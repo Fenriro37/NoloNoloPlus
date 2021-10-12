@@ -8,8 +8,49 @@ body {
     background: linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,85,0,1) 33%, rgba(255,156,0,1) 100%);
 }
 
+h1, h2 {
+    text-align: center;
+}
+
+input, select, label {
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    width: 100%;
+    height: 2em;
+}
+
+#signUp {
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
 .card {
     background-color: rgb(213, 239, 240);
     align-items: center;
     border-radius: 2em;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    padding: 1em 1em 1em 1em;
+}
+
+.row * {
+    display: flex;
+    align-items: center;
+}
+
+.row {
+    width: 100%;
+    margin-bottom: 0.25em;
+    margin-top: 0.25em;
+    --bs-gutter-x: 0.5em;
+}
+
+.firstBox {
+    background-color: blanchedalmond;
+}
+.secondBox {
+    background-color: cadetblue;
 }

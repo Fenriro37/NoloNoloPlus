@@ -15,21 +15,172 @@
         <script src="/js/signUp.js"></script>
     </head>
     <body>
-        <h1>Sign-up</h1>
-        <form>
-            <div class="card">
-                <label for="nome">Nome e Cognome</label>
-                <input id="nome">
-                <label for="indirizzo">Indirizzo</label>
-                <input id="indirizzo">
-                <label for="email">Email</label>
-                <input id="email">
-                <label for="password">Password</label>
-                <input id="password">
-                <label for="pagamento">Metodo di Pagamento</label>
-                <input id="metodoDiPagamento">
-                <button id="invia">Registrati</button>
-            </div>
-        </form>
+        <div class="container">
+            <h1>Sign-up</h1>
+            <form>
+                <div class="card">
+                    <h2>Dati personali</h2>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="name">Nome:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="name" type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="surname">Cognome:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="surname" type="text">    
+                        </div>
+                    </div>
+                    <div class="row mb-0">
+                        <div class="col-8">
+                            <label for="birthday">Data di nascita:</label>
+                        </div>
+                        <div class="col-4">
+                            <label for="sex">Sesso:</label>                            
+                        </div>
+                    </div>
+                    <div class="row mt-0">
+                        <div class="col-8">
+                            <input id="birthday" type="date">                            
+                        </div>
+                        <div class="col-4">
+                            <select id="sex">
+                                <option value="man">Uomo</option>
+                                <option value="woman">Donna</option>
+                                <option value="other">Altro</option>
+                              </select>                                 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="phoneNumber">Cellulare:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="phoneNumber" type="tel">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="email">Email:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="email" type="email">    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="password">Password:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="password" type="password">
+                        </div>
+                    </div>
+                    <div class="row mb-0">
+                        <div class="col-9">
+                            <label for="addressStreet">Indirizzo:</label>
+                        </div>
+                        <div class="col-3">
+                            <label for="addressNumber">N°:</label>
+                        </div>
+                    </div>
+                    <div class="row mt-0">
+                        <div class="col-9">
+                            <input id="addressStreet" type="text">
+                        </div>
+                        <div class="col-3">
+                            <input id="addressNumber" type="text">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <label for="addressCity">Città:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="addressCity" type="text">
+                        </div>
+                    </div>
+    
+                    <h2>Metodo di pagamento</h2>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="paymentCardType">Tipologia:</label>
+                        </div>
+                        <div class="col-8">
+                            <select id="paymentCardType">
+                                <option value="credit">Carta di debito</option>
+                                <option value="debit">Carta di credito</option>
+                                <option value="prepaid">Carta prepagata</option>
+                            </select>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="paymentCardOwnerName">Nome:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="paymentCardOwnerName" type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="paymentCardOwnerSurname">Cognome:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="paymentCardOwnerSurname" type="text">
+                        </div>
+                    </div>
+                    <div class="row mb-0">
+                        <div class="col-4">
+                            <label for="paymentCardExpireMonth">Mese:</label>
+                        </div>
+                        <div class="col-4">
+                            <label for="paymentCardExpireYear">Anno:</label>
+                        </div>
+                        <div class="col-4">
+                            <label for="paymentCardCCV">CCV:</label>
+                        </div>
+                    </div>             
+                    <div class="row mt-0">
+                        <div class="col-4">
+                            <select id="paymentCardExpireMonth">
+                                <option value="1">01</option>
+                                <option value="2">02</option>
+                                <option value="3">03</option>
+                                <option value="4">04</option>
+                                <option value="5">05</option>
+                                <option value="6">06</option>
+                                <option value="7">07</option>
+                                <option value="8">08</option>
+                                <option value="9">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <select id="paymentCardExpireYear">
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <input id="paymentCardCCV" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <input id="signUp" class="btn-primary rounded-2 mb-3" type="button" value="Registrati">
+                    </div>
+                </div>
+            </form>
+        </div>
     </body>
 </html>
