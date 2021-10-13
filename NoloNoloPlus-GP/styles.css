@@ -1,0 +1,83 @@
+body {
+  background-color: #294870;
+  margin: 0px;
+  font-family: tahoma;
+  color: #282828;
+}
+
+.container-fluid {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(201, 201, 238);
+  width: 100%;
+}     
+
+.disabledButton {
+  background-color: #d8d8d8;
+  cursor: not-allowed;
+}
+
+img {
+  border: 2px solid #d8d8d8;
+  width: 70%;
+  margin: 40px;
+  padding: 15px;
+  -webkit-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
+  box-shadow: 2px 15px -12px rgba(0, 0, 0, 0.57);
+}
+
+.navbar * {
+  height: 2.5em;
+}
+
+.input-group {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.checked {
+  color: orange;
+  border-color: rgb(0, 0, 0);
+  border-width: 0.5em;
+}
+
+#myDDButton {
+  background-color: hsl(0, 0%, 82%);
+}
+
+/* Per gli schermi <= 1400px 
+@media screen and (max-width: 1400px) {
+
+  .container {
+      width: 80%;
+  }
+  
+}
+
+/* Per gli schermi <= 1200px
+@media screen and (max-width: 1200px) {
+
+  .container {
+      width: 85%;
+  }
+  
+}
+
+/* Per gli schermi <= 992px 
+@media screen and (max-width: 992px) {
+
+  .container {
+      width: 90%;
+  }
+  
+}
+
+/* Per gli schermi <= 768px 
+@media screen and (max-width: 768px) {
+
+  .container {
+      width: 95%;
+  }
+
+}*/
