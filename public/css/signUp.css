@@ -19,7 +19,7 @@ input, select, label {
     height: 2em;
 }
 
-#signUp {
+#signUpButton {
     width: 100%;
     text-align: center;
     display: block;
@@ -29,11 +29,8 @@ input, select, label {
     background-color: rgb(213, 239, 240);
     align-items: center;
     border-radius: 2em;
-    width: 100%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1em;
-    padding: 1em 1em 1em 1em;
 }
 
 .row * {
@@ -48,9 +45,6 @@ input, select, label {
     --bs-gutter-x: 0.5em;
 }
 
-.firstBox {
-    background-color: blanchedalmond;
-}
-.secondBox {
-    background-color: cadetblue;
+.form-select {
+    padding: 0.2em 0.3em 0.2em 0.3em;
 }

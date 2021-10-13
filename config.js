@@ -5,6 +5,7 @@ const config = {
     databaseUserCollectionName: "users",
     databaseProductCollectionName: "products",
     databaseReservationCollectionName: "reservations",
+    JSONWebTokenKey: "password-chiave-segretesissima-321kjh4b1asdtrkò13kjl41jklnlaqew4ljer12"
 }
 
 module.exports = config

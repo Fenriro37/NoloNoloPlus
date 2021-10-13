@@ -18,14 +18,14 @@
         <div class="container">
             <h1>Sign-up</h1>
             <form>
-                <div class="card">
+                <div class="card w-100 mb-1 p-2">
                     <h2>Dati personali</h2>
                     <div class="row">
                         <div class="col-4">
                             <label for="name">Nome:</label>
                         </div>
                         <div class="col-8">
-                            <input id="name" type="text">
+                            <input id="name" class="form-control" type="text">
                         </div>
                     </div>
                     <div class="row">
@@ -33,7 +33,7 @@
                             <label for="surname">Cognome:</label>
                         </div>
                         <div class="col-8">
-                            <input id="surname" type="text">    
+                            <input id="surname" class="form-control" type="text">    
                         </div>
                     </div>
                     <div class="row mb-0">
@@ -46,10 +46,10 @@
                     </div>
                     <div class="row mt-0">
                         <div class="col-8">
-                            <input id="birthday" type="date">                            
+                            <input id="birthday" class="form-control" type="date">                            
                         </div>
                         <div class="col-4">
-                            <select id="sex">
+                            <select id="sex" class="form-select">
                                 <option value="man">Uomo</option>
                                 <option value="woman">Donna</option>
                                 <option value="other">Altro</option>
@@ -61,7 +61,7 @@
                             <label for="phoneNumber">Cellulare:</label>
                         </div>
                         <div class="col-8">
-                            <input id="phoneNumber" type="tel">
+                            <input id="phoneNumber" class="form-control" type="tel">
                         </div>
                     </div>
                     <div class="row">
@@ -69,7 +69,7 @@
                             <label for="email">Email:</label>
                         </div>
                         <div class="col-8">
-                            <input id="email" type="email">    
+                            <input id="email" class="form-control" type="email">    
                         </div>
                     </div>
                     <div class="row">
@@ -77,7 +77,7 @@
                             <label for="password">Password:</label>
                         </div>
                         <div class="col-8">
-                            <input id="password" type="password">
+                            <input id="password" class="form-control" type="password">
                         </div>
                     </div>
                     <div class="row mb-0">
@@ -90,10 +90,10 @@
                     </div>
                     <div class="row mt-0">
                         <div class="col-9">
-                            <input id="addressStreet" type="text">
+                            <input id="addressStreet" class="form-control" type="text">
                         </div>
                         <div class="col-3">
-                            <input id="addressNumber" type="text">
+                            <input id="addressNumber" class="form-control" type="text">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -101,7 +101,7 @@
                             <label for="addressCity">Città:</label>
                         </div>
                         <div class="col-8">
-                            <input id="addressCity" type="text">
+                            <input id="addressCity" class="form-control" type="text">
                         </div>
                     </div>
     
@@ -111,7 +111,7 @@
                             <label for="paymentCardType">Tipologia:</label>
                         </div>
                         <div class="col-8">
-                            <select id="paymentCardType">
+                            <select id="paymentCardType" class="form-select">
                                 <option value="credit">Carta di debito</option>
                                 <option value="debit">Carta di credito</option>
                                 <option value="prepaid">Carta prepagata</option>
@@ -123,7 +123,7 @@
                             <label for="paymentCardOwnerName">Nome:</label>
                         </div>
                         <div class="col-8">
-                            <input id="paymentCardOwnerName" type="text">
+                            <input id="paymentCardOwnerName" class="form-control" type="text">
                         </div>
                     </div>
                     <div class="row">
@@ -131,7 +131,7 @@
                             <label for="paymentCardOwnerSurname">Cognome:</label>
                         </div>
                         <div class="col-8">
-                            <input id="paymentCardOwnerSurname" type="text">
+                            <input id="paymentCardOwnerSurname" class="form-control" type="text">
                         </div>
                     </div>
                     <div class="row mb-0">
@@ -147,7 +147,7 @@
                     </div>             
                     <div class="row mt-0">
                         <div class="col-4">
-                            <select id="paymentCardExpireMonth">
+                            <select id="paymentCardExpireMonth" class="form-select">
                                 <option value="1">01</option>
                                 <option value="2">02</option>
                                 <option value="3">03</option>
@@ -163,7 +163,7 @@
                             </select>
                         </div>
                         <div class="col-4">
-                            <select id="paymentCardExpireYear">
+                            <select id="paymentCardExpireYear" class="form-select">
                                 <option value="2021">2021</option>
                                 <option value="2022">2022</option>
                                 <option value="2023">2023</option>
@@ -172,12 +172,12 @@
                             </select>
                         </div>
                         <div class="col-4">
-                            <input id="paymentCardCCV" type="text">
+                            <input id="paymentCardCCV" class="form-control" type="text">
                         </div>
                     </div>
 
                     <div class="row">
-                        <input id="signUp" class="btn-primary rounded-2 mb-3" type="button" value="Registrati">
+                        <input id="signUpButton" class="btn-primary rounded-2 mb-3" type="button" value="Registrati">
                     </div>
                 </div>
             </form>

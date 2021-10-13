@@ -32,7 +32,7 @@ exports.insertUser = async function(user) {
     }
 }
 
-async function editUser() {
+async function editUser(query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     await mongo.connect();
 
@@ -46,11 +46,31 @@ async function deleteUser() {
     await mongo.close();
 }
 
-async function searchUser() {
+async function searchOneUser(query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     await mongo.connect();
-
-    await mongo.close();
+    try {
+        await mongo.connect();
+        const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName)
+        const result = await users.findOne(query)
+        await mongo.close();
+        if(!result) {
+            return {
+                status: "400",
+                message: "Utente/Email inesistente"
+            }    
+        } else {
+            return {
+                status: "200",
+                message: result
+            }    
+        }
+    } catch(err) {
+        return {
+            status: "400",
+            message: "Errore generico. \n" + err
+        };
+    }
 }
 
 async function insertProduct() {
@@ -112,7 +132,7 @@ async function searchReservation() {
 
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
-exports.searchUser = searchUser;
+exports.searchOneUser = searchOneUser;
 
 exports.insertProduct = insertProduct;
 exports.editProduct = editProduct;

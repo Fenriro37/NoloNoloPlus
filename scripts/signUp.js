@@ -1,25 +1,35 @@
 const router = require("express").Router();
 const myMongo = require("./mongo.js")
+const bcrypt = require("bcryptjs");
 
 router.post("/", async function(req, res) {
     const {
-        user,
-        address,
+        userName,
+        userSurname,
+        birthday,
+        phoneNumber,
         email,
-        password,
-        payment
+        plainTextPassword,
+        address,
+        paymentMethod
     } = req.body;
+    const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
     const newUser = {
-        user: user,
+        userName: userName,
+        userSurname: userSurname,
+        birthday: birthday,
+        phoneNumber: phoneNumber,
         email: email,
-        password: password,
+        password: hashedPassword,
         address: address,
-        payment: payment
+        payment: paymentMethod
     };
-    console.log("ok")
-    myMongo.insertUser(newUser);
-    console.log("ok")
-    res.status(200)
+    const mongoRes = await myMongo.insertUser(newUser);
+    if(mongoRes.status == "200") {
+        return res.status(200).send(mongoRes.message);
+    } else {
+        return res.status(400).send(mongoRes.message);
+    }
 });
 
 module.exports = router;
