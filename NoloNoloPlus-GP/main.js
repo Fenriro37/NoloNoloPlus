@@ -6,7 +6,7 @@ const app = Vue.createApp({
             image: './assets/images/bici.jpg',
             description: "Questa bici è verde, maneggevole e leggera. I bambini possono guardarla. Odio vitali",
             price: 20.99,
-            onSale: 0,
+            onSale: 1,
             priceS: 19,
             quality: 2,
             tags: ["veicolo", "bicicletta"],
@@ -24,11 +24,10 @@ const app = Vue.createApp({
     },
     computed: {
         number() {
-            return this.price
+            return this.price + "€"
         },
         sale() {
-            this.price = this.price/2;
-            return this.price
+            return this.price/2 + "€"
         },
         reservetion(index){
             return this.bookings[index].id + ' ' + this.bookings[index].clientId + ' ' + 
