@@ -56,6 +56,15 @@ body {
   background-color: hsl(0, 0%, 82%);
 }
 
+.modal-footer {
+  justify-content: space-between;
+}
+
+.margin-right {
+    margin-right: 0.5em;
+}
+
+
 /* Per gli schermi <= 1400px 
 @media screen and (max-width: 1400px) {
 

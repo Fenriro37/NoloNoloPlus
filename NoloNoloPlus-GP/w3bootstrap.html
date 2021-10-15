@@ -13,6 +13,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<!-- Import Icon, per le stelle -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="vueTiOdio.js"></script>
 </head>
 <body>
 	<div class="input-group w-75 mt-2 mb-2 mr-auto ml-auto"> 
@@ -62,6 +63,99 @@
 						data-bs-toggle="modal" data-bs-target="#myModal">
 						Modifica
 					</button>
+					<div class="modal" id="myModal">
+						<div class="modal-dialog">
+							<div class="modal-content">
+						
+							  <!-- Modal Header -->
+							  <div class="modal-header">
+								<h4 class="modal-title">Modalità modifica</h4>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"></button>	
+							  </div>
+						
+							  <!-- Modal body -->
+							  <div class="modal-body">
+								<form>
+									<div class="row mb-3">
+										<div class="col-6">
+											<label for="productName" class="form-label">Nome</label>
+											<input type="text" class="form-control" id="productname" v-bind:placeholder="title">	
+										</div>
+										<div class="col-6">
+											<label for="productModel" class="form-label">Marca</label>
+											<input type="text" class="form-control" id="productModel" v-bind:placeholder="brand">	
+										</div>
+									</div>
+									<div class="row mb-3">
+										<div class="col">
+											<label for="productTags" class="form-label">Etichette (inserisci un'etichetta per riga)</label>
+											<textarea class="form-control overflow-scroll w-80" id="productTags" rows="3">{{ getTags }}</textarea>
+										</div>
+									</div>
+									<div class="row mb-3">
+										<div class="col">
+											<label for="productQuality" class="form-label">Qualità</label>
+											<select class="form-select">
+												<option value="1">1 - Condizioni accettabili</option>
+												<option value="2" selected>2 - Buone condizioni</option>
+												<option value="3">3 - Come nuovo</option>	
+											</select>
+										</div>
+									</div>
+									<div class="row mb-3">
+										<div class="col-3">
+											<label for="productPrice">
+												Prezzo di listino
+											</label>
+										</div>
+										<div class="col-4">
+											<div class="input-group">
+												<input type="text" id="productPrice" class="form-control text-end" v-bind:placeholder="price">
+												<span class="input-group-text">€</span>
+											</div>
+										</div>
+										<div class="col-5">
+											<label class="form-check-label text-end margin-right" for="onSale">Sconto </label>
+											<input class="form-check-input" type="checkbox" id="onSale"
+												:checked="onSale">
+										</div>
+									</div>
+									<div class="row mb-3">
+										<div class="col-5">
+											<div class="form-check">
+												<label class="form-check-label" for="discountPercentage">
+													Percentuale
+												</label>
+												<input class="form-check-input" type="radio" name="discount" id="discountPercentage"
+												:disabled="isDisabled" value="Percentuale">
+											</div>
+											<div class="form-check">
+												<label class="form-check-label" for="discountAmount">
+													Quantità di sconto
+												</label>
+												<input class="form-check-input" type="radio" name="discount" id="discountAmount"
+													:disabled="isDisabled" value="Quantità di sconto">
+											</div>
+										</div>	
+										<div class="col-7">
+											<div class="input-group mb-3">
+												<span class="input-group-text">-</span>
+												<input type="text" class="form-control">
+												<span class="input-group-text" id="javascriptTiAmo"></span>
+											  </div>
+										</div>		
+									</div>
+								</form>
+						
+							  <!-- Modal footer -->
+							  <div class="modal-footer">
+								<button type="button" class="btn btn-primary float-left" data-bs-dismiss="modal">Salva</button>  
+								<button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
+							  </div>
+						
+							</div>
+						  </div>
+					</div>
 				</div>
 			</div>
 		</div>
