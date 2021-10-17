@@ -1,15 +1,7 @@
 html {
     height: auto;
     min-height: 100% !important;
-}
-
-body {
-    background: rgb(255,0,0);
     background: linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,85,0,1) 33%, rgba(255,156,0,1) 100%);
-}
-
-h1, h2 {
-    text-align: center;
 }
 
 input, select, label {
@@ -19,15 +11,8 @@ input, select, label {
     height: 2em;
 }
 
-#signUpButton {
-    width: 100%;
-    text-align: center;
-    display: block;
-}
-
 .card {
-    background-color: rgb(213, 239, 240);
-    align-items: center;
+    background-color: rgb(245, 179, 212);
     border-radius: 2em;
     margin-left: auto;
     margin-right: auto;

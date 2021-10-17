@@ -1,49 +1,22 @@
 html {
     height: auto;
     min-height: 100% !important;
-}
-
-body {
-    background: rgb(255,0,0);
     background: linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,85,0,1) 33%, rgba(255,156,0,1) 100%);
 }
 
 .card {
-    background-color: rgb(255, 134, 134);
-    align-items: center;
+    background-color: rgb(190, 134, 255);
     border-radius: 2em;
     width: 80%;
     margin-left: auto;
     margin-right: auto;
 }
 
-.input-group {
-    margin-bottom: 1em;
-}
-
-.input-group-text {
-    background-color: white;
-    border-right: transparent;
+.input-group-text, .form-control, .btn {
     border-radius: 1.5em;
-}
-
-.form-control {
-    background-color: white;
-    border-left: transparent;
-    border-radius: 1.5em;
+    height: 3.5em;
 }
 
 .btn {
-    height: 3.5em;
-    border: solid grey 0.1em;
-    border-radius: 1.5em;
-    width: 100%;
-    background-color: brown;
-}
-
-.personalRow {
-    height: 3.5em;
-    width: 80%;
-    margin-right: auto;
-    margin-left: auto;
+    background-color: rgb(151, 255, 119);
 }
