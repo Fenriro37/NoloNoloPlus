@@ -1,0 +1,22 @@
+html {
+    height: auto;
+    min-height: 100% !important;
+    background: linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,85,0,1) 33%, rgba(255,156,0,1) 100%);
+}
+
+.card {
+    background-color: rgb(190, 134, 255);
+    border-radius: 2em;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-group-text, .form-control, .btn {
+    border-radius: 1.5em;
+    height: 3.5em;
+}
+
+.btn {
+    background-color: rgb(151, 255, 119);
+}
