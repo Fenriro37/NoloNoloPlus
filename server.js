@@ -12,6 +12,7 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "/public/html")))
 app.use("/js/", express.static(path.join(__dirname, "/public/js")))
 app.use("/css/", express.static(path.join(__dirname, "/public/css")))
+app.use("/media/", express.static(path.join(__dirname, "/public/media")))
 
 app.use("/signUp", mySignUp);
 app.use("/login", myLogin);
