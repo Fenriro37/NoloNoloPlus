@@ -5,9 +5,10 @@ const app = Vue.createApp({
             brand: 'RockRider',
             image: './assets/images/bici.jpg',
             description: "Questa bici è verde, maneggevole e leggera. I bambini possono guardarla. Odio vitali",
-            price: 20.99,
+            note: "Porcodio",
+            price: 120.99,
             discount: {
-                onSale: true,
+                onSale: false,
                 // onSaleType indica il tipo di sconto:
                 // - true se è uno sconto percentuale
                 // - false se è uno sconto fisso
@@ -27,11 +28,17 @@ const app = Vue.createApp({
             return this.bookings[index].id + ' ' + this.bookings[index].clientId + ' ' + 
                    this.bookings[index].startDate + ' ' + this.bookings[index].endDate
         },
+        updateTags() {
+            console.log("mi hai cliccato");
+            // $(...) ottiene seleziona il textarea
+            // .val() ottiene la stringa del textarea
+            // .split(/\s+/) divide la stringa per newline e spazio
+            // .split(/\s+/) divide la stringa per newline e spazio
+            // [...new Set(...)] rimuove i duplicati
+            this.tags = [...new Set($("#tagsTextarea").val().split(/\s+/))];
+        },
     },
     computed: {
-        number() {
-            return this.price + "€"
-        },
         reservetion(index) {
             return this.bookings[index].id + ' ' + this.bookings[index].clientId + ' ' + 
                    this.bookings[index].startDate + ' ' + this.bookings[index].endDate
@@ -42,9 +49,6 @@ const app = Vue.createApp({
                 x += this.tags[index] + "\n"
             }
             return x
-        },
-        updateTags() {
-            console.log("mi hai cliccato");
         },
         isDisabled: function(){
             return !this.discount.onSale;
