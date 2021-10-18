@@ -6,9 +6,14 @@ const app = Vue.createApp({
             image: './assets/images/bici.jpg',
             description: "Questa bici è verde, maneggevole e leggera. I bambini possono guardarla. Odio vitali",
             price: 20.99,
-            onSale: 1,
-            discountPercentage: 0,
-            discountAmount: 0,
+            discount: {
+                onSale: true,
+                // onSaleType indica il tipo di sconto:
+                // - true se è uno sconto percentuale
+                // - false se è uno sconto fisso
+                onSaleType: false,
+                onSaleValue: 10
+            },
             quality: 2,
             tags: ["veicolo", "bicicletta", "a", "c"],
             bookings: [
@@ -18,7 +23,7 @@ const app = Vue.createApp({
         }
     },
     methods: {
-        printBooking(index){
+        printBooking(index) {
             return this.bookings[index].id + ' ' + this.bookings[index].clientId + ' ' + 
                    this.bookings[index].startDate + ' ' + this.bookings[index].endDate
         },
@@ -26,9 +31,6 @@ const app = Vue.createApp({
     computed: {
         number() {
             return this.price + "€"
-        },
-        sale() {
-            return this.price/2 + "€"
         },
         reservetion(index) {
             return this.bookings[index].id + ' ' + this.bookings[index].clientId + ' ' + 
@@ -41,14 +43,17 @@ const app = Vue.createApp({
             }
             return x
         },
+        updateTags() {
+            console.log("mi hai cliccato");
+        },
         isDisabled: function(){
-            return !this.onSale;
+            return !this.discount.onSale;
         },
         getDiscountedPrice() {
-            if(discountPercentage) {
-                return price - price * discountPercentage / 100
+            if(this.discount.onSaleType) {
+                return (this.price - this.price * this.discount.onSaleValue / 100).toFixed(2);
             } else {
-                return price - discountAmount
+                return (this.price - this.discount.onSaleValue).toFixed(2);
             }
         }
     }

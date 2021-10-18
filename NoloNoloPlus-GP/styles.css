@@ -41,6 +41,14 @@ body {
     font-size: x-large;
 }
 
+.input-group-text {
+    width: 2.25em;
+}
+
+#pd {
+    padding-left: 0.6em;
+}
+
 #myDDButton {
     background-color: hsl(0, 0%, 82%);
 }

@@ -13,7 +13,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<!-- Import Icon, per le stelle -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="vueTiOdio.js"></script>
 </head>
 <body>
 	<div class="input-group w-75 mt-2 mb-2 mr-auto ml-auto"> 
@@ -46,7 +45,7 @@
 					<span v-for="iter in (5-quality)" class="fa fa-star"> </span>
 				</div>
 				<div>
-					<p v-if="onSale" class="price"><s>{{price}}€</s> {{sale}}</p>
+					<p v-if="discount.onSale" class="price"><s>{{price}}€</s> {{ getDiscountedPrice }}€</p>
 					<p v-else class="price">{{number}}</p>
 				</div>	
 
@@ -80,10 +79,10 @@
 										</div>
 										<div class="row mb-3">
 											<div class="col-6">
-												<input type="text" class="form-control" id="productname" v-bind:placeholder="title">	
+												<input type="text" class="form-control" id="productname" v-model="title">	
 											</div>
 											<div class="col-6">
-												<input type="text" class="form-control" id="productModel" v-bind:placeholder="brand">	
+												<input type="text" class="form-control" id="productModel" v-model="brand">	
 											</div>
 										</div>
 										<div class="row">
@@ -93,7 +92,7 @@
 										</div>
 										<div class="row mb-3">
 											<div class="col">
-												<textarea class="form-control overflow-scroll w-80" id="productTags" rows="3">{{ getTags }}</textarea>
+												<textarea class="form-control w-80" id="productTags" rows="3">{{ getTags }}</textarea>
 											</div>
 										</div>
 										<div class="row">
@@ -114,43 +113,71 @@
 											</div>
 											<div class="col-6">
 												<div class="input-group">
-													<input type="text" id="productPrice" class="form-control text-end" v-bind:placeholder="price">
+													<input type="text" id="productPrice" class="form-control text-end" v-model="price">
 													<span class="input-group-text">€</span>
 												</div>
 											</div>
 										</div>
 										<div class="row mb-2 d-flex align-items-center justify-content-between">
-											<div class="col-4">
+											<div class="col-6">
 												<div class="form-check">
-													<input class="form-check-input" type="checkbox" id="onSale" :checked="onSale">
+													<input class="form-check-input" type="checkbox" id="onSale" :checked="discount.onSale" v-model="discount.onSale">
 													<label class="form-check-label" for="onSale">Sconto</label>
 												</div>
 											</div>
-											<div class="col-6">
-												<div class="input-group">
+                                            <div class="col-3">
+                                                <div class="form-check">
+													<input
+                                                        class="form-check-input"
+                                                        type="radio" 
+                                                        name="discount" 
+                                                        id="discountPercentage" 
+                                                        :value="true" 
+                                                        :disabled="isDisabled" 
+                                                        v-model="discount.onSaleType">
+                                                    <label class="form-check-label" for="discountPercentage">Percentuale</label>
+												</div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-check">
+													<input
+														id="discountAmount" 	
+														class="form-check-input"
+														type="radio"
+														name="discount"
+														:value="false"
+														:disabled="isDisabled" 
+														v-model="discount.onSaleType" >
+                                                        <label class="form-check-label" for="discountAmount">Fisso</label>													
+												</div>
+                                            </div>
+										</div>
+										<div class="row mb-2 d-flex justify-content-end">
+											<div class="col-6 ">
+												<div class="input-group" >
 													<span class="input-group-text">-</span>
-													<input type="text" class="form-control text-end">
-													<span class="input-group-text" id="javascriptTiAmo"></span>
+													<input
+														type="text"
+														class="form-control text-end"
+														v-model="discount.onSaleValue"
+                                                        :disabled="isDisabled">
+													<span v-if="discount.onSaleType" id="pd" class="input-group-text">%</span>
+                                                    <span v-else id="pd" class="input-group-text">€</span>
 												</div>
 											</div>
 										</div>
-										<div class="row">
-											<div class="col">
-												<div class="form-check">
-													<input class="form-check-input" type="radio" name="discount" id="discountPercentage" :disabled="isDisabled" value="Percentuale">
-													<label class="form-check-label" for="discountPercentage">Percentuale</label>
-												</div>
+                                        <div class="row mb-2">
+											<div class="col-6">
+												Prezzo scontato:
+											</div>
+											<div class="col-6">
+												<input 
+													type="text"
+													class="form-control text-end"
+													disabled :placeholder="getDiscountedPrice">
 											</div>
 										</div>
-										<div class="row">
-											<div class="col">
-												<div class="form-check">
-													<input class="form-check-input" type="radio" name="discount" id="discountAmount" :disabled="isDisabled" value="Quantità di sconto">
-													<label class="form-check-label" for="discountAmount">Quantità di sconto</label>
-												</div>
-											</div>
-										</div>
-
+										
 									</form>
 								</div>
 
