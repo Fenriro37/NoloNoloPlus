@@ -28,34 +28,43 @@
 	</div>
 
 	<div class="container-fluid p-5" id="app">
-		<div class="row">
+		<div class="row mb-5">
 			<div class="col-6">
 				<!-- Colonne immagine -->
 				<img v-bind:src="image" class="img-thumbnail">
 			</div>
+			<!-- Colonne informazioni articolo -->
 			<div class="col-6">
-				<!-- Colonne informazioni articolo -->
-				<h1>{{ title + ' ' + brand }}</h1>
+				
+				<!-- Titolo -->
 				<div>
-					<span class="badge rounded-pill bg-primary" v-for="tag in tags">{{ tag + " " }}</span>
+					<h1>{{ title + ' ' + brand }}</h1>
+				</div>
+				<!-- Etichette -->
+				<div class="mb-2">
+					<span class="badge rounded-pill bg-primary" v-for="tag in tags">{{ tag }}</span>
 				</div>
 				<!-- Stars -->
 				<div>
-					<span v-for="iter in quality" class="fa fa-star checked"> </span>
-					<span v-for="iter in (3-quality)" class="fa fa-star"> </span>
+					<span v-for="iter in quality" class="fa fa-star checked big-size"> </span>
+					<span v-for="iter in (3-quality)" class="fa fa-star big-size"> </span>
 				</div>
+				<!-- Prezzo -->
+				<div class="mt-3 mb-3">
+					<span v-if="discount.onSale" class="price"><s>{{ price }}€</s> <span id="onSalePrice">{{ getDiscountedPrice }}€</span></span>
+					<span v-else class="price">{{ price }} €</span>
+				</div>
+				<!-- Bottoni -->
 				<div>
-					<p v-if="discount.onSale" class="price"><s>{{ price }}€</s> {{ getDiscountedPrice }}€</p>
-					<p v-else class="price">{{ price }}€</p>
-				</div>	
+					<button type="button" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</button>
+					<button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Modifica</button>
+					<div class="form-check form-switch big-size">
+						<input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available">
+						<label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
+						<label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
+					</div>
 
-				<h3>Descrizione</h3>
-				<p>{{description}}</p>
-
-				<div>
-					<button type="button" class="btn btn-secondary btn-lg m-1">Affitta</button>
-					<button type="button" class="btn btn-lg btn-primary m-1" data-bs-toggle="modal" data-bs-target="#myModal">Modifica</button>
-
+					<!-- Modal da mettere in un altro file? -->
 					<div class="modal" id="myModal">
 						<div class="modal-dialog">
 							<div class="modal-content">
@@ -87,7 +96,7 @@
 										</div>
 										<div class="row">
 											<div class="col">
-												<label for="productTags" class="form-label">Etichette (inserisci un'etichetta per riga)</label>
+												<label for="productTags" class="form-label">Etichette</label>
 											</div>
 										</div>
 										<div class="row mb-3">
@@ -118,6 +127,7 @@
 												</div>
 											</div>
 										</div>
+										<hr>
 										<div class="row mb-2 d-flex align-items-center justify-content-between">
 											<div class="col-6">
 												<div class="form-check">
@@ -183,6 +193,7 @@
                                                 </div>
 											</div>
 										</div>
+										<hr>
 										<div class="row">
 											<div class="col">
 												<label for="productDescription" class="form-label">Descrizione</label>
@@ -219,8 +230,19 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="row mt-5">
+		<div class="row">
+			<h3>Descrizione</h3>
+		</div>
+		<div class="row mb-3 p-3 border border-secondary border-3 bg-white">
+			{{ description }}
+		</div>
+		<div class="row">
+			<h3>Note</h3>
+		</div>
+		<div class="row mb-3 p-3 border border-secondary border-3 bg-white">
+			{{ note }}
+		</div>
+		<div class="row">
 			<!-- Da qui parte la tabella delle prenotazioni -->
 			<h3>Lista prenotazioni</h3>
 			<input class="form-control" id="myInput" type="text" placeholder="Search..">
@@ -228,10 +250,10 @@
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
-						<th>idReservation</th>
-						<th>clientId</th>
-						<th>firstDate</th>
-						<th>lastDate</th>
+						<th>ID noleggio</th>
+						<th>ID cliente</th>
+						<th>Inizio noleggio</th>
+						<th>Fine noleggio</th>
 					</tr>
 				</thead>
 				<tbody id="myTable">
@@ -270,6 +292,6 @@
 			});
 		  });
 		});
-		</script>
+	</script>
 </body>
 </html>
