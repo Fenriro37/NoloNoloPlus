@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Amo bootstrap/odio css</title>
+	<!-- Import Styles -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="./styles.css">
+	<!-- Import Vue.js -->
+	<script src="https://unpkg.com/vue@3.0.0-beta.12/dist/vue.global.js"></script>
+	<!-- jQuery CDN file -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- Import Icon, per le stelle -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	<div class="input-group w-75 mt-2 mb-2 mr-auto ml-auto"> 
+		<button id="myDDButton" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">Clienti</button>
+		<div class="dropdown-menu p-0">
+			<a class="dropdown-item" href="#">Clienti</a>
+			<a class="dropdown-item" href="#">Articoli</a>
+			<a class="dropdown-item" href="#">Prenotazioni</a>
+		</div>
+		<input class="form-control" type="text" placeholder="cerca">
+		<button class="btn btn-success" type="submit">
+			<img src="https://cdn.discordapp.com/attachments/888778821262790686/898238385783705610/lente-d-ingradimento.png" height="22.5em"></button>
+	</div>
+
+	<div class="container-fluid p-5" id="app">
+		<div class="row mb-5">
+			<div class="col-6">
+				<!-- Colonne immagine -->
+				<img v-bind:src="image" class="img-thumbnail">
+			</div>
+			<!-- Colonne informazioni articolo -->
+			<div class="col-6">
+				
+				<!-- Titolo -->
+				<div>
+					<h1>{{ title + ' ' + brand }}</h1>
+				</div>
+				<!-- Etichette -->
+				<div class="mb-2">
+					<span class="badge rounded-pill bg-primary" v-for="tag in tags">{{ tag }}</span>
+				</div>
+				<!-- Stars -->
+				<div>
+					<span v-for="iter in quality" class="fa fa-star checked big-size"> </span>
+					<span v-for="iter in (3-quality)" class="fa fa-star big-size"> </span>
+				</div>
+				<!-- Prezzo -->
+				<div class="mt-3 mb-3">
+					<span v-if="discount.onSale" class="price"><s>{{ price }}€</s> <span id="onSalePrice">{{ getDiscountedPrice }}€</span></span>
+					<span v-else class="price">{{ price }} €</span>
+				</div>
+				<!-- Bottoni -->
+				<div>
+					<button type="button" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</button>
+					<button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Modifica</button>
+					<div class="form-check form-switch big-size">
+						<input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available">
+						<label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
+						<label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
+					</div>
+
+					<!-- Modal da mettere in un altro file? -->
+					<div class="modal" id="myModal">
+						<div class="modal-dialog">
+							<div class="modal-content">
+
+								<!-- Modal Header -->
+								<div class="modal-header">
+								<h4 class="modal-title">Modifica prodotto</h4>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"></button>	
+								</div>
+						
+								<!-- Modal body -->
+								<div class="modal-body">
+									<form>
+										<div class="row">
+											<div class="col-6">
+												<label for="productName" class="form-label">Nome</label>
+											</div>
+											<div class="col-6">
+												<label for="productModel" class="form-label">Marca</label>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<div class="col-6">
+												<input type="text" class="form-control" id="productname" v-model="title">	
+											</div>
+											<div class="col-6">
+												<input type="text" class="form-control" id="productModel" v-model="brand">	
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<label for="productTags" class="form-label">Etichette</label>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<div class="col">
+												<textarea id="tagsTextarea" class="form-control w-80" id="productTags" rows="3" @change="updateTags">{{ getTags }}</textarea>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-6">
+												<label for="productQuality" class="form-label">Qualità</label>
+											</div>
+											<div class="col-6">
+												<label for="productPrice">Prezzo di listino</label>												
+											</div>
+										</div>
+										<div class="row mb-3">
+											<div class="col-6">
+												<select class="form-select" v-model="quality">
+													<option :value="1">1 - Condizioni accettabili</option>
+													<option :value="2" selected>2 - Buone condizioni</option>
+													<option :value="3">3 - Come nuovo</option>	
+												</select>												
+											</div>
+											<div class="col-6">
+												<div class="input-group">
+													<input type="text" id="productPrice" class="form-control text-end" v-model="price">
+													<span class="input-group-text justify-content-center">€</span>
+												</div>
+											</div>
+										</div>
+										<hr>
+										<div class="row mb-2 d-flex align-items-center justify-content-between">
+											<div class="col-6">
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox" id="onSale" :checked="discount.onSale" v-model="discount.onSale">
+													<label class="form-check-label" for="onSale">Sconto</label>
+												</div>
+											</div>
+                                            <div class="col-3">
+                                                <div class="form-check">
+													<input
+                                                        class="form-check-input"
+                                                        type="radio" 
+                                                        name="discount" 
+                                                        id="discountPercentage" 
+                                                        :value="true" 
+                                                        :disabled="isDisabled" 
+                                                        v-model="discount.onSaleType">
+                                                    <label class="form-check-label" for="discountPercentage">Percentuale</label>
+												</div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-check">
+													<input
+														id="discountAmount" 	
+														class="form-check-input"
+														type="radio"
+														name="discount"
+														:value="false"
+														:disabled="isDisabled" 
+														v-model="discount.onSaleType" >
+                                                        <label class="form-check-label" for="discountAmount">Fisso</label>													
+												</div>
+                                            </div>
+										</div>
+										<div class="row mb-2 d-flex justify-content-end">
+											<div class="col-6 d-flex align-items-center">
+                                                Sconto applicato
+                                            </div>
+                                            <div class="col-6">
+												<div class="input-group">
+													<span class="input-group-text justify-content-center">-</span>
+													<input
+														type="text"
+														class="form-control text-end"
+														v-model="discount.onSaleValue"
+                                                        :disabled="isDisabled">
+													<span v-if="discount.onSaleType" id="pd" class="input-group-text justify-content-center">%</span>
+                                                    <span v-else id="pd" class="input-group-text justify-content-center">€</span>
+												</div>
+											</div>
+										</div>
+                                        <div class="row mb-3">
+											<div class="col-6 d-flex align-items-center">
+												Prezzo scontato
+											</div>
+											<div class="col-6">
+                                                <div class="input-group">
+                                                    <input 
+													type="text"
+													class="form-control text-end"
+													disabled :placeholder="getDiscountedPrice">
+                                                    <span class="input-group-text justify-content-center">€</span>
+                                                </div>
+											</div>
+										</div>
+										<hr>
+										<div class="row">
+											<div class="col">
+												<label for="productDescription" class="form-label">Descrizione</label>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<div class="col">
+												<textarea class="form-control w-80" id="productDescription" rows="3" v-model="description">{{ description }}</textarea>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<label for="productNote" class="form-label">Note (non sono visibli al cliente)</label>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<div class="col">
+												<textarea class="form-control w-80" id="productNote" rows="3" v-model="note">{{ note }}</textarea>
+											</div>
+										</div>
+									</form>
+								</div>
+
+								<!-- Modal footer -->
+								<div class="modal-footer d-flex justify-content-between">
+									<button type="button" class="btn btn-primary float-left" data-bs-dismiss="modal">Salva</button>  
+									<button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
+								</div>
+							
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<h3>Descrizione</h3>
+		</div>
+		<div class="row mb-3 p-3 border border-secondary border-3 bg-white">
+			{{ description }}
+		</div>
+		<div class="row">
+			<h3>Note</h3>
+		</div>
+		<div class="row mb-3 p-3 border border-secondary border-3 bg-white">
+			{{ note }}
+		</div>
+		<div class="row">
+			<!-- Da qui parte la tabella delle prenotazioni -->
+			<h3>Lista prenotazioni</h3>
+			<input class="form-control" id="myInput" type="text" placeholder="Search..">
+			<br>
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>ID noleggio</th>
+						<th>ID cliente</th>
+						<th>Inizio noleggio</th>
+						<th>Fine noleggio</th>
+					</tr>
+				</thead>
+				<tbody id="myTable">
+					<tr>
+						<td><a href="#">{{bookings[0].id}}</a></td>
+						<td><a href="#">{{bookings[0].clientId}}</a></td>
+						<td>{{bookings[0].startDate}}</td>
+						<td>{{bookings[0].endDate}}</td>
+					</tr>
+					<tr>
+						<td><a href="#">{{bookings[1].id}}</a></td>
+						<td><a href="#">{{bookings[1].clientId}}</a></td>
+						<td>{{bookings[1].startDate}}</td>
+						<td>{{bookings[1].endDate}}</td>
+					</tr>
+				</tbody>
+			</table>
+		
+		</div>
+	</div>
+	
+	<!-- Import App -->
+	<script src="./main.js"></script>
+
+	<!-- Mount App -->
+	<script>
+		const mountedApp = app.mount('#app')
+	</script>
+	
+	<script>
+		$(document).ready(function(){
+		  $("#myInput").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#myTable tr").filter(function() {
+			  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		  });
+		});
+	</script>
+</body>
+</html>
