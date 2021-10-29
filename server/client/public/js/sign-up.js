@@ -57,7 +57,7 @@ window.addEventListener("load", () => {
                 // Risposta del server in caso di successo
                 success: () => {
                     console.log("Success");
-                    window.location.href = "/login.html";
+                    window.location.href = "/public/login.html";
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {

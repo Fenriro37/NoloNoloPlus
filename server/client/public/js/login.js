@@ -32,9 +32,8 @@ window.addEventListener("load", () => {
                 }),
                 // Risposta del server in caso di successo
                 success: (token) => {
+                    // window.location.href = "/user/main-page.html";
                     document.cookie = "jwt=" + token;
-                    window.location.href = "/main-page.html";
-                    console.log("Success");
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {

@@ -62,6 +62,7 @@ router.post("/login", async function(req, res) {
                 config.JSONWebTokenKey
             );
             console.log("Password corretta")
+            console.log(token)
             return res.status(200).send(token);
         }
     }
