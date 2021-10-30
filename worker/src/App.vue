@@ -30,7 +30,7 @@
           <!-- Stars -->
           <div>
             <span v-for="iter in parseInt(quality)" class="fa fa-star checked big-size" :key="iter"> </span>
-            <span v-for="iter in (3 - parseInt(quality))" class="fa fa-star big-size" :key="iter"> </span>
+            <span v-for="mimmo in (3 - parseInt(quality))" class="fa fa-star big-size" :key="mimmo"> </span>
           </div>
           <!-- Prezzo -->
           <div class="mt-3 mb-3">
@@ -40,13 +40,13 @@
           <!-- Bottoni -->
           <div>
             <button type="button" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</button>
-            <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Modifica</button>
+            <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
             <div class="form-check form-switch big-size">
               <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available">
               <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
               <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
             </div>
-            <!-- Modal da mettere in un altro file? -->
+            <!-- Modal da mettere in un altro file???? -->
             <div class="modal" id="myModal">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -68,20 +68,20 @@
                       </div>
                       <div class="row mb-3">
                         <div class="col-6">
-                          <input type="text" class="form-control" id="productname" v-model="title">	
+                          <input type="text" class="form-control" id="productname" v-model="titleModal" :placeholder="titleModal">	
                         </div>
                         <div class="col-6">
-                          <input type="text" class="form-control" id="productModel" v-model="brand">	
+                          <input type="text" class="form-control" id="productModel" v-model="brandModal">	
                         </div>
                       </div>
                       <div class="row">
                         <div class="col">
-                          <label for="productTags" class="form-label">Etichette</label>
+                          <label for="productTags" class="form-label">Etichette (separare con uno spazio)</label>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <div class="col">
-                          <textarea class="form-control w-80" id="productTags" rows="3" @change="updateTags" v-model="getTags"></textarea>
+                          <textarea class="form-control w-80" id="productTags" rows="3" @change="updateTagsModal" v-model="tagsModal"></textarea>
                         </div>
                       </div>
                       <div class="row">
@@ -94,7 +94,7 @@
                       </div>
                       <div class="row mb-3">
                         <div class="col-6">
-                          <select class="form-select" v-model="quality">
+                          <select class="form-select" v-model="qualityModal">
                             <option :value="1">1 - Condizioni accettabili</option>
                             <option :value="2" selected>2 - Buone condizioni</option>
                             <option :value="3">3 - Come nuovo</option>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-6">
                           <div class="input-group">
-                            <input type="text" id="productPrice" class="form-control text-end" v-model="price">
+                            <input type="text" id="productPrice" class="form-control text-end" v-model="priceModal">
                             <span class="input-group-text justify-content-center">€</span>
                           </div>
                         </div>
@@ -111,7 +111,7 @@
                       <div class="row mb-2 d-flex align-items-center justify-content-between">
                         <div class="col-6">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="onSale" :checked="discount.onSale" v-model="discount.onSale">
+                            <input class="form-check-input" type="checkbox" id="onSale" :checked="onSaleModal" v-model="onSaleModal">
                             <label class="form-check-label" for="onSale">Sconto</label>
                           </div>
                         </div>
@@ -123,8 +123,8 @@
                               name="discount" 
                               id="discountPercentage" 
                               :value="true" 
-                              :disabled="isDisabled" 
-                              v-model="discount.onSaleType">
+                              :disabled="!onSaleModal" 
+                              v-model="onSaleTypeModal">
                             <label class="form-check-label" for="discountPercentage">Percentuale</label>
                           </div>
                         </div>
@@ -136,8 +136,8 @@
                               type="radio"
                               name="discount"
                               :value="false"
-                              :disabled="isDisabled" 
-                              v-model="discount.onSaleType" >
+                              :disabled="!onSaleModal" 
+                              v-model="onSaleTypeModal" >
                             <label class="form-check-label" for="discountAmount">Fisso</label>													
                           </div>
                         </div>
@@ -152,8 +152,8 @@
                             <input
                               type="text"
                               class="form-control text-end"
-                              v-model="discount.onSaleValue"
-                              :disabled="isDisabled">
+                              v-model="onSaleValueModal"
+                              :disabled="!onSaleModal">
                             <span v-if="discount.onSaleType" id="pd" class="input-group-text justify-content-center">%</span>
                             <span v-else id="pd" class="input-group-text justify-content-center">€</span>
                           </div>
@@ -168,7 +168,7 @@
                             <input 
                               type="text"
                               class="form-control text-end"
-                              disabled :placeholder="getDiscountedPrice">
+                              disabled :placeholder="getDiscountedPriceModal">
                             <span class="input-group-text justify-content-center">€</span>
                           </div>
                         </div>
@@ -181,7 +181,7 @@
                       </div>
                       <div class="row mb-3">
                         <div class="col">
-                          <textarea class="form-control w-80" id="productDescription" rows="3" v-model="description"></textarea>
+                          <textarea class="form-control w-80" id="productDescription" rows="3" v-model="descriptionModal"></textarea>
                         </div>
                       </div>
                       <div class="row">
@@ -191,14 +191,14 @@
                       </div>
                       <div class="row mb-3">
                         <div class="col">
-                          <textarea class="form-control w-80" id="productNote" rows="3" v-model="note"></textarea>
+                          <textarea class="form-control w-80" id="productNote" rows="3" v-model="noteModal"></textarea>
                         </div>
                       </div>
                     </form>
                   </div>
                   <!-- Modal footer -->
                   <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-primary float-left" data-bs-dismiss="modal">Salva</button>  
+                    <button type="button" class="btn btn-primary float-left"  id="saveData" data-bs-dismiss="modal">Salva</button>  
                     <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
                   </div>
                 </div>
@@ -256,7 +256,6 @@
   import "bootstrap";
   import $ from 'jquery'
   import Functions from '../src/functions/function'
-
   export default {
     data() {
       return {
@@ -274,7 +273,19 @@
         available: false,
         description: '',
         bookings: [],
-        note: ''
+        note: '',
+        ///////////////////////////
+        titleModal: '',
+        brandModal: '',
+        imageModal: '',
+        tagsModal: [],
+        qualityModal: 0,
+        priceModal: 0,
+        onSaleModal: false,
+        onSaleTypeModal: false,
+        onSaleValueModal: 0,
+        descriptionModal: '',
+        noteModal: ''
       }
     },
     methods: {
@@ -282,8 +293,7 @@
         var myData = {};
         Functions.getProduct(id)
         .then((response) => {
-        myData = response.data;
-        console.log(response.data);
+        myData = response.data;        
         this.title = myData.title;
         this.brand = myData.brand;
         this.image = myData.image;
@@ -294,35 +304,45 @@
         this.available = myData.available;
         this.description = myData.description;
         this.note = myData.note;
-        console.log(myData.bookings);
         this.bookings = myData.bookings;
+
+
         }, (error) => {
           console.log(error);
         });
       },
-      updateTags() {
+
+      getModalData(){
+        this.titleModal = this.title;
+        this.brandModal = this.brand;
+        this.imageModal = this.image;
+        this.tagsModal = this.tags;
+        this.qualityModal = this.quality;
+        this.priceModal = this.price;
+        this.onSaleModal = this.discount.onSale;
+        this.onSaleTypeModal = this.discount.onSaleType;
+        this.onSaleValueModal = this.discount.onSaleValue;
+        this.descriptionModal = this.description;
+        this.noteModal = this.note;
+      },
+
+      updateTagsModal() {
         // $(...) ottiene seleziona il textarea
         // .val() ottiene la stringa del textarea
         // .split(/\s+/) divide la stringa per newline e spazio
         // .split(/\s+/) divide la stringa per newline e spazio
         // [...new Set(...)] rimuove i duplicati
-        this.tags = [...new Set($("#tagsTextarea").val().split(/\s+/))];
-      }
+        this.tagsModal = [...new Set($("#tagsTextarea").val().split(/\s+/))];
+      },
     },
     computed: {
-      getBooking(index) {
-        return this.bookings[index].id
-      },
-      getTags() {
+      getTagsModal() {
         var x = ""
         var index = 0
-        for(index in this.tags) {
-          x += this.tags[index] + "\n"
+        for(index in this.tagsModal) {
+          x += this.tagsModal[index] + "\n"
         }
         return x
-      },
-      isDisabled: function() {
-        return !this.discount.onSale;
       },
       getDiscountedPrice() {
         if(this.discount.onSaleType) {
@@ -330,7 +350,14 @@
         } else {
           return (this.price - this.discount.onSaleValue).toFixed(2);
         }
-      }
+      },
+      getDiscountedPriceModal() {
+        if(this.onSaleTypeModal) {
+          return (this.priceModal - this.priceModal * this.onSaleValueModal / 100).toFixed(2);
+        } else {
+          return (this.priceModal - this.onSaleValueModal).toFixed(2);
+        }
+      },
     },
     mounted() {
       // Functions.getProduct(id)
@@ -353,28 +380,62 @@
       // });
     }
   }
+  //////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
+  window.addEventListener("load", () => {
+    // Seleziona il bottone per inviare il form
+    $("#saveData").click((event) => event.preventDefault());
+    $("#saveData").click(async () => {
+      const data = []
+      $(".modal-body input").each(function() {
+        data.push($(this).val())
+      });
+      $(".modal-body select").each(function() {
+        data.push($(this).val())
+      });
+      $(".modal-body textarea").each(function() {
+        data.push($(this).val())
+      });
+      /*
+      0 - Title
+      1 - Brand
+      2 - Price
+      3 - discount.onSale
+      4 - radio 1 
+      5 - radio 2
+      6 - discount.onSaleValue
+      7 - qualità
+      8 - tags
+      9 - descrizione
+      10 - note
+
+      */
+      data[3] = $("#onSale").is(":checked");
+      data[4] = $("#discountPercentage").is(":checked");
+      data[5] = $("#discountAmount").is(":checked");
+      data.splice(7, 1);
+      let tags = [...new Set(data[8].split(/\s+/))];
+      console.log(data);
+      console.log(tags);
+    })
+  })
 </script>
 <style>
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-
 html {
     height: auto;
     min-height: 100% !important;
     background-color: #294870;
 }
-
 body {
     font-family: tahoma;
     background-color: transparent;
     height: 100%;
 }
-
 .container-fluid {
     margin-left: auto;
     margin-right: auto;
     background-color: rgb(201, 201, 238);
 }
-
 .img-thumbnail {
     padding: 0.5em;
     background-color: rgb(156, 156, 156);
@@ -384,57 +445,45 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
-
 .input-group {
     margin-left: auto;
     margin-right: auto;
 }
-
 .checked {
     color: orange;
     border-color: rgb(0, 0, 0);
     border-width: 0.5em;
 }
-
 .price {
     font-size: x-large;
 }
-
 .input-group-text {
     width: 2.5em;
 }
-
 #myDDButton {
     background-color: hsl(0, 0%, 82%);
 }
-
 .big-size {
     transform: scale(1.4);
     margin-right: 0.5em;
 }
-
 .badge {
     font-size: medium;
     margin-right: 0.125em;
 }
-
 .btn-lg {
     margin-right: 0.5em;
     margin-bottom: 0.5rem;
 }
-
 #onSalePrice {
     color: rgb(232, 38, 38);
 }
-
 .form-switch {
     margin-left: 7.2em;
 }
-
 .custom-switch {
     margin-right: 0.5em;
 }
-
 #rentProduct {
     color: black;
     background-color: rgb(254, 165, 45);
