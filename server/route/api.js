@@ -68,4 +68,42 @@ router.post("/login", async function(req, res) {
     }
 });
 
+router.post("/update/product", async function(req, res) {
+    console.log(":D");
+    const {
+        id,
+        title,
+        brand,
+        image,
+        tags,
+        discount,
+        price,
+        descriptions,
+        note,
+        quality
+    } = req.body;
+    const query = {
+        identifier: id,
+        title: title,
+        brand: brand,
+        image: image,
+        tags: tags,
+        discount: discount,
+        price: price,
+        descriptions: descriptions,
+        note: note,
+        quality: quality
+    }
+
+    const result = await myMongo.editProduct(query);
+    if(result.status == '400') {
+        res.status(400).send(result.message);
+    } else if(result.status == '200') {
+        res.status(200).send(result.message);
+    } else {
+        res.status(404).send("SOS");
+    }
+
+});
+
 module.exports = router;

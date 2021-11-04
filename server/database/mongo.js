@@ -93,11 +93,39 @@ async function insertProduct() {
     await mongo.close();
 }
 
-async function editProduct() {
+exports.editProduct = async function (query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     await mongo.connect();
+    const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
+    const filter = { _id: ObjectId(query.identifier) };
+    const updateDocument = {
+        $set: {
+            title: query.title,
+            brand: query.brand,
+            image: query.image,
+            tags: query.tags,
+            discount: query.discount,
+            price: query.price,
+            description: query.descriptions,
+            note: query.note,
+            quality: query.quality
+        }
+    }
+    console.log(updateDocument);
+    const result = await products.updateOne(filter, updateDocument);
+    await mongo.close()
+    if(!result) {
+        return {
+            status: "400",
+            message: "Help"
+        }    
+    } else {
+        return {
+            status: "200",
+            message: ":D"
+        }    
+    }
 
-    await mongo.close();
 }
 
 async function deleteProduct() {
@@ -116,6 +144,33 @@ exports.searchProduct = async function (req, res) {
     return res.status('200').send(result);
 }
 
+exports.searchOneProduct = async function(query) {
+    const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
+    await mongo.connect();
+    try {
+        await mongo.connect();
+        const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName)
+        const result = await products.findOne(query)
+        await mongo.close();
+        if(!result) {
+            return {
+                status: "400",
+                message: "Utente/Email dsaf"
+            }    
+        } else {
+            return {
+                status: "200",
+                message: result
+            }    
+        }
+    } catch(err) {
+        return {
+            status: "400",
+            message: "Errore generico. \n" + err
+        };
+    }
+}
+
 async function insertReservation() {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     await mongo.connect(),
@@ -123,7 +178,7 @@ async function insertReservation() {
     await mongo.close();
 }
 
-async function editReservation() {
+async function editReservation(query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     await mongo.connect();
 
@@ -149,7 +204,6 @@ exports.deleteUser = deleteUser;
 exports.searchOneUser = searchOneUser;
 
 exports.insertProduct = insertProduct;
-exports.editProduct = editProduct;
 exports.deleteProduct = deleteProduct;
 
 exports.insertReservation = insertReservation;

@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser')
 router.use(function(req, res, next) {
     console.log(req.cookies);
     console.log(req.url);
+    console.log("Auth");
     next();
 });
 

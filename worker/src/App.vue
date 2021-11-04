@@ -19,6 +19,9 @@
         </div>
         <!-- Colonne informazioni articolo -->
         <div class="col-6">
+          <div id="productidentifier">
+            ID: {{ identifier }}          
+          </div>   
           <!-- Titolo -->
           <div>
             <h1>{{ title + ' ' + brand }}</h1>
@@ -81,7 +84,16 @@
                       </div>
                       <div class="row mb-3">
                         <div class="col">
-                          <textarea class="form-control w-80" id="productTags" rows="3" @change="updateTagsModal" v-model="tagsModal"></textarea>
+                          <textarea class="form-control w-80" id="productTags" rows="3" v-model="tagsModal"></textarea>
+                        </div>
+                      </div>
+                      <!-- da sistemare -->
+                      <div class="row mb-3 d-flex align-items-center justify-content-between">
+                        <div class="col-4">
+                          <label for="imageLink" class="form-label">Immagine (link)</label>
+                        </div>
+                        <div class="col-8">
+                          <input type="text" class="form-control" id="imageLink" v-model="imageModal">
                         </div>
                       </div>
                       <div class="row">
@@ -259,6 +271,7 @@
   export default {
     data() {
       return {
+        identifier: '',
         title: '',
         brand: '',
         image: '',
@@ -293,7 +306,8 @@
         var myData = {};
         Functions.getProduct(id)
         .then((response) => {
-        myData = response.data;        
+        myData = response.data;
+        this.identifier = myData._id;   
         this.title = myData.title;
         this.brand = myData.brand;
         this.image = myData.image;
@@ -324,16 +338,7 @@
         this.onSaleValueModal = this.discount.onSaleValue;
         this.descriptionModal = this.description;
         this.noteModal = this.note;
-      },
-
-      updateTagsModal() {
-        // $(...) ottiene seleziona il textarea
-        // .val() ottiene la stringa del textarea
-        // .split(/\s+/) divide la stringa per newline e spazio
-        // .split(/\s+/) divide la stringa per newline e spazio
-        // [...new Set(...)] rimuove i duplicati
-        this.tagsModal = [...new Set($("#tagsTextarea").val().split(/\s+/))];
-      },
+      }
     },
     computed: {
       getTagsModal() {
@@ -386,36 +391,83 @@
     $("#saveData").click((event) => event.preventDefault());
     $("#saveData").click(async () => {
       const data = []
-      $(".modal-body input").each(function() {
+      $(".modal-body * input").each(function() {
         data.push($(this).val())
       });
-      $(".modal-body select").each(function() {
+      $(".modal-body * select").each(function() {
         data.push($(this).val())
       });
-      $(".modal-body textarea").each(function() {
+      $(".modal-body * textarea").each(function() {
         data.push($(this).val())
       });
       /*
-      0 - Title
-      1 - Brand
-      2 - Price
-      3 - discount.onSale
-      4 - radio 1 
-      5 - radio 2
-      6 - discount.onSaleValue
-      7 - qualità
-      8 - tags
-      9 - descrizione
-      10 - note
-
+      L'array data ha i seguenti valori:
+      00 - Title
+      01 - Brand
+      02 - Image
+      03 - Price
+      04 - discount.onSale
+      05 - radio 1 
+      06 - radio 2
+      07 - discount.onSaleValue
+      08 - qualità
+      09 - tags (come stringa)
+      10 - descrizione
+      11 - note
       */
-      data[3] = $("#onSale").is(":checked");
-      data[4] = $("#discountPercentage").is(":checked");
-      data[5] = $("#discountAmount").is(":checked");
-      data.splice(7, 1);
-      let tags = [...new Set(data[8].split(/\s+/))];
+      data[4] = $("#onSale").is(":checked");
+      data[5] = $("#discountPercentage").is(":checked");
+      data[6] = $("#discountAmount").is(":checked");
+      data.splice(8, 1);
+      data[9] = data[9].replace(/,/g, ' ');
+      // Conversione dei tags (stringa -> array)
+      let tags = [...new Set(data[9].split(/\s+/))];
+      if(tags[tags.length - 1] == '') {
+        tags.pop()
+      }
+      // identificatore
+      // array[0] = ''
+      // array[1] = 'ID:'
+      // array[2] = '#identificatore'
+      let identifier = (($("#productidentifier").text()).split(" "))[2];
+
       console.log(data);
-      console.log(tags);
+      console.log(identifier);
+
+      $.ajax({
+        url: "http://localhost:8081/api/update/product",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "dataType": 'jsonp'
+        },
+        data: JSON.stringify({
+          id: identifier,
+          title: data[0],
+          brand: data[1],
+          image: data[2],
+          tags: tags,
+          discount: {
+            onSale: data[4],
+            onSaleType: data[5],
+            onSaleValue: data[7]
+          },
+          price: data[3],
+          descriptions: data[10],
+          note: data[11],
+          quality: data[8]
+        }),
+        // Risposta del server in caso di successo
+        success: () => {
+          location.reload();
+        },
+        // Risposta del server in caso di insuccesso
+        error: (error) => {
+          console.log("Error");
+          alert("Errore. " + error.responseText);
+        }
+      });
     })
   })
 </script>
