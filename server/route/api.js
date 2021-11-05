@@ -4,8 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("./../config");
   
-// Prova
-router.get("/", myMongo.prova);
+
 // Ottieni un prodotto
 router.get('/product', myMongo.searchProduct);
 // Sign up
@@ -68,6 +67,32 @@ router.post("/login", async function(req, res) {
     }
 });
 
+router.post("/change/product/", async function(req, res){   
+    const result = await myMongo.editProduct(req.query.id, req.body);
+    if(result.status == '400') {
+        res.status(400).send(result.message);
+    } else if(result.status == '200') {
+        res.status(200).send(result.message);
+    } else {
+        res.status(404).send("SOS");
+    }
+    
+})
+
+router.post("/save/product/", async function(req, res){
+    console.log(req.body)   
+    const result = await myMongo.editProduct(req.query.id, req.body);
+
+    if(result.status == '400') {
+        res.status(400).send(result.message);
+    } else if(result.status == '200') {
+        res.status(200).send(result.message);
+    } else {
+        res.status(404).send("SOS");
+    }
+    
+})
+
 router.post("/update/product", async function(req, res) {
     console.log(":D");
     const {
@@ -83,19 +108,20 @@ router.post("/update/product", async function(req, res) {
         quality
     } = req.body;
     const query = {
-        identifier: id,
         title: title,
         brand: brand,
         image: image,
         tags: tags,
         discount: discount,
         price: price,
-        descriptions: descriptions,
+        description: descriptions,
         note: note,
         quality: quality
     }
 
-    const result = await myMongo.editProduct(query);
+
+
+    const result = await myMongo.editProduct(id, query);
     if(result.status == '400') {
         res.status(400).send(result.message);
     } else if(result.status == '200') {

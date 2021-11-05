@@ -3,17 +3,6 @@ const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
 var path = require('path');
 
-exports.prova = async function(req, res) {
-    const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
-    await mongo.connect();
-    console.log("Mongo connesso");
-    await mongo.close();
-    console.log("Mongo chiuso");
-    const request = req.body;
-    console.log(request);
-    res.sendFile(path.resolve("client/dist/favicon.ico"));
-}
-
 exports.insertUser = async function(user) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -93,25 +82,14 @@ async function insertProduct() {
     await mongo.close();
 }
 
-exports.editProduct = async function (query) {
+exports.editProduct = async function (id, query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     await mongo.connect();
     const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
-    const filter = { _id: ObjectId(query.identifier) };
+    const filter = { _id: ObjectId(id) };
     const updateDocument = {
-        $set: {
-            title: query.title,
-            brand: query.brand,
-            image: query.image,
-            tags: query.tags,
-            discount: query.discount,
-            price: query.price,
-            description: query.descriptions,
-            note: query.note,
-            quality: query.quality
-        }
+        $set: query
     }
-    console.log(updateDocument);
     const result = await products.updateOne(filter, updateDocument);
     await mongo.close()
     if(!result) {
