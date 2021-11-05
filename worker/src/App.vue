@@ -45,7 +45,7 @@
             <button type="button" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</button>
             <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
             <div class="form-check form-switch big-size">
-              <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available">
+              <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
               <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
               <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
             </div>
@@ -210,7 +210,7 @@
                   </div>
                   <!-- Modal footer -->
                   <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-primary float-left"  id="saveData" data-bs-dismiss="modal">Salva</button>  
+                    <button type="button" class="btn btn-primary float-left" @click="saveData"  data-bs-dismiss="modal">Salva</button>  
                     <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
                   </div>
                 </div>
@@ -236,7 +236,7 @@
         <h3>Lista prenotazioni</h3>
         <input class="form-control" id="myInput" type="text" placeholder="Search..">
         <br>
-        <!-- <table class="table table-striped table-bordered">
+        <table class="table table-striped table-bordered">
           <thead>
             <tr>
               <th>ID noleggio</th>
@@ -246,14 +246,14 @@
             </tr>
           </thead>
           <tbody id="myTable">
-            <tr v-for="index in bookings" :key="index">
-              <td><a href="#" v-if="(bookings === [])">{{bookings[index].id}}</a></td>
-              <td><a href="#" v-if="!bookings">{{bookings[index].clientId}}</a></td>
-              <td v-if="!bookings">{{bookings[index].startDate}}</td>
-              <td v-if="!bookings">{{bookings[index].endDate}}</td>
+            <tr v-for="(iter, index) in bookings" :key="index">
+              <td><a href="#" >{{iter.id}}</a></td>
+              <td><a href="#" >{{iter.clientId}}</a></td>
+              <td >{{iter.startDate}}</td>
+              <td >{{iter.endDate}}</td>
             </tr>
           </tbody>
-        </table> -->
+        </table>
       </div>
     </div>
     <button v-on:click="productButton('61790b14c9f1f2e35c109866')">GetCar</button>
@@ -338,7 +338,56 @@
         this.onSaleValueModal = this.discount.onSaleValue;
         this.descriptionModal = this.description;
         this.noteModal = this.note;
-      }
+      },
+
+      changeInStock(){
+        Functions.updateProduct(this.identifier, !this.available)
+      },
+
+      saveData(){
+        let query = {}
+        
+        if(this.titleModal != this.title) { query.title = this.titleModal }
+        if(this.brandModal != this.brand) { query.brand = this.brandModal }
+        if(this.imageModal != this.image) { query.image = this.imageModal }
+        if(typeof(this.tagsModal) !== 'string' ){
+          this.tagsModal = this.tagsModal.join(' ')
+        }
+        this.tagsModal = this.tagsModal.replace(/,/g, ' ');
+
+        let newTags = [...new Set(this.tagsModal.split(/\s+/))];
+        if(newTags[newTags.length - 1] == '') {
+          newTags.pop()
+        }
+        query.tags = newTags
+        if(this.qualityModal != this.quality) { query.quality = this.qualityModal }
+        if(this.priceModal != this.price) { query.price = this.priceModal }
+        query.discount = {}
+        if(this.onSaleModal != this.discount.onSale) { query.discount.onSale = this.onSaleModal }
+        else{ query.discount.onSale = this.discount.onSale }
+        if(this.onSaleTypeModal != this.discount.onSaleType) { query.discount.onSaleType = this.onSaleTypeModal }
+        else{ query.discount.onSaleType = this.discount.onSaleType }
+        if(this.onSaleValueModal != this.discount.onSaleValue) { query.discount.onSaleValue = this.onSaleValueModal }
+        else{ query.discount.onSaleValue = this.discount.onSaleValue }
+        if(this.descriptionModal != this.description) { query.description = this.descriptionModal }
+        if(this.noteModal != this.note) { query.note = this.noteModal }
+        Functions.saveData(this.identifier, query).then(response => {
+          if(response.status == '200'){
+            this.title = this.titleModal
+            this.brand = this.brandModal
+            this.image = this.imageModal
+            this.tags = newTags
+            this.quality = this.qualityModal
+            this.price = this.priceModal
+            this.discount.onSale = this.onSaleModal
+            this.discount.onSaleType = this.onSaleTypeModal 
+            this.discount.onSaleValue = this.onSaleValueModal 
+            this.description = this.descriptionModal
+            this.note = this.noteModal
+          }
+        })
+
+      },
     },
     computed: {
       getTagsModal() {
@@ -386,6 +435,15 @@
     }
   }
   //////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+
   window.addEventListener("load", () => {
     // Seleziona il bottone per inviare il form
     $("#saveData").click((event) => event.preventDefault());
