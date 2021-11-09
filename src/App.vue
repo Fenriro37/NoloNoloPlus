@@ -1,22 +1,116 @@
 <template>
   <div>
     <div class="container-fluid p-5">
-      <div>
-        <h1> Account </h1>
-        <div class="row mb-5">
-          <div class="col-3">
-            <p>Name</p>
-          </div>
-          <div class="col-3">
-            <input type="text" :value="name" >  
-            <p>{{name}}</p>
-          </div>
-          <div class="col-3">
-            <p>Surname</p>
-          </div>
-          <div class="col-3">
-            <input type="text" :value="surname" readonly><br>
-          </div>
+      <h1> Account </h1>
+      <div class="row">
+        <div class="col-3">
+          <p>Name:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="name">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <p>Surname:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="surname"><br>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-3">
+          <p>Sex:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="sex"><br>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <p>Birthday:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="birthday.day">
+          <input type="text" :value="birthday.month">
+          <input type="text" :value="birthday.year"><br>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <p>Phone Number:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="phoneNumber"><br>
+        </div>
+      </div>
+        
+      <div class="row">
+        <div class="col-3">
+          <p>E-mail:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="email"><br>
+        </div>
+      </div>
+        
+      <div class="row">
+        <div class="col-3">
+          <p>Address:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="address.addressStreet">
+          <input type="text" :value="address.addressNumber">
+          <input type="text" :value=" address.addressCity"><br>
+        </div>
+      </div>
+
+      <div class="row">
+        <b>Payment</b>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Card Type:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="payment.cardType">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Card Name:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="payment.cardName">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Card Surname:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="payment.cardSurname">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Card Expire Date:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" :value="payment.cardExpireMonth">
+          <input type="text" :value="payment.cardExpireYear">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Card CVV:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" value="DA DEFINIRE">
         </div>
       </div>
     </div>
@@ -56,25 +150,6 @@
           cardExpireYear: '24',
           cardCCV: '111'
         },
-      ////////////////////// DATI MODALE /////////////////////////////////////////////////////////////////
-        modalName: '',
-        modalSurname: '',
-        modalSex:'',       
-        modalYear: '',
-        modalMonth: '',
-        modalDay: '',        
-        modalPhoneNumber: '',
-        modalEmail: 'exam@gmail.com',
-        modalPassword: 'ca',
-        modalAddressStreet: ' dei cazzi',
-        modalAddressNumber: '',
-        modalAddressCity: '',
-        modalCardType: '',
-        modalCardName: '',
-        modalCardSurname: '',
-        modalCardExpireMonth:'',
-        modalCardExpireYear: '',
-        modalCardCCV: '',
       }
     },
     methods: {},
@@ -91,6 +166,7 @@
       });
     });
 </script>
+
 <style>
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
 html {
@@ -160,5 +236,8 @@ body {
     color: black;
     background-color: rgb(254, 165, 45);
     border-color: rgb(254, 165, 45);
+}
+.row {
+  margin-bottom: 0.5em ;
 }
 </style>
