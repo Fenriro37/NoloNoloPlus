@@ -1,119 +1,182 @@
 <template>
-  <div>
-    <div class="container-fluid p-5">
-      <h1> Account </h1>
-      <div class="row">
-        <div class="col-3">
-          <p>Name:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="name">
-        </div>
+  <div class="container-fluid " >
+    <h1> Account </h1>
+    <div class="row ">
+      <div class="col-3 ">
+        <p>Nome:</p>
       </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p>Surname:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="surname"><br>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-3">
-          <p>Sex:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="sex"><br>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p>Birthday:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="birthday.day">
-          <input type="text" :value="birthday.month">
-          <input type="text" :value="birthday.year"><br>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p>Phone Number:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="phoneNumber"><br>
-        </div>
-      </div>
-        
-      <div class="row">
-        <div class="col-3">
-          <p>E-mail:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="email"><br>
-        </div>
-      </div>
-        
-      <div class="row">
-        <div class="col-3">
-          <p>Address:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="address.addressStreet">
-          <input type="text" :value="address.addressNumber">
-          <input type="text" :value=" address.addressCity"><br>
-        </div>
-      </div>
-
-      <div class="row">
-        <b>Payment</b>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Card Type:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="payment.cardType">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Card Name:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="payment.cardName">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Card Surname:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="payment.cardSurname">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Card Expire Date:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="payment.cardExpireMonth">
-          <input type="text" :value="payment.cardExpireYear">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Card CVV:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" value="DA DEFINIRE">
-        </div>
+      <div class="col-9 ">
+        <input type="text" :value="name">
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Cognome:</p>
+      </div>
+      <div class="col-9">
+        <input type="text" :value="surname">
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-3">
+        <p>Sesso:</p>
+      </div>
+      <div class="col-9">
+        <select class="form-select" aria-label="Default select example">
+          <option value="1" selected>M</option>
+          <option value="2">F</option>
+          <option value="3">Altro</option>
+        </select>
+      </div>
+    </div>
+      
+    <div class="row">
+      <div class="col-3">
+        <p>Numbero di Telefono:</p>
+      </div>
+      <div class="col-9">
+        <input type="text" :value="phoneNumber">
+      </div>
+    </div>
+      
+    <div class="row">
+      <div class="col-3">
+        <p>E-mail:</p>
+      </div>
+      <div class="col-9">
+        <input type="text" :value="email">
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3">
+        <b>Data di nascita</b>
+      </div>
+    </div>
+
+    <div class="row">  
+      <div class="col-3">
+        <p>Giorno:</p>
+      </div>
+      <div class="col-9">
+        <input type="number" :value="birthday.day" min="1" max="31">          
+      </div>
+    </div>
+    
+    <div class="row">  
+      <div class="col-3">
+        <p>Mese:</p>
+      </div>
+      <div class="col-9">
+        <input type="number" :value="birthday.month" min="1" max="12">  
+      </div>
+    </div> 
+
+    <div class="row">  
+      <div class="col-3">
+        <p>Anno:</p>
+      </div>
+      <div class="col-9">
+        <input type="number" :value="birthday.year" min="1940" max="2021">  
+      </div>
+    </div>   
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3">
+        <b>Indirizzo</b>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        Via:
+      </div>
+      <div class="col-9">
+        <input type="text" :value="address.addressStreet">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        Numero:
+      </div>
+      <div class="col-9">
+        <input type="number" :value="address.addressNumber">
+      </div>
+    </div> 
+
+    <div class="row">
+      <div class="col-3">
+        Città:
+      </div>
+      <div class="col-9">
+        <input type="text" :value="address.addressCity">
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <b>Pagamenti</b>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <p>Tipo di carta:</p>
+      </div>
+      <div class="col-9">
+        <input type="text" :value="payment.cardType">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <p>Nome carta:</p>
+      </div>
+      <div class="col-9">
+        <input type="text" :value="payment.cardName">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <p>Proprietario:</p>
+      </div>
+      <div class="col-9">
+        <input type="text" :value="payment.cardSurname">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Data scadenza:</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Mese:</p>
+      </div>
+
+      <div class="col-9">
+        <input type="number" :value="payment.cardExpireMonth" min="1" max="12">  
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Anno:</p>
+      </div>        
+      <div class="col-9">
+        <input type="number" :value="payment.cardExpireYear" min="2021" max="2025">
+      </div>
+    </div>
+
+    <button type="button" id="rentProduct" class="btn btn-lg btn-secondary">Modifica</button>
+    <button type="button" class="btn btn-lg btn-danger"  >Cancella</button>
   </div>
 </template>
 
@@ -130,7 +193,7 @@
         surname: 'Mari',
         sex:'M',
         birthday: {
-          year: '1890',
+          year: '1990',
           month: '11',
           day: '30',
         },
@@ -148,7 +211,7 @@
           cardSurname: 'Vitali',
           cardExpireMonth: '7',
           cardExpireYear: '24',
-          cardCCV: '111'
+          cardCVV: '111'
         },
       }
     },
@@ -180,62 +243,19 @@ body {
     height: 100%;
 }
 .container-fluid {
-    margin-left: auto;
-    margin-right: auto;
     background-color: rgb(201, 201, 238);
-}
-.img-thumbnail {
-    padding: 0.5em;
-    background-color: rgb(156, 156, 156);
-    border: 0px;
-    display: block;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
 }
 .input-group {
     margin-left: auto;
     margin-right: auto;
 }
-.checked {
-    color: orange;
-    border-color: rgb(0, 0, 0);
-    border-width: 0.5em;
-}
-.price {
-    font-size: x-large;
-}
 .input-group-text {
     width: 2.5em;
 }
-#myDDButton {
-    background-color: hsl(0, 0%, 82%);
-}
-.big-size {
-    transform: scale(1.4);
-    margin-right: 0.5em;
-}
-.badge {
-    font-size: medium;
-    margin-right: 0.125em;
-}
+
 .btn-lg {
     margin-right: 0.5em;
     margin-bottom: 0.5rem;
-}
-#onSalePrice {
-    color: rgb(232, 38, 38);
-}
-.form-switch {
-    margin-left: 7.2em;
-}
-.custom-switch {
-    margin-right: 0.5em;
-}
-#rentProduct {
-    color: black;
-    background-color: rgb(254, 165, 45);
-    border-color: rgb(254, 165, 45);
 }
 .row {
   margin-bottom: 0.5em ;
