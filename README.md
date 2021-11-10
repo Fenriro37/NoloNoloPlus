@@ -2,9 +2,12 @@ Progetto TecWeb 2020/2021
 
 CamelNotation
 
-Lingua per i commenti: Italiano
+Commenti
+- lingua italiana
+- lunghezza riga 80 caratteri (compreso)
 
 API, divisi per soggetti:
+```
 - visitatore
     - registrazione                 POST    /api/public/sign-up/
     - login                         POST    /api/public/login/
@@ -50,6 +53,7 @@ API, divisi per soggetti:
     - sui dipendenti                GET     /api/stat/worker?id=...
     - sulle categorie               GET     /api/stat/category?name=...
     - sui noleggi                   GET     /api/stat/reservation?id=...
+```
 
 Client invia una richiesta HTTP con:
 - Metodo
@@ -65,6 +69,7 @@ Client invia una richiesta HTTP con:
 
 API per Mongo: https://docs.mongodb.com/drivers/node/current/
 API di Mongo per il server:
+```
 - visitatore
     - registrazione
         - controllare se esiste l'email                         - clienti.findOne
@@ -119,5 +124,7 @@ API di Mongo per il server:
     - sui dipendenti
     - sulle categorie
     - sui noleggi
-
-    Si fanno find su tutto il DB
+```
+**NB:** `sort` è un JSON del tipo: `{ attribututeToSort: value }` dove `value` vale:
+- `1` se è crescente
+- `-1` se è decrescente

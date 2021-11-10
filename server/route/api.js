@@ -3,10 +3,11 @@ const myMongo = require("../database/mongo.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("./../config");
+const { response } = require("express");
   
-
 // Ottieni un prodotto
 router.get('/product', myMongo.searchProduct);
+
 // Sign up
 router.post("/sign-up", async function(req, res) {
     const {
@@ -119,8 +120,6 @@ router.post("/update/product", async function(req, res) {
         quality: quality
     }
 
-
-
     const result = await myMongo.editProduct(id, query);
     if(result.status == '400') {
         res.status(400).send(result.message);
@@ -130,6 +129,11 @@ router.post("/update/product", async function(req, res) {
         res.status(404).send("SOS");
     }
 
+});
+
+router.get('/test', async function(req, res) {
+    let response = await myMongo.usersFind("Han", { userName: 1, userSurname: 1});
+    res.send(response);
 });
 
 module.exports = router;
