@@ -1,52 +1,63 @@
 <template>
   <div class="container-fluid " >
     <h1> Account </h1>
+
     <div class="row ">
       <div class="col-3 ">
-        <p>Nome:</p>
+        <p><span v-if="boolModify">* </span>Nome:</p>
       </div>
       <div class="col-9 ">
-        <input type="text" :value="name">
+        <!-- ModifyOn/Off -->
+        <input id="name" type="text" :value="name"  :readonly="!boolModify">
       </div>
     </div>
 
     <div class="row">
       <div class="col-3">
-        <p>Cognome:</p>
+        <p><span v-if="boolModify">* </span>Cognome:</p>
       </div>
       <div class="col-9">
-        <input type="text" :value="surname">
+        <input id="surname" type="text" :value="surname" :readonly="!boolModify">
+      </div>
+    </div>
+
+    <div class="row ">
+      <div class="col-3 ">
+        <p>ID:</p>
+      </div>
+      <div class="col-9 ">
+        <input type="text" :value="identifier" readonly>
       </div>
     </div>
     
     <div class="row">
       <div class="col-3">
-        <p>Sesso:</p>
+        <p><span v-if="boolModify">* </span>Sesso:</p>
       </div>
       <div class="col-9">
-        <select class="form-select" aria-label="Default select example">
-          <option value="1" selected>M</option>
-          <option value="2">F</option>
-          <option value="3">Altro</option>
+        <select id="sex" class="form-select" aria-label="Default select example" :disabled="!boolModify">
+          <option value="1" :selected="sex === 1">M</option>
+          <option value="2" :selected="sex === 2">F</option>
+          <option value="3" sel:selected="sex === 3">Altro</option>
         </select>
       </div>
     </div>
       
     <div class="row">
       <div class="col-3">
-        <p>Numbero di Telefono:</p>
+        <p><span v-if="boolModify">* </span>Numbero di Telefono:</p>
       </div>
       <div class="col-9">
-        <input type="text" :value="phoneNumber">
+        <input id="phoneNumber" type="text" :value="phoneNumber" :readonly="!boolModify">
       </div>
     </div>
       
     <div class="row">
       <div class="col-3">
-        <p>E-mail:</p>
+        <p><span v-if="boolModify">* </span>E-mail:</p>
       </div>
       <div class="col-9">
-        <input type="text" :value="email">
+        <input id="email" type="text" :value="email" :readonly="!boolModify">
       </div>
     </div>
 
@@ -60,28 +71,28 @@
 
     <div class="row">  
       <div class="col-3">
-        <p>Giorno:</p>
+        <p><span v-if="boolModify">* </span>Giorno:</p>
       </div>
       <div class="col-9">
-        <input type="number" :value="birthday.day" min="1" max="31">          
+        <input type="number" id="day" :value="birthday.day" min="1" max="31" :readonly="!boolModify">          
       </div>
     </div>
     
     <div class="row">  
       <div class="col-3">
-        <p>Mese:</p>
+        <p><span v-if="boolModify">* </span>Mese:</p>
       </div>
       <div class="col-9">
-        <input type="number" :value="birthday.month" min="1" max="12">  
+        <input type="number" id="month" :value="birthday.month" min="1" max="12" :readonly="!boolModify">  
       </div>
     </div> 
 
     <div class="row">  
       <div class="col-3">
-        <p>Anno:</p>
+        <p><span v-if="boolModify">* </span>Anno:</p>
       </div>
       <div class="col-9">
-        <input type="number" :value="birthday.year" min="1940" max="2021">  
+        <input id="year" type="number" :value="birthday.year" min="1940" max="2021" :readonly="!boolModify">  
       </div>
     </div>   
 
@@ -95,28 +106,29 @@
 
     <div class="row">
       <div class="col-3">
-        Via:
+        <span v-if="boolModify">* </span>Via:
       </div>
       <div class="col-9">
-        <input type="text" :value="address.addressStreet">
+        <input id="street" type="text" :value="address.addressStreet" :readonly="!boolModify">
       </div>
     </div>
 
     <div class="row">
       <div class="col-3">
-        Numero:
+        <span v-if="boolModify">* </span>Numero:
       </div>
       <div class="col-9">
-        <input type="number" :value="address.addressNumber">
+        <input id="streetNumber" type="number" :value="address.addressNumber" :readonly="!boolModify">
+
       </div>
     </div> 
 
     <div class="row">
       <div class="col-3">
-        Città:
+        <span v-if="boolModify">* </span>Città:
       </div>
       <div class="col-9">
-        <input type="text" :value="address.addressCity">
+        <input id="city" type="text" :value="address.addressCity" :readonly="!boolModify">
       </div>
     </div>
 
@@ -127,26 +139,26 @@
     </div>
     <div class="row">
       <div class="col-3">
-        <p>Tipo di carta:</p>
+        <p><span v-if="boolModify">* </span>Tipo di carta:</p>
       </div>
       <div class="col-9">
-        <input type="text" :value="payment.cardType">
+        <input id="cardType" type="text" :value="payment.cardType" :readonly="!boolModify">
       </div>
     </div>
     <div class="row">
       <div class="col-3">
-        <p>Nome carta:</p>
+        <p><span v-if="boolModify">* </span>Nome carta:</p>
       </div>
       <div class="col-9">
-        <input type="text" :value="payment.cardName">
+        <input id="cardName" type="text" :value="payment.cardName" :readonly="!boolModify">
       </div>
     </div>
     <div class="row">
       <div class="col-3">
-        <p>Proprietario:</p>
+        <p><span v-if="boolModify">* </span>Proprietario:</p>
       </div>
       <div class="col-9">
-        <input type="text" :value="payment.cardSurname">
+        <input id="cardOwner" type="text" :value="payment.cardSurname" :readonly="!boolModify">
       </div>
     </div>
 
@@ -156,27 +168,30 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p>Mese:</p>
+    <div class="row" >
+      <div class="col-3 tab">
+        <p><span v-if="boolModify">* </span>Mese:</p>
       </div>
-
       <div class="col-9">
-        <input type="number" :value="payment.cardExpireMonth" min="1" max="12">  
+        <input id="expireMonth" type="number" :value="payment.cardExpireMonth" min="1" max="12" :readonly="!boolModify"> 
       </div>
     </div>
 
     <div class="row">
-      <div class="col-3">
-        <p>Anno:</p>
+      <div class="col-3 tab">
+        <p><span v-if="boolModify">* </span>Anno:</p>
       </div>        
       <div class="col-9">
-        <input type="number" :value="payment.cardExpireYear" min="2021" max="2025">
+        <input id="expireYear" type="number" :value="payment.cardExpireYear" min="2021" max="2025" :readonly="!boolModify">
       </div>
     </div>
 
-    <button type="button" id="rentProduct" class="btn btn-lg btn-secondary">Modifica</button>
-    <button type="button" class="btn btn-lg btn-danger"  >Cancella</button>
+    <button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary"  v-on:click="boolModify = !boolModify">Modifica</button>
+    <button v-if="boolModify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</button>
+    <button v-if="boolModify" type="button" class="btn btn-lg btn-danger">Annulla</button>
+
+
+    <button type="button" class="btn btn-lg btn-danger delete">Elimina cliente</button>
   </div>
 </template>
 
@@ -191,7 +206,7 @@
         identifier: '4485423185',
         name: 'Mario',
         surname: 'Mari',
-        sex:'M',
+        sex: 2,
         birthday: {
           year: '1990',
           month: '11',
@@ -213,9 +228,110 @@
           cardExpireYear: '24',
           cardCVV: '111'
         },
+        //Modalità Modifica
+        boolModify: false,
       }
     },
-    methods: {},
+    methods: {
+
+      saveData(){
+        let query = {}
+
+        if(document.getElementById('name').value != this.name)
+          query.userName = document.getElementById('name').value;
+          
+        if(document.getElementById('surname').value != this.surname)
+          query.userSurname = document.getElementById('surname').value;
+          
+        if(document.getElementById('sex').value != this.sex)
+          query.sex = document.getElementById('sex').value;
+          
+        if(document.getElementById('phoneNumber').value != this.phoneNumber)
+          query.phoneNumber = document.getElementById('phoneNumber').value;
+          
+        if(document.getElementById('email').value != this.email)
+          query.email = document.getElementById('email').value;
+          
+        if(document.getElementById('day').value != this.birthday.day){
+          if(query.birthday === undefined){
+            query.birthday = {}
+          }
+          query.birthday.day = document.getElementById('day').value;
+        }
+          
+        if(document.getElementById('month').value != this.birthday.month){
+          if(query.birthday === undefined){
+            query.birthday = {}
+          }
+          query.birthday.month = document.getElementById('month').value;
+        }
+
+        if(document.getElementById('year').value != this.birthday.year){
+          if(query.birthday === undefined){
+            query.birthday = {}
+          }
+          query.birthday.year = document.getElementById('year').value;
+        }
+
+        if(document.getElementById('street').value != this.address.addressStreet){
+          if(query.address === undefined){
+            query.address = {}
+          }
+          query.address.addressStreet = document.getElementById('street').value;
+        }
+          
+        if(document.getElementById('streetNumber').value != this.address.addressNumber){
+          if(query.address === undefined){
+            query.address = {}
+          }
+          query.address.addressNumber = document.getElementById('streetNumber').value;
+        }
+
+        if(document.getElementById('city').value != this.address.addressCity){
+          if(query.address === undefined){
+            query.address = {}
+          }
+          query.address.addressCity = document.getElementById('city').value;
+        }
+
+        if(document.getElementById('cardType').value != this.payment.cardType){
+          if(query.payment === undefined){
+            query.payment = {}
+          }
+          query.payment.cardType = document.getElementById('cardType').value;
+        }
+
+        if(document.getElementById('cardName').value != this.payment.cardName){
+          if(query.payment === undefined){
+            query.payment = {}
+          }
+          query.payment.cardName = document.getElementById('cardName').value;
+        }
+
+        if(document.getElementById('cardOwner').value != this.payment.cardSurname){
+          if(query.payment === undefined){
+            query.payment = {}
+          }
+          query.payment.cardSurname = document.getElementById('cardOwner').value;
+        }
+
+        if(document.getElementById('expireMonth').value != this.payment.cardExpireMonth){
+          if(query.payment === undefined){
+            query.payment = {}
+          }
+          query.payment.cardExpireMonth = document.getElementById('expireMonth').value;
+        }
+
+        if(document.getElementById('expireYear').value != this.payment.cardExpireYear){
+          if(query.payment === undefined){
+            query.payment = {}
+          }
+          query.payment.cardExpireYear = document.getElementById('expireYear').value;
+        }
+
+        console.log(query);
+      }
+    },
      
     computed: {},
   }
@@ -259,5 +375,11 @@ body {
 }
 .row {
   margin-bottom: 0.5em ;
+}
+.tab{
+  padding-left: 2.5em;
+}
+.delete {
+  float: right
 }
 </style>
