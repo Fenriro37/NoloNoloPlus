@@ -1,16 +1,42 @@
 <template>
   <div class="container-fluid ">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-6">
-          <b-img v-bind:src="bookedArticles.image" class="img-thumbnail"></b-img>
-        </div>
-        <div class="col-6">
-          <p>{{bookedArticles.title + ' ' +bookedArticles.brand}}</p>
-        </div>
+    <div class="row">
+      <div class="col-6">
+        <b-img v-bind:src="bookedArticles.image" class="img-thumbnail"></b-img>
       </div>
-      <div class="row"><p>{{notes}}</p></div>
+      <div class="col-6">
+        <p> {{bookedArticles.title + ' ' +bookedArticles.brand}}</p>
+        <p> Id Articolo: <a href="">{{ bookedArticles.identifier}}</a></p>
+        <p> Id Cliente: <a href="">{{ identifier}}</a></p>
+        <p>Prezzo: {{bookedArticles.price}}€ (da rivedere)</p>
+      </div>
     </div>
+    <div class="row">
+      <p>Data richiesta prenotazione: {{bookingRequest.day + '/' + bookingRequest.month + '/' + bookingRequest.year}}</p>  
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <p>Data inizio prenotazione: {{bookingStart.day + '/' + bookingStart.month + '/' + bookingStart.year}}</p> 
+      </div>
+      <div class="col-4">
+        <input type="checkbox">
+        <label > Avvenuta Consegna</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <p>Data fine prenotazione: {{bookingEnd.day + '/' + bookingEnd.month + '/' + bookingEnd.year}}</p> 
+      </div>
+      <div class="col-4">
+        <input type="checkbox">
+        <label > Avvenuta Restituzione </label>
+      </div>
+    </div>
+    <div class="row"><p>{{notes}}</p></div>
+    <div class="row"><p>{{privateNotes}}</p></div>
+
+    <button class="btn btn-lg btn-secondary"> Modifica</button>
+    <button class="btn btn-lg btn-danger"> Cancella prenotazione</button>
   </div>
 </template>
 
@@ -53,7 +79,7 @@
         rentalOccurred: false,             //avvenuto noleggio (booleano)
         returned: false,               //avvenuta restituzione (booleano)
         notes:'Questa è una prenotazione',                //note 1 (dettagli sul prezzo o altro)                        
-        privateNotes:''                //note 2 (dettagli non visibili al cliente)
+        privateNotes:'Questo è privato'                //note 2 (dettagli non visibili al cliente)
       }
     },
     methods: {},
@@ -114,18 +140,6 @@ body {
     width: 40%;
     margin-left: auto;
     margin-right: auto;
-}
-</style>
-
-.btn-lg {
-    margin-right: 0.5em;
-    margin-bottom: 0.5rem;
-}
-.row {
-  margin-bottom: 0.5em ;
-}
-.tab{
-  padding-left: 2.5em;
 }
 .delete {
   float: right
