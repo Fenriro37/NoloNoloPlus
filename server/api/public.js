@@ -2,9 +2,12 @@
 const router = require('express').Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cookieParser = require('cookie-parser');
 // Librerie interne
 const myMongo = require('../database/mongo.js');
 const config = require('./../config');
+
+router.use(cookieParser());
 
 // POST - /api/public/sign-up
 // Registrazione account
@@ -13,17 +16,20 @@ router.post('/sign-up', async function(req, res) {
         userName,
         userSurname,
         birthday,
+        sex,
         phoneNumber,
         email,
         plainTextPassword,
         address,
         paymentMethod
     } = req.body;
+    console.log(req.body);
     const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
     const newUser = {
         userName: userName,
         userSurname: userSurname,
         birthday: birthday,
+        sex: sex,
         phoneNumber: phoneNumber,
         email: email,
         password: hashedPassword,
@@ -61,9 +67,10 @@ router.post('/login', async function(req, res) {
                 },
                 config.JSONWebTokenKey
             );
-            console.log('Password corretta')
-            console.log(token)
-            return res.status(200).send(token);
+            // console.log('Password corretta')
+            // console.log(token)
+            res.cookie('JWT', token, { maxAge: 86400 * 1000 });
+            return res.status(200);
         }
     }
 });
