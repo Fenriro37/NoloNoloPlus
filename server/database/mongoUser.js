@@ -1,3 +1,7 @@
+// ----------------------------------------------------------------------------
+//                                 API Clienti
+// ----------------------------------------------------------------------------
+
 // API - MongoDB
 // Metodi che si interfacciano con le API di MongoDB
 // I metodi sono suddivisi per:
@@ -10,10 +14,6 @@ const config = require("./../config.js")
 const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
 var path = require('path');
-
-// ----------------------------------------------------------------------------
-//                                 API Clienti
-// ----------------------------------------------------------------------------
 
 // usersFind
 // ----------------------------------------------------------------------------
@@ -34,6 +34,7 @@ var path = require('path');
 //   Indica l'ordine ed può essere:
 //   - -1 se è decrescente
 //   - 1 se è crescente
+//
 // Valore di ritorno: { status, message, obj, error }
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
@@ -45,7 +46,6 @@ var path = require('path');
 //   È l'oggetto che ritorna dalle API di mongodb
 // - error
 //   È il messaggio d'errore 
-
 exports.usersFind = async function(filter, sortBy) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -78,10 +78,11 @@ exports.usersFind = async function(filter, sortBy) {
 
 // usersFindOne
 // ----------------------------------------------------------------------------
-// Parametri: (query)
-// - query
-//   È un oggetto JSON { attributo: valore } e il suo attributo deve coincidere
-//   con gli attributo nel DB; il valore dev'essere unico nel database.
+// Parametri: (id)
+// - id
+//   È un oggetto JSON { attributo: valore } dove attributo può essere:
+//   - email
+//   - _id
 //
 // Valore di ritorno: { status, message, obj, error }
 // - status 
@@ -94,7 +95,7 @@ exports.usersFind = async function(filter, sortBy) {
 // - obj
 //   È l'oggetto che ritorna dalle API di mongodb
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore
 exports.usersFindOne = async function(query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -144,10 +145,10 @@ exports.usersFindOne = async function(query) {
 //   È il messaggio d'errore 
 exports.userInsertOne = async function(user) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
-    try {
+    // try {
         await mongo.connect();
         const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName)
-        const result = await users.findOne(user.email)
+        const result = await users.findOne({ "email": user.email })
         if(result !== null) {
             await mongo.close();
             return {
@@ -162,13 +163,13 @@ exports.userInsertOne = async function(user) {
                 message: "Utente creato correttamente."
             };
         }
-    } catch(error) {
-        return {
-            status: -1,
-            message: "Errore generico.",
-            error: error
-        };
-    }
+    // } catch(error) {
+    //     return {
+    //         status: -1,
+    //         message: "Errore generico.",
+    //         error: error
+    //     };
+    // }
 }
 
 // usersUpdateOne

@@ -1,7 +1,7 @@
 // Framework esterne
 const router = require('express').Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 // Librerie interne
 const myMongo = require('../database/mongo.js');
@@ -53,13 +53,16 @@ router.post('/login', async function(req, res) {
     } = req.body;
     const mongoRes = await myMongo.searchOneUser({ email: email });
     if(mongoRes.status == '400') {
-        console.log('Email errata')
-        return res.status(400).send(mongoRes.message)
+        return res.status(400).json({
+            message: mongoRes.message
+        });
     } else {
-        const user = mongoRes.message
+        const user = mongoRes.message;
         if(await bcrypt.compare(plainTextPassword, user.password) === false) {
             console.log('Password errata')
-            return res.status(401).send('Password errata')
+            return res.status(401).json({
+                message: 'Password errata'
+            });
         } else {
             const token = jwt.sign({
                     id: user._id,
@@ -67,10 +70,11 @@ router.post('/login', async function(req, res) {
                 },
                 config.JSONWebTokenKey
             );
-            // console.log('Password corretta')
-            // console.log(token)
             res.cookie('JWT', token, { maxAge: 86400 * 1000 });
-            return res.status(200);
+            return res.status(200).json({
+                message: "Password corretta",
+                obj: token
+            });
         }
     }
 });

@@ -132,6 +132,7 @@ router.post("/update/product", async function(req, res) {
 });
 
 router.get('/test', async function(req, res) {
+    console.log("/test");
     let response = await myMongo.usersFind("Han", { userName: 1, userSurname: 1});
     res.send(response);
 });
