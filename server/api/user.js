@@ -9,11 +9,12 @@ const myMongoUser = require('../database/mongoUser.js');
 const config = require('./../config');
 
 // GET - /api/user/
-// req.query può avere un parametro :id
+// req.query può avere un parametro id
 // req.body è vuota
 // [Funzionario o Manager] Cerca i dati del cliente con l'id passato come
 // parametro.
-// [Cliente] Cerca i dati dell'utente relativo al JWT salvato tra i cookie
+// [Cliente] Cerca i dati dell'utente relativo al JWT salvato tra i cookie. Non
+// deve avere il parametro id
 router.get("/", async function(req, res) {
     console.log("GET /api/user/");
     try {
@@ -63,13 +64,14 @@ router.get("/", async function(req, res) {
 });
 
 // POST - /api/user/
-// req.query può avere un parametro :id
+// req.query può avere un parametro id
 // req.body ha due elementi:
 // - id (è l'id dell'utente da modificare)
 // - data (è un oggetto composto da dati da modificare; gli attributi devono
 //   coincidere)
-// [Funzionario o Manager] Aggiorna i dati del cliente con un certo id
-// [Cliente] Aggiorna i dati del cliente stesso
+// [Funzionario o Manager] Aggiorna i dati del cliente se gli id del parametro
+// e body sono uguali.
+// [Cliente] Aggiorna i dati del cliente stesso. Non deve avere il parametro id
 router.post("/", async function(req, res) {
     console.log("POST /api/user/");
     try {
@@ -168,9 +170,9 @@ router.get("/all", async function(req, res) {
 });
 
 // DELETE - /api/user/
-// req.query ha un parametro :id
+// req.query ha un parametro id
 // [Funzionario] Cancella l'utente con l'id passato come parametro
-router.post("/", async function(req, res) {
+router.delete("/", async function(req, res) {
     console.log("DELETE /api/user/");
     try {
         const paramId = req.query.id;
