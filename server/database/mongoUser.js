@@ -145,7 +145,7 @@ exports.usersFindOne = async function(query) {
 //   È il messaggio d'errore 
 exports.userInsertOne = async function(user) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
-    // try {
+    try {
         await mongo.connect();
         const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName)
         const result = await users.findOne({ "email": user.email })
@@ -163,13 +163,13 @@ exports.userInsertOne = async function(user) {
                 message: "Utente creato correttamente."
             };
         }
-    // } catch(error) {
-    //     return {
-    //         status: -1,
-    //         message: "Errore generico.",
-    //         error: error
-    //     };
-    // }
+    } catch(error) {
+        return {
+            status: -1,
+            message: "Errore generico.",
+            error: error
+        };
+    }
 }
 
 // usersUpdateOne

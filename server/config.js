@@ -3,7 +3,7 @@ const config = {
     // mongoUri: "mongodb://site202131:iboh2Ish@mongo_site202131?writeConcern=majority",
     databaseName: "NoloNoloPlus",
     databaseUserCollectionName: "users",
-    databaseWorkerCollectionName: "wokers",
+    databaseWorkerCollectionName: "workers",
     databaseManagerCollectionName: "managers",
     databaseProductCollectionName: "products",
     databaseReservationCollectionName: "reservations",
