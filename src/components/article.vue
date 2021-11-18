@@ -1,16 +1,5 @@
 <template>
   <div>
-    <div class="input-group w-75 mt-2 mb-2 mr-auto ml-auto">
-      <button id="myDDButton" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">Clienti</button>
-      <div class="dropdown-menu p-0">
-        <a class="dropdown-item" href="#">Clienti</a>
-        <a class="dropdown-item" href="#">Articoli</a>
-        <a class="dropdown-item" href="#">Prenotazioni</a>
-      </div>
-      <input class="form-control" type="text" placeholder="cerca">
-      <button class="btn btn-success" type="submit">
-      <img src="https://cdn.discordapp.com/attachments/888778821262790686/898238385783705610/lente-d-ingradimento.png" height="22.5em"></button>
-    </div>
     <div class="container-fluid p-5">
       <div class="row mb-5">
         <div class="col-6">
@@ -371,7 +360,7 @@
         else{ query.discount.onSaleValue = this.discount.onSaleValue }
         if(this.descriptionModal != this.description) { query.description = this.descriptionModal }
         if(this.noteModal != this.note) { query.note = this.noteModal }
-        Functions.saveData(this.identifier, query)
+        Functions.saveDataProduct(this.identifier, query)
         .then(response => {
           if(response.status == '200'){
             this.title = this.titleModal
@@ -425,6 +414,7 @@
       });
     });
 </script>
+
 <style>
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
 html {
