@@ -13,9 +13,9 @@ router.use('/public/', publicApi);
 
 router.use(authMiddleware);
 
-// router.use('/invoice/', invoiceApi);
+router.use('/invoice/', invoiceApi);
 router.use('/product/', productApi);
-// router.use('/reservation/', reservationApi);
+router.use('/reservation/', reservationApi);
 // router.use('/stat/', statApi);
 router.use('/user/', userApi);
 
