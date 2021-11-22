@@ -34,7 +34,7 @@ router.post('/sign-up', async function(req, res) {
         address: address,
         payment: paymentMethod
     };
-    const mongoRes = await myMongoUser.userInsertOne(newUser);
+    const mongoRes = await myMongoUser.usersInsertOne(newUser);
     if(mongoRes.status == 0) {
         return res.status(200).json({
             message: mongoRes.message

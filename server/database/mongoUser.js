@@ -13,7 +13,6 @@
 const config = require("./../config.js")
 const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
-var path = require('path');
 
 // usersFind
 // ----------------------------------------------------------------------------
@@ -24,16 +23,8 @@ var path = require('path');
 //   - userSurname
 //   - email
 // - sortBy
-//   È l'oggetto JSON { attributo1: valore, attributo2: valore } che indica
-//   l'ordine della ricerca. Entrambi gli attributi devono essere specificati e
-//   può essere di due tipi:
-//   - userName
-//   - userSurname
-//   Il primo attributo è più potente del secondo attributo: ordina col secondo
-//   in caso di parità.
-//   Indica l'ordine ed può essere:
-//   - -1 se è decrescente
-//   - 1 se è crescente
+//   È un numero che ordina la ricerca in maniera crescente, se vale -1, o
+//   decrescente, se vale 1. L'ordine viene effettuato per cognome e nome.
 //
 // Valore di ritorno: { status, message, obj, error }
 // - status 
@@ -57,9 +48,7 @@ exports.usersFind = async function(filter, sortBy) {
                     { userName: re },
                     { userSurname: re },
                     { email: re }
-                ]},
-                sortBy
-            );
+                ]}).sort({ userSurname: sortBy, userName: sortBy });
         let x = await result.toArray();
         await mongo.close();
         return {
@@ -143,7 +132,7 @@ exports.usersFindOne = async function(query) {
 //   È un messaggio descrittivo.
 // - error
 //   È il messaggio d'errore 
-exports.userInsertOne = async function(user) {
+exports.usersInsertOne = async function(user) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();

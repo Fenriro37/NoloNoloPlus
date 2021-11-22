@@ -1,11 +1,11 @@
 // Framework esterne
 const router = require('express').Router();
+const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
 // Librerie interne
 const myMongoAuth = require('../database/mongoAuth.js');
 const myMongoProduct = require('../database/mongoProduct.js');
 const config = require('./../config');
-const jwt = require('jsonwebtoken');
 
 // GET - /api/product
 // req.query deve avere un parametro id
@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken');
 // [Tutti] Ritorna i dati del prodotto
 router.get('/', async function(req, res) {
     console.log('GET /api/product/');
-    // try {
+    try {
         if(req.query.id == null) {
             return res.status(400).json({
                 message: 'ID mancante.'
@@ -25,12 +25,12 @@ router.get('/', async function(req, res) {
                 obj: result
             });
         }
-    // } catch(error) {
-    //     return res.status(400).json({
-    //         message: 'Errore',
-    //         error: error
-    //     });
-    // }
+    } catch(error) {
+        return res.status(400).json({
+            message: 'Errore',
+            error: error
+        });
+    }
 });
 
 // GET - /api/product/all
