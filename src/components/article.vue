@@ -245,10 +245,11 @@
         </table>
       </div>
     </div>
+    <!--
     <button v-on:click="productButton('61790b14c9f1f2e35c109866')">GetCar</button>
     <button v-on:click="productButton('616fe38696d1e399a0d12244')">GetBike</button>
     <button v-on:click="productButton('6179508e9013db333732f9eb')">GetMotorcycle</button>
-    
+    -->
   </div>
 </template>
 
@@ -256,7 +257,7 @@
   import "bootstrap/dist/css/bootstrap.min.css"
   import "bootstrap";
   import $ from 'jquery'
-  import Functions from '../src/functions/function'
+  import Functions from '../functions/function'
   export default {
     data() {
       return {
@@ -291,7 +292,7 @@
       }
     },
     methods: {
-      productButton(id) {
+        productButton(id) {
         var myData = {};
         Functions.getProduct(id)
         .then((response) => {
@@ -360,6 +361,7 @@
         else{ query.discount.onSaleValue = this.discount.onSaleValue }
         if(this.descriptionModal != this.description) { query.description = this.descriptionModal }
         if(this.noteModal != this.note) { query.note = this.noteModal }
+        
         Functions.saveDataProduct(this.identifier, query)
         .then(response => {
           if(response.status == '200'){
@@ -375,9 +377,10 @@
             this.description = this.descriptionModal
             this.note = this.noteModal
           }
-        })
+        }) 
+      },      
 
-      },
+
     },
     computed: {
       getTagsModal() {

@@ -4,7 +4,7 @@
 
     <b-row>
       <b-col cols="3" >
-        <p> Titolo:</p>
+        <p> *Titolo:</p>
       </b-col>
       <b-col cols="9">
          <b-form-input  type="text" v-model="title"></b-form-input>
@@ -13,7 +13,7 @@
 
     <b-row>
       <b-col cols="3" >
-        <p> Brand:</p>
+        <p> *Brand:</p>
       </b-col>
       <b-col cols="9" >
          <b-form-input  type="text" v-model="brand"></b-form-input>
@@ -22,7 +22,7 @@
 
     <b-row>
       <b-col cols="3" >
-        <p> Immagine:</p>
+        <p> *Immagine (Inserisci URL):</p>
       </b-col>
       <b-col cols="9" >
          <b-form-input  type="url" v-model="image"></b-form-input>
@@ -31,7 +31,7 @@
 
     <b-row>
       <b-col cols="3">
-        <p> Etichette (separare con spazio o virgola):</p>
+        <p> *Etichette (separare con spazio o virgola):</p>
       </b-col>
       <b-col cols="9" >
          <b-form-input  type="text" v-model="tags"></b-form-input>
@@ -40,7 +40,7 @@
   
     <b-row>
       <b-col cols="3" >
-        <p> Qualità:</p>
+        <p> *Qualità:</p>
       </b-col>
       <b-col cols="9" >
         <b-form-input v-model="quality" type="number" min="1" max="3" step="1"></b-form-input>
@@ -49,7 +49,7 @@
 
     <b-row>
       <b-col cols="3" >
-        <p> Prezzo:</p>
+        <p> *Prezzo:</p>
       </b-col>
       <b-col cols="9" >
         <b-form-input v-model="price" type="number" min="1" step="1"></b-form-input>
@@ -115,7 +115,7 @@
 
     <b-row>
       <b-col cols="3">
-        <p> Descrizione:</p>
+        <p> *Descrizione:</p>
       </b-col>
       <b-col cols="9">
         <b-form-input v-model="description" type="text"></b-form-input>
@@ -133,11 +133,11 @@
 
     <b-row>
       <b-col cols="3">
-         <b-button variant="success" @click="createArticle">Salva</b-button>
+        <b-button variant="success" @click="createArticle">Salva</b-button>
       </b-col>
 
       <b-col cols="3">
-         <b-button variant="danger" @click="cancel" >Annulla</b-button>
+        <b-button variant="danger" @click="cancel" >Annulla</b-button>
       </b-col>
     </b-row>
  
@@ -146,6 +146,7 @@
 </template>
 
 <script>
+  import Functions from '../functions/function'
   export default {
     name: "create-article", 
     data() {
@@ -154,12 +155,12 @@
         brand: '',
         image: '',
         tags: '',
-        quality: 0,
-        price: 0,
+        quality: 1,
+        price: '',
         
         onSale: false,
         onSaleType: false,
-        onSaleValue: 0,
+        onSaleValue: '',
 
         available: true,
         description: '',
@@ -175,29 +176,60 @@
       },
 
       createArticle(){
+      //controllare date prezzo e campi non vuoti
+      let query = {};
+      
+      if(this.title == ''){ return (alert('Il campo titolo non può essere vuoto'))}
+      else query.title = this.title;
 
+      if(this.brand == ''){return(alert('Il campo brand non può essere vuoto'))}
+      else query.brand = this.brand;
+
+      if(this.image == ''){return(alert('Il campo immagine non può essere vuoto'))}
+      else query.image = this.image;
+
+      if(this.tags == ''){return(alert('Il campo etichette non può essere vuoto'))}
+      else{
         //trasformiamo le etichette in array
-        //let newTags = this.tags.replace(/,/g, ' ');
-        //newTags = newTags.split(" ");
 
+        let newTags = this.tags.replace(/,/g, ' ');
 
+        newTags = [...new Set(newTags.split(" "))];
+        
+        for (let i = 0; i < newTags.length;i++){
+           if(newTags[i] == ""){
+            newTags.splice(i,1);
+          }
+        }        
+        query.tags = newTags;
+      }
 
-        //INVIO DATI//
-        this.title = '';
-        this.brand = '';
-        this.image = '';
-        this.tags = '';
-        this.quality = 0;
-        this.price = 0;
+      if(this.quality < 1 || this.quality > 3 ){return(alert('Il campo qualità deve essere compreso tra 1 e 3'))}
+      else query.image = this.image;
 
-        this.onSale = false;
-        this.onSaleType = false;
-        this.onSaleValue = 0;
+      if(this.price == ''){return (alert('Il campo prezzo non può essere vuoto'))}
+      if(this.price < 0){return(alert("Il prezzo deve essere maggiore di '0'"))}
+      else query.price = this.price;
 
-        this.available = false;
-        this.description = '';
-        this.note = ''
-        //RIMANDI ALLA HOME
+      query.onSale = this.onSale;
+      query.onSaleType = this.onSaleType;
+      if(this.onSale == true && this.onSaleValue == '' ){return (alert('inserire lo sconto da applicare'))}
+      if(this.onSale == true && this.onSaleValue < 0 ){return (alert('lo sconto da applicare deve essere maggiore di zero'))}
+      query.onSaleValue = this.onSaleValue;
+
+      query.available = this.available;
+      
+      if(this.description == ''){return(alert('Il campo descrizione non può essere vuoto'))}
+      else query.description = this.description;
+
+      //invio dati
+       Functions.addReservation(query)
+        .then(function(){
+
+        //svuotiamo i valori
+        this.cancel();
+        alert("Creazione riuscita")
+        })        
       },
 
       cancel(){
@@ -205,14 +237,14 @@
         this.brand = '';
         this.image = '';
         this.tags = '';
-        this.quality = 0;
-        this.price = 0;
+        this.quality = 1;
+        this.price = '';
 
         this.onSale = false;
         this.onSaleType = false;
-        this.onSaleValue = 0;
+        this.onSaleValue = '';
 
-        this.available = false;
+        this.available = true;
         this.description = '';
         this.note = ''
         //RIMANDI ALLA HOME
