@@ -126,11 +126,11 @@
           brand:'deGasperi',
           image:'https://acquisti.corriere.it/wp-content/uploads/2021/05/BIciclette-Via-Veneto.jpeg',
           price:2000,
-         /*  discount: {    //per risalire allo sconto 
+          discount: {    //per risalire allo sconto 
             onSale: false,
             onSaleType: false,  //percentuale o fisso
             onSaleValue: 0
-          }, */
+          },
         },
         bookingRequest: '12/1/2021', //richiesta noleggio
         bookingStart: '12/2/2021',   //inizio noleggio
@@ -182,20 +182,26 @@
       },
 
       saveData(){
+        if(this.copyPrice <= 0){ return (alert('Il prezzo deve essere un numero positivo'))}
+        if(this.copyBookingRequest > this.copyBookingStart){ return (alert('Il campo Data richiesta prenotazione non può essere superiore rispetto alla data inizio prenotazione'))}
+        if(this.copyBookingStart > this.copyBookingEnd){ return (alert('Il campo Data inizio prenotazione non può essere superiore rispetto alla data fine prenotazione'))}
+        if(this.copyRentalOccurred == false && this.copyReturned){ return (alert("L'articolo non può essere stato restituito se non è stato consegnato"))}
+
+
         let query = {}
 
-        if(this.copyPrice != this.price)
+        if(this.copyPrice != this.bookedArticles.price)
           query.price = this.copyPrice;
 
-        /* if(this.copyOnSale != this.discount.onSale)
+        if(this.copyOnSale != this.bookedArticles.discount.onSale)
           query.onSale = this.copyOnSale;
 
-        if(this.copyOnSaleType != this.discount.onSaleType)
+        if(this.copyOnSaleType != this.bookedArticles.discount.onSaleType)
           query.onSaleType = this.copyOnSaleType;
 
-        if(this.copyOnSaleValue != this.discount.onSaleValue)
-          query.onSaleValue = this.copyOnSaleValue; */
-          
+        if(this.copyOnSaleValue != this.bookedArticles.discount.onSaleValue)
+          query.onSaleValue = this.copyOnSaleValue; 
+        
         if(this.copyBookingRequest != this.bookingRequest)
           query.bookingRequest = this.copyBookingRequest;
 
@@ -235,7 +241,7 @@
           this.privateNotes  = this.copyPrivateNotes
 
             
-            this.boolModify = false;
+          this.boolModify = false;
             }
         })
 

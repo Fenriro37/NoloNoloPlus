@@ -19,6 +19,10 @@ class Functions {
         return http.post("/api/save/product?id=" + id + "&&acs=2", query)
     }
 
+    saveReservation(id, query){
+        return http.post("/api/save/reservation?id=" + id + "&&acs=2", query)
+    }
+
 }
 
 export default new Functions();
