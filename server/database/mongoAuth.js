@@ -1,21 +1,36 @@
 // ----------------------------------------------------------------------------
-//                                API Autenticazione
+//                           MongoDB API - Autenticazione
 // ----------------------------------------------------------------------------
 
-// API - MongoDB
-// Metodi che si interfacciano con le API di MongoDB
-// I metodi sono suddivisi per:
-// - Auth
-// - Clienti
-// - Prodotti
-// - Funzionari
-// - Manager
-
-const config = require('./../config.js')
+// Moduli
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const config = require('./../config.js');
 
+// auth
+// ----------------------------------------------------------------------------
+// Cerca nel database l'utente passato per parametro e ritorna il suo livello
+// di accessibilità.
+//
+// Parametri: (query)
+// - query
+//   È un oggetto JSON di tipo { attributo: valore } dove l'attributo è _id e
+//   e il valore è un ObjectId
+//
+// Valore di ritorno: { status, message, error }
+// - status 
+//   Indica se il programma è andato a buon fine e il livello d'accessibilità
+//   del cliente, che può essere:
+//      - -2 -> Utente inesistente
+//      - -1 -> Errore generico
+//      -  0 -> Cliente
+//      -  1 -> Funzionario
+//      -  2 -> Manager
+// - message
+//   È un messaggio descrittivo.
+// - error
+//   È l'errore. 
 exports.auth = async function(query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -44,19 +59,45 @@ exports.auth = async function(query) {
         } else {
             await mongo.close();
             return {
-                status: -1,
-                message: 'Errore'
+                status: -2,
+                message: 'Utente inesistente'
             }
         }
     } catch (error) {
+        await mongo.close();
         return {
             status: -1,
-            message: 'Errore generico.',
+            message: 'Errore di auth.',
             obj: error
-        };
+        }
     }
 }
 
+// login
+// ----------------------------------------------------------------------------
+// Cerca nel database l'utente, sottoforma di email, passato per parametro e
+// controlla se la password combacia con la password inviata per parametro.
+//
+// Parametri: (queryEmail, plainTextPassword)
+// - queryEmail
+//   È l'email da cercare nel database
+// - plainTextPassord
+//   È la password da confrontare con quella nel database
+//
+// Valore di ritorno: { status, message, error }
+// - status 
+//   Indica se il programma è andato a buon fine e il livello d'accessibilità
+//   del cliente, che può essere:
+//      - -3 -> Errore dell'email
+//      - -2 -> Errore della password
+//      - -1 -> Errore generico
+//      -  0 -> OK (cliente)
+//      -  1 -> OK (funzionario)
+//      -  2 -> OK (manager)
+// - message
+//   È un messaggio descrittivo.
+// - error
+//   È l'errore. 
 exports.login = async function(queryEmail, plainTextPassword) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -67,7 +108,7 @@ exports.login = async function(queryEmail, plainTextPassword) {
         const resultUser = await users.findOne({ email: queryEmail });
         const resultWorker = await workers.findOne({ email: queryEmail });
         const resultManager = await managers.findOne({ email: queryEmail });
-
+        await mongo.close();
         if(resultUser != null) {
             if(await bcrypt.compare(plainTextPassword, resultUser.password) === true) {
                 // È un cliente
@@ -78,15 +119,14 @@ exports.login = async function(queryEmail, plainTextPassword) {
                     },
                     config.JSONWebTokenKey
                 );
-                await mongo.close();
                 return {
                     status: 0,
+                    message: 'Login del cliente avvenuto con successo.',
                     obj: token
                 }
             } else {
-                await mongo.close();
                 return {
-                    status: 1,
+                    status: -2,
                     message: 'Password cliente errata.'
                 }
             }
@@ -99,15 +139,14 @@ exports.login = async function(queryEmail, plainTextPassword) {
                     },
                     config.JSONWebTokenKey
                 );
-                await mongo.close();
                 return {
-                    status: 0,
+                    status: 1,
+                    message: 'Login del funzionaro avvenuto con successo.',
                     obj: token
                 }           
             } else {
-                await mongo.close();
                 return {
-                    status: 1,
+                    status: -2,
                     message: 'Password funzionario errata.'
                 }
             }
@@ -120,21 +159,20 @@ exports.login = async function(queryEmail, plainTextPassword) {
                     },
                     config.JSONWebTokenKey
                 );
-                await mongo.close();
                 return {
-                    status: 0,
+                    status: 2,
+                    message: 'Login del manager avvenuto con successo.',
                     obj: token
                 }
             } else {
-                await mongo.close();
                 return {
-                    status: 1,
+                    status: -2,
                     message: 'Password manager errata.'
                 }
             }
         } else {
             return {
-                status: 2,
+                status: -3,
                 message: 'Email non trovata.'
             }
         }
@@ -142,7 +180,8 @@ exports.login = async function(queryEmail, plainTextPassword) {
         await mongo.close();
         return {
             status: -1,
-            message: 'Errore generico. ' + error
+            message: 'Errore di login.',
+            error: error
         };
     }
 }

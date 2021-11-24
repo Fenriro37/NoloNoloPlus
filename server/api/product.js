@@ -1,78 +1,141 @@
-// Framework esterne
+// ----------------------------------------------------------------------------
+//                         NoloNoloPlus API - Prodotti
+// ----------------------------------------------------------------------------
+
+// Moduli
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
-// Librerie interne
 const myMongoAuth = require('../database/mongoAuth.js');
 const myMongoProduct = require('../database/mongoProduct.js');
 const config = require('./../config');
 
-// GET - /api/product
-// req.query deve avere un parametro id
-// req.body è vuota
-// [Tutti] Ritorna i dati del prodotto
+// GET /api/product
+// ----------------------------------------------------------------------------
+// [Tutti] Ritorna i dati del prodotto con id passato per parametro.
+// 
+// Header:
+// - Parametri
+//   - id - string
+//     È l'id del prodotto.
+// Body: vuoto
+//
+// Valori di ritorno: { message, data, error }
+// - message
+//   È un messaggio descrittivo.
+// - data
+//   Sono i dati da ritornare al chiamante.
+// - error
+//   È l'errore.
 router.get('/', async function(req, res) {
     console.log('GET /api/product/');
     try {
         if(req.query.id == null) {
+            // Parametro mancante
             return res.status(400).json({
                 message: 'ID mancante.'
             })
         } else {
             const result = await myMongoProduct.productsFindOne(req.query.id);
-            return res.status(200).json({
-                message: 'Ricerca effettuata con successo.',
-                obj: result
-            });
+            if(result.status == 0) {
+                // OK
+                return res.status(200).json({
+                    message: 'Ricerca effettuata con successo.',
+                    data: result
+                });    
+            } else {
+                // Errore database
+                return res.status(400).json({
+                    message: result.message,
+                    error: result.obj
+                });
+            }
         }
     } catch(error) {
         return res.status(400).json({
-            message: 'Errore',
+            message: 'Errore di GET /api/product/',
             error: error
         });
     }
 });
 
-// GET - /api/product/all
-// req.body ha due elementi:
-// - filter (è la stringa che filtra il database per title e brand)
-// - sort (è un booleano che ordina i dati in maniera crescente, true, o in
-//   maniera decrescente, false)
-// [Tutti] Ritorna gli oggetti del DB filtrati
+// GET /api/product/all
+// ----------------------------------------------------------------------------
+// [Tutti] Ritorna i prodotto del DB filtrati e ordinati con i parametri
+// passati in input
+// 
+// Header: vuoto
+// Body:
+// - filter (opzionale) - string
+//   È la parola chiave da ricercare nel DB; si filtra per:
+//   - title
+//   - brand
+// - sort (opzionale) - bool
+//   È l'ordine dei valori di ritorno; può essere true (crescente) o false 
+//   (descrescente); è applicato al prezzo.
+//
+// Valori di ritorno: { message, data, error }
+// - message
+//   È un messaggio descrittivo.
+// - data
+//   Sono i dati da ritornare al chiamante.
+// - error
+//   È l'errore.
 router.get('/all', async function(req, res) {
     console.log('GET /api/product/all');
     try {
         if(req.body != null) {
             const result = await myMongoProduct.productsFind(req.body.filter ? req.body.filter : '', req.body.sort ? 1 : -1);
             if(result.status == 0) {
+                // OK
                 return res.status(200).json({
                     message: result.message,
-                    obj: result.obj
+                    data: result.obj
                 });
             } else {
+                // Errore database
                 return res.status(400).json({
                     message: result.message,
                     error: result.obj
                 });
             }
         } else {
+            // filter e/o sort mancanti
             return res.status(400).json({
                 message: 'Parametri mancanti.'
             });
         }
     } catch(error) {
         return res.status(400).json({
-            message: 'Errore. ' + error
-        })
+            message: 'Errore di GET /api/product/all/',
+            error: error
+        });
     }
 });
 
-// POST - /api/product
-// req.query deve avere un parametro id
-// req.body ha un oggetto di tipo JSON { attributo: valore }
-// [Funzionario e Manager] Se il parametro non è specificato, crea un nuovo
+// POST /api/product
+// ----------------------------------------------------------------------------
+// [Funzionario, Manager] Se il parametro non è specificato, crea un nuovo
 // oggetto con i dati di req.body (devono essere completi), altrimenti aggiorna
-// i dati dell'oggetto id
+// i dati dell'oggetto id.
+// 
+// Header:
+// - Cookies JWT
+//   È il token per autenticare il chiamante.
+// - Parametri
+//   - id - string
+//     È l'id del prodotto.
+// Body:
+// - È un oggetto JSON di tipo JSON { attributo: valore } e rappresentano i
+//   dati da aggiornare/inserire.
+//
+// Valori di ritorno: { message, data, error }
+// - message
+//   È un messaggio descrittivo.
+// - data
+//   Sono i dati da ritornare al chiamante.
+// - error
+//   È l'errore.
 router.post('/', async function(req, res) {
     console.log('POST /api/product/');
     try {
@@ -81,8 +144,11 @@ router.post('/', async function(req, res) {
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         let result;
-        // Controlla chi sta effettuando la richiesta
-        if(sender.status > 0) {
+        if(sender.status == -1) {
+            return res.status(401).json({
+                message: 'Token non valido.'
+            });
+        } else if(sender.status > 0) {
             // È un funzionario o manager
             if(productId == null) {
                 // Parametro non specificato
@@ -92,11 +158,13 @@ router.post('/', async function(req, res) {
                 result = await myMongoProduct.productsUpdateOne(productId, req.body);
             }
             if(result.status == 0) {
+                // OK
                 return res.status(200).json({
                     message: result.message,
-                    obj: result.obj
+                    data: result.obj
                 });
             } else {
+                // Errore del database
                 return res.status(400).json({
                     message: result.message,
                     error: result.obj
@@ -110,15 +178,31 @@ router.post('/', async function(req, res) {
         }
     } catch(error) {
         return res.status(400).json({
-            message: 'Errore.',
+            message: 'Errore di POST /api/product/',
             error: error
         });
     }
 });
 
-// DELETE - /api/prodcut
-// req.query ha un parametro id
-// [Funzionario e Manager] Cancella il prodotto id
+// DELETE /api/product
+// ----------------------------------------------------------------------------
+// [Funzionario, Manager] Cancella il prodotto con id passato come parametro.
+// 
+// Header:
+// - Cookies JWT
+//   È il token per autenticare il chiamante.
+// - Parametri
+//   - id - string
+//     È l'id del prodotto.
+// Body: vuoto
+//
+// Valori di ritorno: { message, data, error }
+// - message
+//   È un messaggio descrittivo.
+// - data
+//   Sono i dati da ritornare al chiamante.
+// - error
+//   È l'errore.
 router.delete('/', async function(req, res) {
     console.log('DELETE /api/product/');
     try {
@@ -126,8 +210,11 @@ router.delete('/', async function(req, res) {
         const token = req.cookies['JWT'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
-        // Controlla chi sta effettuando la richiesta
-        if(sender.status > 0) {
+        if(sender.status == -1) {
+            return res.status(401).json({
+                message: 'Token non valido.'
+            });
+        } else if(sender.status > 0) {
             // È un funzionario o manager
             if(productId == null) {
                 // Parametro non specificato
@@ -138,11 +225,13 @@ router.delete('/', async function(req, res) {
                 // Parametro specificato    
                 result = await myMongoProduct.productsDeleteOne(productId);
                 if(result.status == 0) {
+                    // OK
                     return res.status(200).json({
                         message: result.message,
-                        obj: result.obj
+                        data: result.obj
                     });
                 } else {
+                    // Errore del database
                     return res.status(400).json({
                         message: result.message,
                         error: result.obj
@@ -157,7 +246,7 @@ router.delete('/', async function(req, res) {
         }
     } catch(error) {
         return res.status(400).json({
-            message: 'Errore.',
+            message: 'Errore di DELETE /api/product',
             error: error
         });
     }

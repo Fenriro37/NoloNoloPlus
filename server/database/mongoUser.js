@@ -1,21 +1,16 @@
 // ----------------------------------------------------------------------------
-//                                 API Clienti
+//                            MongoDB API - Clienti
 // ----------------------------------------------------------------------------
 
-// API - MongoDB
-// Metodi che si interfacciano con le API di MongoDB
-// I metodi sono suddivisi per:
-// - Clienti
-// - Prodotti
-// - Funzionari
-// - Manager
-
-const config = require("./../config.js")
-const { MongoClient } = require("mongodb");
-const { ObjectId } = require("mongodb");
+// Moduli
+const { MongoClient } = require('mongodb');
+const { ObjectId } = require('mongodb');
+const config = require('./../config.js')
 
 // usersFind
 // ----------------------------------------------------------------------------
+// Cerca nel DB un utente con un certo filtro e li ritorna in un certo ordine.
+//
 // Parametri: (filter, sortBy)
 // - filter
 //   È il valore che viene cercato come sottostringa negli attributi:
@@ -30,13 +25,13 @@ const { ObjectId } = require("mongodb");
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.usersFind = async function(filter, sortBy) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -53,20 +48,23 @@ exports.usersFind = async function(filter, sortBy) {
         await mongo.close();
         return {
             status: 0,
-            message: "Ricerca effettuata con successo",
+            message: 'Ricerca effettuata con successo.',
             obj: x
         };
     } catch (error) {
+        await mongo.close();
         return {
             status: -1,
-            message: "Errore generico.",
-            obj: error
+            message: 'Errore di usersFind.',
+            error: error
         };
     }
 }
 
 // usersFindOne
 // ----------------------------------------------------------------------------
+// Cerca nel DB l'utente con un certo id.
+//
 // Parametri: (id)
 // - id
 //   È un oggetto JSON { attributo: valore } dove attributo può essere:
@@ -78,45 +76,47 @@ exports.usersFind = async function(filter, sortBy) {
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      -  1 -> Utente inesistente
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore
+//   È il messaggio d'errore.
 exports.usersFindOne = async function(query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();
         const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName);
         const result = await users.findOne(query);
+        await mongo.close();
         if(result !== null) {
-            await mongo.close();
             return {
                 status: 0,
-                message: "Utente trovato con successo.",
+                message: 'Utente trovato con successo.',
                 obj: result
             };
         } else {
-            await mongo.close();
             return {
                 status: 1,
-                message: "Utente non trovato.",
+                message: 'Utente non trovato.',
                 obj: result
             };
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: "Errore generico.",
-            obj: error
+            message: 'Errore di usersFindOne.',
+            error: error
         };
     }
 }
 
 // usersInsertOne
 // ----------------------------------------------------------------------------
+// Inserisce nel DB l'utente passato per parametro.
+//
 // Parametri: (user)
 // - user
 //   È un oggetto JSON { attributo: valore } il quale viene inserito nel
@@ -127,35 +127,36 @@ exports.usersFindOne = async function(query) {
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      -  1 -> Utente esistente
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.usersInsertOne = async function(user) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();
-        const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName)
-        const result = await users.findOne({ "email": user.email })
+        const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName);
+        const result = await users.findOne({ 'email': user.email });
         if(result !== null) {
             await mongo.close();
             return {
                 status: 1,
-                message: "Utente esistente."
+                message: 'Utente esistente.'
             };
         } else {
             await users.insertOne(user);
             await mongo.close();
             return {
                 status: 0,
-                message: "Utente creato correttamente."
+                message: 'Utente creato correttamente.'
             };
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: "Errore generico.",
+            message: 'Errore di usersInsertOne.',
             error: error
         };
     }
@@ -163,6 +164,8 @@ exports.usersInsertOne = async function(user) {
 
 // usersUpdateOne
 // ----------------------------------------------------------------------------
+// Aggirona l'utente con un certo id con i valori passati per parametro.
+//
 // Parametri: (id, query)
 // - id
 //   È l'identificativo dell'oggetto.
@@ -175,13 +178,13 @@ exports.usersInsertOne = async function(user) {
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      -  1 -> Errore durante l'aggiornamento dei dati
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.usersUpdateOne = async function(id, query) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -192,24 +195,25 @@ exports.usersUpdateOne = async function(id, query) {
             $set: query
         }
         const result = await users.updateOne(filter, updateDocument);
-        await mongo.close()
+        await mongo.close();
         if(!result) {
             return {
-                status: "1",
+                status: '1',
                 message: "Errore nell'aggiornamento dei dati.",
                 obj: result
             }    
         } else {
             return {
-                status: "0",
-                message: "Modifica dell'utente " + id + " avvennuto con successo.",
+                status: '0',
+                message: "Modifica dell'utente " + id + ' avvennuto con successo.',
                 obj: result
             }
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: "Errore generico.",
+            message: 'Errore di usersUpdateOne.',
             error: error
         };
     }
@@ -217,6 +221,8 @@ exports.usersUpdateOne = async function(id, query) {
 
 // usersDeleteOne
 // ----------------------------------------------------------------------------
+// Cancella l'utente con id passato per parametro.
+//
 // Parametri: (id)
 // - id
 //   È l'identificativo dell'oggetto da rimuovere dal database.
@@ -226,13 +232,13 @@ exports.usersUpdateOne = async function(id, query) {
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      -  1 -> Utente inesistente
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.usersDeleteOne = async function(id) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -240,24 +246,25 @@ exports.usersDeleteOne = async function(id) {
         const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName);
         const filter = { _id: ObjectId(id) };
         const result = await users.deleteOne(filter);
-        await mongo.close()
+        await mongo.close();
         if(result.deletedCount === 1) {
             return {
-                status: "0",
-                message: "L'utente " + id + " è stato cancellato con successo.",
+                status: '0',
+                message: "L'utente " + id + ' è stato cancellato con successo.',
                 obj: result
             }    
         } else {
             return {
-                status: "1",
-                message: "Errore durante la cancellazione dell'utente.",
+                status: '1',
+                message: "L'utente " + id + ' non è stato cancellato.',
                 obj: result
             }
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: "Errore generico.",
+            message: 'Errore di usersDeleteOne.',
             error: error
         };
     }

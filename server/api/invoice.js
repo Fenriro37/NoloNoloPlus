@@ -1,35 +1,70 @@
-// Framework esterne
+// ----------------------------------------------------------------------------
+//                         NoloNoloPlus API - Fattura
+// ----------------------------------------------------------------------------
+
+// Moduli
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
-// Librerie interne
 const myMongoAuth = require('../database/mongoAuth.js');
 const myMongoReservation = require('../database/mongoReservation.js');
 const config = require('./../config');
 
+// GET /api/invoice/
+// ----------------------------------------------------------------------------
+// [Cliente] Ritorna i dati della fattura correlata alla prenotazione con id
+// passata per parametro, se il cliente chiamante è colui che ha effettuato la
+// prenotazione.
+// [Funzionario, Manager] Ritorna i dati della fattura correlata alla
+// prenotazione con id passata per parametro.
+// 
+// Header:
+// - Cookies JWT
+//   È il token per autenticare il chiamante.
+// - Parametri
+//   - id - string
+//     È l'id della prenotazione.
+// Body: vuoto
+//
+// Valori di ritorno: { message, data, error }
+// - message
+//   È un messaggio descrittivo.
+// - data
+//   Sono i dati da ritornare al chiamante.
+// - error
+//   È l'errore.
 router.get('/', async function(req, res) {
-    const result = await myMongoReservation.reservationsFindOne(req.query.id);
-    if(result.status == '0') {
-        const token = jwt.verify(req.cookies['JWT'], config.JSONWebTokenKey)
-        const tokenId = token.id;
-        const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
-        if(sender.status == -1) {
-            return res.status(401).json({
-                message: "Errore sul token di autenticazione."
-            });
-        } else if(sender.status == 0 && token.email != result.obj.clientEmail) {
-            return res.status(401).json({
-                message: "Violazione d'accesso."
-            });
+    console.log('GET /api/invoice/');
+    try {
+        const result = await myMongoReservation.reservationsFindOne(req.query.id);
+        if(result.status == '0') {
+            const token = jwt.verify(req.cookies['JWT'], config.JSONWebTokenKey);
+            const tokenId = token.id;
+            const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
+            if(sender.status == -1) {
+                return res.status(401).json({
+                    message: 'Token non valido.'
+                });
+            } else if(sender.status == 0 && token.email != result.obj.clientEmail) {
+                return res.status(401).json({
+                    message: 'Operazione non autorizzata.'
+                });
+            } else {
+                return res.status(200).json({
+                    message: 'Ok.',
+                    data: result.obj
+                });
+            }
         } else {
-            return res.status(200).json({
+            return res.status(400).json({
+                message: result.message,
                 data: result.obj
             });
-        }
-    } else {
+        }    
+    } catch(error) {
         return res.status(400).json({
-            message: result.message,
-            data: result.obj
+            message: 'Errore di GET /api/invoice',
+            error: error
         })
     }
 });

@@ -1,43 +1,37 @@
 // ----------------------------------------------------------------------------
-//                                API Prodotti
+//                           MongoDB API - Prodotti
 // ----------------------------------------------------------------------------
 
-// API - MongoDB
-// Metodi che si interfacciano con le API di MongoDB
-// I metodi sono suddivisi per:
-// - Clienti
-// - Prodotti
-// - Funzionari
-// - Manager
-
-const config = require('./../config.js')
+// Moduli
 const { MongoClient } = require('mongodb');
 const { ObjectId } = require('mongodb');
+const config = require('./../config.js')
 
 // productsFind
 // ----------------------------------------------------------------------------
+// Cerca nel DB un prodotto con un certo filtro e li ritorna in un certo
+// ordine.
+//
 // Parametri: (filter, sortBy)
 // - filter
 //   È il valore che viene cercato come sottostringa negli attributi:
 //   - title
 //   - brand
 // - sortBy
-//   È l'oggetto JSON { price: valore } che indica l'ordine della ricerca
-//   rispetto al prezzo. L'ordine ed può essere:
-//   - -1 se è decrescente
-//   - 1 se è crescente
+//   È un numero che ordina la ricerca in maniera crescente, se vale -1, o
+//   decrescente se vale 1. L'ordine viene effettuato per il prezzo.
 //
 // Valore di ritorno: { status, message, obj, error }
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
-//      - -1 -> Altro 
+//      - -1 -> Errore generico
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.productsFind = async function(filter, sortBy) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -57,34 +51,37 @@ exports.productsFind = async function(filter, sortBy) {
             status: 0,
             message: 'Ricerca effettuata con successo',
             obj: x
-        };
-    } catch (error) {
+        }
+    } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: 'Errore generico.',
-            obj: error
-        };
+            message: 'Errore di productsFind.',
+            error: error
+        }
     }
 }
 
 // productsFindOne
 // ----------------------------------------------------------------------------
+// Cerca nel DB il prodotto con un certo id.
+//
 // Parametri: (id)
 // - id
-//   È l'id dell'oggetto ricercato.
+//   È l'id del prodotto da ricercare.
 //
 // Valore di ritorno: { status, message, obj, error }
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      -  1 -> Utente inesistente
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore
+//   È il messaggio d'errore.
 exports.productsFindOne = async function(id) {
     id = (/^\d+$/.test(id)) ? JSON.parse(id) : id;
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
@@ -92,15 +89,14 @@ exports.productsFindOne = async function(id) {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
         const result = await products.findOne({ '_id': ObjectId(id) });
+        await mongo.close();
         if(result !== null) {
-            await mongo.close();
             return {
                 status: 0,
                 message: 'Prodotto trovato con successo.',
                 obj: result
             };
         } else {
-            await mongo.close();
             return {
                 status: 1,
                 message: 'Prodotto non trovato.',
@@ -108,16 +104,19 @@ exports.productsFindOne = async function(id) {
             };
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: 'Errore generico.',
-            obj: error
+            message: 'Errore di productsFindOne.',
+            error: error
         };
     }
 }
 
 // productsInsertOne
 // ----------------------------------------------------------------------------
+// Inserisce nel DB il prodotto passato per parametro.
+//
 // Parametri: (newProductData)
 // - newProductData
 //   È un oggetto JSON { attributo: valore } il quale viene inserito nel
@@ -127,16 +126,16 @@ exports.productsFindOne = async function(id) {
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.productsInsertOne = async function(newProductData) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();
-        const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName)
+        const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
         await products.insertOne(newProductData);
         await mongo.close();
         return {
@@ -144,9 +143,10 @@ exports.productsInsertOne = async function(newProductData) {
             message: 'Prodotto creato correttamente.'
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: 'Errore generico.',
+            message: 'Errore di productsInsertOne.',
             error: error
         };
     }
@@ -154,6 +154,8 @@ exports.productsInsertOne = async function(newProductData) {
 
 // productsUpdateOne
 // ----------------------------------------------------------------------------
+// Aggirona il prodotto con un certo id con i valori passati per parametro.
+//
 // Parametri: (id, data)
 // - id
 //   È l'identificativo dell'oggetto.
@@ -166,13 +168,13 @@ exports.productsInsertOne = async function(newProductData) {
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      -  1 -> Errore durante l'aggiornamento dei dati
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.productsUpdateOne = async function(id, data) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -183,7 +185,7 @@ exports.productsUpdateOne = async function(id, data) {
             $set: data
         }
         const result = await products.updateOne(filter, updateDocument);
-        await mongo.close()
+        await mongo.close();
         if(!result) {
             return {
                 status: '1',
@@ -198,9 +200,10 @@ exports.productsUpdateOne = async function(id, data) {
             }
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: 'Errore generico.',
+            message: 'Errore di productsUpdateOne.',
             error: error
         };
     }
@@ -208,6 +211,8 @@ exports.productsUpdateOne = async function(id, data) {
 
 // productsDeleteOne
 // ----------------------------------------------------------------------------
+// Cancella il prodotto con id passato per parametro.
+//
 // Parametri: (id)
 // - id
 //   È l'identificativo dell'oggetto da rimuovere dal database.
@@ -217,13 +222,13 @@ exports.productsUpdateOne = async function(id, data) {
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      -  1 -> Utente inesistente
-//      - -1 -> Altro 
+//      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
 // - obj
-//   È l'oggetto che ritorna dalle API di mongodb
+//   È l'oggetto che ritorna dalle API di mongodb.
 // - error
-//   È il messaggio d'errore 
+//   È il messaggio d'errore.
 exports.productsDeleteOne = async function(id) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
@@ -231,7 +236,7 @@ exports.productsDeleteOne = async function(id) {
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
         const filter = { _id: ObjectId(id) };
         const result = await products.deleteOne(filter);
-        await mongo.close()
+        await mongo.close();
         if(result.deletedCount === 1) {
             return {
                 status: 0,
@@ -241,14 +246,15 @@ exports.productsDeleteOne = async function(id) {
         } else {
             return {
                 status: 1,
-                message: 'Errore durante la cancellazione del prodotto.',
+                message: 'Il prodotto ' + id + ' non è stato cancellato.',
                 obj: result
             }
         }
     } catch(error) {
+        await mongo.close();
         return {
             status: -1,
-            message: 'Errore generico.',
+            message: 'Errore di productsDeleteOne.',
             error: error
         };
     }
