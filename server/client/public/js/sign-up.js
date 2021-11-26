@@ -16,7 +16,7 @@ window.addEventListener("load", () => {
         for(index in data) {
             console.log(data[index])
             if(data[index] == "") {
-                alert("Non hai inserito tutti i dati, coglione.");
+                alert("Non hai inserito tutti i dati.");
                 allDataOk = false;
                 break;
             }
@@ -37,6 +37,7 @@ window.addEventListener("load", () => {
                         month: birthday[1],
                         day: birthday[2]
                     },
+                    sex: data[13],
                     phoneNumber: data[3],
                     email: data[4],
                     plainTextPassword: data[5],

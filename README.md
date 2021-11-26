@@ -6,18 +6,17 @@ Commenti
 - lingua italiana
 - lunghezza riga 80 caratteri (compreso)
 
-API, divisi per soggetti:
+API, divisi per soggetti: https://docs.google.com/spreadsheets/d/1dEVxP9BbVEQvrEBZx4rU8eIZVVpmbJnehbhby7xwTsQ/edit#gid=0
 ```
 - visitatore
     - registrazione                 POST    /api/public/sign-up/
     - login                         POST    /api/public/login/
     - vedere il catalogo            GET     /api/products
         - filtri
-    - cercare un prodotto           GET     /api/product?id=...
 
 - utente
     - vedere il profilo             GET     /api/user
-    - modifiche del profilo         POST    /api/user/update?acs=1
+    - modifiche del profilo         POST    /api/user/update
     - noleggiare                    POST    /api/reservation?acs=1
     - vedere i noleggi              GET     /api/reservations?acs=1
     - vedere un noleggio            GET     /api/reservation?id=...&&acs=1
@@ -35,11 +34,6 @@ API, divisi per soggetti:
     - aggiungere un prodotto        POST    /api/product
     - cancellare un prodotto        DELETE  /api/product?id=...
     - modificare un prodotto        POST    /api/product/update?scenario=...
-        - dati                              scenario=1
-        - disponibilità                     scenario=2
-        - aggiunta prenotazione             scenario=3 (è meglio fare una query al DB?)
-        - rimozione prenotazione            scenario=4 (è meglio fare una query al DB?)
-
     - vedere i noleggi              GET     /api/reservations
     - vedere un noleggio            GET     /api/reservation?id=...
     - modificare un noleggio        POST    /api/reservation?id=...&&acs=2
@@ -72,38 +66,39 @@ API di Mongo per il server:
 ```
 - visitatore
     - registrazione
-        - controllare se esiste l'email                         - clienti.findOne
+        - controllare se esiste l'email                         - clienti.findOne (controllare l'email)
         - aggiungere un cliente                                 - clienti.insertOne
-    - login (controllare l'email)                               - clienti.findOne
+    - login                                                     - clienti.findOne (controllare l'email)
+        - se è un cliente
+        - se è un dipendente
     - vedere il catalogo                                        - prodotti.find
         - filtrare ($text)
         - ordinare (sort)
-    - cercare un prodotto                                       - prodotti.findOne
 
 - utente
-    - vedere il profilo                                         - clienti.findOne
+    - vedere il profilo                                         - clienti.findOne (controllare l'email o l'id)
     - modifiche del profilo                                     - clienti.updateOne
     - noleggiare                                                - noleggi.insertOne
     - vedere i noleggi                                          - noleggi.find
         - ordinare (sort)
         - filtrare ($text)
-    - vedere un noleggio                                        - noleggi.findOne
-    - richiedere la fattura (cerca un noleggio)                 - noleggi.findOne
+    - vedere un noleggio                                        - noleggi.findOne (by id)
+    - richiedere la fattura (cerca un noleggio)                 - noleggi.findOne (by id)
     - modificare un noleggio futuro
-        - cercare un noleggio                                   - noleggi.findOne
+        - cercare un noleggio                                   - noleggi.findOne (by id)
         - modifica                                              - noleggi.updateOne
 
 - funzionario
     - vedere i clienti                                          - clienti.find
         - ordinare (sort)
         - filtrare ($text)
-    - vedere un cliente                                         - clienti.findOne
+    - vedere un cliente                                         - clienti.findOne (controllare l'email o l'id)
     - modificare un cliente                                     - clienti.updateOne
     - cancellare un cliente                                     - clienti.deleteOne    
     - vedere i prodotti                                         - prodotti.find
         - ordinare (sort)
         - filtrare ($text)
-    - vedere un prodotto                                        - prodotti.findOne
+    - vedere un prodotto                                        - prodotti.findOne (controllare l'email o l'id)
     - aggiungere un prodotto                                    - prodotti.insertOne
     - cancellare un prodotto                                    - prodotti.deleteOne
     - modificare un prodotto                                    - prodotti.inserOne
@@ -114,7 +109,7 @@ API di Mongo per il server:
     - vedere i noleggi                                          - noleggi.find
         - ordinare (sort)
         - filtrare ($text)
-    - vedere un noleggio                                        - noleggi.findOne
+    - vedere un noleggio                                        - noleggi.findOne (by id)
     - modificare un noleggio                                    - noleggi.updateOne
     - cancellare un noleggio                                    - noleggi.deleteOne
 
@@ -125,6 +120,7 @@ API di Mongo per il server:
     - sulle categorie
     - sui noleggi
 ```
+
 **NB:** `sort` è un JSON del tipo: `{ attribututeToSort: value }` dove `value` vale:
 - `1` se è crescente
 - `-1` se è decrescente
