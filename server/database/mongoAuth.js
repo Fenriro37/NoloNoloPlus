@@ -105,10 +105,17 @@ exports.login = async function(queryEmail, plainTextPassword) {
         const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName);
         const workers = mongo.db(config.databaseName).collection(config.databaseWorkerCollectionName);
         const managers = mongo.db(config.databaseName).collection(config.databaseManagerCollectionName);
+
         const resultUser = await users.findOne({ email: queryEmail });
         const resultWorker = await workers.findOne({ email: queryEmail });
         const resultManager = await managers.findOne({ email: queryEmail });
+        
         await mongo.close();
+
+        console.log(resultManager);
+        console.log(resultWorker);
+        console.log(resultUser);
+
         if(resultUser != null) {
             if(await bcrypt.compare(plainTextPassword, resultUser.password) === true) {
                 // È un cliente

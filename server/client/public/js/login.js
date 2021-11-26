@@ -21,7 +21,7 @@ window.addEventListener("load", () => {
         if(allDataOk) {
             // Invio dei dati
             $.ajax({
-                url: "/api/login",
+                url: "/api/public/login",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -33,7 +33,7 @@ window.addEventListener("load", () => {
                 // Risposta del server in caso di successo
                 success: (token) => {
                     // window.location.href = "/user/main-page.html";
-                    document.cookie = "jwt=" + token;
+                    console.log("Let's go");
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {

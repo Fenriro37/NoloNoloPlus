@@ -1,238 +1,90 @@
 <template>
-  <div>
-    <div class="container-fluid p-5">
-      <h1> Account </h1>
-      <div class="row ">
-        <div class="col-3 ">
-          <p>Nome:</p>
-        </div>
-        <div class="col-9 ">
-          <input type="text" :value="name">
-        </div>
-      </div>
+<div id="app">
+  <b-navbar toggleable="lg" type="dark" variant="dark">
+    <b-col cols='1'>
+      <!--<router-link to="/" class="nav-link">Home</router-link> -->
+    </b-col>
 
-      <div class="row">
-        <div class="col-3">
-          <p>Cognome:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="surname">
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-3">
-          <p>Sesso:</p>
-        </div>
-        <div class="col-9">
-          <select class="form-select" aria-label="Default select example">
-            <option value="1" selected>M</option>
-            <option value="2">F</option>
-            <option value="3">Altro</option>
-          </select>
-        </div>
-      </div>
-        
-      <div class="row">
-        <div class="col-3">
-          <p>Numbero di Telefono:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="phoneNumber">
-        </div>
-      </div>
-        
-      <div class="row">
-        <div class="col-3">
-          <p>E-mail:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="email">
-        </div>
-      </div>
+    <b-col cols='6'>
+      <b-input-group class="noborder">
+        <b-form-select v-model="selected" :options="options">        </b-form-select>
+        <b-form-input id="ricerca" placeholder="Search..."></b-form-input>
+        <b-button class="bg-primary" >Cerca</b-button>
+      </b-input-group>
+    </b-col>
 
-      <hr>
+    <b-col cols='1'>
+    </b-col>
 
-      <div class="row">
-        <div class="col-3">
-          <b>Data di nascita</b>
-        </div>
+    <template>
+      <div>
+        <b-button id="burgerButton" v-b-toggle.sidebar-right><b-img id="burger" src="https://icon-library.com/images/hamburger-menu-icon-png/hamburger-menu-icon-png-2.jpg"></b-img></b-button>
+        <b-sidebar id="sidebar-right" title="Sidebar" right shadow>
+          <template #default="{ hide }">
+            <div class="p-3">
+              <nav class="mb-3">
+                <b-nav vertical>
+                  <router-link to="/createArticle" class="nav-link" >Aggiungi articolo</router-link>
+                  <router-link to="/createReservation" class="nav-link" >Aggiungi prenotazione</router-link>
+                  <router-link to="/charts" class="nav-link"  >Grafici</router-link>
+                  <router-link to="/articleCatalog" class="nav-link" >Catalogo articoli</router-link>
+                  <router-link to="/clientCatalog" class="nav-link" >Lista utenti</router-link>
+                  <router-link to="/reservationCatalog" class="nav-link" >Lista prenotazioni</router-link>
+                  <router-link to="/reservation" class="nav-link" >Esempio prenotazione</router-link>
+
+                  <router-link :to="{path: '/client/' + id}" class="nav-link">Esempio cliente</router-link>
+
+                 
+
+                  <router-link to="/article" class="nav-link" >Esempio articolo</router-link>
+                </b-nav>
+              </nav>
+              <b-button variant="primary" block @click="hide">Close Sidebar</b-button>
+            </div>
+          </template>
+        </b-sidebar>
       </div>
+    </template>
 
-      <div class="row">  
-        <div class="col-3">
-          <p>Giorno:</p>
-        </div>
-        <div class="col-9">
-          <input type="number" :value="birthday.day" min="1" max="31">          
-        </div>
-      </div>
-      
-      <div class="row">  
-        <div class="col-3">
-          <p>Mese:</p>
-        </div>
-        <div class="col-9">
-          <input type="number" :value="birthday.month" min="1" max="12">  
-        </div>
-      </div> 
+  </b-navbar>
 
-      <div class="row">  
-        <div class="col-3">
-          <p>Anno:</p>
-        </div>
-        <div class="col-9">
-          <input type="number" :value="birthday.year" min="1940" max="2021">  
-        </div>
-      </div>   
+  <router-view/>
 
-      <hr>
-
-      <div class="row">
-        <div class="col-3">
-          <b>Indirizzo</b>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          Via:
-        </div>
-        <div class="col-9">
-          <input type="text" :value="address.addressStreet">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          Numero:
-        </div>
-        <div class="col-9">
-          <input type="number" :value="address.addressNumber">
-        </div>
-      </div> 
-
-      <div class="row">
-        <div class="col-3">
-          Città:
-        </div>
-        <div class="col-9">
-          <input type="text" :value="address.addressCity">
-        </div>
-      </div>
-
-      <hr>
-
-      <div class="row">
-        <b>Pagamenti</b>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Tipo di carta:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="payment.cardType">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Nome carta:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="payment.cardName">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Proprietario:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" :value="payment.cardSurname">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p>Data scadenza:</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p>Mese:</p>
-        </div>
-
-        <div class="col-9">
-          <input type="number" :value="payment.cardExpireMonth" min="1" max="12">  
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p>Anno:</p>
-        </div>        
-        <div class="col-9">
-          <input type="number" :value="payment.cardExpireYear" min="2021" max="2025">
-        </div>
-      </div>
-
-    </div>
-  </div>
+</div>
 </template>
 
+
+
+
 <script>
-  import "bootstrap/dist/css/bootstrap.min.css"
-  import "bootstrap";
-  import $ from 'jquery'
-  //import Functions from '../src/functions/function'
-  export default {
+import Functions from './functions/function'
+export default {
     data() {
       return {
-        identifier: '4485423185',
-        name: 'Mario',
-        surname: 'Mari',
-        sex:'M',
-        birthday: {
-          year: '1990',
-          month: '11',
-          day: '30',
-        },
-        phoneNumber: '3506451389',
-        email: 'example@gmail.com',
-        password: 'cacca',
-        address: {
-          addressStreet: 'Via dei cazzi',
-          addressNumber: '13',
-          addressCity: 'Bologna'
-        },
-        payment: {
-          cardType: 'debito',
-          cardName: 'Visa',
-          cardSurname: 'Vitali',
-          cardExpireMonth: '7',
-          cardExpireYear: '24',
-          cardCVV: '111'
-        },
+        id : 123,
+        path: "/client/",
+        selected: 'a',
+        options: [
+          { value: 'a', text: 'Articoli' },
+          { value: 'c', text: 'Clienti' },
+          { value: 'p', text: 'Prenotazioni' },
+        ]
       }
     },
-    methods: {},
-     
-    computed: {},
+    created(){
+      Functions.loginAsWorker()
+    },
+
   }
-  //////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
-    $(document).ready(function(){
-      $("#myInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#myTable tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-      });
-    });
+
+
 </script>
 
 <style>
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-html {
+
+
+  html {
     height: auto;
     min-height: 100% !important;
     background-color: #294870;
@@ -247,61 +99,24 @@ body {
     margin-right: auto;
     background-color: rgb(201, 201, 238);
 }
-.img-thumbnail {
-    padding: 0.5em;
-    background-color: rgb(156, 156, 156);
-    border: 0px;
-    display: block;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-}
-.input-group {
-    margin-left: auto;
-    margin-right: auto;
-}
 .checked {
     color: orange;
     border-color: rgb(0, 0, 0);
     border-width: 0.5em;
 }
-.price {
-    font-size: x-large;
-}
-.input-group-text {
-    width: 2.5em;
-}
-#myDDButton {
-    background-color: hsl(0, 0%, 82%);
-}
 .big-size {
     transform: scale(1.4);
     margin-right: 0.5em;
 }
-.badge {
-    font-size: medium;
-    margin-right: 0.125em;
+
+#burgerButton{
+  width: 30%;
+  height: 10%;
 }
-.btn-lg {
-    margin-right: 0.5em;
-    margin-bottom: 0.5rem;
-}
-#onSalePrice {
-    color: rgb(232, 38, 38);
-}
-.form-switch {
-    margin-left: 7.2em;
-}
-.custom-switch {
-    margin-right: 0.5em;
-}
-#rentProduct {
-    color: black;
-    background-color: rgb(254, 165, 45);
-    border-color: rgb(254, 165, 45);
-}
-.row {
-  margin-bottom: 0.5em ;
+
+#burger{ 
+  width: 100%;
+  height: 100%;
 }
 
 </style>

@@ -21,6 +21,7 @@ window.addEventListener("load", () => {
                 break;
             }
         }
+        console.log(data)
         if(allDataOk) {
             // Invio dei dati
             $.ajax({

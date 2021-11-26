@@ -180,7 +180,7 @@ exports.productsUpdateOne = async function(id, data) {
     try {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
-        const filter = { _id: ObjectId(id) };
+        const filter = {'_id': id};
         const updateDocument = {
             $set: data
         }
@@ -188,13 +188,13 @@ exports.productsUpdateOne = async function(id, data) {
         await mongo.close();
         if(!result) {
             return {
-                status: '1',
+                status: 1,
                 message: "Errore nell'aggiornamento dei dati.",
                 obj: result
             }    
         } else {
             return {
-                status: '0',
+                status: 0,
                 message: 'Modifica del prodotto ' + id + ' avvennuto con successo.',
                 obj: result
             }
