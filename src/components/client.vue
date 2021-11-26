@@ -16,7 +16,7 @@
 
     <b-row>
       <b-col cols="3">
-        <p><span v-if="!boolModify">* </span>Cognome:</p>
+        <p><span v-if="boolModify">* </span>Cognome:</p>
       </b-col>
       <b-col cols="9">
         <b-form-input v-if="!boolModify" type="text" :value="surname" readonly ></b-form-input>
@@ -29,13 +29,13 @@
         <p>ID:<span v-if="boolModify">(non modificabile)</span></p>
       </b-col>
       <b-col  class="col-9 ">
-        <b-form-input type="text" :value="identifier" readonly ></b-form-input>
+        <b-form-input type="text" :value="id" readonly ></b-form-input>
       </b-col>
     </b-row>
     
     <b-row>
       <b-col cols="3">
-        <p><span v-if="!boolModify">* </span>Sesso:</p>
+        <p><span v-if="boolModify">* </span>Sesso:</p>
       </b-col >
       <b-col cols="9">
         <b-form-select v-if="!boolModify" :disabled="!boolModify" :value="sex" :options="options">
@@ -191,7 +191,7 @@
   export default {
     data() {
       return {
-        identifier: '4485423185',
+        id: this.$route.params.id,
         name: 'Mario',
         surname: 'Mari',
         sex: 'F',
@@ -240,8 +240,17 @@
 
       }
     },
+
+      created() {
+        console.log(this.id + ' cacca')
+        
+        //call mongo dicky
+      },
+
+
     methods: {
 
+  
       modify(){
         this.copyName = this.name,
         this.copySurname = this.surname,
@@ -277,8 +286,13 @@
         if(this.copySex != this.sex)
           query.sex = this.copySex;
         
-        if(this.copyDate != this.date)
-          query.date = this.copyDate;
+        if(this.copyDate != this.date){
+          query.date = {}
+          query.date.day = this.copyDate.charAt(8) + this.copyDate.charAt(9)
+          query.date.month = this.copyDate.charAt(5) + this.copyDate.charAt(6)
+          query.date.year = this.copyDate.charAt(0) + this.copyDate.charAt(1) + this.copyDate.charAt(2) + this.copyDate.charAt(3)
+        }
+          
           
         if(this.copyPhoneNumber != this.phoneNumber)
           query.phoneNumber = this.copyPhoneNumber;

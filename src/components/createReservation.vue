@@ -78,7 +78,7 @@
         </b-form-checkbox>
       </b-col>
       <b-col cols="3">
-        <p v-if="available">L'articolo è stato restituito</p>
+        <p v-if="returned">L'articolo è stato restituito</p>
         <p v-else>L'articolo non è stato restituito</p>
       </b-col>
     </b-row>
@@ -169,13 +169,28 @@
       else query.price = this.price;
 
       if(this.reservationDate == ''){return(alert('Il campo Data richiesta di prenotazione non può essere vuoto'))}
-      else query.reservationDate = this.reservationDate;
+      else{
+        query.reservationDate = {}
+        query.reservationDate.day = this.reservationDate.charAt(8) + this.reservationDate.charAt(9)
+        query.reservationDate.month = this.reservationDate.charAt(5) + this.reservationDate.charAt(6)
+        query.reservationDate.year = this.reservationDate.charAt(0) + this.reservationDate.charAt(1) + this.reservationDate.charAt(2) + this.reservationDate.charAt(3)
+      } 
 
       if(this.reservationStart == ''){return(alert('Il campo Data inizio prenotazione non può essere vuoto'))}
-      else query.reservationStart = this.reservationStart;
+      else{
+        query.reservationStart = {}
+        query.reservationStart.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
+        query.reservationStart.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)
+        query.reservationStart.year = this.reservationStart.charAt(0) + this.reservationStart.charAt(1) + this.reservationStart.charAt(2) + this.reservationStart.charAt(3)
+      } 
 
       if(this.reservationEnd == ''){return(alert('Il campo Data fine prenotazione non può essere vuoto'))}
-      else query.reservationEnd = this.reservationEnd;
+      else{
+        query.reservationEnd = {}
+        query.reservationEnd.day = this.reservationEnd.charAt(8) + this.reservationEnd.charAt(9)
+        query.reservationEnd.month = this.reservationEnd.charAt(5) + this.reservationEnd.charAt(6)
+        query.reservationEnd.year = this.reservationEnd.charAt(0) + this.reservationEnd.charAt(1) + this.reservationEnd.charAt(2) + this.reservationEnd.charAt(3)
+      } 
 
       if(this.reservationDate > this.reservationStart){return(alert("La data di prenotazione non può essere superiore al primo giorno di noleggio"))}
       if(this.reservationStart > this.reservationEnd){return(alert("La data di inizio noleggio non può essere superiore al ritiro"))}

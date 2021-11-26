@@ -31,7 +31,11 @@
                   <router-link to="/clientCatalog" class="nav-link" >Lista utenti</router-link>
                   <router-link to="/reservationCatalog" class="nav-link" >Lista prenotazioni</router-link>
                   <router-link to="/reservation" class="nav-link" >Esempio prenotazione</router-link>
-                  <router-link to="/client" class="nav-link" >Esempio cliente</router-link>
+
+                  <router-link :to="{path: '/client/' + id}" class="nav-link">Esempio cliente</router-link>
+
+                 
+
                   <router-link to="/article" class="nav-link" >Esempio articolo</router-link>
                 </b-nav>
               </nav>
@@ -56,6 +60,8 @@
 export default {
     data() {
       return {
+        id : 123,
+        path: "/client/",
         selected: 'a',
         options: [
           { value: 'a', text: 'Articoli' },

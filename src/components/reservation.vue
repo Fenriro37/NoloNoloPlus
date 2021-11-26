@@ -34,7 +34,7 @@
           <p  >Data richiesta prenotazione: </p>
         </b-col>
         <b-col cols="3">  
-          <b-form-datepicker  v-model="copyBookingRequest" :placeholder="copyBookingRequest"  ></b-form-datepicker>
+          <b-form-datepicker  v-model="copyBookingRequest" :placeholder="copyBookingRequest"  format="DD/MM/yyyy" ></b-form-datepicker>
         </b-col>
       </template>
     </b-row>
@@ -57,7 +57,7 @@
         </b-col>
 
         <b-col cols="3">  
-          <b-form-datepicker v-model="copyBookingStart" :placeholder="copyBookingStart"  ></b-form-datepicker> 
+          <b-form-datepicker v-model="copyBookingStart" :placeholder="copyBookingStart"  format="DD/MM/yyyy" ></b-form-datepicker> 
         </b-col>
         <b-col cols="3">
           <b-form-checkbox          
@@ -88,7 +88,7 @@
           <p  >Data Fine prenotazione: </p>
         </b-col>
         <b-col cols="3">  
-          <b-form-datepicker v-model="copyBookingEnd" :placeholder="copyBookingEnd"  ></b-form-datepicker> 
+          <b-form-datepicker v-model="copyBookingEnd" :placeholder="copyBookingEnd"  format="DD/MM/yyyy"></b-form-datepicker> 
         </b-col>        
         <b-col cols="3">
           <b-form-checkbox :checked="copyReturned" v-model="copyReturned">
@@ -132,9 +132,9 @@
             onSaleValue: 0
           },
         },
-        bookingRequest: '12/1/2021', //richiesta noleggio
-        bookingStart: '12/2/2021',   //inizio noleggio
-        bookingEnd:'12/5/2021',   //fine noleggio
+        bookingRequest: '2021-01-12', //richiesta noleggio
+        bookingStart: '2021-02-12',   //inizio noleggio
+        bookingEnd:'2021-12-12',   //fine noleggio
         
         rentalOccurred: true,             //avvenuto noleggio (booleano)
         returned: false,               //avvenuta restituzione (booleano)
@@ -162,9 +162,9 @@
     methods: {
       modify(){
         this.copyPrice = this.bookedArticles.price
-        /* this.copyOnSale = this.bookedArticles.discount.onSale
+        this.copyOnSale = this.bookedArticles.discount.onSale
         this.copyOnSaleType = this.bookedArticles.discount.onSaleType
-        this.copyOnSaleValue = this.bookedArticles.discount.onSaleValue */
+        this.copyOnSaleValue = this.bookedArticles.discount.onSaleValue 
 
         this.copyBookingRequest = this.bookingRequest
         this.copyBookingStart = this.bookingStart
@@ -187,7 +187,6 @@
         if(this.copyBookingStart > this.copyBookingEnd){ return (alert('Il campo Data inizio prenotazione non può essere superiore rispetto alla data fine prenotazione'))}
         if(this.copyRentalOccurred == false && this.copyReturned){ return (alert("L'articolo non può essere stato restituito se non è stato consegnato"))}
 
-
         let query = {}
 
         if(this.copyPrice != this.bookedArticles.price)
@@ -202,14 +201,29 @@
         if(this.copyOnSaleValue != this.bookedArticles.discount.onSaleValue)
           query.onSaleValue = this.copyOnSaleValue; 
         
-        if(this.copyBookingRequest != this.bookingRequest)
-          query.bookingRequest = this.copyBookingRequest;
+        if(this.copyBookingRequest != this.bookingRequest){
+          query.bookingRequest = {}
+          query.bookingRequest.day = this.copyBookingRequest.charAt(8) + this.copyBookingRequest.charAt(9)
+          query.bookingRequest.month = this.copyBookingRequest.charAt(5) + this.copyBookingRequest.charAt(6)
+          query.bookingRequest.year = this.copyBookingRequest.charAt(0) + this.copyBookingRequest.charAt(1) + this.copyBookingRequest.charAt(2) + this.copyBookingRequest.charAt(3)
+        }
+          
+        if(this.copyBookingStart != this.bookingStart){
+          query.bookingStart = {}
+          query.bookingStart.day = this.copyBookingStart.charAt(8) + this.copyBookingStart.charAt(9)
+          query.bookingStart.month = this.copyBookingStart.charAt(5) + this.copyBookingStart.charAt(6)
+          query.bookingStart.year = this.copyBookingStart.charAt(0) + this.copyBookingStart.charAt(1) + this.copyBookingStart.charAt(2) + this.copyBookingStart.charAt(3)
+        }
+         
 
-        if(this.copyBookingStart != this.bookingStart)
-          query.bookingStart = this.copyBookingStart;
-
-        if(this.copyBookingEnd != this.bookingEnd)
-          query.bookingEnd = this.copyBookingEnd;
+        if(this.copyBookingEnd != this.bookingEnd){
+          query.bookingEnd = {}
+          query.bookingEnd.day = this.copyBookingEnd.charAt(8) + this.copyBookingEnd.charAt(9)
+          query.bookingEnd.month = this.copyBookingEnd.charAt(5) + this.copyBookingEnd.charAt(6)
+          query.bookingEnd.year = this.copyBookingEnd.charAt(0) + this.copyBookingEnd.charAt(1) + this.copyBookingEnd.charAt(2) + this.copyBookingEnd.charAt(3)
+        }
+        
+         
         
         if(this.copyRentalOccurred != this.rentalOccurred)
           query.rentalOccurred = this.copyRentalOccurred;
@@ -229,9 +243,9 @@
           if(response.status == '200'){
             
           this.bookedArticles.price = this.copyPrice
-          /* this.bookedArticles.discount.onSale = this.copyOnSale
+          this.bookedArticles.discount.onSale = this.copyOnSale
           this.bookedArticles.discount.onSaleType = this.copyOnSaleType
-          this.bookedArticles.discount.onSaleValue = this.copyOnSaleValue */
+          this.bookedArticles.discount.onSaleValue = this.copyOnSaleValue 
           this.bookingRequest = this.copyBookingRequest
           this.bookingStart = this.copyBookingStart
           this.bookingEnd = this.copyBookingEnd

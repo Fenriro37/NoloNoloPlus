@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+//import App from "./App.vue"
 import createArticle from "./components/createArticle.vue";
 import createReservation from "./components/createReservation.vue";
 import article from "./components/article.vue";
@@ -14,7 +15,7 @@ Vue.use(Router);
 export default new Router({
   mode: "history",
   routes: [
-/*  {
+   /* {
       path: "/",
       name: "Home",
       component: App
@@ -32,8 +33,8 @@ export default new Router({
       component: article
     },
     {
-      path: "/client",
-      component: client
+      path: "/client/:id",
+      component: client,
     },
     {
       path: "/reservation",
