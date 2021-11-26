@@ -11,10 +11,10 @@ router.use('/manager/css', express.static(managerPath + '/css/'));
 router.use('/manager/js', express.static(managerPath + '/js/'));
 router.use('/manager/media', express.static(managerPath + '/media/'));
 
-// router.use('/worker/', express.static(workerPath + '/'));
-// router.use('/worker/css', express.static(workerPath + '/css/'));
-// router.use('/worker/js', express.static(workerPath + '/js/'));
-// router.use('/worker/media', express.static(workerPath + '/media/'));
+router.use('/worker/', express.static(workerPath + '/'));
+router.use('/worker/css', express.static(workerPath + '/css/'));
+router.use('/worker/js', express.static(workerPath + '/js/'));
+router.use('/worker/media', express.static(workerPath + '/media/'));
 
 router.use('/css', express.static(workerPath + '/css/'));
 router.use('/js', express.static(workerPath + '/js/'));

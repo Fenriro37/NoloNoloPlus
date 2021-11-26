@@ -8,6 +8,9 @@ const bcrypt = require('bcryptjs');
 const myMongoAuth = require('../database/mongoAuth.js');
 const myMongoUser = require('../database/mongoUser.js');
 
+const cookieParser = require('cookie-parser');
+router.use(cookieParser());
+
 // POST /api/public/sign-up/
 // ----------------------------------------------------------------------------
 // [Tutti] Crea un nuovo account come utente con i dati passti nel body.
@@ -87,11 +90,15 @@ router.post('/sign-up', async function(req, res) {
 // - error
 //   È l'errore.
 router.post('/login', async function(req, res) {
+    console.log('api/public/login');
     try {
-        const {
-            email,
-            plainTextPassword,
-        } = req.body;
+        
+        let email = req.body.email
+        let plainTextPassword = req.body.plainTextPassword
+
+        console.log(email)
+        console.log(plainTextPassword)
+
         const mongoRes = await myMongoAuth.login(email, plainTextPassword);
         if(mongoRes.status < 0) {
             // Errore nel login
@@ -101,7 +108,11 @@ router.post('/login', async function(req, res) {
             });
         } else {
             // OK
-            res.cookie('JWT', mongoRes.obj, { maxAge: 86400 * 1000 });
+            res.setHeader('Access-Control-Allow-Credentials', true);
+            res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+            res.setHeader('Access-Control-Expose-Headers', 'Set-Cookie');
+            res.cookie('jwt', mongoRes.obj, { maxAge: 86400 * 1000 });
             return res.status(200).json({
                 message: "Password corretta",
                 data: mongoRes.obj

@@ -5,6 +5,8 @@ export default axios.create({
   headers: {
     "Content-type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    "dataType":'jsonp'
+    "dataType":'jsonp',
+    // "withCredentials": "true",
+    "credentials": 'include'
   }
 });

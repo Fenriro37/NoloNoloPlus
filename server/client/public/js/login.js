@@ -21,7 +21,7 @@ window.addEventListener("load", () => {
         if(allDataOk) {
             // Invio dei dati
             $.ajax({
-                url: "/api/login",
+                url: "/api/public/login",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

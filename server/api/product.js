@@ -34,7 +34,7 @@ router.get('/', async function(req, res) {
             // Parametro mancante
             return res.status(400).json({
                 message: 'ID mancante.'
-            })
+            });
         } else {
             const result = await myMongoProduct.productsFindOne(req.query.id);
             if(result.status == 0) {
