@@ -11,6 +11,8 @@ const myMongoUser = require('../database/mongoUser.js');
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 
+console.log('/api/public.js');
+
 // POST /api/public/sign-up/
 // ----------------------------------------------------------------------------
 // [Tutti] Crea un nuovo account come utente con i dati passti nel body.
@@ -92,7 +94,6 @@ router.post('/sign-up', async function(req, res) {
 router.post('/login', async function(req, res) {
     console.log('api/public/login');
     try {
-        
         let email = req.body.email
         let plainTextPassword = req.body.plainTextPassword
 
@@ -108,11 +109,8 @@ router.post('/login', async function(req, res) {
             });
         } else {
             // OK
-            res.setHeader('Access-Control-Allow-Credentials', true);
-            res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-            res.setHeader('Access-Control-Expose-Headers', 'Set-Cookie');
             res.cookie('jwt', mongoRes.obj, { maxAge: 86400 * 1000 });
+            console.log(res.getHeader('Set-Cookie'));
             return res.status(200).json({
                 message: "Password corretta",
                 data: mongoRes.obj

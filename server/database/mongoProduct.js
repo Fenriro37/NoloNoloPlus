@@ -176,11 +176,12 @@ exports.productsInsertOne = async function(newProductData) {
 // - error
 //   È il messaggio d'errore.
 exports.productsUpdateOne = async function(id, data) {
+    console.log(data)
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
-        const filter = {'_id': id};
+        const filter = {'_id': ObjectId(id)};
         const updateDocument = {
             $set: data
         }

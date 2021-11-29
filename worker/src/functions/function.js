@@ -7,10 +7,14 @@ class Functions {
         let result = http.post(
             "/api/public/login",
             {
-                email: "han.chu@worker.com",
-                plainTextPassword: "1234567890"
+                "email": "han.chu@worker.com",
+                "plainTextPassword": "1234567890"
             }
         );
+        result.then(function(res) {
+            console.log(res);
+            console.log(res.headers);
+        })
         return result;
     }
 

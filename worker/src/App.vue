@@ -71,10 +71,9 @@ export default {
         ]
       }
     },
-    created(){
-      Functions.loginAsWorker()
-    },
-
+    created() {
+      Functions.loginAsWorker();
+    }
   }
 
 

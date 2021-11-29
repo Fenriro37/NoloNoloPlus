@@ -140,7 +140,7 @@ router.post('/', async function(req, res) {
     console.log('POST /api/product/');
     try {
         const productId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         let result;
