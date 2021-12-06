@@ -19,7 +19,7 @@ const config = require('./../config');
 // prenotazione con id passata per parametro.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id - string
@@ -38,7 +38,7 @@ router.get('/', async function(req, res) {
     try {
         const result = await myMongoReservation.reservationsFindOne(req.query.id);
         if(result.status == '0') {
-            const token = jwt.verify(req.cookies['JWT'], config.JSONWebTokenKey);
+            const token = jwt.verify(req.cookies['jwt'], config.JSONWebTokenKey);
             const tokenId = token.id;
             const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
             if(sender.status == -1) {

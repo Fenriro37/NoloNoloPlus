@@ -12,13 +12,13 @@ const config = require('./../config');
 
 // GET /api/user
 // ----------------------------------------------------------------------------
-// [Cliente] Cerca i dati dell'utente relativo al JWT salvato tra i cookie. Non
+// [Cliente] Cerca i dati dell'utente relativo al jwt salvato tra i cookie. Non
 // deve avere il parametro id.
 // [Funzionario, Manager] Cerca i dati del cliente con l'id passato per
 // parametro.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id (opzionale) - string
@@ -36,7 +36,7 @@ router.get('/', async function(req, res) {
     console.log('GET /api/user/');
     try {
         const paramId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         let result;
@@ -92,7 +92,7 @@ router.get('/', async function(req, res) {
 // [Funzionario, Manager] Ritorna le prenotazioni filtrati e ordinati.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // Body:
 // - filter (opzionale) - string
@@ -114,7 +114,7 @@ router.get('/', async function(req, res) {
 router.get('/all', async function(req, res) {
     console.log('GET /api/user/all');
     try {
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         if(sender.status == -1) {
@@ -159,7 +159,7 @@ router.get('/all', async function(req, res) {
 // e body sono uguali.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id (opzionale) - string
@@ -179,7 +179,7 @@ router.post('/', async function(req, res) {
     console.log('POST /api/user/');
     try {
         const paramId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         if(sender.status == -1) {
@@ -243,7 +243,7 @@ router.post('/', async function(req, res) {
 // [Funzionario, Manager] Cancella l'utente con id passato per parametro.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id - string
@@ -261,7 +261,7 @@ router.delete('/', async function(req, res) {
     console.log('DELETE /api/user/');
     try {
         const paramId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         if(sender.status == -1) {

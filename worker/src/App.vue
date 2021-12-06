@@ -53,9 +53,6 @@
 </div>
 </template>
 
-
-
-
 <script>
 import Functions from './functions/function'
 export default {
@@ -73,8 +70,7 @@ export default {
     },
     created(){
       Functions.loginAsWorker()
-    },
-
+    }
   }
 
 

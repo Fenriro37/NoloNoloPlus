@@ -120,7 +120,7 @@ router.get('/all', async function(req, res) {
 // i dati dell'oggetto id.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id - string
@@ -140,7 +140,7 @@ router.post('/', async function(req, res) {
     console.log('POST /api/product/');
     try {
         const productId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         let result;
@@ -189,7 +189,7 @@ router.post('/', async function(req, res) {
 // [Funzionario, Manager] Cancella il prodotto con id passato come parametro.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id - string
@@ -207,7 +207,7 @@ router.delete('/', async function(req, res) {
     console.log('DELETE /api/product/');
     try {
         const productId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         if(sender.status == -1) {
