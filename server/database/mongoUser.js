@@ -43,7 +43,16 @@ exports.usersFind = async function(filter, sortBy) {
                     { userName: re },
                     { userSurname: re },
                     { email: re }
-                ]}).sort({ userSurname: sortBy, userName: sortBy });
+                ]},
+                {
+                    projection: {
+                        _id: 1,
+                        name: 1,
+                        surname: 1,
+                        email: 1,
+                        phoneNumber: 1
+                    }
+                }).sort({ userSurname: sortBy, userName: sortBy });
         let x = await result.toArray();
         await mongo.close();
         return {

@@ -17,7 +17,7 @@ const config = require('./../config');
 // [Funzionario o Manager] Ritorna la prenotazione ricercata per id.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id - string
@@ -34,7 +34,7 @@ const config = require('./../config');
 router.get('/', async function(req, res) {
     console.log('GET /api/reservation/');
     try {
-        const token = jwt.verify(req.cookies['JWT'], config.JSONWebTokenKey)
+        const token = jwt.verify(req.cookies['jwt'], config.JSONWebTokenKey)
         const tokenId = token.id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         if(req.query.id == null) {
@@ -75,7 +75,7 @@ router.get('/', async function(req, res) {
 // [Funzionario, Manager] Ritorna le prenotazioni filtrati e ordinati.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // Body:
 // - filter (opzionale) - string
@@ -99,7 +99,7 @@ router.get('/', async function(req, res) {
 router.get('/all', async function(req, res) {
     console.log('GET /api/reservation/all');
     try {
-        const token = jwt.verify(req.cookies['JWT'], config.JSONWebTokenKey)
+        const token = jwt.verify(req.cookies['jwt'], config.JSONWebTokenKey)
         const sender = await myMongoAuth.auth({ '_id': ObjectId(token.id) });
         if(sender.status == -1) {
             return res.status(401).json({
@@ -150,7 +150,7 @@ router.get('/all', async function(req, res) {
 // aggiorna i dati della prenotazione id.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id (opzionale) - string
@@ -170,7 +170,7 @@ router.post('/', async function(req, res) {
     console.log('POST /api/reservation/');
     try {
         const reservationId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         let result;
@@ -222,7 +222,7 @@ router.post('/', async function(req, res) {
 // parametro.
 // 
 // Header:
-// - Cookies JWT
+// - Cookies jwt
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id - string
@@ -240,7 +240,7 @@ router.delete('/', async function(req, res) {
     console.log('DELETE /api/reservation/');
     try {
         const reservationId = req.query.id;
-        const token = req.cookies['JWT'];
+        const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
         if(sender.status == -1) {

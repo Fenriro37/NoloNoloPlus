@@ -64,7 +64,19 @@ exports.reservationsFind = async function(token, filter, sortBy) {
                     { productId: re },
                     { productTitle: re },
                     { productBrand: re }
-                ]}).sort({ 'bookingDate.year': sortBy, 'bookingDate.month': sortBy, 'bookingDate.day': sortBy});
+                ]},
+                {
+                    projection: {
+                        _id: 1,
+                        productId: 1,
+                        productTitle: 1,
+                        productBrand: 1,
+                        clientEmail: 1,
+                        bookingDate: 1,
+                        isTaken: 1,
+                        isReturned: 1
+                    }
+                }).sort({ 'bookingDate.year': sortBy, 'bookingDate.month': sortBy, 'bookingDate.day': sortBy});
         }
         const x = await result.toArray();
         await mongo.close();
