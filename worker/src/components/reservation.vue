@@ -57,7 +57,7 @@
         </b-col>
 
         <b-col cols="3">  
-          <b-form-datepicker v-model="copyBookingStart" :placeholder="copyBookingStart"  format="DD/MM/yyyy" ></b-form-datepicker> 
+          <b-form-datepicker v-model="copyBookingStart" :placeholder="copyBookingStart"  ></b-form-datepicker> 
         </b-col>
         <b-col cols="3">
           <b-form-checkbox          
@@ -111,7 +111,11 @@
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
     <button class="btn btn-lg btn-danger delete"> Cancella prenotazione</button>
+    
+    <p> {{bookingStart}} </p>
+    <p> {{copyBookingStart}} </p>
   </div>
+  
 </template>
 
 <script>
@@ -119,28 +123,29 @@
   export default {
     data() {
       return {
-        clientEmail:'mario.draghi@gmail.com', //IDcliente(nome cognome)
+        reservationId: '',
+        clientEmail:'', //IDcliente(nome cognome)
         bookedArticles: {     //uno o più articoli [](se ci sono più articoli le date combaciano)
-          identifier:'156945145614',
-          title:'Bici',
-          brand:'deGasperi',
-          image:'https://acquisti.corriere.it/wp-content/uploads/2021/05/BIciclette-Via-Veneto.jpeg',
-          price:2000,
+          identifier:'',
+          title:'',
+          brand:'',
+          image:'',
+          price: '',
           discount: {    //per risalire allo sconto 
             onSale: false,
             onSaleType: false,  //percentuale o fisso
             onSaleValue: 0
           },
         },
-        bookingRequest: '2021-01-12', //richiesta noleggio
-        bookingStart: '2021-02-12',   //inizio noleggio
-        bookingEnd:'2021-12-12',   //fine noleggio
+        bookingRequest: '', //richiesta noleggio
+        bookingStart: '',   //inizio noleggio
+        bookingEnd:'',   //fine noleggio
         
         rentalOccurred: true,             //avvenuto noleggio (booleano)
         returned: false,               //avvenuta restituzione (booleano)
         
-        notes:'Questa è una prenotazione',                //note 1 (dettagli sul prezzo o altro)                        
-        privateNotes:'Questo è privato',                //note 2 (dettagli non visibili al cliente)
+        notes:'',                //note 1 (dettagli sul prezzo o altro)                        
+        privateNotes:'',                //note 2 (dettagli non visibili al cliente)
 
         boolModify : false,
 
@@ -159,6 +164,30 @@
 
       }
     },
+    created() {
+      Functions.getReservation("61977feca4f23a08ccadf8bb").then((result) => {
+        console.log(result)
+        this.reservationId = '61977feca4f23a08ccadf8bb'
+        this.clientEmail = result.data.data.obj.clientEmail 
+        this.bookedArticles.identifier = result.data.data.obj.productId 
+        this.bookedArticles.title = result.data.data.obj.productTitle 
+        this.bookedArticles.brand = result.data.data.obj.productBrand
+        this.bookedArticles.image = result.data.data.obj.image 
+        this.bookedArticles.price = result.data.data.obj.price
+
+        this.bookingRequest = result.data.data.obj.bookingDate.year + '-' + result.data.data.obj.bookingDate.month + '-' + result.data.data.obj.bookingDate.day
+        this.bookingStart = result.data.data.obj.startDate.year + '-' + result.data.data.obj.startDate.month + '-' + result.data.data.obj.startDate.day
+        this.bookingEnd = result.data.data.obj.endDate.year + '-' + result.data.data.obj.endDate.month + '-' + result.data.data.obj.endDate.day 
+        
+        this.rentalOccurred = result.data.data.obj.isTaken 
+        this.returned = result.data.data.obj.isReturned 
+        this.notes = result.data.data.obj.description 
+        this.privateNotes = result.data.data.obj.note    
+
+        
+      })
+    },
+
     methods: {
       modify(){
         this.copyPrice = this.bookedArticles.price
@@ -174,6 +203,7 @@
         this.copyNotes = this.notes
         this.copyPrivateNotes  = this.privateNotes
 
+        console.log(typeof(this.copyBookingStart))
         this.boolModify = true
       },
 
@@ -182,9 +212,12 @@
       },
 
       saveData(){
+        console.log(typeof(this.copyBookingStart))
         if(this.copyPrice <= 0){ return (alert('Il prezzo deve essere un numero positivo'))}
+
         if(this.copyBookingRequest > this.copyBookingStart){ return (alert('Il campo Data richiesta prenotazione non può essere superiore rispetto alla data inizio prenotazione'))}
         if(this.copyBookingStart > this.copyBookingEnd){ return (alert('Il campo Data inizio prenotazione non può essere superiore rispetto alla data fine prenotazione'))}
+
         if(this.copyRentalOccurred == false && this.copyReturned){ return (alert("L'articolo non può essere stato restituito se non è stato consegnato"))}
 
         let query = {}
@@ -192,77 +225,121 @@
         if(this.copyPrice != this.bookedArticles.price)
           query.price = this.copyPrice;
 
-        if(this.copyOnSale != this.bookedArticles.discount.onSale)
-          query.onSale = this.copyOnSale;
+        /*if(this.copyOnSale != this.bookedArticles.discount.onSale)
+            query.onSale = this.copyOnSale;
 
-        if(this.copyOnSaleType != this.bookedArticles.discount.onSaleType)
-          query.onSaleType = this.copyOnSaleType;
+          if(this.copyOnSaleType != this.bookedArticles.discount.onSaleType)
+            query.onSaleType = this.copyOnSaleType;
 
-        if(this.copyOnSaleValue != this.bookedArticles.discount.onSaleValue)
-          query.onSaleValue = this.copyOnSaleValue; 
-        
-        if(this.copyBookingRequest != this.bookingRequest){
-          query.bookingRequest = {}
-          query.bookingRequest.day = this.copyBookingRequest.charAt(8) + this.copyBookingRequest.charAt(9)
-          query.bookingRequest.month = this.copyBookingRequest.charAt(5) + this.copyBookingRequest.charAt(6)
-          query.bookingRequest.year = this.copyBookingRequest.charAt(0) + this.copyBookingRequest.charAt(1) + this.copyBookingRequest.charAt(2) + this.copyBookingRequest.charAt(3)
+          if(this.copyOnSaleValue != this.bookedArticles.discount.onSaleValue)
+            query.onSaleValue = this.copyOnSaleValue;  */
+          
+         let dateChanged = false 
+         if(this.copyBookingRequest != this.bookingRequest){
+          query.bookingDate = {}
+          query.bookingDate.day = this.copyBookingRequest.charAt(8) + this.copyBookingRequest.charAt(9)
+          query.bookingDate.month = this.copyBookingRequest.charAt(5) + this.copyBookingRequest.charAt(6)
+          query.bookingDate.year = this.copyBookingRequest.charAt(0) + this.copyBookingRequest.charAt(1) + this.copyBookingRequest.charAt(2) + this.copyBookingRequest.charAt(3)
         }
           
         if(this.copyBookingStart != this.bookingStart){
-          query.bookingStart = {}
-          query.bookingStart.day = this.copyBookingStart.charAt(8) + this.copyBookingStart.charAt(9)
-          query.bookingStart.month = this.copyBookingStart.charAt(5) + this.copyBookingStart.charAt(6)
-          query.bookingStart.year = this.copyBookingStart.charAt(0) + this.copyBookingStart.charAt(1) + this.copyBookingStart.charAt(2) + this.copyBookingStart.charAt(3)
+          dateChanged = true
+          query.startDate = {}
+          query.startDate.day = this.copyBookingStart.charAt(8) + this.copyBookingStart.charAt(9)
+          query.startDate.month = this.copyBookingStart.charAt(5) + this.copyBookingStart.charAt(6)
+          query.startDate.year = this.copyBookingStart.charAt(0) + this.copyBookingStart.charAt(1) + this.copyBookingStart.charAt(2) + this.copyBookingStart.charAt(3)
         }
          
-
         if(this.copyBookingEnd != this.bookingEnd){
-          query.bookingEnd = {}
-          query.bookingEnd.day = this.copyBookingEnd.charAt(8) + this.copyBookingEnd.charAt(9)
-          query.bookingEnd.month = this.copyBookingEnd.charAt(5) + this.copyBookingEnd.charAt(6)
-          query.bookingEnd.year = this.copyBookingEnd.charAt(0) + this.copyBookingEnd.charAt(1) + this.copyBookingEnd.charAt(2) + this.copyBookingEnd.charAt(3)
-        }
-        
-         
+          dateChanged= true
+          query.endDate = {}
+          query.endDate.day = this.copyBookingEnd.charAt(8) + this.copyBookingEnd.charAt(9)
+          query.endDate.month = this.copyBookingEnd.charAt(5) + this.copyBookingEnd.charAt(6)
+          query.endDate.year = this.copyBookingEnd.charAt(0) + this.copyBookingEnd.charAt(1) + this.copyBookingEnd.charAt(2) + this.copyBookingEnd.charAt(3)
+        }        
         
         if(this.copyRentalOccurred != this.rentalOccurred)
-          query.rentalOccurred = this.copyRentalOccurred;
+          query.isTaken = this.copyRentalOccurred;
 
         if(this.copyReturned != this.returned)
-          query.returned = this.copyReturned;
+          query.isReturned = this.copyReturned;
 
         if(this.copyNotes != this.notes)
-          query.notes = this.copyNotes;
+          query.description = this.copyNotes;
           
         if(this.copyPrivateNotes != this.privateNotes)
-          query.privateNotes = this.copyPrivateNotes;
+          query.note = this.copyPrivateNotes;
           
         console.log(query);
-        Functions.saveReservation(this.identifier, query)
-        .then(response => {
-          if(response.status == '200'){
-            
-          this.bookedArticles.price = this.copyPrice
-          this.bookedArticles.discount.onSale = this.copyOnSale
-          this.bookedArticles.discount.onSaleType = this.copyOnSaleType
-          this.bookedArticles.discount.onSaleValue = this.copyOnSaleValue 
-          this.bookingRequest = this.copyBookingRequest
-          this.bookingStart = this.copyBookingStart
-          this.bookingEnd = this.copyBookingEnd
-          this.rentalOccurred = this.copyRentalOccurred
-          this.returned = this.copyReturned
-          this.notes  = this.copyNotes
-          this.privateNotes  = this.copyPrivateNotes
+        Functions.saveReservation(this.reservationId, query)
+        .then( () => {
+          if(dateChanged){
+            console.log('dataModificata')
+          
+            Functions.getProduct(this.bookedArticles.identifier)
+            .then( (result) =>{
+              console.log('trovato id')
+              console.log(result)
+              let query = {};
+              let newBookings = {};
+              newBookings.id = this.bookedArticles.identifier
+              newBookings.clientId = this.clientEmail
+              newBookings.startDate = {}
+              let d1 = this.copyBookingStart.split('-')
+              newBookings.startDate.day = d1[2]
+              newBookings.startDate.month = d1[1]
+              newBookings.startDate.year = d1[0]
+              let d2 = this.copyBookingEnd.split('-')
+              newBookings.endDate = {}
+              newBookings.endDate.day = d2[2]
+              newBookings.endDate.month = d2[1]
+              newBookings.endDate.year = d2[0]
 
-            
-          this.boolModify = false;
-            }
-        })
+              console.log(result)
+
+              let d3 = this.bookingStart.split('-')
+              let oldStartDate = {}
+              oldStartDate.day = d3[2]
+              oldStartDate.month = d3[1]
+              oldStartDate.year = d3[0] 
+              let d4 = this.bookingEnd.split('-')
+              let oldEndDate = {}
+              oldEndDate.day = d4[2]
+              oldEndDate.month = d4[1]
+              oldEndDate.year = d4[0]
 
 
-      }
-    },
-     
+              query.bookings = result.data.data.obj.bookings
+              for (let i in query.bookings){
+                if(query.bookings[i].id == newBookings.id  && JSON.stringify(query.bookings[i].startDate) === JSON.stringify(oldStartDate) && JSON.stringify(query.bookings[i].endDate) === JSON.stringify(oldEndDate)){                  
+                  query.bookings[i].startDate.day = newBookings.startDate.day
+                  query.bookings[i].startDate.month = newBookings.startDate.month
+                  query.bookings[i].startDate.year = newBookings.startDate.year
+                  query.bookings[i].endDate.day = newBookings.endDate.day
+                  query.bookings[i].endDate.month = newBookings.endDate.month
+                  query.bookings[i].endDate.year = newBookings.endDate.year
+                }
+              }
+              Functions.saveDataProduct(this.bookedArticles.identifier, query)
+              .then(  () =>{
+                //Aggiorniamo l'articolo
+                this.bookedArticles.price = this.copyPrice 
+                this.bookingRequest = this.copyBookingRequest
+                this.bookingStart = this.copyBookingStart
+                this.bookingEnd = this.copyBookingEnd
+                this.rentalOccurred = this.copyRentalOccurred
+                this.returned = this.copyReturned
+                this.notes  = this.copyNotes
+                this.privateNotes  = this.copyPrivateNotes
+                  
+                this.boolModify = false;    
+                alert("Modifica data riuscita") 
+              }) 
+            })
+          }                                       
+        })           
+      },
+    }
   }
 
 </script>

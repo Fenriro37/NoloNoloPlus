@@ -24,15 +24,16 @@
             <div class="p-3">
               <nav class="mb-3">
                 <b-nav vertical>
+                  <router-link to="/home" class="nav-link" >Home</router-link>
                   <router-link to="/createArticle" class="nav-link" >Aggiungi articolo</router-link>
                   <router-link to="/createReservation" class="nav-link" >Aggiungi prenotazione</router-link>
-                  <router-link to="/charts" class="nav-link"  >Grafici</router-link>
+                  <router-link :to="{name: 'chart', params: {products: articles}}" class="nav-link"  >Grafici</router-link>
                   <router-link to="/articleCatalog" class="nav-link" >Catalogo articoli</router-link>
                   <router-link to="/clientCatalog" class="nav-link" >Lista utenti</router-link>
                   <router-link to="/reservationCatalog" class="nav-link" >Lista prenotazioni</router-link>
                   <router-link to="/reservation" class="nav-link" >Esempio prenotazione</router-link>
 
-                  <router-link :to="{path: '/client/' + id}" class="nav-link">Esempio cliente</router-link>
+                  <router-link :to="{path: '/client' }" class="nav-link">Esempio cliente</router-link>
 
                  
 
@@ -53,13 +54,16 @@
 </div>
 </template>
 
+
+
+
 <script>
 import Functions from './functions/function'
 export default {
     data() {
       return {
-        id : 123,
-        path: "/client/",
+        articles: [],
+
         selected: 'a',
         options: [
           { value: 'a', text: 'Articoli' },
@@ -69,8 +73,15 @@ export default {
       }
     },
     created(){
-      Functions.loginAsWorker()
-    }
+      Functions.loginAsWorker().then( () => {
+        Functions.getAllProduct().then ( (result) =>{
+          console.log(result)
+          this.articles = result.data.data
+        })
+      })
+      
+    },
+
   }
 
 

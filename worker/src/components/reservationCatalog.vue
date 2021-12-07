@@ -2,30 +2,30 @@
   <!-- v-for:articles/clients/reservations {html di uno }-->
   
   <div class="container-fluid p-5">
-    <b-row>
-      <b-col cols="2">
-        <b-img thumbnail fluid :src="reservations.productImage"  alt="Image 1"></b-img>
-      </b-col>
-      <b-col cols="3">
-        <h2><router-link to="/client" class="nav-link">{{reservations.clientEmail}}</router-link></h2>
-        <h2><router-link to="/article" class="nav-link">{{reservations.articleId}}</router-link></h2>
-        <h2>{{reservations.articleTitle + ' ' + reservations.articlesBrand}}</h2>
-      </b-col>
-      <b-col cols="3">
-        <h3>Inizio prenotazione: {{reservations.startDay + "/" + reservations.startMonth + "/" + reservations.startYear}}</h3>
-        <h3>Fine prenotazione: {{reservations.endDay + "/" + reservations.endMonth + "/" + reservations.endYear}}</h3>
-        <b-form-checkbox :checked="reservations.rentalOccurred" disabled>Avvenuto Ritiro</b-form-checkbox>
-        <b-form-checkbox :checked="reservations.returned" disabled>Avvenuta Restituzione</b-form-checkbox>
-      </b-col>
-    </b-row>
+    <ul>
+      <li v-for="reservation in catalog" :key="reservation._id">
+        <b-row>
+          <b-col cols="3">
+            <!-- Immagine-->
+          </b-col>
+          <b-col cols="6">
+            <h2><router-link :to="{name: 'client', params: {client: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h2>
+            <h2>{{reservation.productTitle + ' ' + reservation.productBrand}}</h2>
+            <h2><router-link :to="{ name: 'article',  params: { article: reservation.productId}}">{{reservation.productId}}</router-link></h2>            
+          </b-col>
+        </b-row>
+      </li>
+    </ul>
   </div>
 
 </template>
 
 <script>
+import Functions from '../functions/function'
 export default {
     data() {
       return {
+        catalog: [],
         reservations: 
         {
           clientEmail:'mario.draghi@gmail.com',
@@ -44,9 +44,20 @@ export default {
         }                
       }
     },
+
+    created(){
+      Functions.getAllReservation()
+        .then( (result) => {
+          console.log(result)
+          this.catalog = result.data.obj
+        }) 
+    },
     methods: {    },
     computed: {    },
   }
 
 
+/*
+<b-img thumbnail fluid :src="reservations.productImage"  alt="Image 1"></b-img>
+*/ 
 </script>

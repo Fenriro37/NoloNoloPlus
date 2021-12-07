@@ -202,12 +202,37 @@
       else query.notes = this.notes;
 
       //invio dati
-       Functions.addReservation(this.email, this.articleId, query)
-        .then(function(){
+      Functions.addReservation(query)
+        .then( () => {
+          //Aggiorniamo l'array delle prenotazioni del prodotto
+          Functions.getProduct(this.articleId)
+          .then( (result) =>{
+            let query = {};
+            let newBookings = {};
+            newBookings.id = this.articleId
+            newBookings.clientId = this.email
+            newBookings.startDate = {}
+            newBookings.startDate.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
+            newBookings.startDate.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)
+            newBookings.startDate.year = this.reservationStart.charAt(0) + this.reservationStart.charAt(1) + this.reservationStart.charAt(2) + this.reservationStart.charAt(3)
+            newBookings.endDate = {}
+            newBookings.endDate.day = this.reservationEnd.charAt(8) + this.reservationEnd.charAt(9)
+            newBookings.endDate.month = this.reservationEnd.charAt(5) + this.reservationEnd.charAt(6)
+            newBookings.endDate.year = this.reservationEnd.charAt(0) + this.reservationEnd.charAt(1) + this.reservationEnd.charAt(2) + this.reservationEnd.charAt(3)
 
-        //svuotiamo i valori
-        this.cancel();
-        alert("Creazione riuscita")
+            if(result.data.data.obj.bookings == null)  
+              query.bookings = []
+            else 
+              query.bookings = result.data.data.obj.bookings
+            
+            query.bookings.push(newBookings)
+            //Aggiorniamo l'articolo
+            Functions.saveDataProduct(this.articleId, query)
+            .then( () =>{
+              this.cancel();
+              alert("Creazione riuscita")
+            })
+          })
         })        
       },
 

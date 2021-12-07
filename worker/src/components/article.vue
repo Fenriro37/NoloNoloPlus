@@ -238,8 +238,8 @@
             <tr v-for="(iter, index) in bookings" :key="index">
               <td><a href="#" >{{iter.id}}</a></td>
               <td><a href="#" >{{iter.clientId}}</a></td>
-              <td >{{iter.startDate}}</td>
-              <td >{{iter.endDate}}</td>
+              <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
+              <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
             </tr>
           </tbody>
         </table>
@@ -258,6 +258,7 @@
   import "bootstrap";
   import $ from 'jquery'
   import Functions from '../functions/function'
+
   export default {
     data() {
       return {
@@ -292,10 +293,13 @@
       }
     },
 
-     created() {
-        Functions.getProduct("616fe38696d1e399a0d12244").then((result) => {
-          console.log(result.data.data.obj.title);
-          this.identifier = "616fe38696d1e399a0d12244"
+     created() { 
+        console.log(JSON.stringify(this.$route.params))
+
+
+        Functions.getProduct(this.$route.params.article).then((result) => {
+          
+          this.identifier = this.$route.params.article
           this.title = result.data.data.obj.title
           this.brand = result.data.data.obj.brand
           this.image = result.data.data.obj.image
@@ -347,6 +351,7 @@
         this.tagsModal = this.tagsModal.replace(/,/g, ' ');
 
         let newTags = [...new Set(this.tagsModal.split(/\s+/))];
+        //potrebbe non essere l'ultimo?
         if(newTags[newTags.length - 1] == '') {
           newTags.pop()
         }

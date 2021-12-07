@@ -223,8 +223,8 @@
       else query.description = this.description;
 
       //invio dati
-       Functions.addReservation(query)
-        .then(function(){
+      Functions.addProduct(query)
+        .then( () => {
 
         //svuotiamo i valori
         this.cancel();

@@ -7,20 +7,20 @@ class Functions {
         let result = http.post(
             "/api/public/login",
             {
-                "email": "han.chu@worker.com",
-                "plainTextPassword": "1234567890"
+                email: "han.chu@worker.com",
+                plainTextPassword: "1234567890"
             }
         );
-        result.then(function(res) {
-            console.log(res);
-            console.log(res.headers);
-        })
         return result;
     }
 
-
+    //////////////API relative ai prodotti///////////////////////////////////////////////
     getProduct(id) {
         return http.get("/api/product/?id=" + id)
+    }
+
+    getAllProduct(){
+        return http.get("/api/product/all")
     }
 
     updateProduct(id, isAvailable) {
@@ -31,13 +31,39 @@ class Functions {
         return http.post("/api/product?id=" + id, query)
     }
 
+    addProduct(query){
+        return http.post("/api/product", query)
+    }
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////API relative ai clienti///////////////////////////////////////////////
+    getUser(query) {
+        return http.get("/api/user/" + query)
+    }
     
+    getAllUser(){
+        return http.get("/api/user/all")
+    }
+
     saveDataClient(id, query){
-        return http.post("/api/save/product?id=" + id + "&&acs=2", query)
+        return http.post("/api/user?id=" + id , query)
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////API relative alle prenotazioni/////////////////////////////////////////
+    getReservation(id) {
+        return http.get("/api/reservation/?id=" + id)
+    }
+
+    getAllReservation(filter, sort){
+        return http.get("/api/reservation/all", {'filter': filter , 'sort': sort})
     }
 
     saveReservation(id, query){
-        return http.post("/api/save/reservation?id=" + id + "&&acs=2", query)
+        return http.post("/api/reservation?id=" + id , query)        
+    }
+
+    addReservation(query){
+        return http.post("/api/reservation", query)
     }
 
 }

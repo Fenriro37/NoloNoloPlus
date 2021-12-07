@@ -75,7 +75,7 @@
         <b>Data di nascita</b>
       </b-col >
       <b-col cols="9">
-        <b-form-input v-if="!boolModify" :value="birthday"  readonly></b-form-input>
+        <b-form-input v-if="!boolModify" type="text" :value="birthday"  readonly></b-form-input>
         <b-form-datepicker v-else v-model="copyDate" :placeholder="birthday"  ></b-form-datepicker>
       </b-col>
     </b-row>
@@ -191,31 +191,31 @@
   export default {
     data() {
       return {
-        id: this.$route.params.id,
-        name: 'Mario',
-        surname: 'Mari',
-        sex: 'F',
-       options: [
-          { value: 'M', text:'M'},
-          { value: 'F', text:'F'},
-          { value: 'Altro',text:'Altro'},
+        id: '',
+        name: '',
+        surname: '',
+        sex: '',
+        options: [
+          { value: 'Male', text:'M'},
+          { value: 'Female', text:'F'},
+          { value: 'Other',text:'Altro'},
         ],
-        birthday: '10/12/1992',
-        phoneNumber: '3506451389',
-        email: 'example@gmail.com',
-        password: 'cacca',
+        birthday: '',
+        phoneNumber: '',
+        email: '',
+        password: '',
         address: {
-          addressStreet: 'Via dei cazzi',
-          addressNumber: '13',
-          addressCity: 'Bologna'
+          addressStreet: '',
+          addressNumber: '',
+          addressCity: ''
         },
         payment: {
-          cardType: 'debito',
-          cardName: 'Visa',
-          cardSurname: 'Vitali',
-          cardExpireMonth: '7',
-          cardExpireYear: '24',
-          cardCVV: '111'
+          cardType: '',
+          cardName: '',
+          cardSurname: '',
+          cardExpireMonth: '',
+          cardExpireYear: '',
+          cardCVV: ''
         },      
         //Modalità Modifica
         boolModify: false,
@@ -242,10 +242,32 @@
     },
 
       created() {
-        //console.log(this.id + ' cacca')
-        let product = Functions.getProduct("616fe38696d1e399a0d12244")
-        console.log(product)
-        //call mongo dicky
+        console.log(this.$route.params)
+        let query = {}
+        //query.filter = this.$route.params.client
+        query.filter = ''
+        query.sort = true
+        //comporre il getUser con id o email '?id/email=' + value
+        //{'filter': 'han.chu@studio.unibo.it', 'sort': 'true'}
+        Functions.getAllUser().then((result) => {
+          console.log(result)
+          this.id = this.$route.params.client,
+          this.name = result.data.data.userName
+          this.surname = result.data.data.userSurname
+          this.birthday = result.data.data.birthday.day + '/' + result.data.data.birthday.month + '/' + result.data.data.birthday.year
+          this.sex = result.data.data.sex
+          this.phoneNumber = result.data.data.phoneNumber
+          this.email = result.data.data.email
+          this.address.addressStreet = result.data.data.address.addressStreet
+          this.address.addressNumber = result.data.data.address.addressNumber
+          this.address.addressCity = result.data.data.address.addressCity
+          this.payment.cardType = result.data.data.payment.cardType
+          this.payment.cardName = result.data.data.payment.cardName
+          this.payment.cardSurname = result.data.data.payment.cardSurname
+          this.payment.cardExpireMonth = result.data.data.payment.cardExpireMonth
+          this.payment.cardExpireYear = result.data.data.payment.cardExpireYear
+          this.payment.cardCVV = result.data.data.payment.cardCVV
+        })
       },
 
 
@@ -282,10 +304,10 @@
           query.userName = this.copyName;
           
         if(this.copySurname != this.surname)
-          query.surname = this.copySurname;
+          query.userSurname = this.copySurname;
           
         if(this.copySex != this.sex)
-          query.sex = this.copySex;
+          query.sex = this.copySex; 
         
         if(this.copyDate != this.date){
           query.date = {}
@@ -351,8 +373,9 @@
           query.payment.cardExpireYear = this.copyCardExpireYear;
         }
         
-        console.log(query);
-        Functions.saveDataClient(this.identifier, query)
+        console.log(query) 
+        console.log(this.id);
+        Functions.saveDataClient(this.id, query)
         .then(response => {
           if(response.status == '200'){
             this.name = this.copyName
