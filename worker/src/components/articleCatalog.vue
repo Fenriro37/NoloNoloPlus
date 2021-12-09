@@ -30,7 +30,7 @@ export default {
       }
     },
 
-    created(){      
+    created(){
       Functions.getAllProduct()
         .then( (result) => {
           console.log(result)
@@ -39,5 +39,4 @@ export default {
     },
     methods: {    },
   }
-
 </script>

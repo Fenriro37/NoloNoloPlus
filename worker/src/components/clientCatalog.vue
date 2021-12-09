@@ -38,7 +38,7 @@ export default {
       let query = {}
       query.filter = ''
       query.sort = true 
-      Functions.getAllUser(x)
+      Functions.getAllUser(query)
         .then( (result) => {
         console.log(result)
         this.catalog = result.data.data
