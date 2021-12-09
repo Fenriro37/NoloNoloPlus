@@ -5,11 +5,13 @@ const indexRouter = require('./route/index.js');
 const cookieParser = require('cookie-parser');
 
 const corsOptions = {
+  // origin: 'http://localhost:8080',
   origin: '*',
+  methods: ['GET', 'POST', 'DELETE'],
+  allowedHeaders: ['Origin', 'Content-Type'],
+  exposedHeaders: 'Set-Cookie',
   credentials: true,
-  optionSuccessStatus: 200,
-  allowedHeaders: '*',
-  exposedHeaders: '*'
+  optionSuccessStatus: 200
 }
 
 const app = express();
@@ -21,11 +23,8 @@ app.use(cookieParser());
 app.use('/api/', apiRouter);
 app.use('/', indexRouter);
 
-app.get('/test/', function(req, res) {
-  res.cookie('name', 'express').send('cookie set'); //Sets name = express
-})
-
 const PORT = process.env.PORT || 8081;
+// const PORT = 8000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

@@ -31,7 +31,7 @@
           </div>
           <!-- Bottoni -->
           <div>
-            <button type="button" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</button>
+            <router-link :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</router-link>
             <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
             <div class="form-check form-switch big-size">
               <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
@@ -238,18 +238,13 @@
             <tr v-for="(iter, index) in bookings" :key="index">
               <td><a href="#" >{{iter.id}}</a></td>
               <td><a href="#" >{{iter.clientId}}</a></td>
-              <td >{{iter.startDate}}</td>
-              <td >{{iter.endDate}}</td>
+              <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
+              <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <!--
-    <button v-on:click="productButton('61790b14c9f1f2e35c109866')">GetCar</button>
-    <button v-on:click="productButton('616fe38696d1e399a0d12244')">GetBike</button>
-    <button v-on:click="productButton('6179508e9013db333732f9eb')">GetMotorcycle</button>
-    -->
   </div>
 </template>
 
@@ -258,11 +253,12 @@
   import "bootstrap";
   import $ from 'jquery'
   import Functions from '../functions/function'
+
   export default {
     data() {
       return {
         identifier: '',
-        title: 'ciao',
+        title: '',
         brand: '',
         image: '',
         tags: [],
@@ -292,10 +288,13 @@
       }
     },
 
-     created() {
-        Functions.getProduct("616fe38696d1e399a0d12244").then((result) => {
-          console.log(result.data.data.obj.title);
-          this.identifier = "616fe38696d1e399a0d12244"
+     created() { 
+        console.log(JSON.stringify(this.$route.params))
+
+
+        Functions.getProduct(this.$route.params.article).then((result) => {
+          
+          this.identifier = this.$route.params.article
           this.title = result.data.data.obj.title
           this.brand = result.data.data.obj.brand
           this.image = result.data.data.obj.image
@@ -347,6 +346,7 @@
         this.tagsModal = this.tagsModal.replace(/,/g, ' ');
 
         let newTags = [...new Set(this.tagsModal.split(/\s+/))];
+        //potrebbe non essere l'ultimo?
         if(newTags[newTags.length - 1] == '') {
           newTags.pop()
         }

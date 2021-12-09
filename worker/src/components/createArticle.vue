@@ -204,31 +204,35 @@
         query.tags = newTags;
       }
 
-      if(this.quality < 1 || this.quality > 3 ){return(alert('Il campo qualità deve essere compreso tra 1 e 3'))}
-      else query.image = this.image;
+      query.discount = {}
+      query.discount.onSale = this.onSale;
+      query.discount.onSaleType = this.onSaleType;
+      if(this.onSale == true && this.onSaleValue == '' ){return (alert('inserire lo sconto da applicare'))}
+      if(this.onSale == true && this.onSaleValue < 0 ){return (alert('lo sconto da applicare deve essere maggiore di zero'))}
+      query.discount.onSaleValue = this.onSaleValue;
 
       if(this.price == ''){return (alert('Il campo prezzo non può essere vuoto'))}
       if(this.price < 0){return(alert("Il prezzo deve essere maggiore di '0'"))}
       else query.price = this.price;
-
-      query.onSale = this.onSale;
-      query.onSaleType = this.onSaleType;
-      if(this.onSale == true && this.onSaleValue == '' ){return (alert('inserire lo sconto da applicare'))}
-      if(this.onSale == true && this.onSaleValue < 0 ){return (alert('lo sconto da applicare deve essere maggiore di zero'))}
-      query.onSaleValue = this.onSaleValue;
+      
+      if(this.quality < 1 || this.quality > 3 ){return(alert('Il campo qualità deve essere compreso tra 1 e 3'))}
+      else query.quality = this.quality;
 
       query.available = this.available;
       
       if(this.description == ''){return(alert('Il campo descrizione non può essere vuoto'))}
       else query.description = this.description;
 
-      //invio dati
-       Functions.addReservation(query)
-        .then(function(){
+      query.note = this.note
 
-        //svuotiamo i valori
-        this.cancel();
-        alert("Creazione riuscita")
+      query.bookings = []
+
+      //invio dati
+      Functions.addProduct(query)
+        .then( () => {
+          //svuotiamo i valori
+          this.cancel();
+          alert("Creazione riuscita")
         })        
       },
 

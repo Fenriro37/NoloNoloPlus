@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 
 // Moduli
-const express = require('express');
+const router = require('express').Router();
 const authMiddleware = require('./../route/auth.js');
 const invoiceApi = require('./invoice.js');
 const productApi = require('./product.js');
@@ -12,7 +12,7 @@ const reservationApi = require('./reservation.js');
 // const statApi = require('./stat.js');
 const userApi = require('./user.js');
 
-const router = express.Router();
+console.log('/api/index.js');
 
 router.use('/public/', publicApi);
 // router.use(authMiddleware);

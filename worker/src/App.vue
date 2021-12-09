@@ -8,8 +8,8 @@
     <b-col cols='6'>
       <b-input-group class="noborder">
         <b-form-select v-model="selected" :options="options">        </b-form-select>
-        <b-form-input id="ricerca" placeholder="Search..."></b-form-input>
-        <b-button class="bg-primary" >Cerca</b-button>
+        <b-form-input id="ricerca" placeholder="Search..." v-model="search"></b-form-input>
+        <b-button @click="$router.push({path: '/' + selected + 'Catalog', params:{filter: search}})">Click to Navigate</b-button>
       </b-input-group>
     </b-col>
 
@@ -19,24 +19,21 @@
     <template>
       <div>
         <b-button id="burgerButton" v-b-toggle.sidebar-right><b-img id="burger" src="https://icon-library.com/images/hamburger-menu-icon-png/hamburger-menu-icon-png-2.jpg"></b-img></b-button>
-        <b-sidebar id="sidebar-right" title="Sidebar" right shadow>
+        <b-sidebar id="sidebar-right" title="Operazioni" right shadow>
           <template #default="{ hide }">
             <div class="p-3">
               <nav class="mb-3">
                 <b-nav vertical>
+                  <router-link to="/home" class="nav-link" >Home</router-link>
                   <router-link to="/createArticle" class="nav-link" >Aggiungi articolo</router-link>
                   <router-link to="/createReservation" class="nav-link" >Aggiungi prenotazione</router-link>
-                  <router-link to="/charts" class="nav-link"  >Grafici</router-link>
-                  <router-link to="/articleCatalog" class="nav-link" >Catalogo articoli</router-link>
-                  <router-link to="/clientCatalog" class="nav-link" >Lista utenti</router-link>
-                  <router-link to="/reservationCatalog" class="nav-link" >Lista prenotazioni</router-link>
+                  <router-link :to="{name: 'chart', params: {products: articles}}" class="nav-link"  >Grafici</router-link>
+
                   <router-link to="/reservation" class="nav-link" >Esempio prenotazione</router-link>
-
-                  <router-link :to="{path: '/client/' + id}" class="nav-link">Esempio cliente</router-link>
-
-                 
-
+                  <router-link :to="{path: '/client' }" class="nav-link">Esempio cliente</router-link>
                   <router-link to="/article" class="nav-link" >Esempio articolo</router-link>
+
+                  <a>Login/Logout</a>
                 </b-nav>
               </nav>
               <b-button variant="primary" block @click="hide">Close Sidebar</b-button>
@@ -61,19 +58,31 @@ import Functions from './functions/function'
 export default {
     data() {
       return {
-        id : 123,
-        path: "/client/",
-        selected: 'a',
+        articles: [],
+
+        search: '',
+        selected: 'article',
         options: [
-          { value: 'a', text: 'Articoli' },
-          { value: 'c', text: 'Clienti' },
-          { value: 'p', text: 'Prenotazioni' },
+          { value: 'article', text: 'Articoli' },
+          { value: 'client', text: 'Clienti' },
+          { value: 'reservation', text: 'Prenotazioni' },
         ]
       }
     },
     created(){
-      Functions.loginAsWorker()
+      Functions.loginAsWorker().then( () => {
+        Functions.getAllProduct().then ( (result) =>{
+          console.log(result)
+          this.articles = result.data.data
+        })
+      })
+      
     },
+
+    manageItems(){
+      //al click di cerca in base a select e search si chiama uno dei tre componenti eventualmente filtrati
+
+    }
 
   }
 

@@ -20,9 +20,11 @@
 
 
 <script>
+import Functions from '../functions/function'
 export default {
     data() {
       return {
+        catalog: [],
         clients: 
         {
             name: 'Mario',
@@ -31,6 +33,16 @@ export default {
             email: 'mariocazzi@gmail.com',
         }                
       }
+    },
+    created(){
+      let query = {}
+      query.filter = ''
+      query.sort = true 
+      Functions.getAllUser(x)
+        .then( (result) => {
+        console.log(result)
+        this.catalog = result.data.data
+      }) 
     },
     methods: {    },
     computed: {    },

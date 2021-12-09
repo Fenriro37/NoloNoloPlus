@@ -44,7 +44,17 @@ exports.productsFind = async function(filter, sortBy) {
                     { title: re },
                     { brand: re },
                     { tags: { $all: array } }
-                ]}).sort({ price: sortBy });
+                ]},
+                {
+                    projection: {
+                        _id: 1,
+                        title: 1,
+                        brand: 1,
+                        price: 1,
+                        image: 1,
+                        quality: 1
+                    }
+                }).sort({ price: sortBy });
         let x = await result.toArray();
         await mongo.close();
         return {
@@ -176,11 +186,12 @@ exports.productsInsertOne = async function(newProductData) {
 // - error
 //   È il messaggio d'errore.
 exports.productsUpdateOne = async function(id, data) {
+    console.log(data)
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
-        const filter = {'_id': id};
+        const filter = {'_id': ObjectId(id)};
         const updateDocument = {
             $set: data
         }

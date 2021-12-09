@@ -112,10 +112,6 @@ exports.login = async function(queryEmail, plainTextPassword) {
         
         await mongo.close();
 
-        console.log(resultManager);
-        console.log(resultWorker);
-        console.log(resultUser);
-
         if(resultUser != null) {
             if(await bcrypt.compare(plainTextPassword, resultUser.password) === true) {
                 // È un cliente
