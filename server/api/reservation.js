@@ -77,17 +77,18 @@ router.get('/', async function(req, res) {
 // Header:
 // - Cookies jwt
 //   È il token per autenticare il chiamante.
-// Body:
-// - filter (opzionale) - string
-//   È la parola chiave da ricercare nel DB; si filtra per:
-//   - userName
-//   - userSurname
-//   - email
-//   - productTitle
-//   - productBrand
-// - sort (opzionale) - bool
-//   È l'ordine dei valori di ritorno; può essere true (crescente) o false 
-//   (descrescente); è applicato alla data di prenotazione.
+// - Parametri
+//   - filter (opzionale) - string
+//     È la parola chiave da ricercare nel DB; si filtra per:
+//     - userName
+//     - userSurname
+//     - email
+//     - productTitle
+//     - productBrand
+//   - sort (opzionale) - bool
+//     È l'ordine dei valori di ritorno; può essere true (crescente) o false 
+//     (descrescente); è applicato alla data di prenotazione.
+// Body: vuoto
 //
 // Valori di ritorno: { message, data, error }
 // - message
@@ -105,10 +106,10 @@ router.get('/all', async function(req, res) {
             return res.status(401).json({
                 message: 'Token non valido.'
             });
-        } else if(sender.status == 0 && req.body.id == token.id || sender.status > 0) {
+        } else if(sender.status >= 0) {
             // È un cliente o funzionario/manager
-            if(req.body != null) {
-                const result = await myMongoReservation.reservationsFind(token, req.body.filter ? req.body.filter : '', req.body.sort ? 1 : -1);
+            if(req.query.filter != null && req.query.sort != null) {
+                const result = await myMongoReservation.reservationsFind(token, req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
                 if(result.status == 0) {
                     // OK
                     return res.status(200).json({

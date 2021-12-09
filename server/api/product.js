@@ -64,15 +64,16 @@ router.get('/', async function(req, res) {
 // [Tutti] Ritorna i prodotto del DB filtrati e ordinati con i parametri
 // passati in input
 // 
-// Header: vuoto
-// Body:
-// - filter (opzionale) - string
-//   È la parola chiave da ricercare nel DB; si filtra per:
-//   - title
-//   - brand
-// - sort (opzionale) - bool
-//   È l'ordine dei valori di ritorno; può essere true (crescente) o false 
-//   (descrescente); è applicato al prezzo.
+// Header:
+// - Parametri:
+//   - filter (opzionale) - string
+//     È la parola chiave da ricercare nel DB; si filtra per:
+//     - title
+//     - brand
+//   - sort (opzionale) - bool
+//     È l'ordine dei valori di ritorno; può essere true (crescente) o false 
+//     (descrescente); è applicato al prezzo.
+// Body: vuoto
 //
 // Valori di ritorno: { message, data, error }
 // - message
@@ -84,8 +85,8 @@ router.get('/', async function(req, res) {
 router.get('/all', async function(req, res) {
     console.log('GET /api/product/all');
     try {
-        if(req.body != null) {
-            const result = await myMongoProduct.productsFind(req.body.filter ? req.body.filter : '', req.body.sort ? 1 : -1);
+        if(req.query.filter != null && req.query.sort != null) {
+            const result = await myMongoProduct.productsFind(req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
             if(result.status == 0) {
                 // OK
                 return res.status(200).json({

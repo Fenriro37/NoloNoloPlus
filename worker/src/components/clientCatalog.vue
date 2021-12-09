@@ -35,9 +35,11 @@ export default {
       }
     },
     created(){
-      let query = {}
-      query.filter = ''
-      query.sort = true 
+      let query = {
+       "filter": "Han",
+       "sort": false
+      }
+      console.log(query)
       Functions.getAllUser(query)
         .then( (result) => {
         console.log(result)

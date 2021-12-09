@@ -22,7 +22,9 @@ const config = require('./../config');
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id (opzionale) - string
-//     È l'id della prenotazione.
+//     È l'id dell'utente.
+//   - email (opzionale) - string
+//     È l'email dell'utente.
 // Body: vuoto
 //
 // Valori di ritorno: { message, data, error }
@@ -36,6 +38,7 @@ router.get('/', async function(req, res) {
     console.log('GET /api/user/');
     try {
         const paramId = req.query.id;
+        const paramEmail = req.query.email;
         const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
@@ -46,14 +49,18 @@ router.get('/', async function(req, res) {
             });
         } else if(sender.status > 0) {
             // È un funzionario o manager
-            if(paramId == null) {
+            if(paramId || paramEmail) {
+                // Parametro specificato
+                if(paramId) {
+                    result = await myMongoUser.usersFindOne({ '_id': ObjectId(paramId) });
+                } else {
+                    result = await myMongoUser.usersFindOne({ 'email': paramEmail });
+                }
+            } else {
                 // Parametro non specificato
                 return res.status(400).json({
                     message: 'Parametro mancante.'
-                });
-            } else {
-                // Parametro specificato
-                result = await myMongoUser.usersFindOne({ '_id': ObjectId(paramId) });
+                });     
             }
         } else {
             // È un cliente
@@ -128,20 +135,27 @@ router.get('/all', async function(req, res) {
             });
         } else {
             // È un manager o funzionario
-            const result = await myMongoUser.usersFind(req.body.filter ? req.body.filter : '', req.body.sort ? 1 : -1);
-            if(result.status == 0) {
-                // OK
-                return res.status(200).json({
-                    message: result.message,
-                    data: result.obj
-                });
+            if(req.query.filter != null && req.query.sort != null) {
+                const result = await myMongoUser.usersFind(req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
+                if(result.status == 0) {
+                    // OK
+                    return res.status(200).json({
+                        message: result.message,
+                        data: result.obj
+                    });
+                } else {
+                    // Errore del database
+                    return res.status(400).json({
+                        message: result.message,
+                        error: result.obj
+                    });
+                }
             } else {
-                // Errore del database
+                // Parametri mancanti
                 return res.status(400).json({
-                    message: result.message,
-                    error: result.obj
+                    message: 'Parametri mancanti.'
                 });
-            }      
+            }
         }
     } catch(error) {
         return res.status(400).json({
