@@ -208,14 +208,8 @@ router.post('/', async function(req, res) {
                     message: 'Parametro mancante.'
                 });
             } else {
-                // Parametro specificato
-                if(paramId == req.body.id) {
-                    result = await myMongoUser.usersUpdateOne(paramId, req.body.data);
-                } else {
-                    return res.status(400).json({
-                        message: 'I parametri non coincidono.'
-                    })
-                }
+                // Parametro specificato                
+                result = await myMongoUser.usersUpdateOne(paramId, req.body);
             }
         } else {
             // È un cliente
@@ -223,12 +217,9 @@ router.post('/', async function(req, res) {
                 return res.status(401).json({
                     message: 'Operazione non autorizzata.'
                 });
-            } else if(tokenId != req.body.id) {
-                return res.status(400).json({
-                    message: 'I parametri non coincidono.'
-                });
-            } else {
-                result = await myMongoUser.usersUpdateOne(tokenId, req.body.data);
+            } 
+            else {
+                result = await myMongoUser.usersUpdateOne(tokenId, req.body);
             }
         }
         if(result.status == 0) {

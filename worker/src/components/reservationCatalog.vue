@@ -5,10 +5,12 @@
     <div  v-for="reservation in catalog" :key="reservation._id">
       <b-row>
         <b-col cols="3">
-          <!-- Immagine-->
+          <b-img thumbnail fluid v-bind:src="reservation.image"  alt="Image 1"></b-img>
         </b-col>
         <b-col cols="6">
-          <h2><router-link :to="{name: 'client', params: {client: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h2>
+          <h2>Id prenotazione:<router-link :to="{name: 'reservation', params: {id: reservation._id}}">{{reservation._id}}</router-link></h2>
+          <h2>{{reservation.clientName + ' ' + reservation.clientSurname}}
+          <h2><router-link :to="{name: 'client', params: {email: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h2>
           <h2>{{reservation.productTitle + ' ' + reservation.productBrand}}</h2>
           <h2><router-link :to="{ name: 'article',  params: { article: reservation.productId}}">{{reservation.productId}}</router-link></h2>            
         </b-col>
@@ -44,7 +46,11 @@ export default {
     },
 
     created(){
-      Functions.getAllReservation()
+      let query = {
+       filter: this.$route.params.filter,
+       sort: false
+      }
+      Functions.getAllReservation(query)
         .then( (result) => {
           console.log(result)
           this.catalog = result.data.obj

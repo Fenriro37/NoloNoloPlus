@@ -243,15 +243,20 @@
 
       created() {
         console.log(this.$route.params)
-        let query = {}
-        //query.filter = this.$route.params.client
-        query.filter = ''
-        query.sort = true
         //comporre il getUser con id o email '?id/email=' + value
         //{'filter': 'han.chu@studio.unibo.it', 'sort': 'true'}
-        Functions.getUser('6166d51e0e2d77d753b24dae').then((result) => {
+        let query,n
+        if ( this.$route.params.id != undefined){
+          query = this.$route.params.id 
+          n = 0
+        }
+        else {
+          query = this.$route.params.email 
+          n = 1
+        } 
+        Functions.getUser(query, n).then((result) => {
           console.log(result)
-          this.id = this.$route.params.client,
+          this.id = result.data.data._id
           this.name = result.data.data.userName
           this.surname = result.data.data.userSurname
           this.birthday = result.data.data.birthday.day + '/' + result.data.data.birthday.month + '/' + result.data.data.birthday.year
@@ -376,8 +381,7 @@
         console.log(query) 
         console.log(this.id);
         Functions.saveDataClient(this.id, query)
-        .then(response => {
-          if(response.status == '200'){
+        .then( () => {
             this.name = this.copyName
             this.surname = this.copySurname
             this.sex = this.copySex
@@ -393,13 +397,9 @@
             this.payment.cardExpireMonth = this.copyCardExpireMonth
             this.payment.cardExpireYear = this.copyCardExpireYear
 
-            
-            this.boolModify = false;
-          }
-        
+            this.boolModify = false;        
         })
       },
-
     }
   }
 </script>

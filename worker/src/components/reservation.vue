@@ -5,6 +5,7 @@
         <b-img v-bind:src="bookedArticles.image" class="img-thumbnail"></b-img>
       </b-col>
       <b-col cols="6">
+        <p>Id prenotazione: {{reservationId}} </p>
         <p>{{bookedArticles.title + ' ' +bookedArticles.brand}}</p>
 
         <p>Id Articolo: <a href="">{{ bookedArticles.identifier}}</a></p>
@@ -165,9 +166,9 @@
       }
     },
     created() {
-      Functions.getReservation("61977feca4f23a08ccadf8bb").then((result) => {
+      Functions.getReservation(this.$route.params.id).then((result) => {
         console.log(result)
-        this.reservationId = '61977feca4f23a08ccadf8bb'
+        this.reservationId = this.$route.params.id
         this.clientEmail = result.data.data.obj.clientEmail 
         this.bookedArticles.identifier = result.data.data.obj.productId 
         this.bookedArticles.title = result.data.data.obj.productTitle 

@@ -32,7 +32,7 @@ export default new Router({
       component: createReservation
     },
     {
-      path: "/article",
+      path: "/article:id",
       name: "article",
       component: article
     },
@@ -47,15 +47,18 @@ export default new Router({
       component: reservation
     },
     {
-      path: "/articleCatalog",
+      path: "/articleCatalog:filter",
+      name: "articleCatalog",
       component: articleCatalog
     },
     {
-      path: "/clientCatalog",
+      path: "/clientCatalog:filter",
+      name: "clientCatalog",
       component: clientCatalog
     },
     {
-      path: "/reservationCatalog",
+      path: "/reservationCatalog:filter",
+      name: "reservationCatalog",
       component: reservationCatalog
     },
     {

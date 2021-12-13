@@ -19,8 +19,8 @@ class Functions {
         return http.get("/api/product/?id=" + id)
     }
 
-    getAllProduct(){
-        return http.get("/api/product/all")
+    getAllProduct(query){
+        return http.get("/api/product/all/?filter=" + query.filter + "&sort=" + query.sort)
     }
 
     updateProduct(id, isAvailable) {
@@ -36,12 +36,17 @@ class Functions {
     }
     /////////////////////////////////////////////////////////////////////////////////////
     //////////////API relative ai clienti///////////////////////////////////////////////
-    getUser(query) {
-        return http.get("/api/user/" + query)
+    //0 id 
+    //1 email
+    getUser(id, choice) {
+        if(choice == 0)
+            return http.get("/api/user?id=" + id)
+        else     
+            return http.get("/api/user?email=" + id)
     }
     
     getAllUser(query){
-        return http.get("/api/user/all", query)
+        return http.get("/api/user/all?filter=" + query.filter + "&sort=" + query.sort)
     }
 
     saveDataClient(id, query){
@@ -54,8 +59,8 @@ class Functions {
         return http.get("/api/reservation/?id=" + id)
     }
 
-    getAllReservation(filter, sort){
-        return http.get("/api/reservation/all", {'filter': filter , 'sort': sort})
+    getAllReservation(query){
+        return http.get("/api/reservation/all?filter=" + query.filter + "&sort=" + query.sort)
     }
 
     saveReservation(id, query){

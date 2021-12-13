@@ -2,16 +2,18 @@
   <!-- v-for:articles/clients/reservations {html di uno }-->
   
   <div class="container-fluid p-5">
-    <b-row>
-      <b-col cols="2">
-        <b-img thumbnail fluid src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Image 1"></b-img>
-      </b-col>
-      <b-col cols="5">
-        <h2>  <router-link to="/client" class="nav-link">{{clients.name + ' ' + clients.surname}}</router-link></h2>
-        <h2> Email: {{clients.email}} </h2> 
-        <h2> Telefono: {{clients.phoneNumber}} </h2> 
-      </b-col>
-    </b-row>
+    <div  v-for="user in catalog" :key="user._id">
+      <b-row>
+        <b-col cols="2">
+          <b-img thumbnail fluid src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Image 1"></b-img>
+        </b-col>
+        <b-col cols="5">
+          <h2>  <router-link :to="{name: 'client', params:{id: user._id, email: user.email}}" class="nav-link">{{user.userName + ' ' + user.userSurname}}</router-link></h2>
+          <h2> Email: {{user.email}} </h2> 
+          <h2> Telefono: {{user.phoneNumber}} </h2> 
+        </b-col>
+      </b-row>
+    </div>
   </div>
 
 </template>
@@ -25,19 +27,14 @@ export default {
     data() {
       return {
         catalog: [],
-        clients: 
-        {
-            name: 'Mario',
-            surname: 'Cazzi',
-            phoneNumber: '3506451389',
-            email: 'mariocazzi@gmail.com',
-        }                
+        filter: "",              
       }
     },
     created(){
+      this.filter = this.$route.params.filter
       let query = {
-       "filter": "Han",
-       "sort": false
+       filter: this.filter,
+       sort: false
       }
       console.log(query)
       Functions.getAllUser(query)

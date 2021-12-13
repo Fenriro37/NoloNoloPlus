@@ -9,7 +9,7 @@
       <b-input-group class="noborder">
         <b-form-select v-model="selected" :options="options">        </b-form-select>
         <b-form-input id="ricerca" placeholder="Search..." v-model="search"></b-form-input>
-        <b-button @click="$router.push({path: '/' + selected + 'Catalog', params:{filter: search}})">Click to Navigate</b-button>
+        <b-button @click="$router.push({name: selected + 'Catalog'  , params: {filter: search}}).catch(()=>{});">Click to Navigate</b-button>
       </b-input-group>
     </b-col>
 
@@ -29,10 +29,6 @@
                   <router-link to="/createReservation" class="nav-link" >Aggiungi prenotazione</router-link>
                   <router-link :to="{name: 'chart', params: {products: articles}}" class="nav-link"  >Grafici</router-link>
 
-                  <router-link to="/reservation" class="nav-link" >Esempio prenotazione</router-link>
-                  <router-link :to="{path: '/client' }" class="nav-link">Esempio cliente</router-link>
-                  <router-link to="/article" class="nav-link" >Esempio articolo</router-link>
-
                   <a>Login/Logout</a>
                 </b-nav>
               </nav>
@@ -45,7 +41,9 @@
 
   </b-navbar>
 
-  <router-view/>
+  <p>{{search}}</p>
+
+  <router-view :key="$route.fullPath"></router-view>
 
 </div>
 </template>
@@ -70,12 +68,7 @@ export default {
       }
     },
     created(){
-      Functions.loginAsWorker().then( () => {
-        Functions.getAllProduct().then ( (result) =>{
-          console.log(result)
-          this.articles = result.data.data
-        })
-      })
+      Functions.loginAsWorker()
       
     },
 

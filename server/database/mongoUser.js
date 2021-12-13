@@ -47,8 +47,8 @@ exports.usersFind = async function(filter, sortBy) {
                 {
                     projection: {
                         _id: 1,
-                        name: 1,
-                        surname: 1,
+                        userName: 1,
+                        userSurname: 1,
                         email: 1,
                         phoneNumber: 1
                     }

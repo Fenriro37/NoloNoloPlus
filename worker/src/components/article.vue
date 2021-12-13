@@ -7,7 +7,7 @@
           <img v-bind:src="image" class="img-thumbnail">
         </div>
         <!-- Colonne informazioni articolo -->
-        <div class="col-6">
+        <div class="col-4">
           <div id="productidentifier">
             ID: {{ identifier }}          
           </div>   
@@ -236,8 +236,8 @@
           </thead>
           <tbody id="myTable">
             <tr v-for="(iter, index) in bookings" :key="index">
-              <td><a href="#" >{{iter.id}}</a></td>
-              <td><a href="#" >{{iter.clientId}}</a></td>
+              <td><router-link :to="{name: 'reservation', params:{id: iter.id}}">{{iter.id}}</router-link></td>
+              <td><router-link :to="{name: 'client', params:{id: iter.clientId}}">{{iter.clientId}}</router-link></td>
               <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
               <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
             </tr>
@@ -289,12 +289,9 @@
     },
 
      created() { 
-        console.log(JSON.stringify(this.$route.params))
-
-
-        Functions.getProduct(this.$route.params.article).then((result) => {
-          
-          this.identifier = this.$route.params.article
+        Functions.getProduct(this.$route.params.id)
+        .then((result) => {  
+          this.identifier = this.$route.params.id
           this.title = result.data.data.obj.title
           this.brand = result.data.data.obj.brand
           this.image = result.data.data.obj.image

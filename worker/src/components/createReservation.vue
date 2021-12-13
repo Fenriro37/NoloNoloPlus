@@ -215,14 +215,13 @@
         //Get user e get article per fottermi i dati da aggiungere a query
 
         //Aggiorniamo l'array delle prenotazioni del prodotto
-        console.log('prima di getproduct')
         Functions.getProduct(this.articleId)
         .then( (result) =>{
-          console.log('dentro getproduct')
-           console.log(this.articleId)
-           console.log(typeof(this.articleId))
+          console.log(this.articleId)
+          console.log(typeof(this.articleId))
           query.productTitle = result.data.data.obj.title
           query.productBrand = result.data.data.obj.brand
+          query.image = result.data.data.obj.image
           let queryBooking = {};
           let newBookings = {};
           newBookings.id = this.articleId
@@ -240,15 +239,12 @@
 
           Functions.saveDataProduct(this.articleId, queryBooking)
           //this.email
-          console.log('prima di getuser')
-          Functions.getUser('61976c4fa4f23a08ccadf8ba')
+          Functions.getUser(this.email, 1)
           .then( (result) => {
-            console.log('dentro getuser')
             query.clientName = result.data.data.userName
             query.clientSurname = result.data.data.userSurname
             Functions.addReservation(query)
             .then( () => {
-              console.log('dentro addreservation')
               this.cancel();
               alert("Creazione riuscita")
             })   
