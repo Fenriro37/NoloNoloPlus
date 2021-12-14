@@ -22,7 +22,7 @@ const config = require('./../config');
 //   È il token per autenticare il chiamante.
 // - Parametri
 //   - id (opzionale) - string
-//     È l'id della prenotazione.
+//     È l'id dell'utente.
 // Body: vuoto
 //
 // Valori di ritorno: { message, data, error }
@@ -143,7 +143,7 @@ router.get('/all', async function(req, res) {
                 });
             }      
         }
-    } catch(error) {
+    } catch(error) {
         return res.status(400).json({
             message: 'Errore di GET /api/user/all',
             error: error
