@@ -132,13 +132,15 @@ exports.productsFindOne = async function(id) {
 //   È un oggetto JSON { attributo: valore } il quale viene inserito nel
 //   database.
 //
-// Valore di ritorno: { status, message, error }
+// Valore di ritorno: { status, message, obj, error }
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
+// - obj
+//   È l'oggetto inserito.
 // - error
 //   È il messaggio d'errore.
 exports.productsInsertOne = async function(newProductData) {
@@ -146,11 +148,16 @@ exports.productsInsertOne = async function(newProductData) {
     try {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
-        await products.insertOne(newProductData);
+        let insertedProduct = {};
+        await products.insertOne(newProductData, function() {
+            insertedProduct = newProductData;
+   
+        });
         await mongo.close();
         return {
             status: 0,
-            message: 'Prodotto creato correttamente.'
+            message: 'Prodotto creato correttamente.',
+            obj: insertedProduct
         }
     } catch(error) {
         await mongo.close();
