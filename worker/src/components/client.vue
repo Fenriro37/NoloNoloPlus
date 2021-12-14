@@ -177,16 +177,49 @@
       </b-col >
     </b-row>
 
+    <hr>
+
+    <b-row>
+        <!-- Da qui parte la tabella delle prenotazioni -->
+
+        
+        <h3>Lista prenotazioni</h3>
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <br>
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>ID noleggio</th>
+              <th>ID cliente</th>
+              <th>ID prenotazione</th>
+              <th>Inizio noleggio</th>
+              <th>Fine noleggio</th>
+            </tr>
+          </thead>
+          <tbody id="myTable">
+            <tr v-for="(iter, index) in bookings" :key="index">
+              <td><router-link :to="{name: 'article', params:{id: iter.id}}">{{iter.id}}</router-link></td>
+              <td><router-link :to="{name: 'client', params:{id: iter.clientId}}">{{iter.clientId}}</router-link></td>
+              <td><router-link :to="{name: 'reservation', params:{id: iter.id}}">{{iter.id}}</router-link></td>
+              <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
+              <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-row>
+
+      <!-- Bottoni -->
     <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary" @click="modify">Modifica</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
 
 
-    <b-button type="button" class="btn btn-lg btn-danger delete">Elimina cliente</b-button>
+    <b-button type="button" class="btn btn-lg btn-danger delete" @click="deleteUser">Elimina cliente</b-button>
   </b-col >
 </template>
 
 <script>
+  import $ from 'jquery'
   import Functions from '../functions/function'
   export default {
     data() {
@@ -217,6 +250,7 @@
           cardExpireYear: '',
           cardCVV: ''
         },      
+        bookings: [],
         //Modalità Modifica
         boolModify: false,
 
@@ -272,6 +306,19 @@
           this.payment.cardExpireMonth = result.data.data.payment.cardExpireMonth
           this.payment.cardExpireYear = result.data.data.payment.cardExpireYear
           this.payment.cardCVV = result.data.data.payment.cardCVV
+
+          let query = {
+            filter: this.email,
+            sort: false
+          }
+          Functions.getAllReservation(query)
+          .then( (result) => {
+            console.log(result)
+            if(result.data.obj.length === 0) console.log("vuoto")
+            else {
+              this.bookings = result.data.obj
+            }
+          })            
         })
       },
 
@@ -400,8 +447,38 @@
             this.boolModify = false;        
         })
       },
+
+      deleteUser(){
+        if(this.bookings.length === 0){
+          Functions.deleteUser(this.id)
+          .then( () =>{
+            this.$router.push('home')
+          })
+        }         
+        else{
+          for(let i in this.bookings){
+            let bookingDate = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' +  this.bookings[i].endDate.day
+            const current = new Date();      
+            const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+            if(bookingDate > currentDate)   return(alert('Il prodotto ha ancora prenotazioni attive'))
+          }
+          Functions.deleteUser(this.id)
+          .then( () =>{
+            this.$router.push('home')
+          })                   
+        } 
+      }
     }
   }
+//////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
 </script>
 
 <style>

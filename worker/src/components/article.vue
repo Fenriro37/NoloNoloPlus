@@ -33,6 +33,7 @@
           <div>
             <router-link :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</router-link>
             <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
+            <button type="button" class="btn btn-lg btn-danger" v-on:click="deleteProduct">Elimina</button>
             <div class="form-check form-switch big-size">
               <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
               <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
@@ -290,7 +291,8 @@
 
      created() { 
         Functions.getProduct(this.$route.params.id)
-        .then((result) => {  
+        .then((result) => {
+          console.log(result)  
           this.identifier = this.$route.params.id
           this.title = result.data.data.obj.title
           this.brand = result.data.data.obj.brand
@@ -377,7 +379,28 @@
             this.note = this.noteModal
           }
         }) 
-      },      
+      }, 
+      
+      deleteProduct(){
+        if(this.bookings.length === 0){
+          Functions.deleteProduct(this.identifier)
+          .then( () =>{
+            this.$router.push('home')
+          })
+        }         
+        else{
+          for(let i in this.bookings){
+            let bookingDate = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' +  this.bookings[i].endDate.day
+            const current = new Date();      
+            const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+            if(bookingDate > currentDate)   return(alert('Il prodotto ha ancora prenotazioni attive'))
+          }
+          Functions.deleteProduct(this.identifier)
+          .then( () =>{
+            this.$router.push('home')
+          })                   
+        } 
+      }
 
 
     },

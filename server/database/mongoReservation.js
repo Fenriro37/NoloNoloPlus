@@ -77,6 +77,8 @@ exports.reservationsFind = async function(token, filter, sortBy) {
                         clientSurname: 1,
 
                         bookingDate: 1,
+                        startDate: 1,
+                        endDate: 1,
                         isTaken: 1,
                         isReturned: 1
                     }

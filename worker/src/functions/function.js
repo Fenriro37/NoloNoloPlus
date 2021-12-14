@@ -34,6 +34,11 @@ class Functions {
     addProduct(query){
         return http.post("/api/product", query)
     }
+
+    deleteProduct(id)
+    {
+        return http.delete("/api/product?id=" + id)
+    }
     /////////////////////////////////////////////////////////////////////////////////////
     //////////////API relative ai clienti///////////////////////////////////////////////
     //0 id 
@@ -53,6 +58,10 @@ class Functions {
         return http.post("/api/user?id=" + id , query)
     }
 
+    deleteUser(id){
+        return http.delete("/api/user?id=" + id)
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////
     //////////////API relative alle prenotazioni/////////////////////////////////////////
     getReservation(id) {
@@ -69,6 +78,10 @@ class Functions {
 
     addReservation(query){
         return http.post("/api/reservation", query)
+    }
+
+    deleteReservation(id){
+        return http.delete("/api/reservation/?id=" + id)
     }
 
 }
