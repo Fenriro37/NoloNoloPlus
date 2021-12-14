@@ -5,10 +5,22 @@ const indexRouter = require('./route/index.js');
 const cookieParser = require('cookie-parser');
 
 const corsOptions = {
-  // origin: 'http://localhost:8080',
-  origin: '*',
-  methods: ['GET', 'POST', 'DELETE'],
-  allowedHeaders: ['Origin', 'Content-Type'],
+  origin: ['*'],
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Accept',
+    'Access-Control-Allow-Headers',  
+    'Access-Control-Allow-Methods',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Request-Headers',
+    'Access-Control-Request-Method',
+    'Authorization',
+    'Content-Type', 
+    'dataType',
+    'Origin', 
+    'withCredentials',
+    'X-Requested-With'
+  ],
   exposedHeaders: 'Set-Cookie',
   credentials: true,
   optionSuccessStatus: 200
@@ -19,6 +31,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+app.get('/test/', function(req, res) {
+  res.status(200).send('Hello World from server');
+})
 
 app.use('/api/', apiRouter);
 app.use('/', indexRouter);
