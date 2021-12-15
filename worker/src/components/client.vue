@@ -178,37 +178,20 @@
     </b-row>
 
     <hr>
-
-    <b-row>
-        <!-- Da qui parte la tabella delle prenotazioni -->
-
-        
-        <h3>Lista prenotazioni</h3>
-        <input class="form-control" id="myInput" type="text" placeholder="Search..">
-        <br>
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>ID noleggio</th>
-              <th>ID cliente</th>
-              <th>ID prenotazione</th>
-              <th>Inizio noleggio</th>
-              <th>Fine noleggio</th>
-            </tr>
-          </thead>
-          <tbody id="myTable">
-            <tr v-for="(iter, index) in bookings" :key="index">
-              <td><router-link :to="{name: 'article', params:{id: iter.id}}">{{iter.id}}</router-link></td>
-              <td><router-link :to="{name: 'client', params:{id: iter.clientId}}">{{iter.clientId}}</router-link></td>
-              <td><router-link :to="{name: 'reservation', params:{id: iter.id}}">{{iter.id}}</router-link></td>
-              <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
-              <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Da qui parte la tabella delle prenotazioni -->
+    <h3>Lista prenotazioni</h3>
+    <div class="p-3">
+      <b-row>
+        <b-table hover :items="bookings" :fields="fields">
+          <!-- item è la riga -->
+          <template v-slot:cell(product)="{ item }">
+            <router-link :to="{ name: 'article',  params: { id: item.product.id}}">{{ item.product.title }}</router-link>
+          </template>
+        </b-table>
       </b-row>
-
-      <!-- Bottoni -->
+    </div>
+    
+    <!-- Bottoni -->
     <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary" @click="modify">Modifica</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
@@ -251,6 +234,28 @@
           cardCVV: ''
         },      
         bookings: [],
+        fields: [
+         {
+            key: 'product',
+            sortable: false
+          },
+          {
+            key: 'reservation',
+            sortable: false
+          },
+          {
+            key: 'price',
+            sortable: true
+          },
+          {
+            key: 'startDate',
+            sortable: true
+          },
+          {
+            key: 'endDate',
+            sortable: true
+          },
+        ],
         //Modalità Modifica
         boolModify: false,
 
@@ -313,10 +318,26 @@
           }
           Functions.getAllReservation(query)
           .then( (result) => {
-            console.log(result)
+            console.log(result.data.obj)
             if(result.data.obj.length === 0) console.log("vuoto")
             else {
-              this.bookings = result.data.obj
+              let current = new Date();      
+              current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+              for (let i in result.data.obj){
+                let row = {}
+                row.productId =
+                row.product = {}
+                row.product.id =  result.data.obj[i].productId 
+                row.product.title = result.data.obj[i].productTitle + ' ' + result.data.obj[i].productBrand
+                row.price = result.data.obj[i].price
+                row.reservation = result.data.obj[i]._id
+                row.startDate = result.data.obj[i].startDate.year + '-' + result.data.obj[i].startDate.month + '-' + result.data.obj[i].startDate.day
+                row.endDate = result.data.obj[i].endDate.year + '-' + result.data.obj[i].endDate.month + '-' + result.data.obj[i].endDate.day
+                
+                if(row.endDate >= current)
+                  row._rowVariant = 'danger'
+                this.bookings.push(row)
+              }
             }
           })            
         })
@@ -452,19 +473,19 @@
         if(this.bookings.length === 0){
           Functions.deleteUser(this.id)
           .then( () =>{
-            this.$router.push('home')
+            this.$router.push({name: 'clientCatalog'  , params: {filter: ""}})
           })
         }         
         else{
           for(let i in this.bookings){
             let bookingDate = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' +  this.bookings[i].endDate.day
-            const current = new Date();      
-            const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-            if(bookingDate > currentDate)   return(alert('Il prodotto ha ancora prenotazioni attive'))
+            let current = new Date();      
+            current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+            if(bookingDate >= current )   return(alert('Il prodotto ha ancora prenotazioni attive'))
           }
           Functions.deleteUser(this.id)
           .then( () =>{
-            this.$router.push('home')
+             this.$router.push({name: 'clientCatalog'  , params: {filter: ""}})
           })                   
         } 
       }

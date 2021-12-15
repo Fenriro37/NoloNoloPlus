@@ -191,6 +191,10 @@
 
     methods: {
       modify(){
+        const current = new Date();      
+        const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate()
+        if(currentDate >= this.bookingStart) return(alert("Il noleggio non è modificabile"))
+
         this.copyPrice = this.bookedArticles.price
         this.copyOnSale = this.bookedArticles.discount.onSale
         this.copyOnSaleType = this.bookedArticles.discount.onSaleType
@@ -345,17 +349,14 @@
         const current = new Date();      
         const date = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
         //controlliamo se possiamo eliminare la prenotazione
-        console.log(this.copyRentalOccurred)
-        console.log(this.copyReturned)
+        if(date >= this.bookingStart) return(alert('La prenotazione non è modificabile'))
         if(this.boolModify){
           if(!this.copyRentalOccurred) return(alert('Il prodotto non è stato consegnato'))
           if(!this.copyReturned) return(alert('Il prodotto non è stato restituito'))
-          if(this.copyBookingEnd > date) return(alert('Il prodotto è ancora prenotato'))
         }
         else{
           if(!this.rentalOccurred) return(alert('Il prodotto non è stato consegnato'))
           if(!this.returned) return(alert('Il prodotto non è stato restituito'))
-          if(this.bookingEnd > date) return(alert('Il prodotto è ancora prenotato'))
         }
         Functions.getProduct(this.bookedArticles.identifier)
         .then( (result) =>{
@@ -368,7 +369,7 @@
           Functions.saveDataProduct(this.bookedArticles.identifier, query)
           .then( () =>{
             Functions.deleteReservation(this.reservationId)
-            this.$router.push('home')
+            this.$router.push({name: 'reservationCatalog'  , params: {filter: ""}})
           })
 
         })

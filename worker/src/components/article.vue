@@ -385,19 +385,19 @@
         if(this.bookings.length === 0){
           Functions.deleteProduct(this.identifier)
           .then( () =>{
-            this.$router.push('home')
+            this.$router.push({name: 'articleCatalog'  , params: {filter: ""}})
           })
         }         
         else{
           for(let i in this.bookings){
             let bookingDate = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' +  this.bookings[i].endDate.day
-            const current = new Date();      
-            const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-            if(bookingDate > currentDate)   return(alert('Il prodotto ha ancora prenotazioni attive'))
+            let current = new Date();      
+            current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+            if(bookingDate >= current  )   return(alert('Il prodotto ha ancora prenotazioni attive'))
           }
           Functions.deleteProduct(this.identifier)
           .then( () =>{
-            this.$router.push('home')
+            this.$router.push({name: 'articleCatalog'  , params: {filter: ""}})
           })                   
         } 
       }

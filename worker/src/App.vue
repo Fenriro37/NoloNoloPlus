@@ -41,8 +41,6 @@
 
   </b-navbar>
 
-  <p>{{search}}</p>
-
   <router-view :key="$route.fullPath"></router-view>
 
 </div>

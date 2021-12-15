@@ -37,12 +37,17 @@ export default new Router({
       component: article
     },
     {
-      path: "/client",
+      path: "/client:id",
       name: "client",
       component: client,
     },
     {
-      path: "/reservation",
+      path: "/client:email",
+      name: "client",
+      component: client,
+    },
+    {
+      path: "/reservation:id",
       name: "reservation",
       component: reservation
     },

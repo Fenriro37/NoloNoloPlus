@@ -8,7 +8,7 @@
           <b-img thumbnail fluid src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Image 1"></b-img>
         </b-col>
         <b-col cols="5">
-          <h2>  <router-link :to="{name: 'client', params:{id: user._id, email: user.email}}" class="nav-link">{{user.userName + ' ' + user.userSurname}}</router-link></h2>
+          <h2>  <router-link :to="{name: 'client', params:{id: user._id}}" class="nav-link">{{user.userName + ' ' + user.userSurname}}</router-link></h2>
           <h2> Email: {{user.email}} </h2> 
           <h2> Telefono: {{user.phoneNumber}} </h2> 
         </b-col>
@@ -44,7 +44,6 @@ export default {
       }) 
     },
     methods: {    },
-    computed: {    },
   }
 
 

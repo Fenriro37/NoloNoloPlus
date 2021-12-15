@@ -5,4 +5,11 @@
 </div>
 
 </template>
-<script ></script>
+<script >
+export default {
+  data() {},
+  created(){
+    console.log("home")
+  }
+}
+</script>
