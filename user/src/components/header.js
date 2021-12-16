@@ -3,19 +3,24 @@ import { Navbar, Nav, Container, Form, FormControl } from 'react-bootstrap';
 import ApiCall from '../services/apiCall';
 import Cookie from 'js-cookie';
 
+function logout() {
+  Cookie.remove('jwt');
+  window.location.href="http://localhost:8081/user/index.html";
+}
+
 function GetHamburger(props) {
   if(props.isAuthenticated === true) {
     return (
       <span>
         <Nav.Link href="#action1">Pagina personale</Nav.Link>
-        <Nav.Link href="#action2">Prenotazioni effettaute</Nav.Link>
-        <Nav.Link href="#action3">Logout</Nav.Link>
+        <Nav.Link href="#action2">Prenotazioni effettuate</Nav.Link>
+        <Nav.Link onClick={logout}>Logout</Nav.Link>
       </span>
     )
   } else {
     return (
       <div>
-        <Nav.Link href="#action4">Login</Nav.Link>
+        <Nav.Link href="http://localhost:8081/public/login.html">Login</Nav.Link>
       </div>
     )
   }
@@ -31,22 +36,6 @@ export class Header extends React.Component {
   }
 
   componentDidMount() {
-    // START TEST
-    // const email = 'han.chu@studio.unibo.it';
-    // const password = '1234567890';
-    // ApiCall.login(email, password)
-    // .then((result) => {
-    //   Cookie.set('jwt', result.data.data);
-    //   this.setState({
-    //     isAuthenticated: true
-    //   });
-    // })
-    // .catch(() => {
-    //   this.setState({
-    //     isAuthenticated: false
-    //   })
-    // });
-    // END TEST
     if(Cookie.get('jwt')) {
       ApiCall.getUser()
       .then(() => {
@@ -79,6 +68,7 @@ export class Header extends React.Component {
               placeholder="Search"
               className="me-2"
               aria-label="Search"
+              // onClick={}
             />
           </Form>
           <Navbar.Toggle aria-controls="navbarScroll" />

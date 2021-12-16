@@ -45,16 +45,17 @@ exports.productsFind = async function(filter, sortBy) {
                     { brand: re },
                     { tags: { $all: array } }
                 ]},
-                {
-                    projection: {
-                        _id: 1,
-                        title: 1,
-                        brand: 1,
-                        price: 1,
-                        image: 1,
-                        quality: 1
-                    }
-                }).sort({ price: sortBy });
+                // {
+                //     projection: {
+                //         _id: 1,
+                //         title: 1,
+                //         brand: 1,
+                //         price: 1,
+                //         image: 1,
+                //         quality: 1
+                //     }
+                // }
+                ).sort({ price: sortBy });
         let x = await result.toArray();
         await mongo.close();
         return {

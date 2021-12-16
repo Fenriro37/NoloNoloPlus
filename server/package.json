@@ -1,6 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "homepage": "./",
   "description": "Test di un server con Vue",
   "main": "index.js",
   "scripts": {
