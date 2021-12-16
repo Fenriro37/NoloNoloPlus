@@ -225,7 +225,7 @@
           let queryBooking = {};
           let newBookings = {};
           newBookings.id = this.articleId
-          newBookings.clientId = this.email
+          newBookings.clientId = this.email 
           newBookings.startDate = {}
           newBookings.startDate.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
           newBookings.startDate.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)

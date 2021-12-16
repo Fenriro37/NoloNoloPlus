@@ -177,16 +177,32 @@
       </b-col >
     </b-row>
 
+    <hr>
+    <!-- Da qui parte la tabella delle prenotazioni -->
+    <h3>Lista prenotazioni</h3>
+    <div class="p-3">
+      <b-row>
+        <b-table hover :items="bookings" :fields="fields">
+          <!-- item è la riga -->
+          <template v-slot:cell(product)="{ item }">
+            <router-link :to="{ name: 'article',  params: { id: item.product.id}}">{{ item.product.title }}</router-link>
+          </template>
+        </b-table>
+      </b-row>
+    </div>
+    
+    <!-- Bottoni -->
     <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary" @click="modify">Modifica</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
 
 
-    <b-button type="button" class="btn btn-lg btn-danger delete">Elimina cliente</b-button>
+    <b-button type="button" class="btn btn-lg btn-danger delete" @click="deleteUser">Elimina cliente</b-button>
   </b-col >
 </template>
 
 <script>
+  import $ from 'jquery'
   import Functions from '../functions/function'
   export default {
     data() {
@@ -217,6 +233,29 @@
           cardExpireYear: '',
           cardCVV: ''
         },      
+        bookings: [],
+        fields: [
+         {
+            key: 'product',
+            sortable: false
+          },
+          {
+            key: 'reservation',
+            sortable: false
+          },
+          {
+            key: 'price',
+            sortable: true
+          },
+          {
+            key: 'startDate',
+            sortable: true
+          },
+          {
+            key: 'endDate',
+            sortable: true
+          },
+        ],
         //Modalità Modifica
         boolModify: false,
 
@@ -272,6 +311,35 @@
           this.payment.cardExpireMonth = result.data.data.payment.cardExpireMonth
           this.payment.cardExpireYear = result.data.data.payment.cardExpireYear
           this.payment.cardCVV = result.data.data.payment.cardCVV
+
+          let query = {
+            filter: this.email,
+            sort: false
+          }
+          Functions.getAllReservation(query)
+          .then( (result) => {
+            console.log(result.data.obj)
+            if(result.data.obj.length === 0) console.log("vuoto")
+            else {
+              let current = new Date();      
+              current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+              for (let i in result.data.obj){
+                let row = {}
+                row.productId =
+                row.product = {}
+                row.product.id =  result.data.obj[i].productId 
+                row.product.title = result.data.obj[i].productTitle + ' ' + result.data.obj[i].productBrand
+                row.price = result.data.obj[i].price
+                row.reservation = result.data.obj[i]._id
+                row.startDate = result.data.obj[i].startDate.year + '-' + result.data.obj[i].startDate.month + '-' + result.data.obj[i].startDate.day
+                row.endDate = result.data.obj[i].endDate.year + '-' + result.data.obj[i].endDate.month + '-' + result.data.obj[i].endDate.day
+                
+                if(row.endDate >= current)
+                  row._rowVariant = 'danger'
+                this.bookings.push(row)
+              }
+            }
+          })            
         })
       },
 
@@ -400,8 +468,38 @@
             this.boolModify = false;        
         })
       },
+
+      deleteUser(){
+        if(this.bookings.length === 0){
+          Functions.deleteUser(this.id)
+          .then( () =>{
+            this.$router.push({name: 'clientCatalog'  , params: {filter: ""}})
+          })
+        }         
+        else{
+          for(let i in this.bookings){
+            let bookingDate = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' +  this.bookings[i].endDate.day
+            let current = new Date();      
+            current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+            if(bookingDate >= current )   return(alert('Il prodotto ha ancora prenotazioni attive'))
+          }
+          Functions.deleteUser(this.id)
+          .then( () =>{
+             this.$router.push({name: 'clientCatalog'  , params: {filter: ""}})
+          })                   
+        } 
+      }
     }
   }
+//////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
 </script>
 
 <style>

@@ -111,7 +111,7 @@
     <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary" @click="modify">Modifica</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
-    <button class="btn btn-lg btn-danger delete"> Cancella prenotazione</button>
+    <button class="btn btn-lg btn-danger delete" @click="deleteReservation"> Cancella prenotazione</button>
     
     <p> {{bookingStart}} </p>
     <p> {{copyBookingStart}} </p>
@@ -191,6 +191,10 @@
 
     methods: {
       modify(){
+        const current = new Date();      
+        const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate()
+        if(currentDate >= this.bookingStart) return(alert("Il noleggio non è modificabile"))
+
         this.copyPrice = this.bookedArticles.price
         this.copyOnSale = this.bookedArticles.discount.onSale
         this.copyOnSaleType = this.bookedArticles.discount.onSaleType
@@ -340,6 +344,36 @@
           }                                       
         })           
       },
+
+      deleteReservation(){
+        const current = new Date();      
+        const date = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+        //controlliamo se possiamo eliminare la prenotazione
+        if(date >= this.bookingStart) return(alert('La prenotazione non è modificabile'))
+        if(this.boolModify){
+          if(!this.copyRentalOccurred) return(alert('Il prodotto non è stato consegnato'))
+          if(!this.copyReturned) return(alert('Il prodotto non è stato restituito'))
+        }
+        else{
+          if(!this.rentalOccurred) return(alert('Il prodotto non è stato consegnato'))
+          if(!this.returned) return(alert('Il prodotto non è stato restituito'))
+        }
+        Functions.getProduct(this.bookedArticles.identifier)
+        .then( (result) =>{
+          let query = {}
+          query.bookings = result.data.data.obj.bookings
+          for (let i in query.bookings){
+            if(query.bookings[i].reservationId == this.reservationId)
+              query.bookings.splice(i, 1);
+          }
+          Functions.saveDataProduct(this.bookedArticles.identifier, query)
+          .then( () =>{
+            Functions.deleteReservation(this.reservationId)
+            this.$router.push({name: 'reservationCatalog'  , params: {filter: ""}})
+          })
+
+        })
+      }
     }
   }
 

@@ -12,7 +12,7 @@
           <h2>{{reservation.clientName + ' ' + reservation.clientSurname}}
           <h2><router-link :to="{name: 'client', params: {email: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h2>
           <h2>{{reservation.productTitle + ' ' + reservation.productBrand}}</h2>
-          <h2><router-link :to="{ name: 'article',  params: { article: reservation.productId}}">{{reservation.productId}}</router-link></h2>            
+          <h2><router-link :to="{ name: 'article',  params: { id: reservation.productId}}">{{reservation.productId}}</router-link></h2>            
         </b-col>
       </b-row>
     </div>
