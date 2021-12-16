@@ -149,16 +149,13 @@ exports.productsInsertOne = async function(newProductData) {
     try {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
-        let insertedProduct = {};
-        await products.insertOne(newProductData, function() {
-            insertedProduct = newProductData;
-   
-        });
+        const result = await products.insertOne(newProductData);
+        newProductData._id = result.insertedId
         await mongo.close();
         return {
             status: 0,
             message: 'Prodotto creato correttamente.',
-            obj: insertedProduct
+            obj: newProductData
         }
     } catch(error) {
         await mongo.close();

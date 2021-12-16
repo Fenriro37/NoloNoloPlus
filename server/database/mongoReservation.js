@@ -173,15 +173,13 @@ exports.reservationsInsertOne = async function(newReservation) {
     try {
         await mongo.connect();
         const reservations = mongo.db(config.databaseName).collection(config.databaseReservationCollectionName)
-        let insertedReservation = {};
-        await reservations.insertOne(newReservation, function() {
-            insertedReservation = newReservation;
-        });
+        const result = await reservations.insertOne(newReservation);
+        newReservation._id = result.insertedId
         await mongo.close();
         return {
             status: 0,
             message: 'Prenotazione creata correttamente.',
-            obj: insertedReservation
+            obj: newReservation
         };
     } catch(error) {
         await mongo.close();

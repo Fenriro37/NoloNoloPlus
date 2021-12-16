@@ -55,12 +55,14 @@ router.post('/sign-up', async function(req, res) {
         if(mongoRes.status == 0) {
             // OK
             return res.status(200).json({
-                message: mongoRes.message
+                message: mongoRes.message,
+                obj: mongoRes.obj
             });
         } else {
             // Errore del database
             return res.status(400).json({
-                message: mongoRes.message
+                message: mongoRes.message,
+                error: mongoRes.error
             });
         }    
     } catch(error) {
