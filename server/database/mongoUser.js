@@ -156,7 +156,8 @@ exports.usersInsertOne = async function(user) {
                 message: 'Utente esistente.'
             };
         } else {
-            let insertedUser = {};
+            const result = await users.insertOne(user);
+            user._id = result.insertedId
             await users.insertOne(user, function() {
                 insertedUser = user;
             });
@@ -164,7 +165,7 @@ exports.usersInsertOne = async function(user) {
             return {
                 status: 0,
                 message: 'Utente creato correttamente.',
-                obj: insertedUser
+                obj: user
             };
         }
     } catch(error) {

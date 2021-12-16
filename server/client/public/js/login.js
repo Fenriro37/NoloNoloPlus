@@ -12,7 +12,7 @@ window.addEventListener("load", () => {
         for(index in data) {
             console.log(data[index])
             if(data[index] == "") {
-                alert("Non hai inserito tutti i dati, coglione.");
+                alert("Non hai inserito tutti i dati.");
                 allDataOk = false;
                 break;
             }
@@ -31,9 +31,9 @@ window.addEventListener("load", () => {
                     plainTextPassword: data[1]
                 }),
                 // Risposta del server in caso di successo
-                success: (token) => {
-                    // window.location.href = "/user/main-page.html";
-                    console.log("Let's go");
+                success: (result) => {
+                    document.cookie = 'jwt=' + result.data;
+                    window.location.href = "http://localhost:8081/user/index.html";
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {

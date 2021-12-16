@@ -19,10 +19,9 @@ router.use('/worker/media', express.static(workerPath + '/media/'));
 router.use('/css', express.static(workerPath + '/css/'));
 router.use('/js', express.static(workerPath + '/js/'));
 
-router.use('/user/', express.static(userPath + '/html/'));
-router.use('/user/css', express.static(userPath + '/css/'));
-router.use('/user/js', express.static(userPath + '/js/'));
-router.use('/user/media', express.static(userPath + '/media/'));
+router.use('/user/', express.static(userPath + '/'));
+router.use('/static/css', express.static(userPath + '/static/css'));
+router.use('/static/js', express.static(userPath + '/static/js'));
 
 router.use('/public/', express.static(publicPath + '/html/'));
 router.use('/public/css', express.static(publicPath + '/css/'));
