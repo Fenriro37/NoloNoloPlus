@@ -218,7 +218,8 @@
           //Aggiorniamo l'array delle prenotazioni del prodotto
           Functions.getProduct(this.articleId)
           .then( (result) =>{
-            console.log(this.articleId)
+            console.log("GetProduct")
+            console.log(result)
             query.productTitle = result.data.data.obj.title
             query.productBrand = result.data.data.obj.brand
             query.image = result.data.data.obj.image
@@ -242,6 +243,8 @@
             //this.email
             Functions.getUser(this.email, 1)
             .then( (result) => {
+              console.log('GETUSER')
+              console.log(result)
               query.clientName = result.data.data.userName
               query.clientSurname = result.data.data.userSurname
               this.cancel();
