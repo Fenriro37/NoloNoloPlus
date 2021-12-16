@@ -34,7 +34,7 @@
         <p> *Data inizio noleggio</p>
       </b-col>
       <b-col cols="9" >
-         <b-form-datepicker v-model="reservationStart" required></b-form-datepicker>
+         <b-form-datepicker v-model="reservationStart" :date-disabled-fn="dateDisabled"  required></b-form-datepicker>
       </b-col>
     </b-row>
   
@@ -43,7 +43,7 @@
         <p> *Data fine noleggio:</p>
       </b-col>
       <b-col cols="9" >
-         <b-form-datepicker v-model="reservationEnd" required></b-form-datepicker>
+         <b-form-datepicker v-model="reservationEnd" :date-disabled-fn="dateDisabled" required></b-form-datepicker>
       </b-col>
     </b-row>
 
@@ -94,10 +94,10 @@
 
     <b-row>
       <b-col cols="3">
-        <p> *Descrizione:</p>
+        <p> Descrizione:</p>
       </b-col>
       <b-col cols="9">
-        <b-form-input v-model="notes" type="text" required></b-form-input>
+        <b-form-input v-model="notes" type="text" ></b-form-input>
       </b-col>
     </b-row>
 
@@ -206,50 +206,49 @@
 
         query.isTaken = this.rentalOccurred;
         query.isReturned = this.returned;
-
-        if(this.notes == ''){return(alert('Il campo Note non può essere vuoto'))}
-        else query.description = this.notes;
+        query.description = this.notes;
         query.note = this.privateNotes;
 
         //invio dati
         //Get user e get article per fottermi i dati da aggiungere a query
+        Functions.addReservation(query)
+        .then( (result) => {
+          console.log (result)
+          let idReservation = result.data.data._id
+          //Aggiorniamo l'array delle prenotazioni del prodotto
+          Functions.getProduct(this.articleId)
+          .then( (result) =>{
+            console.log(this.articleId)
+            query.productTitle = result.data.data.obj.title
+            query.productBrand = result.data.data.obj.brand
+            query.image = result.data.data.obj.image
+            let queryBooking = {};
+            let newBookings = {};
+            newBookings.id = this.articleId
+            newBookings.clientId = this.email
+            newBookings.reservationId = idReservation
+            newBookings.startDate = {}
+            newBookings.startDate.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
+            newBookings.startDate.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)
+            newBookings.startDate.year = this.reservationStart.charAt(0) + this.reservationStart.charAt(1) + this.reservationStart.charAt(2) + this.reservationStart.charAt(3)
+            newBookings.endDate = {}
+            newBookings.endDate.day = this.reservationEnd.charAt(8) + this.reservationEnd.charAt(9)
+            newBookings.endDate.month = this.reservationEnd.charAt(5) + this.reservationEnd.charAt(6)
+            newBookings.endDate.year = this.reservationEnd.charAt(0) + this.reservationEnd.charAt(1) + this.reservationEnd.charAt(2) + this.reservationEnd.charAt(3)
+            queryBooking.bookings = result.data.data.obj.bookings
+            queryBooking.bookings.push(newBookings)
 
-        //Aggiorniamo l'array delle prenotazioni del prodotto
-        Functions.getProduct(this.articleId)
-        .then( (result) =>{
-          console.log(this.articleId)
-          console.log(typeof(this.articleId))
-          query.productTitle = result.data.data.obj.title
-          query.productBrand = result.data.data.obj.brand
-          query.image = result.data.data.obj.image
-          let queryBooking = {};
-          let newBookings = {};
-          newBookings.id = this.articleId
-          newBookings.clientId = this.email 
-          newBookings.startDate = {}
-          newBookings.startDate.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
-          newBookings.startDate.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)
-          newBookings.startDate.year = this.reservationStart.charAt(0) + this.reservationStart.charAt(1) + this.reservationStart.charAt(2) + this.reservationStart.charAt(3)
-          newBookings.endDate = {}
-          newBookings.endDate.day = this.reservationEnd.charAt(8) + this.reservationEnd.charAt(9)
-          newBookings.endDate.month = this.reservationEnd.charAt(5) + this.reservationEnd.charAt(6)
-          newBookings.endDate.year = this.reservationEnd.charAt(0) + this.reservationEnd.charAt(1) + this.reservationEnd.charAt(2) + this.reservationEnd.charAt(3)
-          queryBooking.bookings = result.data.data.obj.bookings
-          queryBooking.bookings.push(newBookings)
-
-          Functions.saveDataProduct(this.articleId, queryBooking)
-          //this.email
-          Functions.getUser(this.email, 1)
-          .then( (result) => {
-            query.clientName = result.data.data.userName
-            query.clientSurname = result.data.data.userSurname
-            Functions.addReservation(query)
-            .then( () => {
+            Functions.saveDataProduct(this.articleId, queryBooking)
+            //this.email
+            Functions.getUser(this.email, 1)
+            .then( (result) => {
+              query.clientName = result.data.data.userName
+              query.clientSurname = result.data.data.userSurname
               this.cancel();
-              alert("Creazione riuscita")
-            })   
-          })
-        })        
+              alert("Creazione riuscita")       
+            })
+          })       
+        })
       },
 
       cancel(){
@@ -263,8 +262,16 @@
         this.price = '';
         this.notes = '';
         this.privateNotes = '';
-      }
+      },
 
+      dateDisabled(ymd, date) {         
+        //for all bookings 
+        const day = date.getDate()
+        const month = date.getMonth() + 1
+        const year = date.getFullYear() 
+        // Return `true` if the date should be disabled
+        return (year >= 2021 && year <= 2021 && month >= 11 && month <= 12 && day >= 19 && day <= 21)       
+      }
     },
   }
 </script>

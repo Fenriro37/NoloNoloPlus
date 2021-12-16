@@ -47,8 +47,8 @@ exports.usersFind = async function(filter, sortBy) {
                 {
                     projection: {
                         _id: 1,
-                        userName: 1,
-                        userSurname: 1,
+                        name: 1,
+                        surname: 1,
                         email: 1,
                         phoneNumber: 1
                     }
@@ -131,7 +131,7 @@ exports.usersFindOne = async function(query) {
 //   È un oggetto JSON { attributo: valore } il quale viene inserito nel
 //   database.
 //
-// Valore di ritorno: { status, message, error }
+// Valore di ritorno: { status, message, obj, error }
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
@@ -139,6 +139,8 @@ exports.usersFindOne = async function(query) {
 //      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
+// - obj
+//   È l'oggetto inserito.
 // - error
 //   È il messaggio d'errore.
 exports.usersInsertOne = async function(user) {
@@ -154,11 +156,15 @@ exports.usersInsertOne = async function(user) {
                 message: 'Utente esistente.'
             };
         } else {
-            await users.insertOne(user);
+            let insertedUser = {};
+            await users.insertOne(user, function() {
+                insertedUser = user;
+            });
             await mongo.close();
             return {
                 status: 0,
-                message: 'Utente creato correttamente.'
+                message: 'Utente creato correttamente.',
+                obj: insertedUser
             };
         }
     } catch(error) {

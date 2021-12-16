@@ -2,6 +2,7 @@
   <!-- v-for:articles/clients/reservations {html di uno }-->
   
   <div class="container-fluid p-5">
+    <!--<b-form-select  v-model="selectedFilter"  :options="reservationFilter" :on-change="changeFilter()">Filtra</b-form-select>-->
     <div  v-for="reservation in catalog" :key="reservation._id">
       <b-row>
         <b-col cols="3">
@@ -26,22 +27,12 @@ export default {
     data() {
       return {
         catalog: [],
-        reservations: 
-        {
-          clientEmail:'mario.draghi@gmail.com',
-          articleId:'156945145614',
-          articleTitle:'Bici',
-          articlesBrand:'deGasperi',
-          productImage:'https://acquisti.corriere.it/wp-content/uploads/2021/05/BIciclette-Via-Veneto.jpeg',
-          startYear: '1990',
-          startMonth: '12',
-          startDay: '10',
-          endYear: '1990',
-          endMonth: '12',
-          endDay: '30',
-          rentalOccurred: true,
-          returned: false,  
-        }                
+        selectedFilter: 'all',
+        reservationFilter: [
+          { value: 'all', text: 'Tutte' },
+          { value: 'active', text: 'Attive' },
+          { value: 'old', text: 'Passate' },
+        ]
       }
     },
 
@@ -56,7 +47,19 @@ export default {
           this.catalog = result.data.obj
         }) 
     },
-    methods: {    },
+    methods: {
+      /* changeFilter() {
+        if (this.selectedFilter == "all"){
+
+        }
+        else if(this.selectedFilter == "active"){
+
+        }
+        else {
+
+        }
+      } */
+    },
     computed: {    },
   }
 

@@ -9,6 +9,7 @@
       <b-input-group class="noborder">
         <b-form-select v-model="selected" :options="options">        </b-form-select>
         <b-form-input id="ricerca" placeholder="Search..." v-model="search"></b-form-input>
+
         <b-button @click="$router.push({name: selected + 'Catalog'  , params: {filter: search}}).catch(()=>{});">Click to Navigate</b-button>
       </b-input-group>
     </b-col>
@@ -40,7 +41,7 @@
     </template>
 
   </b-navbar>
-
+  <p>{{selected}}</p>
   <router-view :key="$route.fullPath"></router-view>
 
 </div>
@@ -55,14 +56,13 @@ export default {
     data() {
       return {
         articles: [],
-
         search: '',
         selected: 'article',
         options: [
           { value: 'article', text: 'Articoli' },
           { value: 'client', text: 'Clienti' },
           { value: 'reservation', text: 'Prenotazioni' },
-        ]
+        ]       
       }
     },
     created(){
@@ -70,10 +70,6 @@ export default {
       
     },
 
-    manageItems(){
-      //al click di cerca in base a select e search si chiama uno dei tre componenti eventualmente filtrati
-
-    }
 
   }
 

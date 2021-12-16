@@ -160,13 +160,15 @@ exports.reservationsFindOne = async function(id) {
 //   È un oggetto JSON { attributo: valore } il quale viene inserito nel
 //   database.
 //
-// Valore di ritorno: { status, message, error }
+// Valore di ritorno: { status, message, obj, error }
 // - status 
 //   Indica se il programma è andato a buon fine; può essere:
 //      -  0 -> OK 
 //      - -1 -> Errore generico 
 // - message
 //   È un messaggio descrittivo.
+// - obj
+//   È l'oggetto inserito.
 // - error
 //   È il messaggio d'errore.
 exports.reservationsInsertOne = async function(newReservation) {
@@ -174,11 +176,15 @@ exports.reservationsInsertOne = async function(newReservation) {
     try {
         await mongo.connect();
         const reservations = mongo.db(config.databaseName).collection(config.databaseReservationCollectionName)
-        await reservations.insertOne(newReservation);
+        let insertedReservation = {};
+        await reservations.insertOne(newReservation, function() {
+            insertedReservation = newReservation;
+        });
         await mongo.close();
         return {
             status: 0,
-            message: 'Prenotazione creata correttamente.'
+            message: 'Prenotazione creata correttamente.',
+            obj: insertedReservation
         };
     } catch(error) {
         await mongo.close();
