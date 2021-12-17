@@ -27,7 +27,6 @@
                 <b-nav vertical>
                   <router-link to="/home" class="nav-link" >Home</router-link>
                   <router-link to="/createArticle" class="nav-link" >Aggiungi articolo</router-link>
-                  <router-link to="/createReservation" class="nav-link" >Aggiungi prenotazione</router-link>
                   <router-link :to="{name: 'chart', params: {products: articles}}" class="nav-link"  >Grafici</router-link>
 
                   <a>Login/Logout</a>
@@ -41,7 +40,6 @@
     </template>
 
   </b-navbar>
-  <p>{{selected}}</p>
   <router-view :key="$route.fullPath"></router-view>
 
 </div>

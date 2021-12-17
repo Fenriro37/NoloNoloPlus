@@ -16,7 +16,7 @@
         <p> *ID Articolo:</p>
       </b-col>
       <b-col cols="9" >
-         <b-form-input  type="text" v-model="articleId" required></b-form-input>
+         <b-form-input  type="text" v-model="articleId" readonly></b-form-input>
       </b-col>
     </b-row>
 
@@ -134,6 +134,7 @@
         email: '',
         articleId: '',
         price:' ',
+        bookings: [],
 
         reservationDate:'',
         reservationStart:'',
@@ -147,11 +148,11 @@
     },
 
     created(){
-      console.log(this.$route.params)
-      if(this.$route.params.id != undefined)
-        this.articleId = this.$route.params.id
-      if(this.$route.params.price != undefined)
-        this.price = this.$route.params.price
+      this.articleId = this.$route.params.id
+      this.price = this.$route.params.price
+      Functions.getProduct(this.articleId).then((result) => {
+        this.bookings = result.data.data.obj.bookings
+      })
     },
 
     methods: {
@@ -203,7 +204,14 @@
           query.endDate.year = this.reservationEnd.charAt(0) + this.reservationEnd.charAt(1) + this.reservationEnd.charAt(2) + this.reservationEnd.charAt(3)
         } 
         if(this.reservationStart > this.reservationEnd){return(alert("La data di inizio noleggio non può essere superiore al ritiro"))}
-
+        let bookingStart
+        let bookingEnd
+        for(let i in this.bookings){
+          bookingStart = this.bookings[i].startDate.year + '-' + this.bookings[i].startDate.month + '-' + this.bookings[i].startDate.day
+          bookingEnd = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' + this.bookings[i].endDate.day
+          if(this.reservationStart < bookingStart && bookingEnd < this.reservationEnd )
+            return (alert("Nel periodo selezionato il prodotto non può essere affittato"))
+        }
         query.isTaken = this.rentalOccurred;
         query.isReturned = this.returned;
         query.description = this.notes;
@@ -211,11 +219,12 @@
 
         //invio dati
         //Get user e get article per fottermi i dati da aggiungere a query
+        
+        //Aggiorniamo l'array delle prenotazioni del prodotto
         Functions.addReservation(query)
         .then( (result) => {
-          console.log (result)
-          let idReservation = result.data.data._id
-          //Aggiorniamo l'array delle prenotazioni del prodotto
+          console.log(result)
+          let reservationIdentifier = result.data.data._id
           Functions.getProduct(this.articleId)
           .then( (result) =>{
             console.log("GetProduct")
@@ -227,7 +236,7 @@
             let newBookings = {};
             newBookings.id = this.articleId
             newBookings.clientId = this.email
-            newBookings.reservationId = idReservation
+            newBookings.reservationId = reservationIdentifier
             newBookings.startDate = {}
             newBookings.startDate.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
             newBookings.startDate.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)
@@ -247,10 +256,12 @@
               console.log(result)
               query.clientName = result.data.data.userName
               query.clientSurname = result.data.data.userSurname
+              Functions.saveReservation(reservationIdentifier, query).then( ()  =>{
               this.cancel();
               alert("Creazione riuscita")       
-            })
-          })       
+              })
+            })       
+          })
         })
       },
 
@@ -272,8 +283,15 @@
         const day = date.getDate()
         const month = date.getMonth() + 1
         const year = date.getFullYear() 
+        for(let i in this.bookings){
+          if(year >= this.bookings[i].startDate.year && year <= this.bookings[i].endDate.year && 
+            month >= this.bookings[i].startDate.month && month <= this.bookings[i].endDate.month && 
+            day >=  this.bookings[i].startDate.day && day <= this.bookings[i].endDate.day)
+            return true
+        } 
         // Return `true` if the date should be disabled
-        return (year >= 2021 && year <= 2021 && month >= 11 && month <= 12 && day >= 19 && day <= 21)       
+        //return (year >= 2021 && year <= 2021 && month >= 11 && month <= 12 && day >= 19 && day <= 21)     
+        return false  
       }
     },
   }
