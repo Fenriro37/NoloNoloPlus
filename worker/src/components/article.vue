@@ -31,7 +31,8 @@
           </div>
           <!-- Bottoni -->
           <div>
-            <router-link :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</router-link>
+            <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</router-link>
+            <button v-else id="rentProduct" class="btn btn-lg btn-secondary" disabled>Affitta</button>
             <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
             <button type="button" class="btn btn-lg btn-danger" v-on:click="deleteProduct">Elimina</button>
             <div class="form-check form-switch big-size">
@@ -330,7 +331,12 @@
       },
 
       changeInStock(){
-        Functions.updateProduct(this.identifier, !this.available)
+        let query = {}
+        query.available = !this.available
+        Functions.saveDataProduct(this.identifier, query)
+        .then( () => {
+          alert("Modifica disponibilità riuscita") 
+        })
       },
 
       saveData(){

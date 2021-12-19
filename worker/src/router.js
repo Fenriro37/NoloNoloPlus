@@ -52,7 +52,7 @@ export default new Router({
       component: reservation
     },
     {
-      path: "/articleCatalog:filter",
+      path: "/articleCatalog",
       name: "articleCatalog",
       component: articleCatalog
     },

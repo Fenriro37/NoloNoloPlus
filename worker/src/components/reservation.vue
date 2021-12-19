@@ -6,11 +6,8 @@
       </b-col>
       <b-col cols="6">
         <p>Id prenotazione: {{reservationId}} </p>
-        <p>{{bookedArticles.title + ' ' +bookedArticles.brand}}</p>
-
-        <p>Id Articolo: <a href="">{{ bookedArticles.identifier}}</a></p>
-
-        <p>mail Cliente: <a href="">{{ clientEmail}}</a></p>
+        <p><router-link :to="{ name: 'article',  params: { id: bookedArticles.identifier} }">{{bookedArticles.title + ' ' +bookedArticles.brand}}</router-link></p>
+        <p><router-link :to="{name: 'client', params:{id: clientEmail, choice: 1}}" >{{clientEmail}}</router-link></p>
 
         <template v-if="!boolModify">
           <p>Prezzo: {{bookedArticles.price}}€ (da rivedere)</p>
@@ -365,16 +362,32 @@
                   alert("Modifica data riuscita") 
                 }) 
               })
+            }
+            else{
+                  this.bookedArticles.price = this.copyPrice 
+                  this.bookingRequest = this.copyBookingRequest
+                  this.rentalOccurred = this.copyRentalOccurred
+                  this.returned = this.copyReturned
+                  this.notes  = this.copyNotes
+                  this.privateNotes  = this.copyPrivateNotes
+                    
+                  this.boolModify = false;    
+                  alert("Modifica data riuscita") 
             }                                       
           })   
         }
         else if(this.boolVerify){
+          console.log("BoolVerify")
           if(this.copyRentalOccurred == false && this.copyReturned){ return (alert("L'articolo non può essere stato restituito se non è stato consegnato"))}
           if (this.copyRentalOccurred !=  this.rentalOccurred || this.copyReturned != this.returned){
             let query = {}
             query.isTaken = this.copyRentalOccurred;
             query.isReturned = this.copyReturned;
             Functions.saveReservation(this.reservationId, query).then( ()  =>{
+              console.log("saveReservation")
+              this.rentalOccurred = this.copyRentalOccurred;
+              this.returned = this.copyReturned
+              this.boolVerify = false;
               alert("Modifica effettuata")       
             })
           }

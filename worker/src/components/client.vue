@@ -187,6 +187,9 @@
           <template v-slot:cell(product)="{ item }">
             <router-link :to="{ name: 'article',  params: { id: item.product.id}}">{{ item.product.title }}</router-link>
           </template>
+          <template v-slot:cell(reservation)="{ item }">
+            <router-link :to="{ name: 'reservation',  params: { id: item.reservation}}">{{ item.reservation }}</router-link>
+          </template>
         </b-table>
       </b-row>
     </div>
@@ -285,7 +288,7 @@
         //comporre il getUser con id o email '?id/email=' + value
         //{'filter': 'han.chu@studio.unibo.it', 'sort': 'true'}
         let query,n
-        if ( this.$route.params.id != undefined){
+        if ( this.$route.params.id !== undefined){
           query = this.$route.params.id 
           n = 0
         }
@@ -298,7 +301,7 @@
           this.id = result.data.data._id
           this.name = result.data.data.userName
           this.surname = result.data.data.userSurname
-          this.birthday = result.data.data.birthday.day + '/' + result.data.data.birthday.month + '/' + result.data.data.birthday.year
+          this.birthday = result.data.data.birthday.year + '-' + result.data.data.birthday.month + '-' + result.data.data.birthday.day
           this.sex = result.data.data.sex
           this.phoneNumber = result.data.data.phoneNumber
           this.email = result.data.data.email
@@ -351,10 +354,9 @@
         this.copyName = this.name,
         this.copySurname = this.surname,
         this.copySex = this.sex,
-        this.copyDate = this.date,
+        this.copyDate = this.birthday,
         this.copyPhoneNumber = this.phoneNumber,
         this.copyEmail = this.email,
-        this.copyPassword = this.password,
         this.copyAddressStreet = this.address.addressStreet,
         this.copyAddressNumber = this.address.addressNumber,
         this.copyAddressCity = this.address.addressCity,
@@ -456,6 +458,7 @@
             this.phoneNumber = this.copyPhoneNumber
             this.email = this.copyEmail
             this.birthday = this.copyDate
+
             this.address.addressStreet = this.copyAddressStreet
             this.address.addressNumber = this.copyAddressNumber
             this.address.addressCity = this.copyAddressCity

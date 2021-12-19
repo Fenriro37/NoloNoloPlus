@@ -31,8 +31,10 @@ export default {
     },
 
     created(){
+      //non funziona
+      let filter = (this.$route.params.filter !== undefined) ? this.$route.params.filter : ""
       let query = {
-      filter: this.$route.params.filter,
+      filter: filter,
       sort: false
       }
       Functions.getAllProduct(query)

@@ -23,10 +23,6 @@ class Functions {
         return http.get("/api/product/all/?filter=" + query.filter + "&sort=" + query.sort)
     }
 
-    updateProduct(id, isAvailable) {
-        return http.post("/api/change/product?id=" + id, { available: isAvailable } )
-    }
-
     saveDataProduct(id, query){
         return http.post("/api/product?id=" + id, query)
     }
