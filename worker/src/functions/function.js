@@ -40,7 +40,7 @@ class Functions {
     //0 id 
     //1 email
     getUser(id, choice) {
-        if(choice == 0)
+        if(choice === 0)
             return http.get("/api/user?id=" + id)
         else     
             return http.get("/api/user?email=" + id)

@@ -42,8 +42,8 @@ export default new Router({
       component: client,
     },
     {
-      path: "/client:email",
-      name: "client",
+      path: "/client1:email",
+      name: "client1",
       component: client,
     },
     {

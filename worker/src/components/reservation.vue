@@ -7,7 +7,7 @@
       <b-col cols="6">
         <p>Id prenotazione: {{reservationId}} </p>
         <p><router-link :to="{ name: 'article',  params: { id: bookedArticles.identifier} }">{{bookedArticles.title + ' ' +bookedArticles.brand}}</router-link></p>
-        <p><router-link :to="{name: 'client', params:{id: clientEmail, choice: 1}}" >{{clientEmail}}</router-link></p>
+        <p><router-link :to="{name: 'client1', params:{email: clientEmail, choice: 1}}" >{{clientEmail}}</router-link></p>
 
         <template v-if="!boolModify">
           <p>Prezzo: {{bookedArticles.price}}€ (da rivedere)</p>
