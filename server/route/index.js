@@ -1,23 +1,23 @@
 const express = require('express');
 const router = express.Router();
 
-const managerPath = __dirname + '/../client/manager';
-const workerPath = __dirname + '/../client/worker';
-const userPath = __dirname + '/../client/user';
-const publicPath = __dirname + '/../client/public';
+const managerPath = __dirname + '/../frontEnd/manager';
+const workerPath = __dirname + '/../frontEnd/worker';
+const userPath = __dirname + '/../frontEnd/user';
+const publicPath = __dirname + '/../frontEnd/public';
 
-router.use('/manager/', express.static(managerPath + '/html/'));
-router.use('/manager/css', express.static(managerPath + '/css/'));
-router.use('/manager/js', express.static(managerPath + '/js/'));
-router.use('/manager/media', express.static(managerPath + '/media/'));
-
-router.use('/worker/', express.static(workerPath + '/'));
+router.use('/worker/', express.static(workerPath + '/html/'));
 router.use('/worker/css', express.static(workerPath + '/css/'));
 router.use('/worker/js', express.static(workerPath + '/js/'));
 router.use('/worker/media', express.static(workerPath + '/media/'));
 
-router.use('/css', express.static(workerPath + '/css/'));
-router.use('/js', express.static(workerPath + '/js/'));
+router.use('/manager/', express.static(managerPath + '/'));
+router.use('/manager/css', express.static(managerPath + '/css/'));
+router.use('/manager/js', express.static(managerPath + '/js/'));
+router.use('/manager/media', express.static(managerPath + '/media/'));
+
+router.use('/css', express.static(managerPath + '/css/'));
+router.use('/js', express.static(managerPath + '/js/'));
 
 router.use('/user/', express.static(userPath + '/'));
 router.use('/static/css', express.static(userPath + '/static/css'));

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="mystyle.css">
+    <script src="./functions/function"></script>
+    <script >
+        import Functions from '../js/functions/function'
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("prima")
+            Functions.loginAsWorker()
+            console.log("suca")
+        }, false);
+    </script>
+</head>
+<body>
+    <div class="container-fluid p-5">
+        <div class="row mb-5">
+            <div class="col-6">
+            <!-- Colonne immagine -->
+            <img v-bind:src="image" class="img-thumbnail">
+            </div>
+            <!-- Colonne informazioni articolo -->
+            <div class="col-4">
+            <div id="productidentifier">
+                ID: {{ identifier }}          
+            </div>   
+            <!-- Titolo -->
+            <div>
+                <h1>{{ title + ' ' + brand }}</h1>
+            </div>
+            <!-- Etichette -->
+            <div class="mb-2">
+                <span class="badge rounded-pill bg-primary" v-for="tag in tags" :key="tag">{{ tag }}</span>
+            </div>
+            <!-- Stars -->
+            <div>
+                <span v-for="iter in parseInt(quality)" class="fa fa-star checked big-size" :key="iter"> </span>
+                <span v-for="mimmo in (3 - parseInt(quality))" class="fa fa-star big-size" :key="mimmo"> </span>
+            </div>
+            <!-- Prezzo -->
+            <div class="mt-3 mb-3">
+                <span v-if="discount.onSale" class="price"><s>{{ price }}€</s> <span id="onSalePrice">{{ getDiscountedPrice }}€</span></span>
+                <span v-else class="price">{{ price }} €</span>
+            </div>
+            <!-- Bottoni -->
+            <div>
+                <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</router-link>
+                <button v-else id="rentProduct" class="btn btn-lg btn-secondary" disabled>Affitta</button>
+                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
+                <button type="button" class="btn btn-lg btn-danger" v-on:click="deleteProduct">Elimina</button>
+                <div class="form-check form-switch big-size">
+                <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
+                <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
+                <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
+                </div>
+                <!-- Modal da mettere in un altro file???? -->
+                <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Modifica prodotto</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>	
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                        <div class="row">
+                            <div class="col-6">
+                            <label for="productName" class="form-label">Nome</label>
+                            </div>
+                            <div class="col-6">
+                            <label for="productModel" class="form-label">Marca</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                            <input type="text" class="form-control" id="productname" v-model="titleModal" :placeholder="titleModal">	
+                            </div>
+                            <div class="col-6">
+                            <input type="text" class="form-control" id="productModel" v-model="brandModal">	
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            <label for="productTags" class="form-label">Etichette (separare con uno spazio)</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                            <textarea class="form-control w-80" id="productTags" rows="3" v-model="tagsModal"></textarea>
+                            </div>
+                        </div>
+                        <!-- da sistemare -->
+                        <div class="row mb-3 d-flex align-items-center justify-content-between">
+                            <div class="col-4">
+                            <label for="imageLink" class="form-label">Immagine (link)</label>
+                            </div>
+                            <div class="col-8">
+                            <input type="text" class="form-control" id="imageLink" v-model="imageModal">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                            <label for="productQuality" class="form-label">Qualità</label>
+                            </div>
+                            <div class="col-6">
+                            <label for="productPrice">Prezzo di listino</label>												
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                            <select class="form-select" v-model="qualityModal">
+                                <option :value="1">1 - Condizioni accettabili</option>
+                                <option :value="2" selected>2 - Buone condizioni</option>
+                                <option :value="3">3 - Come nuovo</option>
+                            </select>
+                            </div>
+                            <div class="col-6">
+                            <div class="input-group">
+                                <input type="text" id="productPrice" class="form-control text-end" v-model="priceModal">
+                                <span class="input-group-text justify-content-center">€</span>
+                            </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mb-2 d-flex align-items-center justify-content-between">
+                            <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="onSale" :checked="onSaleModal" v-model="onSaleModal">
+                                <label class="form-check-label" for="onSale">Sconto</label>
+                            </div>
+                            </div>
+                            <div class="col-3">
+                            <div class="form-check">
+                                <input
+                                class="form-check-input"
+                                type="radio" 
+                                name="discount" 
+                                id="discountPercentage" 
+                                :value="true" 
+                                :disabled="!onSaleModal" 
+                                v-model="onSaleTypeModal">
+                                <label class="form-check-label" for="discountPercentage">Percentuale</label>
+                            </div>
+                            </div>
+                            <div class="col-3">
+                            <div class="form-check">
+                                <input
+                                id="discountAmount" 	
+                                class="form-check-input"
+                                type="radio"
+                                name="discount"
+                                :value="false"
+                                :disabled="!onSaleModal" 
+                                v-model="onSaleTypeModal" >
+                                <label class="form-check-label" for="discountAmount">Fisso</label>													
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 d-flex justify-content-end">
+                            <div class="col-6 d-flex align-items-center">
+                            Sconto applicato
+                            </div>
+                            <div class="col-6">
+                            <div class="input-group">
+                                <span class="input-group-text justify-content-center">-</span>
+                                <input
+                                type="text"
+                                class="form-control text-end"
+                                v-model="onSaleValueModal"
+                                :disabled="!onSaleModal">
+                                <span v-if="discount.onSaleType" id="pd" class="input-group-text justify-content-center">%</span>
+                                <span v-else id="pd" class="input-group-text justify-content-center">€</span>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6 d-flex align-items-center">
+                            Prezzo scontato
+                            </div>
+                            <div class="col-6">
+                            <div class="input-group">
+                                <input 
+                                type="text"
+                                class="form-control text-end"
+                                disabled :placeholder="getDiscountedPriceModal">
+                                <span class="input-group-text justify-content-center">€</span>
+                            </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                            <label for="productDescription" class="form-label">Descrizione</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                            <textarea class="form-control w-80" id="productDescription" rows="3" v-model="descriptionModal"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            <label for="productNote" class="form-label">Note (non sono visibli al cliente)</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                            <textarea class="form-control w-80" id="productNote" rows="3" v-model="noteModal"></textarea>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-primary float-left" @click="saveData"  data-bs-dismiss="modal">Salva</button>  
+                        <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Descrizione</h3>
+        </div>
+        <div class="row mb-3 p-3 border border-secondary border-3 bg-white">
+            {{ description }}
+        </div>
+        <div class="row">
+            <h3>Note</h3>
+        </div>
+        <div class="row mb-3 p-3 border border-secondary border-3 bg-white">
+            {{ note }}
+        </div>
+        <div class="row">
+            <!-- Da qui parte la tabella delle prenotazioni -->
+            <h3>Lista prenotazioni</h3>
+            <input class="form-control" id="myInput" type="text" placeholder="Search..">
+            <br>
+            <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                <th>ID noleggio</th>
+                <th>ID cliente</th>
+                <th>Inizio noleggio</th>
+                <th>Fine noleggio</th>
+                </tr>
+            </thead>
+            <tbody id="myTable">
+                <tr v-for="(iter, index) in bookings" :key="index">
+                <td><router-link :to="{name: 'reservation', params:{id: iter.id}}">{{iter.id}}</router-link></td>
+                <td><router-link :to="{name: 'client', params:{id: iter.clientId}}">{{iter.clientId}}</router-link></td>
+                <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
+                <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
