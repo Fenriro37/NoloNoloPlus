@@ -1,9 +1,7 @@
 import React from 'react'
 import { Card } from './card.js'
-import ApiCall from '../services/apiCall.js'
 
 export class List extends React.Component {
-
   constructor(props) {
     super(props);
   }
@@ -26,7 +24,5 @@ export class List extends React.Component {
         </div>
       );
     }
-
-    
   }
 }

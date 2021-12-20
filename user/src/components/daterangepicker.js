@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import MobileDateRangePicker from '@mui/lab/MobileDateRangePicker';
 
 function disableWeekends(date) {
@@ -15,12 +14,13 @@ export default function DateRangePicker() {
   const [value, setValue] = React.useState([null, null]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Stack spacing={3}>
+    <div className='pb-0'>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <MobileDateRangePicker
           disablePast
           shouldDisableDate={disableWeekends}
-          startText="Mobile start"
+          startText="Data di inizio"
+          endText="Data di fine"
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -28,12 +28,12 @@ export default function DateRangePicker() {
           renderInput={(startProps, endProps) => (
             <React.Fragment>
               <TextField {...startProps} />
-              <Box sx={{ mx: 2 }}> to </Box>
+              <Box sx={{ mx: 2 }}> a </Box>
               <TextField {...endProps} />
             </React.Fragment>
           )}
         />
-      </Stack>
-    </LocalizationProvider>
+      </LocalizationProvider>
+    </div>
   );
 }

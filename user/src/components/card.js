@@ -1,6 +1,8 @@
 import React from 'react'
 import { Navbar, Nav } from 'react-bootstrap';
-import ResponsiveDateRangePicker from './daterangepicker'
+import DateRangePicker from './daterangepicker'
+import { Stars } from './stars';
+import { Tags } from './tags';
 
 export function Card(props) {
   return (
@@ -30,12 +32,11 @@ export function Card(props) {
             </div>
           </Navbar.Toggle>
           <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0" navbarScroll>
+            <Nav className="me-auto p-2 pb-0" navbarScroll>
+              <Tags tags={props.product.tags}/>
               <div>{props.product.description}</div>
-              <div>Qualità {props.product.quality}</div>
-              <div>3</div>
-              <div>4</div>
-              <ResponsiveDateRangePicker/>
+              <Stars quality={props.product.quality}/>
+              <DateRangePicker/>
             </Nav>
           </Navbar.Collapse>
       </Navbar>
