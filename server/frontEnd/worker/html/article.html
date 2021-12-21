@@ -5,21 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="mystyle.css">
-    <script src="./functions/function"></script>
-    <script >
-        import Functions from '../js/functions/function'
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/myScript.js"></script>
+    <script>
+        /* function login() {
+            console.log("cacca")
+            $.ajax({
+                url: "/api/public/login",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    email: "han.chu@worker.com",
+                    plainTextPassword: "1234567890"
+                }),
+                // Risposta del server in caso di successo
+                success: (result) => {
+                    console.log(result)
+                    document.cookie = 'jwt=' + result.data;
+                    //window.location.href = "http://localhost:8081/user/index.html";
+                },
+                // Risposta del server in caso di insuccesso
+                error: (error) => {
+                    console.log("Error");
+                    alert("Errore. " + error.responseText);
+                }
+            });
+        }    */
 
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("prima")
-            Functions.loginAsWorker()
-            console.log("suca")
-        }, false);
-    </script>
+    </script> 
+
+
 </head>
 <body>
     <div class="container-fluid p-5">
+        <div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+        <button onclick="login()">Get External Content</button>
+
         <div class="row mb-5">
             <div class="col-6">
             <!-- Colonne immagine -->
@@ -28,36 +52,32 @@
             <!-- Colonne informazioni articolo -->
             <div class="col-4">
             <div id="productidentifier">
-                ID: {{ identifier }}          
+                ID:           
             </div>   
             <!-- Titolo -->
             <div>
-                <h1>{{ title + ' ' + brand }}</h1>
+                <h1> title  brand </h1>
             </div>
             <!-- Etichette -->
             <div class="mb-2">
-                <span class="badge rounded-pill bg-primary" v-for="tag in tags" :key="tag">{{ tag }}</span>
+                <span class="badge rounded-pill bg-primary" >tag </span>
             </div>
             <!-- Stars -->
             <div>
-                <span v-for="iter in parseInt(quality)" class="fa fa-star checked big-size" :key="iter"> </span>
-                <span v-for="mimmo in (3 - parseInt(quality))" class="fa fa-star big-size" :key="mimmo"> </span>
+                <span class="fa fa-star checked big-size" > </span>
             </div>
             <!-- Prezzo -->
             <div class="mt-3 mb-3">
-                <span v-if="discount.onSale" class="price"><s>{{ price }}€</s> <span id="onSalePrice">{{ getDiscountedPrice }}€</span></span>
-                <span v-else class="price">{{ price }} €</span>
+                <span v-if="discount.onSale" class="price"><s> price €</s> <span id="onSalePrice"> getDiscountedPrice €</span></span>
+                <span v-else class="price"> price  €</span>
             </div>
             <!-- Bottoni -->
             <div>
-                <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</router-link>
-                <button v-else id="rentProduct" class="btn btn-lg btn-secondary" disabled>Affitta</button>
+                <button>Affitta</button>
                 <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
-                <button type="button" class="btn btn-lg btn-danger" v-on:click="deleteProduct">Elimina</button>
+                <button type="button" class="btn btn-lg btn-danger" >Elimina</button>
                 <div class="form-check form-switch big-size">
-                <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
-                <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
-                <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
+                <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" >
                 </div>
                 <!-- Modal da mettere in un altro file???? -->
                 <div class="modal" id="myModal">
@@ -233,13 +253,13 @@
             <h3>Descrizione</h3>
         </div>
         <div class="row mb-3 p-3 border border-secondary border-3 bg-white">
-            {{ description }}
+             description
         </div>
         <div class="row">
             <h3>Note</h3>
         </div>
         <div class="row mb-3 p-3 border border-secondary border-3 bg-white">
-            {{ note }}
+             note 
         </div>
         <div class="row">
             <!-- Da qui parte la tabella delle prenotazioni -->
@@ -256,11 +276,6 @@
                 </tr>
             </thead>
             <tbody id="myTable">
-                <tr v-for="(iter, index) in bookings" :key="index">
-                <td><router-link :to="{name: 'reservation', params:{id: iter.id}}">{{iter.id}}</router-link></td>
-                <td><router-link :to="{name: 'client', params:{id: iter.clientId}}">{{iter.clientId}}</router-link></td>
-                <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
-                <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
                 </tr>
             </tbody>
             </table>
