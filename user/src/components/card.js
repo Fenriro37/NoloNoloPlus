@@ -26,7 +26,7 @@ export function Card(props) {
                   {props.product.brand}
                 </div>
                 <div>
-                  {props.product.price} euro al giorno
+                  {props.product.price} € al giorno
                 </div>
               </div>
             </div>
@@ -34,7 +34,9 @@ export function Card(props) {
           <Navbar.Collapse id="navbarScroll">
             <Nav className="me-auto p-2 pb-0" navbarScroll>
               <Tags tags={props.product.tags}/>
-              <div>{props.product.description}</div>
+              <div style={{"text-align": "justify"}}>
+                {props.product.description}
+              </div>
               <Stars quality={props.product.quality}/>
               <DateRangePicker/>
             </Nav>

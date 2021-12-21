@@ -2,6 +2,7 @@
   "name": "user",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
@@ -26,7 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "BUILD_PATH='./../server/client/user' react-scripts build",
+    "build": "BUILD_PATH='./../frontEnd/user' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
