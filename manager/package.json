@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest ./../server/frontEnd/manager",
+    "build": "vue-cli-service build --dest ./../frontEnd/manager",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
