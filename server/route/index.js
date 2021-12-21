@@ -16,9 +16,6 @@ router.use('/manager/css', express.static(managerPath + '/css/'));
 router.use('/manager/js', express.static(managerPath + '/js/'));
 router.use('/manager/media', express.static(managerPath + '/media/'));
 
-router.use('/css', express.static(managerPath + '/css/'));
-router.use('/js', express.static(managerPath + '/js/'));
-
 router.use('/user/', express.static(userPath + '/'));
 router.use('/static/css', express.static(userPath + '/static/css'));
 router.use('/static/js', express.static(userPath + '/static/js'));
