@@ -1,4 +1,5 @@
-import config from './../../config';
+const site202131Url = "http://localhost:8081/user/index.html";
+// const site202131Url = "http://site202131.tw.cs.unibo.it/user/index.html";
 
 window.addEventListener("load", () => {
     // Seleziona il bottone per inviare il form
@@ -35,7 +36,7 @@ window.addEventListener("load", () => {
                 // Risposta del server in caso di successo
                 success: (result) => {
                     document.cookie = 'jwt=' + result.data;
-                    window.location.href = config.site202131Url;
+                    window.location.href = site202131Url;
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {

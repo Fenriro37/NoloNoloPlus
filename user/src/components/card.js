@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import DateRangePicker from './daterangepicker'
+import DateRangePicker from './daterangepicker';
 import { Stars } from './stars';
 import { Tags } from './tags';
 
@@ -38,12 +38,10 @@ export function Card(props) {
                 {props.product.description}
               </div>
               <Stars quality={props.product.quality}/>
-              <DateRangePicker/>
+              <DateRangePicker bookings={props.product.bookings}/>
             </Nav>
           </Navbar.Collapse>
       </Navbar>
     </div>
-    
-    
   )
 }

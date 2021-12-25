@@ -7,7 +7,6 @@ export class Tags extends React.Component {
   }
 
   render() {
-    console.log(this.props.tags)
     const lista = this.props.tags.map((tag) => {
       return (
         <Chip

@@ -1,8 +1,8 @@
 import axios from "axios";
-import config from './../config';
 
 export default axios.create({
-  baseURL: config.site202131Url,
+  baseURL: "http://localhost:8081/",
+  //baseURL: "http://site202131.tw.cs.unibo.it",
   headers: {
     "Content-type": "application/json",
     "Access-Control-Allow-Origin": "*",

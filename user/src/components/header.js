@@ -2,6 +2,7 @@ import React from 'react';
 import { Navbar, Nav, Container, Form, FormControl, Dropdown } from 'react-bootstrap';
 import { Hamburger } from './hamburger';
 import { Filters } from './filters';
+import config from './../config';
 
 export class Header extends React.Component {
 
@@ -14,7 +15,7 @@ export class Header extends React.Component {
       <div>
         <Navbar bg="light" expand='false'>
           <Container fluid>
-            <Navbar.Brand href="#">
+            <Navbar.Brand href={config.site202131Url}>
               <img
                 src='https://cdn.discordapp.com/attachments/918079016651604009/918082983964061726/CAtena_montuosa.png'
                 alt='logo'
