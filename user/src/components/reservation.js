@@ -5,6 +5,15 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 import MobileDateRangePicker from '@mui/lab/MobileDateRangePicker';
 import { Button } from 'react-bootstrap';
+import ApiCall from '../services/apiCall';
+
+function convertDateToObject(date) {
+  return {
+    day: date.getDate().toString(),
+    month: (date.getMonth() + 1).toString(),
+    year: date.getFullYear().toString()
+  }
+}
 
 // Metodo che calcola la differenza di due giorni
 function datediff(first, second) {
@@ -59,7 +68,7 @@ function convertToDate(array) {
   return dates;
 }
 
-export class DateRangePicker extends React.Component {
+export class Reservation extends React.Component {
   constructor(props) {
     super(props);
 
@@ -72,6 +81,7 @@ export class DateRangePicker extends React.Component {
       dates: datesInTime,
       bookings: props.bookings,
       price: props.finalPrice,
+      product: props.product,
       isAuthenticated: props.isAuthenticated
     }
 
@@ -149,8 +159,48 @@ export class DateRangePicker extends React.Component {
         ? (
           <Button 
             className="mt-2 w-100"
-            onClick={() => {
-              console.log("Prenotazione!");
+            onClick={(event) => {
+              console.log("Prenotazione");
+              event.preventDefault();
+              if(!this.state.value[0] || !this.state.value[1]) {
+                alert("Data prenotazione non valida");
+              }
+              ApiCall.getUser().then((getUserResult) => {
+                const reservation = {
+                  clientEmail: getUserResult.data.data.email,
+                  clientName: getUserResult.data.data.userName,
+                  clientSurname: getUserResult.data.data.userSurname,
+                  productId: this.state.product._id,
+                  prodcutTitle: this.state.product.title,
+                  productBrand: this.state.product.brand,
+                  productImage: this.state.product.image,
+                  bookingDate: convertDateToObject(new Date()),
+                  startDate: convertDateToObject(this.state.value[0]),
+                  endDate: convertDateToObject(this.state.value[1]),
+                  isTaken: false,
+                  isReturned: false,
+                  price: (datediff(this.state.value[0], this.state.value[1]) * this.state.price).toFixed(2),
+                  description: '',
+                  note: ''
+                }
+                console.log(reservation);
+                ApiCall.postReservation(reservation).then((PostReservationResult) => {
+                  // Modifica delle prenotazioni del prodotto
+                  let newBooking = {
+                    productId: this.state.product._id,
+                    clientId: getUserResult.data.data.email,
+                    reservationId: PostReservationResult.data.data._id,
+                    startDate: convertDateToObject(this.state.value[0]),
+                    endDate: convertDateToObject(this.state.value[1])
+                  }
+                  let oldBookings = this.state.bookings;
+                  oldBookings.push(newBooking);
+
+                  ApiCall.postProduct(this.state.product._id, { bookings: oldBookings });
+                  
+                  alert('Prenotazione effettuata con successo');
+                });
+              });
             }}
             href="/user/index.html"
           >Prenota ora</Button>

@@ -1,7 +1,6 @@
 import React from 'react';
 import Cookie from 'js-cookie';
 import { Nav } from 'react-bootstrap';
-import config from './../config'
 
 export class Hamburger extends React.Component {
   constructor(props) {
@@ -14,7 +13,7 @@ export class Hamburger extends React.Component {
 
   logout() {
     Cookie.remove('jwt');
-    window.location.href=config.site202131Url + '/user/index.html';
+    window.location.href='/user/index.html';
   }
 
   componentWillReceiveProps(nextProps) {
@@ -33,7 +32,7 @@ export class Hamburger extends React.Component {
     } else {
       return (
         <div className="text-center">
-          <Nav.Link href={config.site202131Url + '/public/login.html'}>Login</Nav.Link>
+          <Nav.Link href={'/public/login.html'}>Login</Nav.Link>
         </div>
       )
     }

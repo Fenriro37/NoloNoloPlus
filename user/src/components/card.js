@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { DateRangePicker } from './daterangepicker';
+import { Reservation } from './reservation';
 import { Stars } from './stars';
 import { Tags } from './tags';
 import { Button } from 'react-bootstrap';
@@ -26,14 +26,12 @@ export class Card extends React.Component {
       <div className='m-2 bg-light rounded-3 border border-dark'>
         <Navbar bg="trasparent" expand='false'>
             <Navbar.Toggle aria-controls="navbarScroll" className="border-0 w-100">
-              <div className='row m-0 h-100'>
-                <div className='col-5 p-0 d-flex align-items-center'>
+              <div className='row m-0'>
+                <div className='col-5 p-0 d-flex align-items-center align-self-center'>
                   <img
-                    className='img-fluid img-responsive align-self-center'
+                    className='img-fluid img-responsive mx-auto d-block'
                     src={this.state.product.image}
                     alt='Immagine'
-                    max-width='100%'
-                    max-height='100%'
                   />
                 </div>
                 <div className='col-7 bg-trasparent align-self-center' style={{ paddingRight: '0' }}>
@@ -72,10 +70,11 @@ export class Card extends React.Component {
                 <Stars quality={this.state.product.quality}/>
                 {
                   this.state.product.available ? (
-                    <DateRangePicker
+                    <Reservation
                       bookings={this.state.product.bookings}
                       finalPrice={this.state.product.discount.onSale ? this.state.discountedPrice : this.state.product.price}
                       isAuthenticated={this.state.isAuthenticated}
+                      product={this.state.product}
                     />
                   ) : (
                     <Button disabled={true}>Prodotto non disponibile</Button>

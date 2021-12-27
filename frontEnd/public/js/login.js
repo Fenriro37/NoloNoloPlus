@@ -36,7 +36,7 @@ window.addEventListener("load", () => {
                 // Risposta del server in caso di successo
                 success: (result) => {
                     document.cookie = 'jwt=' + result.data;
-                    window.location.href = site202131Url;
+                    window.location.href = '/user/index.html';
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {
