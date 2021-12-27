@@ -11,7 +11,7 @@ const config = {
     serverPort: "8081",
     // serverPort: "8000",
     origin: "http://localhost:8081",
-    origin: "*",
+    // origin: "*",
 }
 
 module.exports = config

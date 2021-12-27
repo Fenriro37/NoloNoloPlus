@@ -97,17 +97,18 @@ export class Reservation extends React.Component {
   }
 
   checkDateRange(range) {
-    if(range.length == 2 && this.state.dates != null) {
+    if(range.length == 2 && this.state.dates != null && range[0] && range[1]) {
       let currentDate = range[0];
       let endDate = range[1];
-      while (currentDate <= endDate) {
+      while(currentDate <= endDate) {
         if(isInArray(this.state.dates, currentDate) == true) {
           return false;
         }
         currentDate = currentDate.addDays(1);
       }
+      return true;
     }
-    return true;
+    return false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -137,7 +138,6 @@ export class Reservation extends React.Component {
               </React.Fragment>
             )}
             inputFormat="dd/MM/yyyy"
-            onAccept={(value) => { this.checkDateRange(value) }}
           />
         </LocalizationProvider>
         <div>
@@ -157,13 +157,14 @@ export class Reservation extends React.Component {
         {
         this.state.isAuthenticated
         ? (
-          <Button 
+          <Button
+            disabled={!this.checkDateRange(this.state.value)}
             className="mt-2 w-100"
             onClick={(event) => {
               console.log("Prenotazione");
               event.preventDefault();
               if(!this.state.value[0] || !this.state.value[1]) {
-                alert("Data prenotazione non valida");
+                return alert("Data prenotazione non valida");
               }
               ApiCall.getUser().then((getUserResult) => {
                 const reservation = {
@@ -196,14 +197,20 @@ export class Reservation extends React.Component {
                   let oldBookings = this.state.bookings;
                   oldBookings.push(newBooking);
 
-                  ApiCall.postProduct(this.state.product._id, { bookings: oldBookings });
-                  
-                  alert('Prenotazione effettuata con successo');
+                  ApiCall.postProduct(this.state.product._id, { bookings: oldBookings }).then(() => {
+                    alert('Prenotazione effettuata con successo');
+                    window.location.reload(false);
+                  }); 
                 });
               });
             }}
-            href="/user/index.html"
-          >Prenota ora</Button>
+          >
+            {
+              this.checkDateRange(this.state.value)
+              ? <span>Prenota ora</span>
+              : <span>Seleziona una data valida</span>
+            }
+          </Button>
         )
         : (
           <Button 
