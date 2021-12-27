@@ -1,5 +1,4 @@
 import React from 'react';
-import ApiCall from '../services/apiCall';
 import Cookie from 'js-cookie';
 import { Nav } from 'react-bootstrap';
 import config from './../config'
@@ -8,7 +7,7 @@ export class Hamburger extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false
+      isAuthenticated: props.isAuthenticated
     }
     this.logout = this.logout.bind(this);
   }
@@ -18,20 +17,8 @@ export class Hamburger extends React.Component {
     window.location.href=config.site202131Url + '/user/index.html';
   }
 
-  componentDidMount() {
-    if(Cookie.get('jwt')) {
-      ApiCall.getUser()
-      .then(() => {
-        this.setState({
-          isAuthenticated: true
-        });
-      })
-      .catch(() => {
-        this.setState({
-          isAuthenticated: false
-        });
-      });
-    }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ isAuthenticated: nextProps.isAuthenticated });  
   }
 
   render() {

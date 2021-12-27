@@ -8,6 +8,13 @@ export class Header extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      isAuthenticated: props.isAuthenticated
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ isAuthenticated: nextProps.isAuthenticated });  
   }
 
   render() {
@@ -44,7 +51,7 @@ export class Header extends React.Component {
                   className="me-auto my-2 my-lg-0"
                   navbarScroll
               >
-              <Hamburger/>
+              <Hamburger isAuthenticated={this.state.isAuthenticated}/>
               </Nav>
             </Navbar.Collapse>
           </Container>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Header } from './header'
 import { List } from './list'
+import Cookie from 'js-cookie';
 import ApiCall from '../services/apiCall';
 
 export class Main extends React.Component {
@@ -8,7 +9,8 @@ export class Main extends React.Component {
     super(props);
     this.state = {
       products: [],
-      filteredProducts: []
+      filteredProducts: [],
+      isAuthenticated: false
     }
     this.searchProducts = this.searchProducts.bind(this);
     this.showOnlyAvailableProducts = this.showOnlyAvailableProducts.bind(this);
@@ -49,7 +51,6 @@ export class Main extends React.Component {
     if(isIncreasing == false) {
       products.reverse();
     }
-    console.log(products);
     this.setState({
       products: products,
       filteredProducts: products
@@ -63,6 +64,19 @@ export class Main extends React.Component {
         filteredProducts: result.data.data
       });
     });
+    if(Cookie.get('jwt')) {
+      ApiCall.getUser()
+      .then(() => {
+        this.setState({
+          isAuthenticated: true
+        });
+      })
+      .catch(() => {
+        this.setState({
+          isAuthenticated: false
+        });
+      });
+    }
   }
 
   render() {
@@ -72,8 +86,12 @@ export class Main extends React.Component {
           search={this.searchProducts}
           showOnlyAvailable={this.showOnlyAvailableProducts}
           sort={this.sortProducts}
+          isAuthenticated={this.state.isAuthenticated}
         />
-        <List products={this.state.filteredProducts}/>
+        <List
+          products={this.state.filteredProducts}
+          isAuthenticated={this.state.isAuthenticated}
+        />
       </div>
     )
   }
