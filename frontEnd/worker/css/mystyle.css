@@ -1,4 +1,3 @@
-@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
 html {
     height: auto;
     min-height: 100% !important;
@@ -15,14 +14,14 @@ body {
     background-color: rgb(201, 201, 238);
 }
 .img-thumbnail {
-    padding: 0.5em;
-    background-color: rgb(156, 156, 156);
     border: 0px;
     display: block;
     width: 70%;
     margin-left: auto;
     margin-right: auto;
-}
+} 
+/* padding: 0.5em;
+background-color: rgb(156, 156, 156); */
 .input-group {
     margin-left: auto;
     margin-right: auto;
@@ -34,6 +33,9 @@ body {
 }
 .price {
     font-size: x-large;
+}
+.input-group {
+    width: 60%;
 }
 .input-group-text {
     width: 2.5em;
@@ -66,4 +68,25 @@ body {
     color: black;
     background-color: rgb(254, 165, 45);
     border-color: rgb(254, 165, 45);
+}
+
+#burgerButton{
+    width: 30%;
+    height: 10%;
+  }
+  
+#burger{ 
+    width: 100%;
+    height: 100%;
+  }
+.moveleft{
+    margin-right: 2em;
+}
+.heigt-group{
+    height: 2em;
+}
+.single{
+    border: thin solid black;
+    width:80%;
+    margin: auto;
 }
