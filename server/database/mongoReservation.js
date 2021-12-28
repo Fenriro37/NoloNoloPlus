@@ -72,7 +72,7 @@ exports.reservationsFind = async function(token, filter, sortBy) {
                         productTitle: 1,
                         productBrand: 1,
                         price: 1,
-                        image: 1,
+                        productImage: 1,
                         clientEmail: 1,
                         clientName: 1,
                         clientSurname: 1,
@@ -81,7 +81,9 @@ exports.reservationsFind = async function(token, filter, sortBy) {
                         startDate: 1,
                         endDate: 1,
                         isTaken: 1,
-                        isReturned: 1
+                        isReturned: 1,
+                        description: 1,
+                        note: 1
                     }
                 }).sort({ 'bookingDate.year': sortBy, 'bookingDate.month': sortBy, 'bookingDate.day': sortBy});
         }
