@@ -1,54 +1,83 @@
 import React from 'react';
-import ApiCall from '../services/apiCall';
+
 import Cookie from 'js-cookie';
-import { Nav } from 'react-bootstrap';
-import config from './../config'
+import { Nav, Form, FormControl } from 'react-bootstrap';
 
 export class Hamburger extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false
+      isAuthenticated: props.isAuthenticated
     }
     this.logout = this.logout.bind(this);
   }
 
   logout() {
     Cookie.remove('jwt');
-    window.location.href=config.site202131Url + '/user/index.html';
+    window.location.href='/user/index.html';
   }
 
-  componentDidMount() {
-    if(Cookie.get('jwt')) {
-      ApiCall.getUser()
-      .then(() => {
-        this.setState({
-          isAuthenticated: true
-        });
-      })
-      .catch(() => {
-        this.setState({
-          isAuthenticated: false
-        });
-      });
-    }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ isAuthenticated: nextProps.isAuthenticated });  
   }
 
   render() {
     if(this.state.isAuthenticated === true) {
       return (
-        <div className="text-center">
+        <Nav
+        className='text-center d-flex align-items-center'
+        navbarScroll
+        >
+          <Nav.Link>
+            <Form
+
+              onSubmit={(e) => {
+                e.preventDefault();
+                this.props.search(e.target.searchInput.value);
+              }}
+            >
+              <FormControl
+                type={'search'}
+                placeholder={'Cerca'}
+                name={'searchInput'}
+                className={'me-2'}
+                aria-label={'Cerca'}
+              />
+            </Form>
+          </Nav.Link>
           <Nav.Link href="#action1">Pagina personale</Nav.Link>
           <Nav.Link href="#action2">Prenotazioni effettuate</Nav.Link>
           <Nav.Link onClick={this.logout}>Logout</Nav.Link>
-        </div>
-      )
+        </Nav>
+      );
     } else {
       return (
-        <div className="text-center">
-          <Nav.Link href={config.site202131Url + '/public/login.html'}>Login</Nav.Link>
-        </div>
-      )
+        <Nav
+        className='me-auto my-2 my-lg-0 text-center d-flex align-items-center'
+        navbarScroll
+        >
+          <Nav.Link
+          className='w-100'
+          >
+            <Form
+              className='element-to-hide-over-350'
+              onSubmit={(e) => {
+                e.preventDefault();
+                this.props.search(e.target.searchInput.value);
+              }}
+            >
+              <FormControl
+                type={'search'}
+                placeholder={'Cerca'}
+                name={'searchInput'}
+                className={'me-2'}
+                aria-label={'Cerca'}
+              />
+            </Form>
+          </Nav.Link>
+          <Nav.Link href={'/public/login.html'}>Login</Nav.Link>
+        </Nav>
+      );
     }
   }
 }

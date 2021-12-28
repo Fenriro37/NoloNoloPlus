@@ -26,7 +26,12 @@ class ApiCall {
     }
 
     postUser(id, query) {
-        return http.post('/api/user?id=' + id , query)
+        if(id != null) {
+            return http.post('/api/user?id=' + id, query)
+        } else {
+            return http.post('/api/user', query)
+        }
+        
     }
 
     // Chiamate alle API sui prodotti
@@ -38,6 +43,10 @@ class ApiCall {
         return http.get('/api/product/all' + '?filter=' + filter + '&&sort=' + isDecreasing)
     }
 
+    postProduct(id, bookings) {
+        return http.post('/api/product/?id=' + id, bookings);
+    }
+
     // Chiamate alle API sulle prenotazioni
     getReservation(id) {
         return http.get('/api/reservation/?id=' + id)
@@ -47,8 +56,8 @@ class ApiCall {
         return http.get('/api/reservation/all', {'filter': filter , 'sort': sort})
     }
 
-    postReservation() {
-
+    postReservation(reservation) {
+        return http.post('/api/reservation', reservation)
     }
 
 }

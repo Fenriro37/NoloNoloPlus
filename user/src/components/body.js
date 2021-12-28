@@ -1,11 +1,18 @@
 import React from 'react'
 import { Card } from './card.js'
 
-export class List extends React.Component {
+export class Body extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isAuthenticated: props.isAuthenticated
+    }
   }
   
+  componentWillReceiveProps(nextProps) {
+    this.setState({ isAuthenticated: nextProps.isAuthenticated });  
+  }
+
   render() {
     if(this.props.products.length === 0) {
       return <div/>;
@@ -15,6 +22,7 @@ export class List extends React.Component {
           <Card
             key={product._id}
             product={product}
+            isAuthenticated={this.state.isAuthenticated}
           />
         );
       });

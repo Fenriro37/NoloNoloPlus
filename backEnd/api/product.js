@@ -116,7 +116,7 @@ router.get('/all', async function(req, res) {
 
 // POST /api/product
 // ----------------------------------------------------------------------------
-// [Funzionario, Manager] Se il parametro non è specificato, crea un nuovo
+// [Cliente, Funzionario, Manager] Se il parametro non è specificato, crea un nuovo
 // oggetto con i dati di req.body (devono essere completi), altrimenti aggiorna
 // i dati dell'oggetto id.
 // 
@@ -149,8 +149,8 @@ router.post('/', async function(req, res) {
             return res.status(401).json({
                 message: 'Token non valido.'
             });
-        } else if(sender.status > 0) {
-            // È un funzionario o manager
+        } else {
+            // È un cliente, funzionario o manager
             if(productId == null) {
                 // Parametro non specificato
                 result = await myMongoProduct.productsInsertOne(req.body);
@@ -171,11 +171,6 @@ router.post('/', async function(req, res) {
                     error: result.obj
                 });
             }
-        } else {
-            // È un cliente
-            return res.status(401).json({
-                message: 'Operazione non autorizzata.'
-            });
         }
     } catch(error) {
         return res.status(400).json({

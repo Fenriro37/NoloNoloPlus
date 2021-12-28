@@ -1,4 +1,5 @@
 window.addEventListener("load", () => {
+    alert("Questo è un progetto universitario, inscerisci dei dati fittizi");
     // Seleziona il bottone per inviare il form
     $("#signUpButton").click((event) => event.preventDefault());
     $("#signUpButton").click(async () => {
