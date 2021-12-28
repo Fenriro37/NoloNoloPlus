@@ -1,10 +1,13 @@
-import React from 'react'
-import { Header } from './header'
-import { List } from './list'
+import React from 'react';
+
 import Cookie from 'js-cookie';
+
 import ApiCall from '../services/apiCall';
+import { Body } from './body';
+import { Header } from './header';
 
 export class Main extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -17,8 +20,10 @@ export class Main extends React.Component {
     this.sortProducts = this.sortProducts.bind(this);
   }
 
+  // Functions called by header, rendered by body
+
   searchProducts(filter) {
-    console.log("searchProducts(" + filter + ")");
+    console.log('searchProducts(' + filter + ')');
     ApiCall.getAllProduct(filter, true).then((result) => {
       this.setState({
         products: result.data.data,
@@ -28,7 +33,7 @@ export class Main extends React.Component {
   }
 
   showOnlyAvailableProducts(isAvailable) {
-    console.log("showOnlyAvailableProducts(" + isAvailable + ")");
+    console.log('showOnlyAvailableProducts(' + isAvailable + ')');
     let products = [];
     if(isAvailable == true) {
       for(let index in this.state.products) {
@@ -45,9 +50,11 @@ export class Main extends React.Component {
   }
 
   sortProducts(isIncreasing) {
-    console.log("sortProducts(" + isIncreasing + ")");
+    console.log('sortProducts(' + isIncreasing + ')');
     let products = this.state.products;
-    products.sort(function(a, b) { return a.price - b.price})
+    products.sort((a, b) => {
+      return a.price - b.price;
+    });
     if(isIncreasing == false) {
       products.reverse();
     }
@@ -65,13 +72,11 @@ export class Main extends React.Component {
       });
     });
     if(Cookie.get('jwt')) {
-      ApiCall.getUser()
-      .then(() => {
+      ApiCall.getUser().then(() => {
         this.setState({
           isAuthenticated: true
         });
-      })
-      .catch(() => {
+      }).catch(() => {
         this.setState({
           isAuthenticated: false
         });
@@ -83,16 +88,16 @@ export class Main extends React.Component {
     return (
       <div>
         <Header
-          search={this.searchProducts}
-          showOnlyAvailable={this.showOnlyAvailableProducts}
-          sort={this.sortProducts}
-          isAuthenticated={this.state.isAuthenticated}
+        search={this.searchProducts}
+        showOnlyAvailable={this.showOnlyAvailableProducts}
+        sort={this.sortProducts}
+        isAuthenticated={this.state.isAuthenticated}
         />
-        <List
-          products={this.state.filteredProducts}
-          isAuthenticated={this.state.isAuthenticated}
+        <Body
+        products={this.state.filteredProducts}
+        isAuthenticated={this.state.isAuthenticated}
         />
       </div>
-    )
+    );
   }
 }

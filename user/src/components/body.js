@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card } from './card.js'
 
-export class List extends React.Component {
+export class Body extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

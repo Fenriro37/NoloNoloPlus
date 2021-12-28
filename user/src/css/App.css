@@ -13,6 +13,18 @@ html {
   }
 }
 
+@media (max-width: 350px) {
+  .element-to-hide-under-350 {
+    display: none;
+  }
+}
+
+@media (min-width: 350px) {
+  .element-to-hide-over-350 {
+    display: none;
+  }
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -36,3 +48,4 @@ html {
     transform: rotate(360deg);
   }
 }
+

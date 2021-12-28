@@ -10,7 +10,7 @@ const config = {
     JSONWebTokenKey: "password-chiave-segretesissima-321kjh4b1asdtrkò13kjl41jklnlaqew4ljer12",
     serverPort: "8081",
     // serverPort: "8000",
-    origin: "http://localhost:8081",
+    origin: ["http://localhost:8081", "http://localhost:3000"],
     // origin: "*",
 }
 
