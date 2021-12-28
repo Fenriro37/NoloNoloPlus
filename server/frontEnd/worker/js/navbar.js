@@ -65,29 +65,27 @@ function getAllArticle(){
             console.log(result)
             const myCatalog = document.getElementById("catalog");
             myCatalog.textContent = '';
-            result.data.forEach(article => {
+            let articles = result.data
+            for (let i in articles){
                 $( "#catalog" ).append(
                     '<div class="row single justify-content-center">' +
-                    '<div class="col-5"> <img class="img-thumbnail" alt="immagine prodotto" src='+ article.image +'></div>' +
-                    '<div class="col-5"> <h2><a href="article.html?id=' +article._id+ '">'+ article.title + " " + article.brand + '</a></h2> <h2>' +article.price+'€</h2>' +
-                    '<span id="star" ></span></div>' +
+                    '<div class="col-5"> <img class="img-thumbnail" alt="immagine prodotto" src='+ articles[i].image +'></div>' +
+                    '<div class="col-5"> <h2><a href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> <h2>' +articles[i].price+'€</h2>' +
+                    '<span id="star' +i+ '"></span></div>' +
                     '</div>'
                 );  
-                console.log(article.quality + article.title)
-                let i;
-                for ( i = 0; i < article.quality; i++){
-                    console.log("color")
-                    $("#star").append(
-                        '<i class="bi bi-star-fill checked big-size</i>'
+                let j;
+                for ( j = 0; j < articles[i].quality; j++){
+                    $("#star" + i).append(
+                        '<i class="bi bi-star-fill checked big-size"</i>'
                     )
                 }
-                for (i = 0; i < 3 - article.quality; i++){
-                    console.log("start")
-                    $("#star").append(
-                        '<i class="bi bi-star big-size </i>'
+                for (j = 0; j < 3 - articles[i].quality; j++){
+                    $("#star" + i).append(
+                        '<i class="bi bi-star big-size"</i>'
                     )
                 }
-            });             
+            }             
             //window.location.href = "http://localhost:8081/user/index.html";
         },
         // Risposta del server in caso di insuccesso
