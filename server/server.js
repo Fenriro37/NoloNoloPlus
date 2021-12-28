@@ -5,7 +5,7 @@ const indexRouter = require('./route/index.js');
 const cookieParser = require('cookie-parser');
 
 const corsOptions = {
-  origin: ['*'],
+  origin: ["http://localhost:8081/"],
   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Accept',
