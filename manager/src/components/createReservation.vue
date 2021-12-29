@@ -7,7 +7,7 @@
         <p> *email cliente:</p>
       </b-col>
       <b-col cols="9">
-         <b-form-input  type="text" v-model="email" required></b-form-input>
+         <b-form-input  type="text" v-model="email"></b-form-input>
       </b-col>
     </b-row>
 
@@ -16,7 +16,7 @@
         <p> *ID Articolo:</p>
       </b-col>
       <b-col cols="9" >
-         <b-form-input  type="text" v-model="articleId" readonly></b-form-input>
+         <b-form-input  type="text" v-model="articleId"></b-form-input>
       </b-col>
     </b-row>
 
@@ -25,7 +25,7 @@
         <p> *Data richiesta prenotazione:</p>
       </b-col>
       <b-col cols="9" >
-         <b-form-datepicker v-model="reservationDate" required></b-form-datepicker>
+         <b-form-datepicker v-model="reservationDate"></b-form-datepicker>
       </b-col>
     </b-row>
 
@@ -34,7 +34,7 @@
         <p> *Data inizio noleggio</p>
       </b-col>
       <b-col cols="9" >
-         <b-form-datepicker v-model="reservationStart" :date-disabled-fn="dateDisabled"  required></b-form-datepicker>
+         <b-form-datepicker v-model="reservationStart" :date-disabled-fn="dateDisabled" ></b-form-datepicker>
       </b-col>
     </b-row>
   
@@ -43,7 +43,7 @@
         <p> *Data fine noleggio:</p>
       </b-col>
       <b-col cols="9" >
-         <b-form-datepicker v-model="reservationEnd" :date-disabled-fn="dateDisabled" required></b-form-datepicker>
+         <b-form-datepicker v-model="reservationEnd" :date-disabled-fn="dateDisabled" ></b-form-datepicker>
       </b-col>
     </b-row>
 
@@ -55,7 +55,7 @@
         <b-form-checkbox
           v-model="rentalOccurred"
           @click="changeRentalOccured"
-          required
+          
         >          
         </b-form-checkbox>
         </b-col>
@@ -73,7 +73,7 @@
         <b-form-checkbox
           v-model="returned"
           @click="changeReturned"
-          required
+          
         >          
         </b-form-checkbox>
       </b-col>
@@ -88,7 +88,7 @@
         <p> *Prezzo:</p>
       </b-col>
       <b-col cols="9">
-        <b-form-input v-model="price" type="number"  min="1" required></b-form-input>
+        <b-form-input v-model="price" type="number"  min="1" ></b-form-input>
       </b-col>
     </b-row>
 
@@ -106,7 +106,7 @@
         <p> Note (non visibili ai clienti):</p>
       </b-col>
       <b-col cols="9">
-        <b-form-input v-model="privateNotes" type="text" required></b-form-input>
+        <b-form-input v-model="privateNotes" type="text" ></b-form-input>
       </b-col>
     </b-row>
 

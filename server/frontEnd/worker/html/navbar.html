@@ -14,35 +14,33 @@
 
 </head>
 <body>
-<div>
-    <nav class="navbar navbar-dark bg-dark">
+<nav class="navbar navbar-dark bg-dark">
 
-        <div class="input-group ">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Articoli</button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button" onclick="changeTextDropdown(0)">Articoli</button>
-                <button class="dropdown-item" type="button" onclick="changeTextDropdown(1)">Clienti</button>
-                <button class="dropdown-item" type="button" onclick="changeTextDropdown(2)">Prenotazioni</button>
-            </div>
-            <input id="searchText" type="text" class="form-control" placeholder="Search..." aria-label="Recipient's username" aria-describedby="button-addon2">
-            <button class="btn btn-primary" type="button" id="button-addon2" onclick="search()">Button</button>
-        </div>
+	<div class="input-group ">
+		<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Articoli</button>
+		<div class="dropdown-menu dropdown-menu-right">
+			<button class="dropdown-item" type="button" onclick="changeTextDropdown(0)">Articoli</button>
+			<button class="dropdown-item" type="button" onclick="changeTextDropdown(1)">Clienti</button>
+			<button class="dropdown-item" type="button" onclick="changeTextDropdown(2)">Prenotazioni</button>
+		</div>
+		<input id="searchText" type="text" class="form-control" placeholder="Search..." aria-label="Recipient's username" aria-describedby="button-addon2">
+		<button class="btn btn-primary" type="button" id="button-addon2" onclick="search()">Button</button>
+	</div>
 
-        <button class="navbar-toggler moveleft" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+	<button class="navbar-toggler moveleft" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 
-    </nav>
-    <div class="collapse" id="navbarToggleExternalContent">
-        <div class="bg-dark">
-        <p class="text-center text-light bg-dark">Login/Logout</p>
-        <p class="text-center text-light bg-dark">Aggiungi un articolo</p>
-        </div>
+</nav>
+
+<div class="collapse" id="navbarToggleExternalContent">
+	<div class="bg-dark">
+	<p class="text-center text-light bg-dark">Login/Logout</p>
+	<p class="text-center text-light bg-dark"><a href="createArticle.html">Aggiungi un articolo</a></p>
+	</div>
 </div>
 
-<div class="container-fluid" id="catalog">
-
-</div>
+<div class="container-fluid" id="catalog"></div>
 
 <script type="text/javascript" src="./js/navbar.js"></script>
 </body>
