@@ -1,6 +1,3 @@
-const site202131Url = "http://localhost:8081/user/index.html";
-// const site202131Url = "http://site202131.tw.cs.unibo.it/user/index.html";
-
 window.addEventListener("load", () => {
     // Seleziona il bottone per inviare il form
     $("#loginButton").click((event) => event.preventDefault());

@@ -37,12 +37,12 @@ exports.productsFind = async function(filter, sortBy) {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
         const array = filter.split(' ');
-        const re = new RegExp(`\\b${filter}\\b`, 'gi');
+        const re = new RegExp(`${filter}`, 'gi');
         const result = await products.find({
                 $or: [
                     { title: re },
                     { brand: re },
-                    { tags: { $all: array } }
+                    { tags: re }
                 ]},
                 // {
                 //     projection: {

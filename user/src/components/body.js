@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Card } from './card.js'
 
 export class Body extends React.Component {
@@ -10,11 +11,13 @@ export class Body extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    this.setState({ isAuthenticated: nextProps.isAuthenticated });  
+    this.setState({
+      isAuthenticated: nextProps.isAuthenticated
+    });  
   }
 
   render() {
-    if(this.props.products.length === 0) {
+    if(this.props.products.length == 0) {
       return <div/>;
     } else {
       const lista = this.props.products.map((product) => {

@@ -91,12 +91,10 @@ export class Main extends React.Component {
         search={this.searchProducts}
         showOnlyAvailable={this.showOnlyAvailableProducts}
         sort={this.sortProducts}
-        isAuthenticated={this.state.isAuthenticated}
-        />
+        isAuthenticated={this.state.isAuthenticated}/>
         <Body
         products={this.state.filteredProducts}
-        isAuthenticated={this.state.isAuthenticated}
-        />
+        isAuthenticated={this.state.isAuthenticated}/>
       </div>
     );
   }

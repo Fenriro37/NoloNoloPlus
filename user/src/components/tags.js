@@ -1,4 +1,5 @@
 import React from 'react'
+
 import Chip from '@mui/material/Chip';
 
 export class Tags extends React.Component {
@@ -10,14 +11,14 @@ export class Tags extends React.Component {
     const lista = this.props.tags.map((tag) => {
       return (
         <Chip
-          className="m-1"
+          className='m-1'
           key={tag}
-          label={tag}
-        />
+          label={tag}/>
       );
     });
     return (
-      <div className="d-flex justify-content-center">
+      <div
+      className='mb-1 d-flex justify-content-center flex-wrap'>
         {lista}
       </div>
     );

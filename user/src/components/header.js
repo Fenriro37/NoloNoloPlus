@@ -25,54 +25,43 @@ export class Header extends React.Component {
       <div>
         <Navbar
         className='bg-light w-100'
-        expand='false'
-        >
+        expand='false'>
           <Container
-          fluid
-          
-          >
+          fluid>
             <Navbar.Brand
             href='/user/index.html'
-            className='p-0 m-0'
-            >
+            className='p-0 m-0'>
               <img
                 src='https://cdn.discordapp.com/attachments/918079016651604009/918082983964061726/CAtena_montuosa.png'
                 alt='logo NoloNoloPlus'
-                height='37.5em'
-              />
+                height='37.5em'/>
             </Navbar.Brand>
             <Form
-              className={'element-to-hide-under-350'}
+              className='element-to-hide-under-350'
               style={{ width: '60%' }}
               onSubmit={(e) => {
                 e.preventDefault();
                 this.props.search(e.target.searchInput.value);
-              }}
-            >
+              }}>
               <FormControl
-                type={'search'}
-                placeholder={'Cerca'}
-                name={'searchInput'}
-                className={'me-2'}
-                aria-label={'Cerca'}
-              />
+                type='search'
+                placeholder='Cerca'
+                name='searchInput'
+                className='me-2'
+                aria-label='Cerca'/>
             </Form>
             <Navbar.Toggle
-              aria-controls={'navbarScroll'}
-            />
+              aria-controls='navbarScroll'/>
             <Navbar.Collapse
-              id={'navbarScroll'}
-            >
+              id='navbarScroll'>
               <Hamburger
-                isAuthenticated={this.state.isAuthenticated}
-              />
+                isAuthenticated={this.state.isAuthenticated}/>
             </Navbar.Collapse>
           </Container>
         </Navbar>
         <Filters
           showOnlyAvailable={this.props.showOnlyAvailable}
-          sort={this.props.sort}
-        />
+          sort={this.props.sort}/>
       </div>
     );
   }
