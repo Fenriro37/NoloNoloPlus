@@ -30,7 +30,8 @@ export class Body extends React.Component {
         );
       });
       return (
-        <div>
+        <div
+        id='body'>
           {lista}
         </div>
       );

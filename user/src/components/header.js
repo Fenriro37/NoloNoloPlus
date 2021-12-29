@@ -4,6 +4,7 @@ import { Navbar, Container, Form, FormControl } from 'react-bootstrap';
 
 import { Hamburger } from './hamburger';
 import { Filters } from './filters';
+import { padding } from '@mui/system';
 
 export class Header extends React.Component {
 
@@ -34,7 +35,7 @@ export class Header extends React.Component {
               <img
                 src='https://cdn.discordapp.com/attachments/918079016651604009/918082983964061726/CAtena_montuosa.png'
                 alt='logo NoloNoloPlus'
-                height='37.5em'/>
+                height='45px'/>
             </Navbar.Brand>
             <Form
               className='element-to-hide-under-350'
@@ -51,7 +52,12 @@ export class Header extends React.Component {
                 aria-label='Cerca'/>
             </Form>
             <Navbar.Toggle
-              aria-controls='navbarScroll'/>
+            style={{
+              height: '45px',
+              width: '45px',
+              padding: '0px'
+            }}
+            aria-controls='navbarScroll'/>
             <Navbar.Collapse
               id='navbarScroll'>
               <Hamburger
