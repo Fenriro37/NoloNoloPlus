@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article</title>
+    <title>Prenotazione</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
@@ -15,138 +15,44 @@
 <body>
 <div class="container-fluid ">
   <div class="row">
-    <div class="col-6">
-      <b-img v-bind:src="bookedArticles.image" class="img-thumbnail"></b-img>
+    <div class="col-5" id="img">
     </div>
-    <div class="col-6">
-      <p>Id prenotazione: {{reservationId}} </p>
-      <p><router-link :to="{ name: 'article',  params: { id: bookedArticles.identifier} }">{{bookedArticles.title + ' ' +bookedArticles.brand}}</router-link></p>
-      <p><router-link :to="{name: 'client1', params:{email: clientEmail, choice: 1}}" >{{clientEmail}}</router-link></p>
-
-      <template v-if="!boolModify">
-        <p>Prezzo: {{bookedArticles.price}}€ (da rivedere)</p>
-      </template>
-      <template v-else>
-        <div class="row">
-          <div class="col-2">
-            <p>Prezzo:</p>
-          </div>
-          <div class="col-6">
-            <b-form-input type="number" v-model="copyPrice"></b-form-input>
-          </div>
-        </div>
-      </template>
-
-    </div>
-  </div>
-  <div class="row">
-    <p  v-if="!boolModify">Data richiesta prenotazione: {{bookingRequest}}</p>  
-    <template v-else>
-      <div class="col-3">
-        <p>Data richiesta prenotazione: </p>
-      </div>
-      <div class="col-3">  
-        <b-form-datepicker  v-model="copyBookingRequest" :placeholder="copyBookingRequest"  format="DD/MM/yyyy" ></b-form-datepicker>
-      </div>
-    </template>
-  </div>
-
-  <div class="row">
-    <template v-if="!boolModify && !boolVerify">
-      <div class="col-4">
-        <p v-if="!boolModify">Data inizio prenotazione: {{bookingStart}}</p>
-      </div>
-      <div class="col-4">
-        <b-form-checkbox v-if="!boolModify" :checked="rentalOccurred" :disabled="!boolModify">
-          Avvenuta consegna
-        </b-form-checkbox>
-      </div>  
-    </template>
+    <div class="col-6" id="info">
       
-    <template v-else-if="boolModify">
-      <div class="col-3">
-        <p  >Data inizio prenotazione: </p>
-      </div>
+    </div>
+  </div>
+  <div class="row" id="bookingRequest"> 
+  </div>
 
-      <div class="col-3">  
-        <b-form-datepicker v-model="copyBookingStart" :placeholder="copyBookingStart"  ></b-form-datepicker> 
+  <div class="row">
+      <div class="col-4" id="bookingStart">
       </div>
-      <div class="col-3">
-        <b-form-checkbox          
-        :checked="copyRentalOccurred"
-        v-model="copyRentalOccurred"          
-        >
+      <div class="col-4">
+        <input class="form-check-input" type="checkbox" value="" id="rentalOccurred" disabled>
+        <label class="form-check-label" for="rentalOccurred">
           Avvenuta consegna
-        </b-form-checkbox>
-      </div>
-    </template>
-    <template v-else>
-      <div class="col-4">
-        <p v-if="!boolModify">Data inizio prenotazione: {{bookingStart}}</p>
-      </div>
-      <div class="col-3">
-        <b-form-checkbox          
-        :checked="copyRentalOccurred"
-        v-model="copyRentalOccurred"          
-        >
-          Avvenuta consegna
-        </b-form-checkbox>
-      </div>
-    </template>
+        </label>
+      </div>  
   </div>
 
   <div class="row">
-    
-    <template v-if="!boolModify && !boolVerify">
-      <div class="col-4">
-        <p>Data fine prenotazione: {{bookingEnd}}</p> 
+      <div class="col-4" id="bookingEnd">
       </div>
       <div class="col-4">
-        <b-form-checkbox :checked="returned" :disabled="!boolModify">
-          Avvenuta Restituzione 
-        </b-form-checkbox>
+        <input class="form-check-input" type="checkbox" value="" id="returned" disabled>
+        <label class="form-check-label" for="returned">
+          Avvenuta restituzione
+        </label>
       </div>
-    </template>
-
-    <template v-else-if="boolModify">
-      <div class="col-3">
-        <p  >Data Fine prenotazione: </p>
-      </div>
-      <div class="col-3">  
-        <b-form-datepicker v-model="copyBookingEnd" :placeholder="copyBookingEnd"  format="DD/MM/yyyy"></b-form-datepicker> 
-      </div>        
-      <div class="col-3">
-        <b-form-checkbox :checked="copyReturned" v-model="copyReturned">
-          Avvenuta Restituzione 
-        </b-form-checkbox>
-      </div>
-    </template>
-
-    <template v-else>
-      <div class="col-4">
-        <p>Data fine prenotazione: {{bookingEnd}}</p> 
-      </div>
-      <div class="col-3">
-        <b-form-checkbox :checked="copyReturned" v-model="copyReturned">
-          Avvenuta Restituzione 
-        </b-form-checkbox>
-      </div>
-    </template>
   </div>
 
-  <div class="row">
-    <p  v-if="!boolModify">{{notes}}</p>
-    <b-form-input v-else type="text" v-model="copyNotes"  ></b-form-input>
+  <div class="row" id="notes">
   </div>
-  <div class="row">
-    <p  v-if="!boolModify">{{privateNotes}}</p>
-    <b-form-input v-else type="text" v-model="copyPrivateNotes"></b-form-input>
+  <div class="row" id="privateNotes">
   </div>
 
-  <b-button v-if="!boolModify && !boolVerify" type="button" class="btn btn-lg btn-secondary" @click="modify">Modifica</b-button>
-  <b-button v-if="boolModify || boolVerify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
-  <b-button v-if="boolModify || boolVerify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
-  <button class="btn btn-lg btn-danger delete" @click="deleteReservation"> Cancella prenotazione</button>
+  <button type="button" class="btn btn-lg btn-secondary">Modifica</button>
+
 </div>
 
 <script type="text/javascript" src="./js/reservation.js"></script>

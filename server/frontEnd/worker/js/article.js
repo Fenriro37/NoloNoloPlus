@@ -13,7 +13,7 @@ window.onload = function getProduct() {
         // Risposta del server in caso di successo
         success: (result) => {
             let data = result.data.obj
-            console.log(data)
+            console.log(result)
 						$("#img").append(
 							' <img class="img-thumbnail" alt="immagine prodotto" src='+ data.image+'>'
 						)
