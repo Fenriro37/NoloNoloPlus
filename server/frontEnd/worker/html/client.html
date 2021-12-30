@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./css/mystyle.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <h1> Account </h1>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Nome:</p>
+      </div>
+      <div class="col-9" id="name">
+        <!-- ModifyOn/Off -->
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Cognome:</p>
+      </div>
+      <div class="col-9" id="surname">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>ID:<span>(non modificabile)</span></p>
+      </div>
+      <div class="col-9" id="identifier">
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-3">
+        <p>Sesso:</p>
+      </div>
+      <div class="col-9" id="sex">
+
+      </div>
+    </div>
+      
+    <div class="row">
+      <div class="col-3">
+        <p>Numbero di Telefono:</p>
+      </div>
+      <div class="col-9" id="phone">
+      </div>
+    </div>
+      
+    <div class="row">
+      <div class="col-3">
+        <p>E-mail:</p>
+      </div>
+      <div class="col-9" id="mail">
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3">
+        <b>Data di nascita</b>
+      </div>
+      <div class="col-9" id="birthday">
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3">
+        <b>Indirizzo</b>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Via:</p>
+      </div>
+      <div class="col-9" id="street">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Numero:</p>
+      </div>
+      <div class="col-9" id="num">
+      </div>
+    </div> 
+
+    <div class="row">
+      <div class="col-3">
+        <p>Città: </p>
+      </div>
+      <div class="col-9" id="city">
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <b>Pagamenti</b>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <p>Tipo di carta:</p>
+      </div>
+      <div class="col-9" id="cardType">       
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <p>Nome carta:</p>
+      </div>
+      <div class="col-9" id="cardName">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <p>Proprietario:</p>
+      </div>
+      <div class="col-9" id="owner">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <p>Data scadenza</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3 tab">
+        <p>Mese:</p>
+      </div>
+      <div class="col-9" id="cardMonth">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3 tab">
+        <p>Anno:</p>
+      </div>        
+      <div class="col-9" id="cardYear">
+      </div>
+    </div>
+
+    <hr>
+    <!-- Da qui parte la tabella delle prenotazioni -->
+    <h3>Lista prenotazioni</h3>
+    <div class="p-3">
+      <div class="row">
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <br>
+        <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+            <th>ID noleggio</th>
+            <th>ID prodotti</th>
+            <th>Inizio noleggio</th>
+            <th>Fine noleggio</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            
+        </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Bottoni -->
+    <button type="button" class="btn btn-lg btn-secondary">Modifica</button>
+
+  </div>
+  <script type="text/javascript" src="./js/client.js"></script>
+</body>
+</html>
