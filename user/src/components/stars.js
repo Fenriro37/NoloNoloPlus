@@ -11,8 +11,8 @@ export class Stars extends React.Component {
     const val = parseInt(this.props.quality);
     return (
       <div
-      className='mb-1 d-flex align-items-center'>
-        Qualità:
+      className='d-flex align-items-center'>
+        <b>Qualità:</b>
         <Rating
           name='read-only'
           value={val}

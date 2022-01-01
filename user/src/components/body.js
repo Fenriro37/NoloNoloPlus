@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Card } from './card.js'
+import { ProductCard } from './productCard.js'
 
 export class Body extends React.Component {
   constructor(props) {
@@ -22,7 +22,7 @@ export class Body extends React.Component {
     } else {
       const lista = this.props.products.map((product) => {
         return (
-          <Card
+          <ProductCard
             key={product._id}
             product={product}
             isAuthenticated={this.state.isAuthenticated}

@@ -4,7 +4,6 @@ import { Navbar, Container, Form, FormControl } from 'react-bootstrap';
 
 import { Hamburger } from './hamburger';
 import { Filters } from './filters';
-import { padding } from '@mui/system';
 
 export class Header extends React.Component {
 
@@ -33,7 +32,7 @@ export class Header extends React.Component {
             href='/user/index.html'
             className='p-0 m-0'>
               <img
-                src='https://cdn.discordapp.com/attachments/918079016651604009/918082983964061726/CAtena_montuosa.png'
+                src='https://cdn.discordapp.com/attachments/888778821262790686/926860373775249469/nolonoloplus.png'
                 alt='logo NoloNoloPlus'
                 height='45px'/>
             </Navbar.Brand>
@@ -46,10 +45,10 @@ export class Header extends React.Component {
               }}>
               <FormControl
                 type='search'
-                placeholder='Cerca'
+                placeholder='Cerca... '
                 name='searchInput'
                 className='me-2'
-                aria-label='Cerca'/>
+                aria-label='Cerca prodotti'/>
             </Form>
             <Navbar.Toggle
             style={{

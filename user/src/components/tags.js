@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Chip from '@mui/material/Chip';
+import { Badge, Pill } from 'react-bootstrap';
 
 export class Tags extends React.Component {
   constructor(props) {
@@ -10,16 +10,22 @@ export class Tags extends React.Component {
   render() {
     const lista = this.props.tags.map((tag) => {
       return (
-        <Chip
-          className='m-1'
-          key={tag}
-          label={tag}/>
+        <Badge
+        pill
+        bg='primary'
+        className='m-1'
+        key={tag}>
+          {tag}
+        </Badge>
       );
     });
     return (
-      <div
-      className='mb-1 d-flex justify-content-center flex-wrap'>
-        {lista}
+      <div>
+        <b>Categoria:</b>
+        <div
+        className='d-flex justify-content-center flex-wrap'>
+          {lista}
+        </div>
       </div>
     );
   }

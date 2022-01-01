@@ -16,6 +16,7 @@ export class Filters extends React.Component {
           <Form.Check 
             type='checkbox'
             label='Disponibilità'
+            title='Dis'
             className='m-0'
             onChange={(e) => {
               this.props.showOnlyAvailable(e.target.checked);
