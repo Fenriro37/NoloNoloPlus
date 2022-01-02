@@ -1,4 +1,4 @@
- function login() {
+window.onload = function login() {
   $.ajax({
       url: "/api/public/login",
       method: "POST",
@@ -119,7 +119,7 @@ function getAllClient(text){
                 $("#catalog").append(
                     '<div class="row single justify-content-center">' +
                     '<div class="col-2"> <img class="img-fluid" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Immagine utente base"></div>' +
-                    '<div class="col-5"> <h2><a href="client.html?id=' +user._id+ '">'+ user.userName + ' ' + user.userSurname + '</a></h2> <h2>Email:' +user.email+'€</h2>' +
+                    '<div class="col-5"> <h2><a href="client.html?email=' +user.email+ '">'+ user.userName + ' ' + user.userSurname + '</a></h2> <h2>Email:' +user.email+'€</h2>' +
                     '<h2> Telefono: ' +user.phoneNumber+ '</h2></div>'+ 
                     '</div>'
                 );  

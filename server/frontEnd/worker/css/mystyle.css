@@ -90,3 +90,9 @@ background-color: rgb(156, 156, 156); */
     width:80%;
     margin: auto;
 }
+.delete {
+    float: right
+  }
+#formButtons{
+    visibility: hidden;
+}

@@ -50,7 +50,6 @@ $('form').on('reset', function(e){
 });
 
 function save() {
-
 	let newTags = $('#tags').val().replace(/,/g, ' ');
 	newTags = [...new Set(newTags.split(" "))];
 	for (let i = 0; i < newTags.length;i++){

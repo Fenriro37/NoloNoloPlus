@@ -15,149 +15,181 @@
 <body>
   <div class="container-fluid">
     <h1> Account </h1>
+    <form name="myform" id="formId" onSubmit="">
+    <!--<form method="post" id="theFormID" name="theFormID" action=""></form>-->
+      <div class="row">
+        <div class="col-3">
+          <p>Nome:</p>
+        </div>
+        <div class="col-9">
+          <input type="text" id="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1" readonly required>
+        </div>
+      </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p>Nome:</p>
+      <div class="row">
+        <div class="col-3">
+          <p>Cognome:</p>
+        </div>
+        <div class="col-9" >
+          <input type="text" id="surname" class="form-control" aria-label="surname" aria-describedby="basic-addon2" readonly required>
+        </div>
       </div>
-      <div class="col-9" id="name">
-        <!-- ModifyOn/Off -->
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p>Cognome:</p>
+      <div class="row">
+        <div class="col-3">
+          <p>ID:<span>(non modificabile)</span></p>
+        </div>
+        <div class="col-9" >
+          <input type="text" id="identifier" class="form-control" aria-label="identifier" aria-describedby="basic-addon3" readonly required>
+        </div>
       </div>
-      <div class="col-9" id="surname">
+      
+      <div class="row">
+        <div class="col-3">
+          <p>Sesso:</p>
+        </div>
+        <div class="col-9" >
+          <select id="sex" class="form-select" aria-label="Default select example" disabled required>
+            <option value="1">M</option>
+            <option value="2">F</option>
+            <option value="3">Altro</option>
+          </select>
+        </div>
       </div>
-    </div>
+        
+      <div class="row">
+        <div class="col-3">
+          <p>Numbero di Telefono:</p>
+        </div>
+        <div class="col-9">
+          <input type="tel" id="phone" class="form-control" aria-label="phone" aria-describedby="basic-addon5" readonly required>
+        </div>
+      </div>
+        
+      <div class="row">
+        <div class="col-3">
+          <p>E-mail:</p>
+        </div>
+        <div class="col-9" >
+          <input type="email" id="mail" class="form-control" aria-label="mail" aria-describedby="basic-addon6" readonly required>
+        </div>
+      </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p>ID:<span>(non modificabile)</span></p>
+      <hr>
+
+      <div class="row">
+        <div class="col-3">
+          <b>Data di nascita</b>
+        </div>
+        <div class="col-9" >
+          <input id="birthday" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" aria-label="birthday" aria-describedby="basic-addon7" readonly required>
+        </div>
       </div>
-      <div class="col-9" id="identifier">
+
+      <hr>
+
+      <div class="row">
+        <div class="col-3">
+          <b>Indirizzo</b>
+        </div>
       </div>
+
+      <div class="row">
+        <div class="col-3">
+          <p>Via:</p>
+        </div>
+        <div class="col-9" >
+          <input type="text" id="street" class="form-control" aria-label="street" aria-describedby="basic-addon8" readonly required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <p>Numero:</p>
+        </div>
+        <div class="col-9">
+          <input type="number"  id="num" class="form-control" aria-label="city" aria-describedby="basic-addon10" step="1" min="1" readonly required>
+        </div>
+      </div> 
+
+      <div class="row">
+        <div class="col-3">
+          <p>Città: </p>
+        </div>
+        <div class="col-9" >
+          <input type="text" id="city" class="form-control" aria-label="city" aria-describedby="basic-addon10" readonly required>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <b>Pagamenti</b>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Tipo di carta:</p>
+        </div>
+        <div class="col-9" >   
+          <input type="text" id="cardType" class="form-control" aria-label="cardType" aria-describedby="basic-addon11" readonly required>
+    
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Nome carta:</p>
+        </div>
+        <div class="col-9" >
+          <input type="text" id="cardName" class="form-control" aria-label="cardName" aria-describedby="basic-addon12" readonly required>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <p>Proprietario:</p>
+        </div>
+        <div class="col-9" >
+          <input type="text" id="owner" class="form-control" aria-label="owner" aria-describedby="basic-addon13" readonly required>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <p>Data scadenza</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3 tab">
+          <p>Mese:</p>
+        </div>
+        <div class="col-9" >
+          <input type="number"  id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" step="1" min="1" max="12" readonly required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3 tab">
+          <p>Anno:</p>
+        </div>        
+        <div class="col-9" >
+          <input type="number" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" step="1" min="2021" max="2030" readonly required>
+        </div>
+      </div>
+      <div id="formButtons">
+        <button class="btn btn-lg btn-success">Salva</button>
+        <button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>
+        <button type="button" class="btn btn-lg btn-danger delete">Elimina cliente</button>
+      </div>
+    </form> 
+    <!-- Bottoni -->
+    <div id="myButton">
+      <button type="button" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
     </div>
     
-    <div class="row">
-      <div class="col-3">
-        <p>Sesso:</p>
-      </div>
-      <div class="col-9" id="sex">
-
-      </div>
-    </div>
-      
-    <div class="row">
-      <div class="col-3">
-        <p>Numbero di Telefono:</p>
-      </div>
-      <div class="col-9" id="phone">
-      </div>
-    </div>
-      
-    <div class="row">
-      <div class="col-3">
-        <p>E-mail:</p>
-      </div>
-      <div class="col-9" id="mail">
-      </div>
-    </div>
-
     <hr>
 
-    <div class="row">
-      <div class="col-3">
-        <b>Data di nascita</b>
-      </div>
-      <div class="col-9" id="birthday">
-      </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-      <div class="col-3">
-        <b>Indirizzo</b>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3">
-        <p>Via:</p>
-      </div>
-      <div class="col-9" id="street">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3">
-        <p>Numero:</p>
-      </div>
-      <div class="col-9" id="num">
-      </div>
-    </div> 
-
-    <div class="row">
-      <div class="col-3">
-        <p>Città: </p>
-      </div>
-      <div class="col-9" id="city">
-      </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-      <b>Pagamenti</b>
-    </div>
-    <div class="row">
-      <div class="col-3">
-        <p>Tipo di carta:</p>
-      </div>
-      <div class="col-9" id="cardType">       
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-3">
-        <p>Nome carta:</p>
-      </div>
-      <div class="col-9" id="cardName">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-3">
-        <p>Proprietario:</p>
-      </div>
-      <div class="col-9" id="owner">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3">
-        <p>Data scadenza</p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3 tab">
-        <p>Mese:</p>
-      </div>
-      <div class="col-9" id="cardMonth">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3 tab">
-        <p>Anno:</p>
-      </div>        
-      <div class="col-9" id="cardYear">
-      </div>
-    </div>
-
-    <hr>
     <!-- Da qui parte la tabella delle prenotazioni -->
     <h3>Lista prenotazioni</h3>
     <div class="p-3">
@@ -179,10 +211,6 @@
         </table>
       </div>
     </div>
-    
-    <!-- Bottoni -->
-    <button type="button" class="btn btn-lg btn-secondary">Modifica</button>
-
   </div>
   <script type="text/javascript" src="./js/client.js"></script>
 </body>
