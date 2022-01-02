@@ -1,16 +1,15 @@
 <template>
 <div id="app">
   <b-navbar toggleable="lg" type="dark" variant="dark">
+
     <b-col cols='1'>
-      <!--<router-link to="/" class="nav-link">Home</router-link> -->
     </b-col>
 
     <b-col cols='6'>
       <b-input-group class="noborder">
-        <b-form-select v-model="selected" :options="options">        </b-form-select>
+        <b-form-select v-model="selected" :options="options"></b-form-select>
         <b-form-input id="ricerca" placeholder="Search..." v-model="search"></b-form-input>
-
-        <b-button @click="$router.push({name: selected + 'Catalog'  , params: {filter: search}}).catch(()=>{});">Click to Navigate</b-button>
+        <b-button @click="$router.push({name: selected + 'Catalog', params: {filter: search}}).catch(()=>{});">Click to Navigate</b-button>
       </b-input-group>
     </b-col>
 

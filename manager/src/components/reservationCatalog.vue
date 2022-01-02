@@ -6,13 +6,13 @@
     <div  v-for="reservation in reservations" :key="reservation._id">
       <b-row>
         <b-col cols="3">
-          <b-img thumbnail fluid v-bind:src="reservation.image"  alt="Image 1"></b-img>
+          <b-img thumbnail fluid v-bind:src="reservation.productImage"  alt="Immagine articolo"></b-img>
         </b-col>
         <b-col cols="6">
           <h2>Id prenotazione:<router-link :to="{name: 'reservation', params: {id: reservation._id}}">{{reservation._id}}</router-link></h2>
           <h2>{{reservation.clientName + ' ' + reservation.clientSurname}}
           <h2><router-link :to="{name: 'client', params: {email: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h2>
-          <h2><router-link :to="{ name: 'article',  params: { id: reservation.productId}}">{{reservation.productTitle + ' ' + reservation.productBrand}}</router-link></h2>            
+          <h2><router-link :to="{name: 'article',  params: { id: reservation.productId}}">{{reservation.productTitle + ' ' + reservation.productBrand}}</router-link></h2>            
         </b-col>
       </b-row>
     </div>
