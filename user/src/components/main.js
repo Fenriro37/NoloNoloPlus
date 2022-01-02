@@ -3,7 +3,7 @@ import React from 'react';
 import Cookie from 'js-cookie';
 
 import ApiCall from '../services/apiCall';
-import { Body } from './body';
+import { Home } from './home';
 import { Header } from './header';
 
 export class Main extends React.Component {
@@ -92,7 +92,7 @@ export class Main extends React.Component {
         showOnlyAvailable={this.showOnlyAvailableProducts}
         sort={this.sortProducts}
         isAuthenticated={this.state.isAuthenticated}/>
-        <Body
+        <Home
         products={this.state.filteredProducts}
         isAuthenticated={this.state.isAuthenticated}/>
       </div>

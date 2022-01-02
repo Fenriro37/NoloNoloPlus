@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ProductCard } from './productCard.js'
 
-export class Body extends React.Component {
+export class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -71,7 +71,7 @@ exports.reservationsFind = async function(token, filter, sortBy) {
                         productTitle: 1,
                         productBrand: 1,
                         price: 1,
-                        image: 1,
+                        productImage: 1,
                         clientEmail: 1,
                         clientName: 1,
                         clientSurname: 1,

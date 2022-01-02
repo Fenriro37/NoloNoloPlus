@@ -125,7 +125,10 @@ exports.login = async function(queryEmail, plainTextPassword) {
                 return {
                     status: 0,
                     message: 'Login del cliente avvenuto con successo.',
-                    obj: token
+                    obj: {
+                        token: token,
+                        userType: 1
+                    }
                 }
             } else {
                 return {
@@ -145,7 +148,10 @@ exports.login = async function(queryEmail, plainTextPassword) {
                 return {
                     status: 1,
                     message: 'Login del funzionaro avvenuto con successo.',
-                    obj: token
+                    obj: {
+                        token: token,
+                        userType: 2
+                    }
                 }           
             } else {
                 return {
@@ -165,7 +171,10 @@ exports.login = async function(queryEmail, plainTextPassword) {
                 return {
                     status: 2,
                     message: 'Login del manager avvenuto con successo.',
-                    obj: token
+                    obj: {
+                        token: token,
+                        userType: 3
+                    }
                 }
             } else {
                 return {

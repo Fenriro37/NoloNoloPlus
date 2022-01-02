@@ -2,6 +2,10 @@ import React from 'react';
 
 import Cookie from 'js-cookie';
 import { Nav, Form, FormControl } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+
+import { Page } from './page'
+import { Reservation } from './reservation'
 
 export class Hamburger extends React.Component {
   constructor(props) {
@@ -46,12 +50,12 @@ export class Hamburger extends React.Component {
             </Form>
           </Nav.Link>
           <Nav.Link
-          href='#action1'>
-            Pagina personale
+          href='./page'>
+            Personal page
           </Nav.Link>
           <Nav.Link
-          href='#action2'>
-            Prenotazioni effettuate
+          href='./reservation'>
+            Reservation
           </Nav.Link>
           <Nav.Link
           onClick={this.logout}>

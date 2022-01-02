@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, Nav, Navbar, Accordion, Card } from 'react-bootstrap';
 
-import { Reservation } from './reservation';
+import { MakeReservation } from './makeReservation';
 import { Stars } from './stars';
 import { Tags } from './tags';
 import { Price } from './price';
@@ -72,7 +72,7 @@ export class ProductCard extends React.Component {
             <hr/>
             <div className='mb-2'><b>Prenotazione:</b></div>
             {this.state.product.available ? (
-              <Reservation
+              <MakeReservation
                 bookings={this.state.product.bookings}
                 finalPrice={this.state.product.discount.onSale ? this.state.discountedPrice : this.state.product.price}
                 isAuthenticated={this.state.isAuthenticated}

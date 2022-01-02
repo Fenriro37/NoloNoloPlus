@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path')
 
 const managerPath = __dirname + '/../../frontEnd/manager';
 const workerPath = __dirname + '/../../frontEnd/worker';
@@ -12,13 +13,15 @@ router.use('/worker/js', express.static(workerPath + '/js/'));
 router.use('/worker/media', express.static(workerPath + '/media/'));
 
 router.use('/manager/', express.static(managerPath + '/'));
-// router.use('/manager/css', express.static(managerPath + '/css/'));
-// router.use('/manager/js', express.static(managerPath + '/js/'));
-// router.use('/manager/media', express.static(managerPath + '/media/'));
 
 router.use('/user/', express.static(userPath + '/'));
-// router.use('/user/static/css', express.static(userPath + '/static/css'));
-// router.use('/user/static/js', express.static(userPath + '/static/js'));
+router.get('/user/page', (req, res) => {
+    res.sendFile(path.join(userPath + '/index.html'));
+});
+router.get('/user/reservation', (req, res) => {
+    res.sendFile(path.join(userPath + '/index.html'));
+});
+
 
 router.use('/public/', express.static(publicPath + '/html/'));
 router.use('/public/css', express.static(publicPath + '/css/'));

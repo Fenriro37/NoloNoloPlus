@@ -10,8 +10,6 @@ export class Price extends React.Component {
   }
 
   render() {
-    console.log(this.state.originalPrice)
-    console.log(this.state.discountedPrice)
     if(this.state.originalPrice != this.state.discountedPrice) {
       return (
         <div>
