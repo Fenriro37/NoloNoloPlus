@@ -1,4 +1,5 @@
 let data = {}
+let bookings = []
 let boolModify = false
 window.onload = function getClient() {
   
@@ -38,7 +39,7 @@ window.onload = function getClient() {
       },
       // Risposta del server in caso di successo
       success: (result) => {
-        let bookings = result.obj
+        bookings = result.obj
         console.log(bookings)
         for (let i in bookings){
           $("#myTable").append(
@@ -133,6 +134,37 @@ function reset(){
   readOnly()
   document.getElementById("formButtons").style.visibility  = "hidden" 
   document.getElementById("myButton").style.visibility = "visible"
+}
+
+document.getElementById("delete").addEventListener("click", remove);
+
+function remove(){
+  console.log('removeUser')
+  let current = new Date();      
+  current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+  for(let i in bookings){
+    let bookingDate = bookings[i].endDate.year + '-' + bookings[i].endDate.month + '-' +  bookings[i].endDate.day
+    console.log(bookingDate)
+    console.log(current)
+    if(bookingDate >= current )  
+      return(alert('Il prodotto ha ancora prenotazioni attive'))
+  }
+  $.ajax({
+    url: "/api/user?id=" + data._id,
+    method: "DELETE",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    // Risposta del server in caso di successo
+    success: () => {
+      window.location = "http://localhost:8081/worker/navbar.html?";
+    },
+    // Risposta del server in caso di insuccesso
+    error: (error) => {
+      console.log("Error");
+      alert("Errore. " + error.responseText);
+    }
+});
 }
 
 $('#formId').submit(function (evt) {
