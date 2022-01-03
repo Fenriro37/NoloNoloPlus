@@ -89,3 +89,59 @@ $(document).ready(function(){
 		});
 	});
 });
+
+$('#flexSwitchCheckDefault').change(function() {
+	if (this.checked) {
+		$("#rentProduct").prop("disabled", true);
+  }
+	if (!this.checked) {
+		$("#rentProduct").prop("disabled", false);
+  } 
+/* 	$.ajax({
+    url:"/api/product?id=" + data._id,
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    data: JSON.stringify({
+      available : $('#flexSwitchCheckDefault').is(":checked") ? false : true
+    }),
+    // Risposta del server in caso di successo
+    success: (result) => {
+    },
+    // Risposta del server in caso di insuccesso
+    error: (error) => {
+        console.log("Error");
+        alert("Errore. " + error.responseText);
+    }
+	});  */
+})
+
+function remove(){
+	let current = new Date();      
+  current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
+  for(let i in data.bookings){
+    let bookingDate = data.bookings[i].endDate.year + '-' + data.bookings[i].endDate.month + '-' +  data.bookings[i].endDate.day
+    console.log(bookingDate)
+    console.log(current)
+    if(bookingDate >= current )  
+      return(alert('Il prodotto ha ancora prenotazioni attive'))
+  }
+	return(alert('Il prodotto è stato cancellato'))
+/*$.ajax({
+		url: "/api/product?id=" + data._id,
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		// Risposta del server in caso di successo
+		success: () => {
+			window.location = "http://localhost:8081/worker/navbar.html?";
+		},
+		// Risposta del server in caso di insuccesso
+		error: (error) => {
+			console.log("Error");
+			alert("Errore. " + error.responseText);
+		}
+	}); */
+}

@@ -43,10 +43,10 @@
             <!-- Bottoni -->
             <div id="buttons">
                 <button type="button" class="btn btn-lg" id="rentProduct">Affitta</button>
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</button>
-                <button type="button" class="btn btn-lg btn-danger" >Elimina</button>
+                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" >Modifica</button>
+                <button type="button" class="btn btn-lg btn-danger" onclick="remove()">Elimina</button>
                 <div class="form-check form-switch big-size">
-                <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" >
+                <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available">
                 </div>
                 <!-- Modal da mettere in un altro file???? -->
                 <div class="modal" id="myModal">
