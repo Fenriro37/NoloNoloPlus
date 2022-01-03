@@ -15,14 +15,14 @@
 <body>
     <div class="container-fluid p-5">
         <div class="row mb-5">
-            <div class="col-6" id="img">
+            <div class="col-6">
             <!-- Colonne immagine -->
-            
+                <img id="img" class="img-thumbnail" alt="immagine prodotto" >
             </div>
             <!-- Colonne informazioni articolo -->
             <div class="col-4">
             <div id="productidentifier">
-                ID:           
+                <p id="productidentifier"></p>      
             </div>   
             <!-- Titolo -->
             <div>
@@ -30,11 +30,9 @@
             </div>
             <!-- Etichette -->
             <div class="mb-2" id="tags">
-    
             </div>
             <!-- Stars -->
             <div id="stars">
-                
             </div>
             <!-- Prezzo -->
             <div class="mt-3 mb-3" id="price">
@@ -59,7 +57,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <form name="myform" >
+                        <form name="myform" id="formId" onSubmit="">
                             <div class="row">
                                 <div class="col-6">
                                 <label for="productName" class="form-label">Nome</label>
@@ -70,10 +68,10 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-6">
-                                <input type="text" class="form-control" id="productName" required>	
+                                <input type="text" class="form-control" id="productName" >	
                                 </div>
                                 <div class="col-6">
-                                <input type="text" class="form-control" id="productModel" required>	
+                                <input type="text" class="form-control" id="productModel" >	
                                 </div>
                             </div>
                             <div class="row">
@@ -83,7 +81,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                <textarea class="form-control w-80" id="productTags" rows="3" required></textarea>
+                                <textarea class="form-control w-80" id="productTags" rows="3" ></textarea>
                                 </div>
                             </div>
                             <!-- da sistemare -->
@@ -92,7 +90,7 @@
                                 <label for="imageLink" class="form-label">Immagine (link)</label>
                                 </div>
                                 <div class="col-8">
-                                <input type="text" class="form-control" id="imageLink" required>
+                                <input type="text" class="form-control" id="imageLink" >
                                 </div>
                             </div>
                             <div class="row">
@@ -113,7 +111,7 @@
                                 </div>
                                 <div class="col-6">
                                 <div class="input-group">
-                                    <input type="text" id="productPrice" class="form-control text-end" required>
+                                    <input type="text" id="productPrice" class="form-control text-end" >
                                     <span class="input-group-text justify-content-center">€</span>
                                 </div>
                                 </div>
@@ -134,7 +132,7 @@
                                     name="discount" 
                                     id="discountPercentage" 
                                     disabled
-                                    required> 
+                                    > 
                                     <label class="form-check-label" for="discountPercentage">Percentuale</label>
                                 </div>
                                 </div>
@@ -146,7 +144,7 @@
                                     type="radio"
                                     name="discount"
                                     disabled 
-                                    required>
+                                    >
                                     <label class="form-check-label" for="discountAmount">Fisso</label>													
                                 </div>
                                 </div>
@@ -158,7 +156,7 @@
                                 <div class="col-6">
                                 <div class="input-group">
                                 <!-- <span class="input-group-text justify-content-center">-</span>-->
-                                    <input type="number" class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()" required readonly>
+                                    <input type="number" class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()"  readonly>
                                     <span id="pd" class="input-group-text justify-content-center"></span>
                                 </div>
                                 </div>
@@ -186,7 +184,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                <textarea class="form-control w-80" id="productDescription" rows="3" required></textarea>
+                                <textarea class="form-control w-80" id="productDescription" rows="3" ></textarea>
                                 </div>
                             </div>
                             <div class="row">

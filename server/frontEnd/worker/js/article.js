@@ -25,18 +25,17 @@ window.onload = function getProduct() {
 }
 
 function fill(){
-	$("#img").append(
-		' <img class="img-thumbnail" alt="immagine prodotto" src='+ data.image+'>'
-	)
-	$("#productidentifier").append(
-			'<span>'+data._id+'</span>'
-	)
+	$("#img").attr("src", data.image)
+	$("#productidentifier").text("ID: " + data._id)
 	$("#title").text(data.title + ' ' + data.brand)
+
 	//etichette
+	$('#tags').empty();
 	for (let i in data.tags){
 		$("#tags").append('<span class="badge rounded-pill bg-primary" >'+data.tags[i]+'</span>')
 	}
 	//stelle
+	$('#stars').empty();
 	let j;
 	for ( j = 0; j < data.quality; j++){
 			$("#stars").append(
@@ -49,15 +48,23 @@ function fill(){
 			)
 	}
 	//prezzo
+	$("#price").empty()
 	if(data.discount.onSale){
+		let newPrice
+		if(data.discount.onSaleType){
+			newPrice = data.price - data.discount.onSaleValue;
+		}
+		else{
+			newPrice = data.price - data.price * data.discount.onSaleValue / 100;
+		}
 		$("#price").append(
-			'<span class="price"><s>' +data.price+' €</s> <span>' +data.price+ 'cpmputed€</span></span>'
-			)
+			'<span class="price"><s>' +data.price+'€</s><span>' +newPrice+ '€</span></span>'
+		)
 	}
 	else{
 		$("#price").append(
 			'<span class="price">' +data.price+' €<span>'
-			)
+		)
 	}
 
 	if(data.available){
@@ -204,11 +211,56 @@ function getModalData(){
   $("#productTags").val(labels);
 }
 
-$("#myform").on("submit", function (e) {
-  //do your form submission logic here
-	e.preventDefault();
-	alert("diocane")
-})
+$('#formId').submit(function (evt) {
+  evt.preventDefault();
+  save()
+});
+
+function save(){
+	console.log("save")
+  /*$.ajax({
+    url:"/api/product?id=" + data._id,
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    data: JSON.stringify({
+      userName: $("#name").val(),
+    }),
+    // Risposta del server in caso di successo
+    success: (result) => {
+        console.log(result)
+        data.title = $("#productName").val()
+				data.brand = $("#productModel").val()
+				data.image = $("#imageLink").val()
+				data.price = $("#productPrice").val()
+				data.quality = $("#qualityModal").val()
+				data.discount.onSale = $('#onSale').is(":checked") ? true : false,
+				data.discount.onSaleType = $('#discountAmount').is(":checked") ? true : false,
+				data.discount.onSaleValue = $("#discountValue").val()
+
+				newLabels = $("#productTags").val()
+				newLabels = newLabels.replace(/,/g, ' ');
+
+        let newTags = [...new Set(newLabels.split(/\s+/))];
+        //potrebbe non essere l'ultimo?
+        if(newTags[newTags.length - 1] == '') {
+          newTags.pop()
+        }
+				data.tags = newTags
+
+				data.description = $("#productDescription").val()
+				data.note = $("#productNote").val()
+				
+				fill()
+    },
+    // Risposta del server in caso di insuccesso
+    error: (error) => {
+        console.log("Error");
+        alert("Errore. " + error.responseText);
+    }
+	});  */
+}
 
 //listener per checkbox available
 $('#onSale').change(function() {
@@ -229,7 +281,7 @@ $('#onSale').change(function() {
   } 
 }) 
 
- $('#discountAmount').change(percentageSale)
+$('#discountAmount').change(percentageSale)
 	 
 function percentageSale() {
 	if (this.checked) {
