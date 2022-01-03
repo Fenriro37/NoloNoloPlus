@@ -153,7 +153,7 @@ function remove(){
     url: "/api/user?id=" + data._id,
     method: "DELETE",
     headers: {
-        "Content-Type": "application/json"
+      "Content-Type": "application/json"
     },
     // Risposta del server in caso di successo
     success: () => {
@@ -164,7 +164,7 @@ function remove(){
       console.log("Error");
       alert("Errore. " + error.responseText);
     }
-});
+  });
 }
 
 $('#formId').submit(function (evt) {

@@ -18,14 +18,36 @@
     <div class="col-5" id="img">
     </div>
     <div class="col-6" id="info">
-      
     </div>
   </div>
-  <div class="row" id="bookingRequest"> 
-  </div>
+  <form name="myform" id="formId" onSubmit="">
+    <div class="row">
+      <div class="col-3">
+        <label class="form-check-label" for="price">Prezzo: </label>
+      </div>
+      <div class="col-4">
+        <input id="price" type="number" step="1" min="1" class="form-control" aria-label="price" aria-describedby="basic-addon" readonly required>
+      </div>
+    </div>
+    <div class="row"> 
+      <div class="col-3">
+        <label class="form-check-label" for="bookingRequest">
+          Data richiesta prenotazione:
+        </label>
+      </div>
+      <div class="col-4">
+        <input id="bookingRequest" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" aria-label="bookingRequest" aria-describedby="basic-addon" readonly required>
+      </div>
+    </div>
 
-  <div class="row">
-      <div class="col-4" id="bookingStart">
+    <div class="row">
+      <div class="col-3">
+        <label class="form-check-label" for="bookingStart">
+          Data inizio prenotazione:
+        </label>
+      </div>
+      <div class="col-4">
+        <input id="bookingStart" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" aria-label="bookingStart" aria-describedby="basic-addon2" readonly required>
       </div>
       <div class="col-4">
         <input class="form-check-input" type="checkbox" value="" id="rentalOccurred" disabled>
@@ -33,25 +55,37 @@
           Avvenuta consegna
         </label>
       </div>  
-  </div>
+    </div>
 
-  <div class="row">
-      <div class="col-4" id="bookingEnd">
-      </div>
-      <div class="col-4">
-        <input class="form-check-input" type="checkbox" value="" id="returned" disabled>
-        <label class="form-check-label" for="returned">
-          Avvenuta restituzione
-        </label>
-      </div>
-  </div>
+    <div class="row">
+        <div class="col-3">
+          <label class="form-check-label" for="bookingEnd">
+            Data fine prenotazione:
+          </label>
+        </div>
+        <div class="col-4">
+          <input id="bookingEnd" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" aria-label="bookingEnd" aria-describedby="basic-addon3" readonly required>
+        </div>
+        <div class="col-4">
+          <input class="form-check-input" type="checkbox" value="" id="returned" disabled>
+          <label class="form-check-label" for="returned">
+            Avvenuta restituzione
+          </label>
+        </div>
+    </div>
 
-  <div class="row" id="notes">
-  </div>
-  <div class="row" id="privateNotes">
-  </div>
-
-  <button type="button" class="btn btn-lg btn-secondary">Modifica</button>
+    <div class="row">
+      <p id="notes"><p>
+    </div>
+    <div class="row" >
+      <p id="privateNotes"><p>
+    </div>
+    <div id="formButtons">
+      <button class="btn btn-lg btn-success">Salva</button>
+      <button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>
+    </div>
+  </form> 
+  <button type="button" id="myButton" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
 
 </div>
 
