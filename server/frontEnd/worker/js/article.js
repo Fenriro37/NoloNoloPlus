@@ -59,6 +59,15 @@ function fill(){
 			'<span class="price">' +data.price+' €<span>'
 			)
 	}
+
+	if(data.available){
+		$('#flexSwitchCheckDefault').prop('checked', false);
+	}
+	else{
+		$('#flexSwitchCheckDefault').prop('checked', true);
+		$('#rentProduct').prop('disabled', true);
+	}
+
 	//descrizione e note
 	$("#description").text(data.description)
 	$("#note").text(data.note)
@@ -144,4 +153,112 @@ function remove(){
 			alert("Errore. " + error.responseText);
 		}
 	}); */
+}
+
+function getModalData(){
+	$("#productName").attr("placeholder", data.title);
+  $("#productName").val(data.title);
+	$("#productModel").attr("placeholder", data.brand);
+  $("#productModel").val(data.brand);
+
+	if(data.quality == '1')
+		$("#qualityModal").val(1)
+	else if(data.quality == '2')
+		$("#qualityModal").val(2)
+	else
+		$("#qualityModal").val(3)
+
+	$("#imageLink").attr("placeholder", data.image);
+  $("#imageLink").val(data.image);
+	
+	$("#productPrice").attr("placeholder", data.price);
+  $("#productPrice").val(data.price);
+	$("#productDescription").attr("placeholder", data.description);
+  $("#productDescription").val(data.description);
+	$("#productNote").attr("placeholder", data.note);
+  $("#productNote").val(data.note);
+
+	if(data.discount.onSale){
+		$('#onSale').prop('checked', true);
+		$('#discountAmount').prop('disabled', false);
+		$('#discountPercentage').prop('disabled', false);
+		$('#discountValue').prop('readonly', false);
+
+		$("#discountValue").val(data.discount.onSaleValue);
+		if(data.discount.onSaleType){
+			$('#discountAmount').prop('checked', true);
+			$('#pd').text("€")
+			$('#newPrice').val(data.price - data.discount.onSaleValue)
+		}
+		else{
+			$('#discountPercentage').prop('checked', true);
+			$('#pd').text("%")
+			$('#newPrice').val(data.price - data.price * data.discount.onSaleValue / 100)
+		}
+	}
+	let labels = ""
+	for(let i in data.tags){
+		labels += data.tags[i]  + " "
+	}
+	$("#productTags").attr("placeholder", labels);
+  $("#productTags").val(labels);
+}
+
+$("#myform").on("submit", function (e) {
+  //do your form submission logic here
+	e.preventDefault();
+	alert("diocane")
+})
+
+//listener per checkbox available
+$('#onSale').change(function() {
+	if (this.checked) {
+		$('#discountAmount').prop('disabled', false);
+		$('#discountPercentage').prop('disabled', false);
+		$('#discountValue').prop('readonly', false);
+		$('#newPrice').val(data.price);
+  }
+	if (!this.checked) {
+		$('#discountAmount').prop('checked', false);
+		$('#discountPercentage').prop('checked', false);
+		$('#discountValue').val("");
+		$('#discountAmount').prop('disabled', true);
+		$('#discountPercentage').prop('disabled', true);
+		$('#discountValue').prop('readonly', true);
+		$('#newPrice').val("");
+  } 
+}) 
+
+ $('#discountAmount').change(percentageSale)
+	 
+function percentageSale() {
+	if (this.checked) {
+		$('#pd').text("€")
+		$('#newPrice').val($("#productPrice").val() - $('#discountValue').val())
+	}
+}
+
+$('#discountPercentage').change(percentageFlat)
+
+function percentageFlat() {
+	if (this.checked) {
+		$('#pd').text("%")
+		console.log($('#newPrice').val() != "")
+		let total = $("#productPrice").val()
+		let sale = $('#discountValue').val()
+		let newTotal = total - total * sale / 100; 
+		$('#newPrice').val(newTotal)
+	}
+}
+
+function calculateDiscount(){
+	if($('#discountAmount').is(":checked")){
+		$('#newPrice').val($("#productPrice").val() - $('#discountValue').val())
+	} 
+	if($('#discountPercentage').is(":checked")){
+		let total = $("#productPrice").val()
+		let sale = $('#discountValue').val()
+		let newTotal = total - total * sale / 100; 
+		$('#newPrice').val(newTotal)
+	}
 }
