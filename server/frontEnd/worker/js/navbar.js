@@ -13,6 +13,8 @@ window.onload = function login() {
       success: (result) => {
           console.log(result)
           document.cookie = 'jwt=' + result.data;
+          $("#reservationsWrap").hide();
+
           //window.location.href = "http://localhost:8081/user/index.html";
       },
       // Risposta del server in caso di insuccesso
@@ -153,6 +155,7 @@ function getAllReservation(text){
             const myCatalog = document.getElementById("catalog");
             myCatalog.textContent = '';
             let reservations = result.obj
+            $("#reservationsWrap").show();
             reservations.forEach(reservation => {
                 $("#catalog").append(
                     '<div class="row single justify-content-center">' +
@@ -165,13 +168,31 @@ function getAllReservation(text){
                     '</div>'
                 );  
             });
-            //window.location.href = "http://localhost:8081/user/index.html";
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
             console.log("Error");
             alert("Errore. " + error.responseText);
         }
-    });
-    
+    });   
+}
+
+
+
+document.getElementById("reservations").addEventListener("change", changeReservation);
+
+function changeReservation(){
+    if($("#reservations").val() == "all"){
+        //check date e inserire in un array
+        //chiamare una funzione che display l'array
+        console.log(1)
+    }
+    else if($("#reservations").val() == "active"){
+        //check date e inserire in un array
+        console.log(2)
+    }
+    else{
+        //check date e inserire in un array
+        console.log(3)
+    }
 }

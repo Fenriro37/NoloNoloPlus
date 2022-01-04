@@ -35,6 +35,12 @@ window.onload = function getClient() {
   });
 }
 
+$(document).ready(function(){
+  $( "#bookingRequest" ).datepicker();
+  $( "#bookingStart" ).datepicker();
+  $( "#bookingEnd" ).datepicker();
+ });
+
 function insertData(){
   $("#img").append(
     ' <img class="img-thumbnail" alt="immagine prodotto" src='+ data.productImage+'>'

@@ -22,6 +22,11 @@ window.onload = function getProduct() {
         }
     });
 }
+$(document).ready(function(){
+ $( "#date-input" ).datepicker();
+ $( "#date-start" ).datepicker();
+ $( "#date-end" ).datepicker();
+});
 
 $('#rentalOccurred').change(function() {
 	if (this.checked) {
@@ -61,10 +66,18 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-    var date = new Date($('#date-input').val());
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
+    let date0 = new Date($('#date-input').val());
+    let dayInput = date.getDate();
+    let monthInput = date.getMonth() + 1;
+    let yearInput = date.getFullYear();
+    let date1 = new Date($('#date-start').val());
+    let dayStart = date.getDate();
+    let monthStart = date.getMonth() + 1;
+    let yearStart = date.getFullYear();
+    let date2 = new Date($('#date-end').val());
+    let dayEnd = date.getDate();
+    let monthEnd = date.getMonth() + 1;
+    let yearEnd = date.getFullYear();
     console.log(day +"-"+ month +"-"+ year)
     $.ajax({
       url:"/api/user?email=" + $("#email").val(),
@@ -91,19 +104,19 @@ function save(){
             clientName: user.userName,
             clientSurname: user.userSurname,
             bookingDate: {
-              day: ,
-              month: ,
-              year: 
+              day: dayInput,
+              month: monthInput,
+              year: yearInput 
             },
             startDate: {
-              day: ,
-              month: ,
-              year: 
+              day: dayStart,
+              month: monthStart,
+              year: yearStart
             },
             endDate: {
-              day: ,
-              month: ,
-              year: 
+              day: dayEnd,
+              month: monthEnd,
+              year: yearEnd 
             }, 
             isTaken: $("#rentalOccurred").is(':checked') ? true  : false,
             isReturned: $("#returned").is(':checked') ? true  : false,
@@ -114,7 +127,41 @@ function save(){
           }),
           // Risposta del server in caso di successo
           success: (result) => {
-              console.log(result)
+            console.log(result)
+            //aggiornamento article
+            let newBooking = {}
+            newBooking.productId = data._id
+            newBooking.clientId = user.email
+            newBooking.reservationId = result.something ._id
+            newBooking.startDate = {}
+            newBooking.startDate.day = dayStart
+            newBooking.startDate.month = monthStart
+            newBooking.startDate.year = yearStart
+            newBooking.endDate = {}
+            newBooking.endDate.day = dayEnd
+            newBooking.endDate.month = monthEnd
+            newBooking.endDate.year = yearEnd
+            data.bookings.push(newBooking)
+            /*$.ajax({
+            url:"/api/product/?id=" + data._id,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+              bookings: data.bookings
+            }),
+            // Risposta del server in caso di successo
+            success: (result) => {
+                console.log(result)
+            },
+            // Risposta del server in caso di insuccesso
+            error: (error) => {
+                console.log("Error");
+                alert("Errore. " + error.responseText);
+            }
+            }); 
+              
           },
           // Risposta del server in caso di insuccesso
           error: (error) => {
@@ -128,5 +175,5 @@ function save(){
           console.log("Error");
           alert("Errore. " + error.responseText);
       }
-    });
+    });   
 }

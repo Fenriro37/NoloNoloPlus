@@ -96,3 +96,17 @@ background-color: rgb(156, 156, 156); */
 #formButtons{
     visibility: hidden;
 }
+
+/* queste due servono per datepicker jquery ui */
+.relative{
+    position:relative;
+    z-index: 10000 !important; 
+}
+.absolute{
+    position:absolute
+}
+
+/* usato per nascondere select in navbar.html */
+.invisible{
+    display: none;
+}
