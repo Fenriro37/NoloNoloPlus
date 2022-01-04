@@ -94,7 +94,7 @@ function fill(){
 
 $("#rentProduct").click( function(){
 	let productId =  $("#productidentifier span").text()
-	location.href = "createArticle.html?product="+ productId;
+	location.href = "createReservation.html?product="+ data._id;
 });
 
 $(document).ready(function(){

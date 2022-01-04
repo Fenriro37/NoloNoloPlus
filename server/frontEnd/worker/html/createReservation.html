@@ -15,7 +15,7 @@
 <body>
 <div class="container-fluid">
     <h1> Aggiungi prenotazione </h1>
-
+		<form name="myform" id="formId" onSubmit="save()"> 
     <div class="row">
       <div class="col-3">
         <p> *email cliente:</p>
@@ -30,7 +30,7 @@
         <p> *ID Articolo:</p>
       </div>
       <div class="col-9">
-        <input type="text" class="form-control" id="articleId" aria-label="Recipient's articleId" aria-describedby="basic-addon2" required>
+        <input type="text" class="form-control" id="articleId" aria-label="Recipient's articleId" aria-describedby="basic-addon2" required readonly>
       </div>
     </div>
 
@@ -39,7 +39,7 @@
         <p> *Data richiesta prenotazione:</p>
       </div>
       <div class="col-9">
-				<input placeholder="Selected date" type="date" id="date-input" class="form-control datepicker">
+				<input placeholder="Selected date" type="date" id="date-input" class="form-control datepicker" required>
       </div>
     </div>
 
@@ -48,7 +48,7 @@
         <p> *Data inizio noleggio</p>
       </div>
       <div class="col-9"> 
-				<input placeholder="Selected date" type="date" id="date-picker-1" class="form-control datepicker">
+				<input placeholder="Selected date" type="date" id="date-picker-1" class="form-control datepicker" required>
       </div>
     </div>
   
@@ -57,7 +57,7 @@
         <p> *Data fine noleggio:</p>
       </div>
       <div class="col-9">
-				<input placeholder="Selected date" type="date" id="date-picker-2" class="form-control datepicker">
+				<input placeholder="Selected date" type="date" id="date-picker-2" class="form-control datepicker" required>
       </div>
     </div>
 
@@ -99,7 +99,7 @@
         <p> Descrizione:</p>
       </div>
       <div class="col-9">
-        <input type="text" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" required>
+        <input type="text" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" >
       </div>
     </div>
 
@@ -108,19 +108,20 @@
         <p> Note (non visibili ai clienti):</p>
       </div>
       <div class="col-9">
-        <input type="text" class="form-control" id="privateNotes" aria-label="Recipient's privateNotes" aria-describedby="basic-addon6" required>
+        <input type="text" class="form-control" id="privateNotes" aria-label="Recipient's privateNotes" aria-describedby="basic-addon6" >
       </div>
     </div>
 
     <div class="row">
 			<div class="col-3">
-				<button type="submit" class="btn btn-success" onclick="show()">Salva</button>
+				<button type="submit" class="btn btn-success" onclick="save()">Salva</button>
 			</div>
 
 			<div class="col-3">
 				<button type="reset" class="btn btn-danger">Annulla</button>
 			</div>
-		</div>   
+		</div>  
+  </form>  
   </div>
 <script type="text/javascript" src="./js/createReservation.js"></script>
 </body>

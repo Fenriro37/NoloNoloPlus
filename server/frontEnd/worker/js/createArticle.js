@@ -104,5 +104,4 @@ function save() {
 				alert("Errore. " + error.responseText);
 		}
 	}); 
-
 }
