@@ -43,6 +43,17 @@ $('#returned').change(function() {
   } 
 })
 
+
+$("#clear").click(function() {
+  $("input").each(function(){
+    //console.log($(this).attr('id') != "articleId")
+    if($(this).attr('id') != "articleId")
+      $(this).val("")
+    if($(this).is(':checkbox'))
+      $(this).prop('checked', false);
+  });
+});
+
 $('#formId').submit(function (evt) {
   evt.preventDefault();
   console.log("preventDefault")
@@ -54,25 +65,68 @@ function save(){
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
-/*     $.ajax({
-      url:"/api/reservation",
-      method: "POST",
+    console.log(day +"-"+ month +"-"+ year)
+    $.ajax({
+      url:"/api/user?email=" + $("#email").val(),
+      method: "GET",
       headers: {
           "Content-Type": "application/json"
       },
-      data: JSON.stringify({
-        title: $('#title').val(),
-
-      }),
       // Risposta del server in caso di successo
       success: (result) => {
           console.log(result)
-          //window.location.href = "http://localhost:8081/user/index.html";
+          let user = result.data
+          /*$.ajax({
+          url:"/api/reservation",
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          data: JSON.stringify({
+            productId: data._id,
+            productTitle: data.title,
+            productBrand: data.brand,
+            productImage: data.image,
+            clientEmail: user.email,
+            clientName: user.userName,
+            clientSurname: user.userSurname,
+            bookingDate: {
+              day: ,
+              month: ,
+              year: 
+            },
+            startDate: {
+              day: ,
+              month: ,
+              year: 
+            },
+            endDate: {
+              day: ,
+              month: ,
+              year: 
+            }, 
+            isTaken: $("#rentalOccurred").is(':checked') ? true  : false,
+            isReturned: $("#returned").is(':checked') ? true  : false,
+            price:  $("#price").val(),
+            description:  $("#notes").val(),
+            note: $("#privateNotes").val(),
+
+          }),
+          // Risposta del server in caso di successo
+          success: (result) => {
+              console.log(result)
+          },
+          // Risposta del server in caso di insuccesso
+          error: (error) => {
+              console.log("Error");
+              alert("Errore. " + error.responseText);
+          }
+          }); */
       },
       // Risposta del server in caso di insuccesso
       error: (error) => {
           console.log("Error");
           alert("Errore. " + error.responseText);
       }
-    });  */
+    });
 }

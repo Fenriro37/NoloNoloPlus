@@ -15,7 +15,7 @@
 <body>
 <div class="container-fluid">
     <h1> Aggiungi prenotazione </h1>
-		<form name="myform" id="formId" onSubmit="save()"> 
+		<form name="myform" id="formId"> 
     <div class="row">
       <div class="col-3">
         <p> *email cliente:</p>
@@ -30,7 +30,7 @@
         <p> *ID Articolo:</p>
       </div>
       <div class="col-9">
-        <input type="text" class="form-control" id="articleId" aria-label="Recipient's articleId" aria-describedby="basic-addon2" required readonly>
+        <input type="text" class="form-control" id="articleId" aria-label="Recipient's articleId" aria-describedby="basic-addon2" disabled>
       </div>
     </div>
 
@@ -114,11 +114,11 @@
 
     <div class="row">
 			<div class="col-3">
-				<button type="submit" class="btn btn-success" onclick="save()">Salva</button>
+				<button type="submit" class="btn btn-success" >Salva</button>
 			</div>
 
 			<div class="col-3">
-				<button type="reset" class="btn btn-danger">Annulla</button>
+				<button type="button" id="clear" class="btn btn-danger" >Annulla</button>
 			</div>
 		</div>  
   </form>  
