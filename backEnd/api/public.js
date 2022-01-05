@@ -109,7 +109,7 @@ router.post('/login', async function(req, res) {
             });
         } else {
             // OK
-            res.cookie('jwt', mongoRes.obj, { maxAge: 86400 * 1000 });
+            res.cookie('jwt', mongoRes.obj.token, { maxAge: 86400 * 1000 });
             console.log(res.getHeader('Set-Cookie'));
             return res.status(200).json({
                 message: "Password corretta",
