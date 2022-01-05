@@ -14,7 +14,10 @@ router.use('/worker/media', express.static(workerPath + '/media/'));
 
 router.use('/manager/', express.static(managerPath + '/'));
 
+router.use('/user/page/static/css', express.static(userPath + '/static/css'));
+router.use('/user/page/static/js', express.static(userPath + '/static/js'));
 router.use('/user/', express.static(userPath + '/'));
+
 router.get('/user/page', (req, res) => {
     res.sendFile(path.join(userPath + '/index.html'));
 });
