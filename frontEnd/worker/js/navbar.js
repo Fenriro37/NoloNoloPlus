@@ -79,7 +79,7 @@ function getAllArticle(text){
                                     '<div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ articles[i].image +'></div>' +
                                     '<div class="col-7 text-truncate" style="height:100%;">'+
                                         '<h2><a href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> '+ 
-                                        '<h3>' +articles[i].price+'€</h3>' +
+                                        '<div id="price' +i+ '"></div>' +
                                         '<span id="star' +i+ '"></span>'+
                                     '</div>' +
                                 '</div>'+
@@ -87,6 +87,25 @@ function getAllArticle(text){
                         '</div>'+
                     '</div>'
                 );  
+                //prezzo
+                if(articles[i].discount.onSale){
+                    let newPrice
+                    if(articles[i].discount.onSaleType){
+                        newPrice = articles[i].price - articles[i].discount.onSaleValue;
+                    }
+                    else{
+                        newPrice = articles[i].price - articles[i].price * articles[i].discount.onSaleValue / 100;
+                    }
+                    $("#price"+ i).append(
+                        '<span class="price"><s>' +articles[i].price+'€  </s><span>' +newPrice+ '€</span></span>'
+                    )
+                }
+                else{
+                    $("#price"+ i).append(
+                        '<span class="price">' +articles[i].price+'€<span>'
+                    )
+                }
+                //stelle
                 let j;
                 for ( j = 0; j < articles[i].quality; j++){
                     $("#star" + i).append(
