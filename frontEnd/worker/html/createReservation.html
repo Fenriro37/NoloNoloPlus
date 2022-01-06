@@ -18,107 +18,83 @@
     <link rel="stylesheet" href="./css/mystyle.css">
 </head>
 <body>
-<div class="container-fluid">
-    <h1> Aggiungi prenotazione </h1>
-		<form name="myform" id="formId"> 
-    <div class="row">
-      <div class="col-3">
-        <p> *email cliente:</p>
-      </div>
-      <div class="col-9">
-        <input type="text" class="form-control" id="email" aria-label="Recipient's email" aria-describedby="basic-addon1" required>
-      </div>
-    </div>
+<div class="container-fluid d-flex justify-content-center">
+  <div class="w-50">
+    <form name="myform" id="formId"> 
+      
+      <h1 class="mb-4"> Aggiungi prenotazione </h1>
 
-    <div class="row">
-      <div class="col-3">
-        <p> *ID Articolo:</p>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="email" aria-label="Recipient's email" aria-describedby="basic-addon1" required>
+        <label for="email"> Email cliente*</label>
       </div>
-      <div class="col-9">
-        <input type="text" class="form-control" id="articleId" aria-label="Recipient's articleId" aria-describedby="basic-addon2" disabled>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p> *Data richiesta prenotazione:</p>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="articleId" aria-label="Recipient's email" aria-describedby="basic-addon1" disabled required>
+        <label for="articleId"> ID articolo*</label>
       </div>
-      <div class="col-9 relative">
-				<input placeholder="Selected date" type="text" id="date-input" class="form-control relative" required>
+
+      <div class="form-floating mb-3">
+        <input type="date" id="date-input" class="form-control" required>
+        <label for="date-input"> Data prenotazione*</label>
       </div>
-    </div>
+    
+      <div class="form-floating mb-3">
+        <input type="text" id="dateRange" class="form-control" required>
+        <label for="dateRange"> Periodo noleggio*</label>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <p> Ritiro:</p>
+        </div>
+        <div class="col-9">
+          <div class=" form-check">
+              <input type="checkbox" class="form-check-input" id="rentalOccurred">
+              <label class="form-check-label" for="rentalOccurred">Il prodotto non è stato ritirato</label>
+          </div>
+        </div>
+      </div>
   
-    <div class="row">
-      <div class="col-3">
-        <p> *Periodo noleggio:</p>
-      </div>
-      <div class="col-9 ">
-				<input placeholder="Selected date" type="text" id="dateRange" class="form-control relative" required>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3">
-        <p> Ritiro:</p>
-      </div>
-      <div class="col-4">
-        <div class=" form-check">
-            <input type="checkbox" class="form-check-input" id="rentalOccurred">
-            <label class="form-check-label" for="rentalOccurred">Il prodotto non è stato ritirato</label>
+      <div class="row">
+        <div class="col-3">
+          <p> Restituzione:</p>
+        </div>
+        <div class="col-9">
+          <div class=" form-check">
+              <input type="checkbox" class="form-check-input" id="returned">
+              <label class="form-check-label" for="returned">Il prodotto non è stato restituito</label>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p> Restituzione:</p>
-      </div>
-      <div class="col-4">
-        <div class=" form-check">
-            <input type="checkbox" class="form-check-input" id="returned">
-            <label class="form-check-label" for="returned">Il prodotto non è stato restituito</label>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3">
-        <p> *Prezzo:</p>
-      </div>
-      <div class="col-9">
+      <div class="form-floating mb-3">
         <input type="number" min="1" step="1" class="form-control" id="price" aria-label="Recipient's price" aria-describedby="basic-addon4" required>
-      </div>
+        <label for="price"> Prezzo*</label>
     </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p> Descrizione:</p>
-      </div>
-      <div class="col-9">
+      <div class="form-floating mb-3">
         <input type="text" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" >
+        <label for="notes"> Descrizione</label>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-3">
-        <p> Note (non visibili ai clienti):</p>
-      </div>
-      <div class="col-9">
+      <div class="form-floating mb-4">
         <input type="text" class="form-control" id="privateNotes" aria-label="Recipient's privateNotes" aria-describedby="basic-addon6" >
+        <label for="privateNotes">  Note (non visibili ai clienti)</label>
       </div>
-    </div>
 
-    <div class="row">
-			<div class="col-3">
-				<button type="submit" class="btn btn-success" >Salva</button>
-			</div>
+      <div class="row">
+        <div class="col-6">
+          <button type="submit" class="btn btn-lg btn-success" >Salva</button>
+        </div>
 
-			<div class="col-3">
-				<button type="button" id="clear" class="btn btn-danger" >Annulla</button>
-			</div>
-		</div>  
-  </form>  
+        <div class="col-6">
+          <button type="button" id="clear" class="btn btn-lg btn-danger delete" >Annulla</button>
+        </div>
+      </div>  
+    </form>  
   </div>
+</div>
 <script type="text/javascript" src="./js/createReservation.js"></script>
 </body>
 </html>

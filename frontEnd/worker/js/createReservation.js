@@ -60,7 +60,7 @@ $(document).ready(function(){
       "firstDay": 1
     },
     autoUpdateInput: false,
-    showDropdowns: true,
+    showDropdowns: true, 
     isInvalidDate: function(date){
       for (let i in data.bookings) {								
           var from = new Date(data.bookings[i].startDate.month +'-'+data.bookings[i].startDate.day+'-'+data.bookings[i].startDate.year );
@@ -68,7 +68,7 @@ $(document).ready(function(){
           var current = new Date(date);					
           if (current >= from && current <= to) return true;
       }
-      return false
+    return false
     } 
   });
 })
@@ -84,6 +84,8 @@ $('#rentalOccurred').change(function() {
   }
 	if (!this.checked) {
 		$('label[for=rentalOccurred]').text("Il prodotto non è stato ritirato");
+    $('label[for=returned]').text("Il prodotto non è stato restituito");
+    $('#returned').prop('checked', false);
   } 
 })
 
