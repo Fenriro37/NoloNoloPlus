@@ -50,9 +50,9 @@
         </div>
         <div class="col-9" >
           <select id="sex" class="form-select" aria-label="Default select example" disabled required>
-            <option value="1">M</option>
-            <option value="2">F</option>
-            <option value="3">Altro</option>
+            <option value="Male">M</option>
+            <option value="Female">F</option>
+            <option value="Other">Altro</option>
           </select>
         </div>
       </div>
@@ -163,7 +163,7 @@
           <p>Mese:</p>
         </div>
         <div class="col-9" >
-          <input type="number"  id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" step="1" min="1" max="12" readonly required>
+          <input type="number" min="1" max="12" step="1" id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" readonly required>
         </div>
       </div>
 
@@ -172,7 +172,7 @@
           <p>Anno:</p>
         </div>        
         <div class="col-9" >
-          <input type="number" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" step="1" min="2021" max="2030" readonly required>
+          <input type="number" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" readonly required>
         </div>
       </div>
       <div id="formButtons">

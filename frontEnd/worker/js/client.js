@@ -16,9 +16,7 @@ window.onload = function getClient() {
       success: (result) => {
         data = result.data
         console.log(data)
-        fill()
-
-          
+        fill()   
       },
       // Risposta del server in caso di insuccesso
       error: (error) => {
@@ -41,6 +39,16 @@ window.onload = function getClient() {
       success: (result) => {
         bookings = result.obj
         console.log(bookings)
+        let current = new Date();      
+        current = current.getFullYear() * 10000 + (current.getMonth()+1) * 100 + current.getDate()
+        for(let i in bookings){
+          bookingStart = parseInt(bookings[i].startDate.year) * 10000 + parseInt(bookings[i].startDate.month)* 100 + parseInt(bookings[i].startDate.day)
+          bookingEnd = parseInt(bookings[i].endDate.year) * 10000 + parseInt(bookings[i].endDate.month) * 100 + parseInt(bookings[i].endDate.day)
+          if(current >= bookingStart  && current <= bookingEnd){
+            $("#delete").prop("disabled", true)
+            $("#delete").text("Prenotazione attive")
+          }
+        }
         for (let i in bookings){
           $("#myTable").append(
             '<tr>'+
@@ -68,12 +76,7 @@ function fill(){
   $("#identifier").attr("placeholder", data._id);
   $("#identifier").val(data._id);
 
-  if(data.sex == 'Male')
-    $("#sex").val(1)
-  else if(data.sex == 'Female')
-    $("#sex").val(2)
-  else
-    $("#sex").val(3)
+  $("#sex").val(data.sex)
 
   $("#phone").attr("placeholder", data.phoneNumber);
   $("#phone").val(data.phoneNumber);

@@ -13,7 +13,7 @@ window.onload = function getProduct() {
         success: (result) => {
 					data = result.data.obj
 					console.log(data)
-          $("#articleId").val(id + " " + data.title + " " + data.brand)
+          $("#articleId").val(id + " " + data.title + " " + data.brand)          
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
@@ -78,6 +78,36 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
 });
 
 
+$('#dateRange').on('apply.daterangepicker', function(ev, picker) {
+  let block = false
+  let dateRange = $(this).val()
+  dateRange = dateRange.replace(/ /g, "")
+  dateRange = dateRange.split("-")
+  let date1 = dateRange[0]
+  let date2 = dateRange[1]
+  date1 = date1.split("/")
+  date2 = date2.split("/")
+  date1 = date1[2] * 10000  + date1[1] * 100 + date1[0]
+  date2 = date2[2] * 10000  + date2[1] * 100 + date2[0]
+  for(let i in data.bookings){
+    bookingStart = data.bookings[i].startDate.year * 10000 + data.bookings[i].startDate.month * 100 + data.bookings[i].startDate.day
+    bookingEnd = data.bookings[i].endDate.year * 10000 + data.bookings[i].endDate.month * 100 + data.bookings[i].endDate.day
+    if( date1 < bookingStart && bookingEnd < date2 )
+     block = true
+  }
+  console.log('changed');
+  console.log(block)
+  if(block){
+    $("#save").text("seleziona una data valida")
+    $("#save").prop("disabled", true)
+  }
+  else{
+    $("#save").text("Salva")
+    $("#save").prop("disabled", false)
+  }
+});
+
+
 $('#rentalOccurred').change(function() {
 	if (this.checked) {
 		$('label[for=rentalOccurred]').text("Il prodotto è stato ritirato");
@@ -118,20 +148,25 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-  console.log(typeof($("#dateRange").val()))
-    /* let date0 = new Date($('#date-input').val());
-    let dayInput = date.getDate();
-    let monthInput = date.getMonth() + 1;
-    let yearInput = date.getFullYear();
-    let date1 = new Date($('#date-start').val());
-    let dayStart = date.getDate();
-    let monthStart = date.getMonth() + 1;
-    let yearStart = date.getFullYear();
-    let date2 = new Date($('#date-end').val());
-    let dayEnd = date.getDate();
-    let monthEnd = date.getMonth() + 1;
-    let yearEnd = date.getFullYear();
-    console.log(day +"-"+ month +"-"+ year) */
+  
+    let date0 = new Date($('#date-input').val());
+    let dayInput = date0.getDate();
+    let monthInput = date0.getMonth() + 1;
+    let yearInput = date0.getFullYear();
+    let dateRange = $("#dateRange").val()
+    dateRange = dateRange.replace(/ /g, "")
+    dateRange = dateRange.split("-")
+    let date1 = dateRange[0]
+    let date2 = dateRange[1]
+    date1 = date1.split("/")
+    date2 = date2.split("/")
+    console.log(date1)
+    let dayStart = date1[0]
+    let monthStart = date1[1]
+    let yearStart = date1[2]
+    let dayEnd = date2[0]
+    let monthEnd = date2[1]
+    let yearEnd = date2[2] 
     $.ajax({
       url:"/api/user?email=" + $("#email").val(),
       method: "GET",
@@ -142,7 +177,7 @@ function save(){
       success: (result) => {
           console.log(result)
           let user = result.data
-          /*$.ajax({
+          $.ajax({
           url:"/api/reservation",
           method: "POST",
           headers: {
@@ -176,7 +211,6 @@ function save(){
             price:  $("#price").val(),
             description:  $("#notes").val(),
             note: $("#privateNotes").val(),
-
           }),
           // Risposta del server in caso di successo
           success: (result) => {
@@ -185,7 +219,7 @@ function save(){
             let newBooking = {}
             newBooking.productId = data._id
             newBooking.clientId = user.email
-            newBooking.reservationId = result.something ._id
+            newBooking.reservationId = result.data._id
             newBooking.startDate = {}
             newBooking.startDate.day = dayStart
             newBooking.startDate.month = monthStart
@@ -195,7 +229,7 @@ function save(){
             newBooking.endDate.month = monthEnd
             newBooking.endDate.year = yearEnd
             data.bookings.push(newBooking)
-            /*$.ajax({
+            $.ajax({
             url:"/api/product/?id=" + data._id,
             method: "POST",
             headers: {
@@ -221,7 +255,7 @@ function save(){
               console.log("Error");
               alert("Errore. " + error.responseText);
           }
-          }); */
+          }); 
       },
       // Risposta del server in caso di insuccesso
       error: (error) => {
