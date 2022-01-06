@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, Nav, Navbar, Accordion, Card } from 'react-bootstrap';
+import { Button, Accordion } from 'react-bootstrap';
 
 import { MakeReservation } from './makeReservation';
 import { Stars } from './stars';

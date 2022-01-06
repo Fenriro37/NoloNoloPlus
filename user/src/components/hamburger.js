@@ -2,10 +2,6 @@ import React from 'react';
 
 import Cookie from 'js-cookie';
 import { Nav, Form, FormControl } from 'react-bootstrap';
-import { Link } from "react-router-dom";
-
-import { Page } from './page'
-import { Reservation } from './reservation'
 
 export class Hamburger extends React.Component {
   constructor(props) {

@@ -3,10 +3,10 @@ import React from 'react';
 import Cookie from 'js-cookie';
 
 import ApiCall from '../services/apiCall';
-import { Home } from './home';
+import { List } from './list';
 import { Header } from './header';
 
-export class Main extends React.Component {
+export class Product extends React.Component {
 
   constructor(props) {
     super(props);
@@ -16,11 +16,11 @@ export class Main extends React.Component {
       isAuthenticated: false
     }
     this.searchProducts = this.searchProducts.bind(this);
-    this.showOnlyAvailableProducts = this.showOnlyAvailableProducts.bind(this);
+    this.showProducts = this.showProducts.bind(this);
     this.sortProducts = this.sortProducts.bind(this);
   }
 
-  // Functions called by header, rendered by body
+  // Functions called by header, rendered by List
 
   searchProducts(filter) {
     console.log('searchProducts(' + filter + ')');
@@ -32,10 +32,14 @@ export class Main extends React.Component {
     });
   }
 
-  showOnlyAvailableProducts(isAvailable) {
-    console.log('showOnlyAvailableProducts(' + isAvailable + ')');
+  showProducts(type) {
+    // type == 1: all products
+    // type == 2: available
+    // type == 3: unavailable
+    console.log('showProducts(' + type + ')');
     let products = [];
-    if(isAvailable == true) {
+    if(type > 1) {
+      let isAvailable = type == 2 ? true : false
       for(let index in this.state.products) {
         if(this.state.products[index].available == isAvailable) {
           products.push(this.state.products[index]);
@@ -65,12 +69,7 @@ export class Main extends React.Component {
   }
   
   componentDidMount() {
-    ApiCall.getAllProduct('', true).then((result) => {
-      this.setState({
-        products: result.data.data,
-        filteredProducts: result.data.data
-      });
-    });
+    this.searchProducts('');
     if(Cookie.get('jwt')) {
       ApiCall.getUser().then(() => {
         this.setState({
@@ -86,16 +85,18 @@ export class Main extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <Header
+        type='product'
         search={this.searchProducts}
-        showOnlyAvailable={this.showOnlyAvailableProducts}
+        show={this.showProducts}
         sort={this.sortProducts}
         isAuthenticated={this.state.isAuthenticated}/>
-        <Home
-        products={this.state.filteredProducts}
+        <List
+        type='product'
+        elements={this.state.filteredProducts}
         isAuthenticated={this.state.isAuthenticated}/>
-      </div>
+      </>
     );
   }
 }
