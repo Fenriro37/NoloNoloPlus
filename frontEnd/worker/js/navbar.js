@@ -72,11 +72,19 @@ function getAllArticle(text){
             let articles = result.data
             for (let i in articles){
                 $( "#catalog" ).append(
-                    '<div class="row single d-flex justify-content-center mb-2 mt-2 p-4 rounded align-items-center" style="height: 10em;" >' +
-                        '<div class="col-5 align-items-center" style="height:100%;"> <img class="myImg " alt="immagine prodotto" src='+ articles[i].image +'></div>' +
-                        '<div class="col-5" style="height:100%;"> <h2><a href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> <h2>' +articles[i].price+'€</h2>' +
-                            '<span id="star' +i+ '"></span>'+
-                        '</div>' +
+                    '<div class="d-flex justify-content-center align-items-center">' +
+                        '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+                            '<div class="card-body h-100">' +
+                                '<div class="row h-100">' +
+                                    '<div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ articles[i].image +'></div>' +
+                                    '<div class="col-7 text-truncate" style="height:100%;">'+
+                                        '<h2><a href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> '+ 
+                                        '<h3>' +articles[i].price+'€</h3>' +
+                                        '<span id="star' +i+ '"></span>'+
+                                    '</div>' +
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
                     '</div>'
                 );  
                 let j;
@@ -122,10 +130,18 @@ function getAllClient(text){
             let clients = result.data
             clients.forEach(user => {
                 $("#catalog").append(
-                    '<div class="row single justify-content-center">' +
-                    '<div class="col-2"> <img class="img-fluid" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Immagine utente base"></div>' +
-                    '<div class="col-5"> <h2><a href="client.html?email=' +user.email+ '">'+ user.userName + ' ' + user.userSurname + '</a></h2> <h2>Email:' +user.email+'</h2>' +
-                    '<h2> Telefono: ' +user.phoneNumber+ '</h2></div>'+ 
+                    '<div class="d-flex justify-content-center align-items-center">' +
+                        '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+                            '<div class="card-body h-100">' +
+                                '<div class="row h-100">' +
+                                    '<div class="col-5 align-items-center h-100"> <img class="myImg " src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Immagine utente base"></div>' +
+                                    '<div class="col-7 text-truncate" style="height:100%;"> <h2><a href="client.html?email=' +user.email+ '">'+ user.userName + ' ' + user.userSurname + '</a></h4>'+ 
+                                        '<h4>Email: ' +user.email+'</h4>'+ 
+                                        '<h4>Tel: ' +user.phoneNumber+ '</h4>'+ 
+                                    '</div>' +
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
                     '</div>'
                 );  
             });        
@@ -161,14 +177,20 @@ function getAllReservation(text){
             //$("#reservationsWrap").show();
             reservations.forEach(reservation => {
                 $("#catalog").append(
-                    '<div class="row single justify-content-center">' +
-                        '<div class="col-3"> <img class="img-thumbnail" alt="immagine prodotto" src='+ reservation.productImage +'></div>' +
-                        '<div class="col-6"> '+
-                            '<h2>Id prenotazione:<a href="reservation.html?id=' +reservation._id+ '">' +reservation._id+ '</a></h2>' +
-                            '<h2><a href="article.html?id=' +reservation.productId+ '">' +reservation.productTitle + " " + reservation.productBrand + '</a></h2>' +
-                            '<h2><a href="client.html?id=' +reservation.clientEmail+ '">' +reservation.clientEmail+ '</a></h2>' +
+                '<div class="d-flex justify-content-center align-items-center">' +
+                    '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+                        '<div class="card-body h-100">' +
+                            '<div class="row h-100">' +
+                                '<div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ reservation.productImage +'></div>' +
+                                '<div class="col-7" style="height:100%;"> '+
+                                    '<h4 class="text-truncate">Id: <a href="reservation.html?id=' +reservation._id+ '">' +reservation._id+ '</a></h4>' +
+                                    '<h4 class="text-truncate">Articolo: <a href="article.html?id=' +reservation.productId+ '">' +reservation.productTitle + " " + reservation.productBrand + '</a></h4>' +
+                                    '<h4 class="text-truncate">Cliente: <a href="client.html?id=' +reservation.clientEmail+ '">' +reservation.clientEmail+ '</a></h4>' +
+                                '</div>'+
+                            '</div>'+
                         '</div>'+
-                    '</div>'
+                    '</div>'+
+                '</div>'
                 );  
             });
         },

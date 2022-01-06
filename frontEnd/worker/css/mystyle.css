@@ -1,7 +1,7 @@
 html {
     height: auto;
     min-height: 100% !important;
-    background-color: rgb(201, 201, 238);
+    background-color: rgba(77, 76, 76, 0.118);
 }
 body {
     font-family: tahoma;
@@ -80,20 +80,12 @@ background-color: rgb(156, 156, 156); */
     width: 100%;
     height: 100%;
   }
-.moveleft{
-    margin-right: 2em;
-}
+
+
 .heigt-group{
     height: 2em;
 }
-.single{
-    border: thin solid black;
-    width:80%;
-    margin: auto;
-}
-.delete {
-    float: right
-  }
+
 #formButtons{
     visibility: hidden;
 }
@@ -111,3 +103,24 @@ background-color: rgb(156, 156, 156); */
 .invisible{
     display: none;
 }
+
+/* css navbar*/
+.moveleft{
+    margin-right: 40px;
+}
+.moveright{
+    margin-left: 40px;
+}
+
+.navbar-toggler{
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
+
+
+/* creazione articolo*/
+.delete {
+    float: right;
+    margin: 0;
+  }

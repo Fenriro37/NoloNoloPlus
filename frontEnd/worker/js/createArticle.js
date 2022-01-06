@@ -13,7 +13,7 @@ $('#sale').change(function() {
 	if (this.checked) {
 		$('label[for=sale]').text("Il prodotto è scontato");
 		$("#saleRow").append(
-			'<div id="saleInfo">' +
+			'<div id="saleInfo" class="mt-2">' +
 				'<div class="row">' +
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
@@ -32,9 +32,15 @@ $('#sale').change(function() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="salePrice" aria-label="SalePrice" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step="1" id="saleValue" onkeyup="calculateDiscount()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
 					'</div>' +
 				'</div>' +
+				'<div class="row mt-2">'+
+					'<div class="col-3">Prezzo scontato:</div>' +
+					'<div class="col-9">' +
+						'<input type="number" class="form-control"  id="newValue" aria-label="SalePrice" aria-describedby="basic-addon6" disabled>' +
+					'</div>'+
+				'</div>'+
 			'</div>'
 		);  	
   }
@@ -43,6 +49,31 @@ $('#sale').change(function() {
 	  $("#saleInfo").remove()
   } 
 })
+
+$(document).on('click','#flat',function(){
+	$('#newValue').val($("#price").val() - $('#saleValue').val())
+})
+
+$(document).on('click','#percentage',function(){
+	if (this.checked) {
+		let total = $("#price").val()
+		let sale = $('#saleValue').val()
+		let newTotal = total - total * sale / 100; 
+		$('#newValue').val(newTotal)
+	}
+})
+
+function calculateDiscount(){
+	if($('#flat').is(":checked")){
+		$('#newValue').val($("#price").val() - $('#saleValue').val())
+	} 
+	if($('#percentage').is(":checked")){
+		let total = $("#price").val()
+		let sale = $('#saleValue').val()
+		let newTotal = total - total * sale / 100; 
+		$('#newValue').val(newTotal)
+	}
+}
 
 //aggiunta della cancellazione del nodo saleInfo se creato in precedenza
 $('form').on('reset', function(e){
@@ -60,7 +91,7 @@ function save() {
 	onSale = $("#sale").is(':checked') ? true : false
 			if(onSale){
 				onSaleType = $("#percentage").is(':checked') ? true  : false
-				onSaleValue = $('#salePrice').val()
+				onSaleValue = $('#saleValue').val()
 			}
 			else{
 				onSaleType = false,

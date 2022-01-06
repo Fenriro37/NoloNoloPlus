@@ -1,5 +1,4 @@
 let data = {}
-let dateRange = []
 window.onload = function getProduct() {
   
     var url = window.location.href;
@@ -14,12 +13,6 @@ window.onload = function getProduct() {
         success: (result) => {
 					data = result.data.obj
 					console.log(data)
-          for(let i in data.bookings){
-            let tmp = []
-            tmp.push(data.bookings[i].startDate.month + '-' + data.bookings[i].startDate.day + '-' + data.bookings[i].startDate.year)
-            tmp.push(data.bookings[i].endDate.month + '-' + data.bookings[i].endDate.day + '-' + data.bookings[i].endDate.year)
-            dateRange.push(tmp)
-          }
           $("#articleId").val(id + " " + data.title + " " + data.brand)
         },
         // Risposta del server in caso di insuccesso
@@ -29,49 +22,62 @@ window.onload = function getProduct() {
         }
     });
 }
-var date_range = [ ["11-01-2022", "18-01-2022"], ["01-11-2022", "01-14-2022"]];
+
 $(document).ready(function(){
-  $( "#date-input" ).datepicker({
-    changeMonth: true,
-    changeYear: true
-  });
-  $( "#date-start" ).datepicker({
-    changeMonth: true,
-    changeYear: true,
-    dateFormat: "dd-mm-yy",
-    beforeShowDay: function(date) {
-			var string = $.datepicker.formatDate('mm-dd-yy', date);
-      //$.datepicker.formatDate('mm-dd-yy', date)  //salva la data nel formato specificato
-			for (let i in dateRange) {				
-				if (Array.isArray(dateRange[i])) {				
-					var from = new Date(dateRange[i][0]);
-					var to = new Date(dateRange[i][1]);
-					var current = new Date(string);					
-					if (current >= from && current <= to) return false;
-				}				
-			}
-			return [dateRange.indexOf(string) == -1]
-    }
-  });
-  $( "#date-end" ).datepicker({
-    changeMonth: true,
-    changeYear: true,
-    dateFormat: "dd-mm-yy",
-    beforeShowDay: function(date) {
-			var string = $.datepicker.formatDate('mm-dd-yy', date);
-      //$.datepicker.formatDate('mm-dd-yy', date)  //salva la data nel formato specificato
-			for (let i in dateRange) {				
-				if (Array.isArray(dateRange[i])) {				
-					var from = new Date(dateRange[i][0]);
-					var to = new Date(dateRange[i][1]);
-					var current = new Date(string);					
-					if (current >= from && current <= to) return false;
-				}				
-			}
-			return [dateRange.indexOf(string) == -1]
-    }
+  $( "#dateRange" ).daterangepicker({    
+    "locale": {
+      "format": "DD/MM/YYYY",
+      "separator": " - ",
+      "applyLabel": "Seleziona",
+      "cancelLabel": "Chiudi",
+      "fromLabel": "From",
+      "toLabel": "To",
+      "customRangeLabel": "Custom",
+      "weekLabel": "W",
+      "daysOfWeek": [
+        "Do",
+        "Lu",
+        "Ma",
+        "Me",
+        "Gi",
+        "Ve",
+        "Sa",
+      ],
+      "monthNames": [
+        "Gennaio",
+        "Febbraio",
+        "Marzo",
+        "Aprile",
+        "Maggio",
+        "Giugno",
+        "Luglio",
+        "Agosto",
+        "Settembre",
+        "Ottobre",
+        "Novembre",
+        "Dicembre"
+      ],
+      "firstDay": 1
+    },
+    autoUpdateInput: false,
+    showDropdowns: true,
+    isInvalidDate: function(date){
+      for (let i in data.bookings) {								
+          var from = new Date(data.bookings[i].startDate.month +'-'+data.bookings[i].startDate.day+'-'+data.bookings[i].startDate.year );
+          var to = new Date(data.bookings[i].endDate.month +'-'+data.bookings[i].endDate.day+'-'+data.bookings[i].endDate.year);
+          var current = new Date(date);					
+          if (current >= from && current <= to) return true;
+      }
+      return false
+    } 
   });
 })
+
+$('#dateRange').on('apply.daterangepicker', function(ev, picker) {
+  $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+});
+
+
 $('#rentalOccurred').change(function() {
 	if (this.checked) {
 		$('label[for=rentalOccurred]').text("Il prodotto è stato ritirato");
@@ -110,7 +116,8 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-    let date0 = new Date($('#date-input').val());
+  console.log(typeof($("#dateRange").val()))
+    /* let date0 = new Date($('#date-input').val());
     let dayInput = date.getDate();
     let monthInput = date.getMonth() + 1;
     let yearInput = date.getFullYear();
@@ -122,7 +129,7 @@ function save(){
     let dayEnd = date.getDate();
     let monthEnd = date.getMonth() + 1;
     let yearEnd = date.getFullYear();
-    console.log(day +"-"+ month +"-"+ year)
+    console.log(day +"-"+ month +"-"+ year) */
     $.ajax({
       url:"/api/user?email=" + $("#email").val(),
       method: "GET",

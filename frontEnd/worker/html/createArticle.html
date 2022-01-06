@@ -13,69 +13,47 @@
 
 </head>
 <body>
-<div class="container-fluid">
-    <h1> Aggiungi articolo </h1>
+<div class="container-fluid d-flex justify-content-center">
+	<div class="w-50">
+   
 		<form name="myform" onSubmit="save()"> 
+			<h1 class="mb-4"> Aggiungi articolo </h1>
+
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" id="title" aria-label="Recipient's title" aria-describedby="basic-addon1" required>
+				<label for="title"> Titolo*</label>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" id="brand" aria-label="Recipient's brand" aria-describedby="basic-addon2">
+				<label for="brand"> Brand </label>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input type="url" class="form-control" id="image" aria-label="Recipient's image" aria-describedby="basic-addon3" required>
+				<label for="image"> Immagine* (Inserisci URL)</label>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" id="tags" aria-label="Recipient's tags" aria-describedby="basic-addon4"> 
+				<label for="tags"> Etichette (separare con spazio o virgola)</label>
+			</div>
 		
-			<div class="row">
-				<div class="col-3" >
-					<p> *Titolo:</p>
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" max="3" step="1" id="quality" aria-label="Recipient's quality" aria-describedby="basic-addon5" required>
+				<label for="quality"> Qualità*</label>
 				</div>
-				<div class="col-9">
-					<input type="text" class="form-control" id="title" placeholder="Recipient's title" aria-label="Recipient's title" aria-describedby="basic-addon1" required>
-				</div>
+
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" id="price" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<label for="price"> Prezzo*</label>
 			</div>
 
-			<div class="row">
-				<div class="col-3" >
-					<p> *Brand:</p>
-				</div>
-				<div class="col-9" >
-					<input type="text" class="form-control" id="brand" placeholder="Recipient's brand" aria-label="Recipient's brand" aria-describedby="basic-addon2" required>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-3" >
-					<p> *Immagine (Inserisci URL):</p>
-				</div>
-				<div class="col-9" >
-					<input type="url" class="form-control" id="image" placeholder="Recipient's image" aria-label="Recipient's image" aria-describedby="basic-addon3" required>
-				</div>
-			</div>
-
-			<div class="row">
+			<div class="row mb-3" id="saleRow">
 				<div class="col-3">
-					<p> *Etichette (separare con spazio o virgola):</p>
+					<label><b>Sconto:</b></label>
 				</div>
-				<div class="col-9" >
-					<input type="text" class="form-control" id="tags" placeholder="Recipient's tags" aria-label="Recipient's tags" aria-describedby="basic-addon4" required> 
-				</div>
-			</div>
-		
-			<div class="row">
-				<div class="col-3" >
-					<p> *Qualità:</p>
-				</div>
-				<div class="col-9" >
-					<input type="number" class="form-control" min="1" max="3" step="1" id="quality" placeholder="Recipient's quality" aria-label="Recipient's quality" aria-describedby="basic-addon5" required>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-3" >
-					<p> *Prezzo:</p>
-				</div>
-				<div class="col-9" >
-					<input type="number" class="form-control" min="1" step="1" id="price" placeholder="Recipient's price" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
-				</div>
-			</div>
-
-			<div class="row" id="saleRow">
-				<div class="col-3" >
-					<p> Sconto:</p>
-				</div>
-				<div class="col-4">
+				<div class="col-9 ">
 					<div class=" form-check">
 						<input type="checkbox" class="form-check-input" id="sale">
 						<label class="form-check-label" for="sale">Il prodotto non è scontato</label>
@@ -83,9 +61,9 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row mb-3">
 				<div class="col-3">
-					<p> Disponibilità:</p>
+					<label><b>Disponibilità:</b></label>
 				</div>
 				<div class="col-4">
 					<div class=" form-check">
@@ -95,35 +73,28 @@
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-3">
-					<p> Descrizione:</p>
-				</div>
-				<div class="col-9">
-					<input type="text" class="form-control" id="description" placeholder="Recipient's description" aria-label="Recipient's description" aria-describedby="basic-addon8">
-				</div>
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" id="description" aria-label="Recipient's description" aria-describedby="basic-addon8">
+				<label for="description"> Descrizione</label>
 			</div>
 
-			<div class="row">
-				<div class="col-3">
-					<p> Note (non visibili ai clienti):</p>
-				</div>
-				<div class="col-9">
-					<input type="text" class="form-control" id="note" placeholder="Recipient's note" aria-label="Recipient's note" aria-describedby="basic-addon9">
-				</div>
+			<div class="form-floating mb-4">
+				<input type="text" class="form-control" id="note" aria-label="Recipient's note" aria-describedby="basic-addon9">
+				<label for="note"> Note (non visibili ai clienti)</label>
 			</div>
 
-			<div class="row">
-				<div class="col-3">
-					<button type="submit" class="btn btn-success"   >Salva</button>
+			<div class="row mb-5">
+				<div class="col-6">
+					<button type="submit" class="btn btn-lg btn-success"   >Salva</button>
 				</div>
 
-				<div class="col-3">
-					<button type="reset" class="btn btn-danger" >Annulla</button>
+				<div class="col-6">
+					<button type="reset" class="btn btn-lg btn-danger delete" >Annulla</button>
 				</div>
 			</div>
 		</form> 
   </div>
+</div>
 <script type="text/javascript" src="./js/createArticle.js"></script>
 </body>
 </html>
