@@ -1,3 +1,5 @@
+let reservations = []
+
 window.onload = function login() {
   $.ajax({
       url: "/api/public/login",
@@ -14,7 +16,7 @@ window.onload = function login() {
           console.log(result)
           document.cookie = 'jwt=' + result.data;
           //$("#reservationsWrap").hide();
-          getAllArticle("")
+          getAllReservation("")
 
 
           //window.location.href = "http://localhost:8081/user/index.html";
@@ -29,12 +31,12 @@ window.onload = function login() {
 
 function changeTextDropdown(val){
     if (val === 0 ){
-        $(".btn.dropdown-toggle").text("Articoli") 
+        $("#searchButton").text("Articoli") 
     }
     else if(val === 1)
-        $(".btn.dropdown-toggle").text("Clienti") 
+        $("searchButton").text("Clienti") 
     else
-        $(".btn.dropdown-toggle").text("Prenotazioni") 
+        $("searchButton").text("Prenotazioni") 
 }
 
 function search(){
@@ -67,8 +69,7 @@ function getAllArticle(text){
         // Risposta del server in caso di successo
         success: (result) => {
             console.log(result)
-            const myCatalog = document.getElementById("catalog");
-            myCatalog.textContent = '';
+            $("#catalog").empty()
             let articles = result.data
             for (let i in articles){
                 $( "#catalog" ).append(
@@ -144,8 +145,7 @@ function getAllClient(text){
         // Risposta del server in caso di successo
         success: (result) => {
             console.log(result)
-            const myCatalog = document.getElementById("catalog");
-            myCatalog.textContent = '';
+            $("#catalog").empty()
             let clients = result.data
             clients.forEach(user => {
                 $("#catalog").append(
@@ -190,28 +190,18 @@ function getAllReservation(text){
         // Risposta del server in caso di successo
         success: (result) => {
             console.log(result)
-            const myCatalog = document.getElementById("catalog");
-            myCatalog.textContent = '';
-            let reservations = result.obj
-            //$("#reservationsWrap").show();
-            reservations.forEach(reservation => {
-                $("#catalog").append(
-                '<div class="d-flex justify-content-center align-items-center">' +
-                    '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
-                        '<div class="card-body h-100">' +
-                            '<div class="row h-100">' +
-                                '<div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ reservation.productImage +'></div>' +
-                                '<div class="col-7" style="height:100%;"> '+
-                                    '<h4 class="text-truncate">Id: <a href="reservation.html?id=' +reservation._id+ '">' +reservation._id+ '</a></h4>' +
-                                    '<h4 class="text-truncate">Articolo: <a href="article.html?id=' +reservation.productId+ '">' +reservation.productTitle + " " + reservation.productBrand + '</a></h4>' +
-                                    '<h4 class="text-truncate">Cliente: <a href="client.html?id=' +reservation.clientEmail+ '">' +reservation.clientEmail+ '</a></h4>' +
-                                '</div>'+
-                            '</div>'+
-                        '</div>'+
-                    '</div>'+
-                '</div>'
-                );  
-            });
+            $("#catalog").empty()
+            reservations = result.obj
+            $("#catalog").append(
+            '<button class="btn btn-secondary dropdown-toggle" id="reservationsFilter" type="button" data-bs-toggle="dropdown" aria-expanded="false">Tutte</button>'+
+            '<div class="dropdown-menu dropdown-menu-right">'+
+                '<button class="dropdown-item" type="button" id="all">Tutte</button>'+
+                '<button class="dropdown-item" type="button" id="active">Attive</button>'+
+                '<button class="dropdown-item" type="button" id="old">Concluse</button>'+
+		    '</div>'
+            );
+            fillReservation(reservations)
+            
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
@@ -221,22 +211,66 @@ function getAllReservation(text){
     });   
 }
 
-
-
-//document.getElementById("reservations").addEventListener("change", changeReservation);
-
-function changeReservation(){
-    if($("#reservations").val() == "all"){
-        //check date e inserire in un array
-        //chiamare una funzione che display l'array
-        console.log(1)
-    }
-    else if($("#reservations").val() == "active"){
-        //check date e inserire in un array
-        console.log(2)
-    }
-    else{
-        //check date e inserire in un array
-        console.log(3)
-    }
+function fillReservation(data){
+    for(let i in data) {
+        $("#catalog").append(
+        '<div id="'+i+'" class="d-flex justify-content-center align-items-center">' +
+            '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+                '<div class="card-body h-100">' +
+                    '<div class="row h-100">' +
+                        '<div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ data[i].productImage +'></div>' +
+                        '<div class="col-7" style="height:100%;"> '+
+                            '<h4 class="text-truncate">Id: <a href="reservation.html?id=' +data[i]._id+ '">' +data[i]._id+ '</a></h4>' +
+                            '<h4 class="text-truncate">Articolo: <a href="article.html?id=' +data[i].productId+ '">' +data[i].productTitle + " " + data[i].productBrand + '</a></h4>' +
+                            '<h4 class="text-truncate">Cliente: <a href="client.html?id=' +data[i].clientEmail+ '">' +data[i].clientEmail+ '</a></h4>' +
+                        '</div>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'+
+        '</div>'
+        );  
+    };
 }
+
+document.addEventListener('click',function(e){
+    if(e.target && e.target.id== 'all'){
+        $("#reservationsFilter").text("Tutte")  
+        let bookings = []   
+        for(let i in reservations){
+            $("#" + i).remove()
+            bookings[i] = reservations[i]      
+        }
+        console.log(bookings)
+        fillReservation(reservations)
+    }
+ });
+
+ document.addEventListener('click',function(e){
+    if(e.target && e.target.id== 'active'){
+        $("#reservationsFilter").text("Attive")    
+        let bookings = []   
+        for(let i in reservations){
+            $("#" + i).remove()
+            if(reservations[i].isTaken && !reservations[i].isReturned){
+                bookings[i] = reservations[i]
+            }     
+        }
+        console.log(bookings)
+        fillReservation(bookings)
+    }
+ });
+
+ document.addEventListener('click',function(e){
+    if(e.target && e.target.id== 'old'){
+        $("#reservationsFilter").text("Concluse")   
+        let bookings = [] 
+        for(let i in reservations){
+            $("#" + i).remove()
+            if(reservations[i].isTaken && reservations[i].isReturned){
+                bookings[i] = reservations[i]
+            }
+        }    
+        console.log(bookings)
+        fillReservation(bookings)
+    }
+ });

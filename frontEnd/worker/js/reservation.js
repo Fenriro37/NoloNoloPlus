@@ -3,6 +3,9 @@ let article = {}
 let editable
 let boolModify
 
+//serve per inizializzare il datepickerRange. Se viene inizializzato più volte smette di funzionare
+let firstTime = 0
+
 let dateBeginnig = []
 let dateFinish = []
 
@@ -111,58 +114,59 @@ function modify(){
   //////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////
-
-  $( "#bookingRange" ).daterangepicker({    
-    "locale": {
-      "format": "DD/MM/YYYY",
-      "separator": " - ",
-      "applyLabel": "Seleziona",
-      "cancelLabel": "Chiudi",
-      "fromLabel": "From",
-      "toLabel": "To",
-      "customRangeLabel": "Custom",
-      "weekLabel": "W",
-      "daysOfWeek": [
-        "Do",
-        "Lu",
-        "Ma",
-        "Me",
-        "Gi",
-        "Ve",
-        "Sa",
-      ],
-      "monthNames": [
-        "Gennaio",
-        "Febbraio",
-        "Marzo",
-        "Aprile",
-        "Maggio",
-        "Giugno",
-        "Luglio",
-        "Agosto",
-        "Settembre",
-        "Ottobre",
-        "Novembre",
-        "Dicembre"
-      ],
-      "firstDay": 1
-    },
-    minDate:  data.bookingDate.day +'/'+ data.bookingDate.month +'/'+ data.bookingDate.year,
-    autoUpdateInput: false,
-    showDropdowns: true, 
-    isInvalidDate: function(date){
-      for (let i in article.bookings) {	
-        if(data._id != article.bookings[i].reservationId){
-          var from = new Date(article.bookings[i].startDate.month +'-'+article.bookings[i].startDate.day+'-'+article.bookings[i].startDate.year );
-          var to = new Date(article.bookings[i].endDate.month +'-'+article.bookings[i].endDate.day+'-'+article.bookings[i].endDate.year);
-          var current = new Date(date);					
-          if (current >= from && current <= to) return true;
-        }		
-      }
-    return false
-    }  
-  });
-
+  if(firstTime === 0){
+    firstTime = 1
+    $( "#bookingRange" ).daterangepicker({    
+      "locale": {
+        "format": "DD/MM/YYYY",
+        "separator": " - ",
+        "applyLabel": "Seleziona",
+        "cancelLabel": "Chiudi",
+        "fromLabel": "From",
+        "toLabel": "To",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": [
+          "Do",
+          "Lu",
+          "Ma",
+          "Me",
+          "Gi",
+          "Ve",
+          "Sa",
+        ],
+        "monthNames": [
+          "Gennaio",
+          "Febbraio",
+          "Marzo",
+          "Aprile",
+          "Maggio",
+          "Giugno",
+          "Luglio",
+          "Agosto",
+          "Settembre",
+          "Ottobre",
+          "Novembre",
+          "Dicembre"
+        ],
+        "firstDay": 1
+      },
+      minDate:  data.bookingDate.day +'/'+ data.bookingDate.month +'/'+ data.bookingDate.year,
+      autoUpdateInput: false,
+      showDropdowns: true, 
+      isInvalidDate: function(date){
+        for (let i in article.bookings) {	
+          if(data._id != article.bookings[i].reservationId){
+            var from = new Date(article.bookings[i].startDate.month +'-'+article.bookings[i].startDate.day+'-'+article.bookings[i].startDate.year );
+            var to = new Date(article.bookings[i].endDate.month +'-'+article.bookings[i].endDate.day+'-'+article.bookings[i].endDate.year);
+            var current = new Date(date);					
+            if (current >= from && current <= to) return true;
+          }		
+        }
+      return false
+      }  
+    });
+  }
   boolModify = true
   readOnly()
 }
