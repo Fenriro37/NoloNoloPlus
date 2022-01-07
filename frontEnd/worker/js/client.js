@@ -1,6 +1,7 @@
 let data = {}
 let bookings = []
 let boolModify = false
+let deletable = true
 window.onload = function getClient() {
   
   var url = window.location.href;
@@ -45,15 +46,14 @@ window.onload = function getClient() {
           bookingStart = parseInt(bookings[i].startDate.year) * 10000 + parseInt(bookings[i].startDate.month)* 100 + parseInt(bookings[i].startDate.day)
           bookingEnd = parseInt(bookings[i].endDate.year) * 10000 + parseInt(bookings[i].endDate.month) * 100 + parseInt(bookings[i].endDate.day)
           if(current >= bookingStart  && current <= bookingEnd){
-            $("#delete").prop("disabled", true)
-            $("#delete").text("Prenotazione attive")
+            deletable = false
           }
         }
         for (let i in bookings){
           $("#myTable").append(
             '<tr>'+
             '<td><a href="reservation.html?id=' +bookings[i]._id+'">'+bookings[i]._id+'</td>'+
-            '<td><a href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
+            '<td class="text-truncate"><a href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
             '<td>'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
             '<td>'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
             '</tr>'
@@ -104,11 +104,20 @@ function fill(){
 
 function modify(){
   console.log("modify")
-  var button = document.getElementById("myButton");
-  button.style.visibility = "hidden"
+  $("#myButtons").empty()
+  $("#myButtons").append(
+    '<button class="btn btn-lg btn-success">Salva</button>'+
+    '<button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>'+
+    '<button type="button" id="delete" class="btn btn-lg btn-danger delete">Elimina cliente</button>'
+  )
+  if(!deletable){
+    $("#delete").prop("disabled", true)
+    $("#delete").text("Prenotazione attive")
+  }
+
   boolModify = true
   readOnly()
-  document.getElementById("formButtons").style.visibility  = "visible" 
+
 }
 
 function readOnly(){
@@ -128,18 +137,29 @@ function readOnly(){
   }
 }
 
-document.getElementById("reset").addEventListener("click", reset);
+
+document.addEventListener('click',function(e){
+  if(e.target && e.target.id== 'reset'){
+    reset()
+   }
+});
 
 function reset(){
   console.log('reset')
+  $("#myButtons").empty()
+  $("#myButtons").append(
+  '<button type="button" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>'
+  )
   boolModify = false
   fill()
   readOnly()
-  document.getElementById("formButtons").style.visibility  = "hidden" 
-  document.getElementById("myButton").style.visibility = "visible"
+  
 }
-
-document.getElementById("delete").addEventListener("click", remove);
+document.addEventListener('click',function(e){
+  if(e.target && e.target.id== 'delete'){
+    remove()
+   }
+});
 
 function remove(){
   console.log('removeUser')
@@ -251,3 +271,12 @@ function save() {
     }
 	});
 }
+
+$(document).ready(function(){
+	$("#myInput").on("keyup", function() {
+		var value = $(this).val().toLowerCase();
+		$("#myTable tr").filter(function() {
+			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+	});
+});

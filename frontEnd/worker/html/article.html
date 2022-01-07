@@ -13,207 +13,209 @@
     <link rel="stylesheet" href="./css/mystyle.css">
 </head>
 <body>
-    <div class="container-fluid p-5">
-        <div class="row mb-5">
+<div class="container-fluid d-flex justify-content-center">
+
+        <div class="row mb-5 mt-3">
             <div class="col-6">
             <!-- Colonne immagine -->
                 <img id="img" class="img-thumbnail" alt="immagine prodotto" >
             </div>
             <!-- Colonne informazioni articolo -->
-            <div class="col-4">
-            <div id="productidentifier">
-                <p id="productidentifier"></p>      
-            </div>   
-            <!-- Titolo -->
-            <div>
-                <h1 id="title">  </h1>
-            </div>
-            <!-- Etichette -->
-            <div class="mb-2" id="tags">
-            </div>
-            <!-- Stars -->
-            <div id="stars">
-            </div>
-            <!-- Prezzo -->
-            <div class="mt-3 mb-3" id="price">
+            <div class="col-6">
+                <div id="productidentifier">
+                    <p id="productidentifier"></p>      
+                </div>   
+                <!-- Titolo -->
+                <div>
+                    <h4 id="title">  </h4>
+                </div>
+                <!-- Etichette -->
+                <div class="mb-2" id="tags">
+                </div>
+                <!-- Stars -->
+                <div id="stars">
+                </div>
+                <!-- Prezzo -->
+                <div class="mt-3 mb-3" id="price">
 
-            </div>
-            <!-- Bottoni -->
-            <div id="buttons">
-                <button type="button" class="btn btn-lg" id="rentProduct">Affitta</button>
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="getModalData()">Modifica</button>
-                <button type="button" class="btn btn-lg btn-danger" onclick="remove()">Elimina</button>
-                <div class="form-check form-switch big-size">
-                <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" >
                 </div>
-                <!-- Modal da mettere in un altro file???? -->
-                <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Modifica prodotto</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>	
+                <!-- Bottoni -->
+                <div id="buttons">
+                    <button type="button" class="btn btn-lg" id="rentProduct">Affitta</button>
+                    <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="getModalData()">Modifica</button>
+                    <button type="button" class="btn btn-lg btn-danger" onclick="remove()">Elimina</button>
+                    <div class="form-check form-switch big-size">
+                    <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" >
                     </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <form name="myform" id="formId" onSubmit="">
-                            <div class="row">
-                                <div class="col-6">
-                                <label for="productName" class="form-label">Nome</label>
+                    <!-- Modal da mettere in un altro file???? -->
+                    <div class="modal" id="myModal">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Modifica prodotto</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>	
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form name="myform" id="formId" onSubmit="">
+                                <div class="row">
+                                    <div class="col-6">
+                                    <label for="productName" class="form-label">Nome</label>
+                                    </div>
+                                    <div class="col-6">
+                                    <label for="productModel" class="form-label">Marca</label>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                <label for="productModel" class="form-label">Marca</label>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                    <input type="text" class="form-control" id="productName" >	
+                                    </div>
+                                    <div class="col-6">
+                                    <input type="text" class="form-control" id="productModel" >	
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                <input type="text" class="form-control" id="productName" >	
+                                <div class="row">
+                                    <div class="col">
+                                    <label for="productTags" class="form-label">Etichette (separare con uno spazio)</label>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                <input type="text" class="form-control" id="productModel" >	
+                                <div class="row mb-3">
+                                    <div class="col">
+                                    <textarea class="form-control w-80" id="productTags" rows="3" ></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                <label for="productTags" class="form-label">Etichette (separare con uno spazio)</label>
+                                <!-- da sistemare -->
+                                <div class="row mb-3 d-flex align-items-center justify-content-between">
+                                    <div class="col-4">
+                                    <label for="imageLink" class="form-label">Immagine (link)</label>
+                                    </div>
+                                    <div class="col-8">
+                                    <input type="text" class="form-control" id="imageLink" >
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                <textarea class="form-control w-80" id="productTags" rows="3" ></textarea>
+                                <div class="row">
+                                    <div class="col-6">
+                                    <label for="productQuality" class="form-label">Qualità</label>
+                                    </div>
+                                    <div class="col-6">
+                                    <label for="productPrice">Prezzo di listino</label>												
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- da sistemare -->
-                            <div class="row mb-3 d-flex align-items-center justify-content-between">
-                                <div class="col-4">
-                                <label for="imageLink" class="form-label">Immagine (link)</label>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                    <select class="form-select" id="qualityModal" >
+                                        <option value=1 >1 - Condizioni accettabili</option>
+                                        <option value=2 >2 - Buone condizioni</option>
+                                        <option value=3 >3 - Come nuovo</option>
+                                    </select>
+                                    </div>
+                                    <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="text" id="productPrice" class="form-control text-end" >
+                                        <span class="input-group-text justify-content-center">€</span>
+                                    </div>
+                                    </div>
                                 </div>
-                                <div class="col-8">
-                                <input type="text" class="form-control" id="imageLink" >
+                                <hr>
+                                <div class="row mb-2 d-flex align-items-center justify-content-between">
+                                    <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="onSale" >
+                                        <label class="form-check-label" for="onSale">Sconto</label>
+                                    </div>
+                                    </div>
+                                    <div class="col-3">
+                                    <div class="form-check">
+                                        <input
+                                        class="form-check-input"
+                                        type="radio" 
+                                        name="discount" 
+                                        id="discountPercentage" 
+                                        disabled
+                                        > 
+                                        <label class="form-check-label" for="discountPercentage">Percentuale</label>
+                                    </div>
+                                    </div>
+                                    <div class="col-3">
+                                    <div class="form-check">
+                                        <input
+                                        id="discountAmount" 	
+                                        class="form-check-input"
+                                        type="radio"
+                                        name="discount"
+                                        disabled 
+                                        >
+                                        <label class="form-check-label" for="discountAmount">Fisso</label>													
+                                    </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                <label for="productQuality" class="form-label">Qualità</label>
+                                <div class="row mb-2 d-flex justify-content-end">
+                                    <div class="col-6 d-flex align-items-center">
+                                    Sconto applicato
+                                    </div>
+                                    <div class="col-6">
+                                    <div class="input-group">
+                                    <!-- <span class="input-group-text justify-content-center">-</span>-->
+                                        <input type="number" class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()"  readonly>
+                                        <span id="pd" class="input-group-text justify-content-center"></span>
+                                    </div>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                <label for="productPrice">Prezzo di listino</label>												
+                                <div class="row mb-3">
+                                    <div class="col-6 d-flex align-items-center">
+                                    Prezzo scontato
+                                    </div>
+                                    <div class="col-6">
+                                    <div class="input-group">
+                                        <input 
+                                        type="number"
+                                        class="form-control text-end"
+                                        readonly
+                                        id="newPrice">
+                                        <span class="input-group-text justify-content-center">€</span>
+                                    </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                <select class="form-select" id="qualityModal" >
-                                    <option value=1 >1 - Condizioni accettabili</option>
-                                    <option value=2 >2 - Buone condizioni</option>
-                                    <option value=3 >3 - Come nuovo</option>
-                                </select>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                    <label for="productDescription" class="form-label">Descrizione</label>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                <div class="input-group">
-                                    <input type="text" id="productPrice" class="form-control text-end" >
-                                    <span class="input-group-text justify-content-center">€</span>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                    <textarea class="form-control w-80" id="productDescription" rows="3" ></textarea>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col">
+                                    <label for="productNote" class="form-label">Note (non sono visibli al cliente)</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="row mb-2 d-flex align-items-center justify-content-between">
-                                <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="onSale" >
-                                    <label class="form-check-label" for="onSale">Sconto</label>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                    <textarea class="form-control w-80" id="productNote" rows="3" ></textarea>
+                                    </div>
                                 </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-primary float-left" data-bs-dismiss="modal" >Salva</button>  
+                                    <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
                                 </div>
-                                <div class="col-3">
-                                <div class="form-check">
-                                    <input
-                                    class="form-check-input"
-                                    type="radio" 
-                                    name="discount" 
-                                    id="discountPercentage" 
-                                    disabled
-                                    > 
-                                    <label class="form-check-label" for="discountPercentage">Percentuale</label>
-                                </div>
-                                </div>
-                                <div class="col-3">
-                                <div class="form-check">
-                                    <input
-                                    id="discountAmount" 	
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="discount"
-                                    disabled 
-                                    >
-                                    <label class="form-check-label" for="discountAmount">Fisso</label>													
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row mb-2 d-flex justify-content-end">
-                                <div class="col-6 d-flex align-items-center">
-                                Sconto applicato
-                                </div>
-                                <div class="col-6">
-                                <div class="input-group">
-                                <!-- <span class="input-group-text justify-content-center">-</span>-->
-                                    <input type="number" class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()"  readonly>
-                                    <span id="pd" class="input-group-text justify-content-center"></span>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-6 d-flex align-items-center">
-                                Prezzo scontato
-                                </div>
-                                <div class="col-6">
-                                <div class="input-group">
-                                    <input 
-                                    type="number"
-                                    class="form-control text-end"
-                                    readonly
-                                    id="newPrice">
-                                    <span class="input-group-text justify-content-center">€</span>
-                                </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col">
-                                <label for="productDescription" class="form-label">Descrizione</label>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                <textarea class="form-control w-80" id="productDescription" rows="3" ></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                <label for="productNote" class="form-label">Note (non sono visibli al cliente)</label>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                <textarea class="form-control w-80" id="productNote" rows="3" ></textarea>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <button type="submit" class="btn btn-primary float-left" data-bs-dismiss="modal" >Salva</button>  
-                                <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
+                        <!-- Modal footer -->
+                        <!--<div class="modal-footer d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary float-left" data-bs-dismiss="modal" onclick="save()">Salva</button>  
+                            <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
+                        </div>-->
                     </div>
-                    <!-- Modal footer -->
-                    <!--<div class="modal-footer d-flex justify-content-between">
-                        <button type="submit" class="btn btn-primary float-left" data-bs-dismiss="modal" onclick="save()">Salva</button>  
-                        <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
-                    </div>-->
+                    </div>
+                    </div>
                 </div>
-                </div>
-                </div>
-            </div>
             </div>
         </div>
+    <div class="w-50">
         <div class="row">
             <h3>Descrizione</h3>
         </div>
@@ -246,6 +248,7 @@
             </table>
         </div>
     </div>
+</div>
 <script type="text/javascript" src="./js/article.js"></script>
 </body>
 </html>

@@ -13,181 +13,116 @@
     <link rel="stylesheet" href="./css/mystyle.css">
 </head>
 <body>
-  <div class="container-fluid">
-    <h1> Account </h1>
+<div class="container-fluid d-flex justify-content-center">
+  <div class="w-50">
     <form name="myform" id="formId" onSubmit="">
+      <h1 class="mb-3"> Account </h1>
     <!--<form method="post" id="theFormID" name="theFormID" action=""></form>-->
-      <div class="row">
-        <div class="col-3">
-          <p>Nome:</p>
-        </div>
-        <div class="col-9">
-          <input type="text" id="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1" readonly required>
-        </div>
+  
+      <div class="form-floating mb-3">
+        <input type="text" id="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1" readonly required>
+        <label for="name"> Nome*</label>
       </div>
 
-      <div class="row">
-        <div class="col-3">
-          <p>Cognome:</p>
-        </div>
-        <div class="col-9" >
-          <input type="text" id="surname" class="form-control" aria-label="surname" aria-describedby="basic-addon2" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="text" id="surname" class="form-control" aria-label="surname" aria-describedby="basic-addon2" readonly required>
+        <label for="surname"> Cognome*</label>
       </div>
 
-      <div class="row">
-        <div class="col-3">
-          <p>ID:<span>(non modificabile)</span></p>
-        </div>
-        <div class="col-9" >
-          <input type="text" id="identifier" class="form-control" aria-label="identifier" aria-describedby="basic-addon3" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="text" id="identifier" class="form-control" aria-label="identifier" aria-describedby="basic-addon3" readonly required>
+        <label for="identifier"> ID(non modificabile)*</label>
       </div>
       
-      <div class="row">
-        <div class="col-3">
-          <p>Sesso:</p>
-        </div>
-        <div class="col-9" >
-          <select id="sex" class="form-select" aria-label="Default select example" disabled required>
-            <option value="Male">M</option>
-            <option value="Female">F</option>
-            <option value="Other">Altro</option>
-          </select>
-        </div>
+      <div class="form-floating mb-3">
+        <select id="sex" class="form-select" aria-label="Default select example" disabled required>
+          <option value="male">M</option>
+          <option value="female">F</option>
+          <option value="other">Altro</option>
+        </select>
+        <label for="sex"> Sesso*</label>
       </div>
         
-      <div class="row">
-        <div class="col-3">
-          <p>Numbero di Telefono:</p>
-        </div>
-        <div class="col-9">
-          <input type="tel" id="phone" class="form-control" aria-label="phone" aria-describedby="basic-addon5" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="tel" id="phone" class="form-control" aria-label="phone" aria-describedby="basic-addon5" readonly required>
+        <label for="phone"> Numero di telefono*</label>
       </div>
         
-      <div class="row">
-        <div class="col-3">
-          <p>E-mail:</p>
-        </div>
-        <div class="col-9" >
-          <input type="email" id="mail" class="form-control" aria-label="mail" aria-describedby="basic-addon6" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="email" id="mail" class="form-control" aria-label="mail" aria-describedby="basic-addon6" readonly required>
+        <label for="mail"> E-mail*</label>
       </div>
 
       <hr>
 
-      <div class="row">
-        <div class="col-3">
-          <b>Data di nascita</b>
-        </div>
-        <div class="col-9" >
-          <input id="birthday" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" aria-label="birthday" aria-describedby="basic-addon7" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input id="birthday" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" aria-label="birthday" aria-describedby="basic-addon7" readonly required>
+        <label for="birthday"> Data di nascita*</label>
       </div>
 
       <hr>
 
-      <div class="row">
-        <div class="col-3">
-          <b>Indirizzo</b>
-        </div>
+      <div class="row mb-3">
+        <h3>Indirizzo</h3>
+      </div>
+      
+
+      <div class="form-floating mb-3">
+        <input type="text" id="street" class="form-control" aria-label="street" aria-describedby="basic-addon8" readonly required>
+        <label for="street"> Via*</label>
       </div>
 
-      <div class="row">
-        <div class="col-3">
-          <p>Via:</p>
-        </div>
-        <div class="col-9" >
-          <input type="text" id="street" class="form-control" aria-label="street" aria-describedby="basic-addon8" readonly required>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p>Numero:</p>
-        </div>
-        <div class="col-9">
-          <input type="number"  id="num" class="form-control" aria-label="city" aria-describedby="basic-addon10" step="1" min="1" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="number"  id="num" class="form-control" aria-label="city" aria-describedby="basic-addon10" step="1" min="1" readonly required>
+        <label for="num"> Numero*</label>
       </div> 
 
-      <div class="row">
-        <div class="col-3">
-          <p>Città: </p>
-        </div>
-        <div class="col-9" >
-          <input type="text" id="city" class="form-control" aria-label="city" aria-describedby="basic-addon10" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="text" id="city" class="form-control" aria-label="city" aria-describedby="basic-addon10" readonly required>
+        <label for="city"> Città*</label>
       </div>
 
       <hr>
 
-      <div class="row">
-        <b>Pagamenti</b>
+      <div class="row mb-3">
+        <h3>Metodo di pagamento</h3>
       </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Tipo di carta:</p>
-        </div>
-        <div class="col-9" >   
-          <input type="text" id="cardType" class="form-control" aria-label="cardType" aria-describedby="basic-addon11" readonly required>
-    
-        </div>
+      
+      <div class="form-floating mb-3">
+        <input type="text" id="cardType" class="form-control" aria-label="cardType" aria-describedby="basic-addon11" readonly required>
+        <label for="cardType"> Tipo di carta*</label>
       </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Nome carta:</p>
-        </div>
-        <div class="col-9" >
-          <input type="text" id="cardName" class="form-control" aria-label="cardName" aria-describedby="basic-addon12" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="text" id="cardName" class="form-control" aria-label="cardName" aria-describedby="basic-addon12" readonly required>
+        <label for="cardName"> Nome carta*</label>
       </div>
-      <div class="row">
-        <div class="col-3">
-          <p>Proprietario:</p>
-        </div>
-        <div class="col-9" >
-          <input type="text" id="owner" class="form-control" aria-label="owner" aria-describedby="basic-addon13" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="text" id="owner" class="form-control" aria-label="owner" aria-describedby="basic-addon13" readonly required>
+        <label for="owner"> Proprietario*</label>
       </div>
 
-      <div class="row">
-        <div class="col-3">
-          <p>Data scadenza</p>
-        </div>
+      <div class="row mb-3">
+          <b>Data scadenza</b>
       </div>
 
-      <div class="row">
-        <div class="col-3 tab">
-          <p>Mese:</p>
-        </div>
-        <div class="col-9" >
-          <input type="number" min="1" max="12" step="1" id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="number" min="1" max="12" step="1" id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" readonly required>
+        <label for="cardMonth"> Mese*</label>
       </div>
 
-      <div class="row">
-        <div class="col-3 tab">
-          <p>Anno:</p>
-        </div>        
-        <div class="col-9" >
-          <input type="number" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" readonly required>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="number" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" readonly required>
+        <label for="cardYear"> Anno*</label>
       </div>
-      <div id="formButtons">
-        <button class="btn btn-lg btn-success">Salva</button>
-        <button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>
-        <button type="button" id="delete" class="btn btn-lg btn-danger delete">Elimina cliente</button>
+      
+      <div id="myButtons">
+        <button type="button" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
       </div>
     </form> 
-    <!-- Bottoni -->
-    <div id="myButton">
-      <button type="button" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
-    </div>
-    
+    <!-- Bottoni -->    
     <hr>
 
+    <!-- attiva primary daIniziare Warning  finite succes -->
     <!-- Da qui parte la tabella delle prenotazioni -->
     <h3>Lista prenotazioni</h3>
     <div class="p-3">
@@ -210,6 +145,7 @@
       </div>
     </div>
   </div>
+</div>
   <script type="text/javascript" src="./js/client.js"></script>
 </body>
 </html>

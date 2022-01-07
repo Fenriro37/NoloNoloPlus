@@ -1,5 +1,6 @@
 let data = {}
 let editable
+let boolModify
 
 window.onload = function getClient() {
   var url = window.location.href;
@@ -18,7 +19,7 @@ window.onload = function getClient() {
         console.log(data)
         let today = new Date().toISOString().slice(0, 10)
         let start = data.startDate.year +'-'+ data.startDate.month +'-'+ data.startDate.day
-        editable = (today >= start) ? false : true
+        editable = (data.isTaken) ? false : true
         console.log("today >= start")
         console.log("today " + today)
         console.log("startDate " + start)
@@ -35,26 +36,15 @@ window.onload = function getClient() {
   });
 }
 
-$(document).ready(function(){
-  $( "#bookingRequest" ).datepicker();
-  $( "#bookingStart" ).datepicker();
-  $( "#bookingEnd" ).datepicker();
- });
-
 function insertData(){
   $("#img").append(
     ' <img class="img-thumbnail" alt="immagine prodotto" src='+ data.productImage+'>'
   )
   $("#info").prepend(
     '<p>Id prenotazione: ' +data._id+ '</p>' +
-    '<p><a href="article.html?id=' +data.productId+ '">' +data.productTitle + " " + data.productBrand + '</a></p>' +
-    '<p><a href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' 
+    '<p>Articolo: <a href="article.html?id=' +data.productId+ '">' +data.productTitle + " " + data.productBrand + '</a></p>' +
+    '<p>Email: <a href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' 
   )
-  if(editable){
-    $("#formButtons").append(
-    '<button type="button" id="delete" class="btn btn-lg btn-danger delete" onclick="remove()">Elimina prenotazione</button>'
-    )}
-
   fill()
 } 
 
@@ -67,9 +57,6 @@ function fill(){
 
   $("#bookingStart").attr("placeholder", data.startDate.year +'-'+ data.startDate.month +'-'+ data.startDate.day);
   $("#bookingStart").val( data.startDate.year +'-'+ data.startDate.month +'-'+ data.startDate.day);  
-
-  $("#bookingEnd").attr("placeholder", data.endDate.year +'-'+ data.endDate.month +'-'+ data.endDate.day);
-  $("#bookingEnd").val( data.endDate.year +'-'+ data.endDate.month +'-'+ data.endDate.day);
 
   $("#notes").attr("placeholder", data.description);
   $("#notes").val(data.description);
@@ -94,11 +81,19 @@ function fill(){
 function modify(){
   console.log("modify")
 
-  var button = document.getElementById("myButton");
-  button.style.visibility = "hidden"
+  $("#myButtons").empty()
+  $("#myButtons").append(
+    '<button class="btn btn-lg btn-success">Salva</button>'+
+    '<button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>' +
+    '<button type="button" id="delete" class="btn btn-lg btn-danger delete" onclick="remove()">Elimina prenotazione</button>'
+  )
+  if(data.isTaken){
+    //$("#delete").prop("disabled", true)
+    $("#delete").text("Prenotazione non eliminabile")
+  }
+
   boolModify = true
   readOnly()
-  document.getElementById("formButtons").style.visibility  = "visible" 
 }
 
 function readOnly(){
@@ -108,28 +103,40 @@ function readOnly(){
       $(this).prop("readonly", true); 
       $(this).prop("disabled", true);
     });
+    $("#edit").prop("disabled", false)
+    
   }
   else{ 
     $("form :input").each(function(){
-      if(editable){
-        $(this).prop("readonly", false); 
-      }
+    if(editable){
+      $(this).prop("readonly", false); 
+    }
       $(this).prop("disabled", false);
     });
-    $("#bookingRequest").prop("readonly", true);
     
+    $("#bookingRequest").prop("readonly", true);
+    if(data.isTaken){
+      $("#delete").prop("disabled", true)
+    }
   }
 }
 
-document.getElementById("reset").addEventListener("click", reset);
+document.addEventListener('click',function(e){
+  if(e.target && e.target.id== 'reset'){
+    reset()
+   }
+});
 
 function reset(){
   console.log('reset')
+  $("#myButtons").empty()
+  $("#myButtons").append(
+  '<button type="button" id="edit" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>'
+  )
   boolModify = false
   fill()
   readOnly()
-  document.getElementById("formButtons").style.visibility  = "hidden" 
-  document.getElementById("myButton").style.visibility = "visible"
+  
 }
 
 $('#formId').submit(function (evt) {
@@ -174,6 +181,7 @@ function save(){
     monthEnd = dateEnd[1]
     yearEnd = dateEnd[0]
   } 
+
 /*   $.ajax({
     url:"/api/reservation?id=" + data._id,
     method: "POST",

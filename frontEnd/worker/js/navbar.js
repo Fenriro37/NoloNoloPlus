@@ -153,8 +153,8 @@ function getAllClient(text){
                         '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
                             '<div class="card-body h-100">' +
                                 '<div class="row h-100">' +
-                                    '<div class="col-5 align-items-center h-100"> <img class="myImg " src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Immagine utente base"></div>' +
-                                    '<div class="col-7 text-truncate" style="height:100%;"> <h2><a href="client.html?email=' +user.email+ '">'+ user.userName + ' ' + user.userSurname + '</a></h4>'+ 
+                                    '<div class="col-4 align-items-center h-100"> <img class="myImg " src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Immagine utente base"></div>' +
+                                    '<div class="col-8 text-truncate" style="height:100%;"> <h2><a href="client.html?email=' +user.email+ '">'+ user.userName + ' ' + user.userSurname + '</a></h4>'+ 
                                         '<h4>Email: ' +user.email+'</h4>'+ 
                                         '<h4>Tel: ' +user.phoneNumber+ '</h4>'+ 
                                     '</div>' +
