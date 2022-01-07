@@ -121,7 +121,7 @@ function save() {
 			quality:  $('#quality').val(),
 			description:  $('#description').val(),
 			note:  $('#note').val(),
-			bookings: {}
+			bookings: []
 		}),
 		// Risposta del server in caso di successo
 		success: (result) => {

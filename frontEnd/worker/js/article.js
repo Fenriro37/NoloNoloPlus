@@ -80,15 +80,19 @@ function fill(){
 	$("#note").text(data.note)
 
 	//tabella
-	for (let i in data.bookings){
-		$("#myTable").append(
-			'<tr>'+
-			'<td><a href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
-			'<td><a href="reservation.html?id=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
-			'<td>'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
-			'<td>'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
-			'</tr>'
-		)
+	if(data.bookings.length !== 0){
+		for (let i in data.bookings){
+			console.log(data.bookings)
+			console.log(i)
+			$("#myTable").append(
+				'<tr>'+
+				'<td><a href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
+				'<td><a href="reservation.html?id=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
+				'<td>'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
+				'<td>'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
+				'</tr>'
+			)
+		}
 	}
 }
 

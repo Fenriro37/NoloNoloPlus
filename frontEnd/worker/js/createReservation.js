@@ -18,7 +18,8 @@ window.onload = function getProduct() {
         success: (result) => {
 					data = result.data.obj
 					console.log(data)
-          $("#articleId").val(id + " " + data.title + " " + data.brand)          
+          $("#articleId").val(id + " " + data.title + " " + data.brand) 
+          $("#price").val(data.price)       
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
@@ -140,7 +141,10 @@ $('#returned').change(function() {
 })
 
 
-$("#clear").click(function() {
+$("#clear").click(reset)
+
+
+function reset(){
   $("input").each(function(){
     //console.log($(this).attr('id') != "articleId")
     if($(this).attr('id') != "articleId")
@@ -148,7 +152,7 @@ $("#clear").click(function() {
     if($(this).is(':checkbox'))
       $(this).prop('checked', false);
   });
-});
+}
 
 $('#formId').submit(function (evt) {
   evt.preventDefault();
@@ -221,6 +225,8 @@ function save(){
           success: (result) => {
             console.log(result)
             //aggiornamento article
+            let reservations = []
+            reservations = data.bookings
             let newBooking = {}
             newBooking.productId = data._id
             newBooking.clientId = user.email
@@ -233,7 +239,7 @@ function save(){
             newBooking.endDate.day = dayEnd
             newBooking.endDate.month = monthEnd
             newBooking.endDate.year = yearEnd
-            data.bookings.push(newBooking)
+            reservations.push(newBooking)
             $.ajax({
             url:"/api/product/?id=" + data._id,
             method: "POST",
@@ -241,11 +247,11 @@ function save(){
                 "Content-Type": "application/json"
             },
             data: JSON.stringify({
-              bookings: data.bookings
+              bookings: reservations
             }),
             // Risposta del server in caso di successo
             success: (result) => {
-                console.log(result)
+              location.reload(true);
             },
             // Risposta del server in caso di insuccesso
             error: (error) => {

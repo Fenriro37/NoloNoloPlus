@@ -41,11 +41,12 @@ window.onload = function getClient() {
         bookings = result.obj
         console.log(bookings)
         let current = new Date();      
-        current = current.getFullYear() * 10000 + (current.getMonth()+1) * 100 + current.getDate()
+        current = parseInt(current.getFullYear()) * 10000 + parseInt((current.getMonth()+1)) * 100 + parseInt(current.getDate())
+        console.log(current)
         for(let i in bookings){
-          bookingStart = parseInt(bookings[i].startDate.year) * 10000 + parseInt(bookings[i].startDate.month)* 100 + parseInt(bookings[i].startDate.day)
           bookingEnd = parseInt(bookings[i].endDate.year) * 10000 + parseInt(bookings[i].endDate.month) * 100 + parseInt(bookings[i].endDate.day)
-          if(current >= bookingStart  && current <= bookingEnd){
+          console.log(bookingEnd)
+          if(current <= bookingEnd){
             deletable = false
           }
         }
@@ -163,15 +164,6 @@ document.addEventListener('click',function(e){
 
 function remove(){
   console.log('removeUser')
-  let current = new Date();      
-  current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-  for(let i in bookings){
-    let bookingDate = bookings[i].endDate.year + '-' + bookings[i].endDate.month + '-' +  bookings[i].endDate.day
-    console.log(bookingDate)
-    console.log(current)
-    if(bookingDate >= current )  
-      return(alert('Il prodotto ha ancora prenotazioni attive'))
-  }
   $.ajax({
     url: "/api/user?id=" + data._id,
     method: "DELETE",

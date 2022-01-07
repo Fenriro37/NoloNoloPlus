@@ -3,10 +3,12 @@ let article = {}
 let editable
 let boolModify
 
+let dateBeginnig = []
+let dateFinish = []
+
 window.onload = function getClient() {
   var url = window.location.href;
   var id = url.substring(url.lastIndexOf('=') + 1);
-  console.log(id)
   $.ajax({
       url: "/api/reservation?id=" + id,
       method: "GET",
@@ -17,7 +19,12 @@ window.onload = function getClient() {
       success: (result) => {
         data = result.data.obj
         console.log(data)
-
+        dateBeginnig[0] = data.startDate.day
+        dateBeginnig[1] = data.startDate.month
+        dateBeginnig[2] = data.startDate.year
+        dateFinish[0] = data.endDate.day
+        dateFinish[1] = data.endDate.month
+        dateFinish[2] = data.endDate.year
         editable = (data.isTaken) ? false : true
         insertData()  
         //Get product
@@ -89,7 +96,6 @@ function fill(){
 
 
 function modify(){
-  console.log("modify")
 
   $("#myButtons").empty()
   $("#myButtons").append(
@@ -145,11 +151,13 @@ function modify(){
     autoUpdateInput: false,
     showDropdowns: true, 
     isInvalidDate: function(date){
-      for (let i in article.bookings) {								
+      for (let i in article.bookings) {	
+        if(data._id != article.bookings[i].reservationId){
           var from = new Date(article.bookings[i].startDate.month +'-'+article.bookings[i].startDate.day+'-'+article.bookings[i].startDate.year );
           var to = new Date(article.bookings[i].endDate.month +'-'+article.bookings[i].endDate.day+'-'+article.bookings[i].endDate.year);
           var current = new Date(date);					
           if (current >= from && current <= to) return true;
+        }		
       }
     return false
     }  
@@ -166,22 +174,31 @@ $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
 $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
   let block = false
   let dateRange = $(this).val()
+  console.log("-----------")
+  console.log(dateRange)
+  console.log("-----------")
   dateRange = dateRange.replace(/ /g, "")
   dateRange = dateRange.split("-")
   let date1 = dateRange[0]
   let date2 = dateRange[1]
   date1 = date1.split("/")
   date2 = date2.split("/")
+  for(let i in date1){
+    dateBeginnig[i] = date1[i]
+  }
+  for(let i in date2){
+    dateFinish[i] = date2[i]
+  }
   date1 = date1[2] * 10000  + date1[1] * 100 + date1[0]
   date2 = date2[2] * 10000  + date2[1] * 100 + date2[0]
   for(let i in article.bookings){
-    bookingStart = article.bookings[i].startDate.year * 10000 + article.bookings[i].startDate.month * 100 + article.bookings[i].startDate.day
-    bookingEnd = article.bookings[i].endDate.year * 10000 + article.bookings[i].endDate.month * 100 + article.bookings[i].endDate.day
-    if( date1 < bookingStart && bookingEnd < date2 )
-     block = true
+    if(data._id != article.bookings[i].reservationId){
+      bookingStart = article.bookings[i].startDate.year * 10000 + article.bookings[i].startDate.month * 100 + article.bookings[i].startDate.day
+      bookingEnd = article.bookings[i].endDate.year * 10000 + article.bookings[i].endDate.month * 100 + article.bookings[i].endDate.day
+      if( date1 < bookingStart && bookingEnd < date2 )
+       block = true
+    }
   }
-  console.log('changed');
-  console.log(block)
   if(block){
     $("#save").text("seleziona una data valida")
     $("#save").prop("disabled", true)
@@ -221,12 +238,12 @@ $('#returned').change(function() {
 //////////////////////////////////////////////////////////////
 
 function readOnly(){
-  console.log("readOnly")
   if(!boolModify){
     $("form :input").each(function(){
       $(this).prop("readonly", true); 
       $(this).prop("disabled", true);
     });
+    //impedisce la disabilitazione del bottone modifica
     $("#edit").prop("disabled", false)
     
   }
@@ -239,6 +256,11 @@ function readOnly(){
     });
     
     $("#bookingRequest").prop("readonly", true);
+    
+    if(data.available == false){
+      $("#bookingRange").prop("readonly", true);
+    }
+
     if(data.isTaken){
       $("#delete").prop("disabled", true)
     }
@@ -252,7 +274,6 @@ document.addEventListener('click',function(e){
 });
 
 function reset(){
-  console.log('reset')
   $("#myButtons").empty()
   $("#myButtons").append(
   '<button type="button" id="edit" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>'
@@ -269,109 +290,65 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-  //annullare i giorni non validi
-  alert("save")
- /*  let dateModified = false
-  console.log(dateStart)
-  let dayStart, monthStart, yearStart
-  //se non hai modificato la data la tiene nel formato dd/mm/yyyy
-  if(dateStart == data.startDate.year+'-'+data.startDate.month+'-'+data.startDate.day){
-    dayStart = data.startDate.day
-    monthStart = data.startDate.month
-    yearStart = data.startDate.year
+  console.log(dateBeginnig[0] + dateBeginnig[1] + dateBeginnig[2])
+  console.log(dateFinish[0] + dateFinish[1] + dateFinish[2])
+  console.log("----------------------------------")
+  let boolDataChanged = false
+  if(data.startDate.day != dateBeginnig[0] || data.startDate.month != dateBeginnig[1] || data.startDate.year != dateBeginnig[2] ||
+    data.endDate.day != dateFinish[0] || data.endDate.month != dateFinish[1] || data.endDate.year != dateFinish[2]){
+      boolDataChanged = true
   }
-  //se la modifichi è nel formato yyyy/mm/dd
-  else{
-    dateStart = dateStart.split('-')
-    dateModified = true
-    dayStart = dateStart[2]
-    monthStart = dateStart[1]
-    yearStart = dateStart[0]
-  } 
-  //controllare se le due date sono state modificate se sì fare le due chiamate ajax riinserire i dati
-  let dateEnd = $("#bookingEnd").val()
-  let dayEnd, monthEnd, yearEnd
-  if(dateEnd == data.endDate.year +'-'+  data.endDate.month +'-'+  data.endDate.day){
-    dayEnd = data.endDate.day
-    monthEnd = data.endDate.month
-    yearEnd = data.endDate.year
-  }
-  //se la modifichi è nel formato yyyy/mm/dd
-  else{
-    dateModified = true
-    dateEnd = dateEnd.split('-')
-    dayEnd = dateEnd[2]
-    monthEnd = dateEnd[1]
-    yearEnd = dateEnd[0]
-  }  */
-
-/*   $.ajax({
-    url:"/api/reservation?id=" + data._id,
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    data: JSON.stringify({
-      price : $("#price").val(),
-      startDate:{
-        day: dayStart,
-        month: monthStart,
-        year: yearStart,
-      },
-      endDate:{
-        day: dayEnd,
-        month: monthEnd,
-        year: yearEnd,
-      },
-      isTaken : $('#rentalOccurred').is(":checked") ? true : false,
-      isReturned : $('#returned').is(":checked") ? true : false,
-      description : $("#notes").val(),
-      note : $("#privateNotes").val()
-
-    }),
-    // Risposta del server in caso di successo
-    success: (result) => {
-      console.log(result)
-      data.price = $("#price").val()
-      data.startDate.day = dayStart
-      data.startDate.month = monthStart
-      data.startDate.year = yearStart
-      data.endDate.day = dayEnd
-      data.endDate.month = monthEnd
-      data.endDate.year = yearEnd
-      data.isTaken = $('#rentalOccurred').is(":checked") ? true : false
-      data.isReturned = $('#returned').is(":checked") ? true : false
-      data.description = $("#notes").val()
-      data.note = $("#privateNotes").val()
-      alert("modifica riuscita")
-      reset()
-    },
-    // Risposta del server in caso di insuccesso
-    error: (error) => {
-        console.log("Error");
-        alert("Errore. " + error.responseText);
-    }
-	}); 
-  //se abbiamo modificato le date modifichiamo anche la prenotazione sul prodotto
-  if(editable){
-    let article = {}
+  /*if(boolDataChanged){
+    // se abbiamo modificato le date modifichiamo anche la prenotazione sul prodotto
     $.ajax({
-      url:"/api/product?id=" + data.productId,
-      method: "GET",
+      url:"/api/reservation?id=" + data._id,
+      method: "POST",
       headers: {
           "Content-Type": "application/json"
       },
+      data: JSON.stringify({
+        price : $("#price").val(),
+        startDate:{
+          day: dateBeginnig[0],
+          month: dateBeginnig[1],
+          year: dateBeginnig[2],
+        },
+        endDate:{
+          day: dateFinish[0],
+          month: dateFinish[1],
+          year: dateFinish[2],
+        },
+        isTaken : $('#rentalOccurred').is(":checked") ? true : false,
+        isReturned : $('#returned').is(":checked") ? true : false,
+        description : $("#notes").val(),
+        note : $("#privateNotes").val()
+
+      }),
+      // Risposta del server in caso di successo
       success: (result) => {
-        article = result.data.obj.bookings
-        console.log(article)
-        for (let i in article){
-          if(article[i].reservationId == data._id){
-            article[i].startDate.day = dayStart
-            article[i].startDate.month = monthStart
-            article[i].startDate.year = yearStart
-            article[i].endDate.day = dayEnd
-            article[i].endDate.month = monthEnd
-            article[i].endDate.year = yearEnd
+        console.log(result)
+        data.price = $("#price").val()
+        data.startDate.day = dateBeginnig[0]
+        data.startDate.month = dateBeginnig[1]
+        data.startDate.year = dateBeginnig[2]
+        data.endDate.day = dateFinish[0]
+        data.endDate.month = dateFinish[1]
+        data.endDate.year = dateFinish[2]
+        data.isTaken = $('#rentalOccurred').is(":checked") ? true : false
+        data.isReturned = $('#returned').is(":checked") ? true : false
+        data.description = $("#notes").val()
+        data.note = $("#privateNotes").val()
+        
+        let reservations = []
+        reservations = article.bookings
+        for(let i in reservations){
+          if(data._id == reservations[i].reservationId){
+            reservations[i].startDate.day = dateBeginnig[0]
+            reservations[i].startDate.month = dateBeginnig[1]
+            reservations[i].startDate.year = dateBeginnig[2]
+            reservations[i].endDate.day = dateFinish[0]
+            reservations[i].endDate.month = dateFinish[1]
+            reservations[i].endDate.year = dateFinish[2]
           }
         }
         $.ajax({
@@ -381,81 +358,98 @@ function save(){
             "Content-Type": "application/json"
           },
           data: JSON.stringify({
-            bookings : article     
+            bookings : reservations     
           }),
-          success: (result) => {
-            console.log(article)
+          success: () => {
+            console.log("prenotazione modificata")
+            reset()
           },
           error: (error) => {
             console.log("Error");
             alert("Errore. " + error.responseText);
           }
-        });
+        }); 
       },
+      // Risposta del server in caso di insuccesso
       error: (error) => {
           console.log("Error");
           alert("Errore. " + error.responseText);
       }
-    });
+    }); 
+  }
+  //se non abbiamo modificato le date
+  else{
+    $.ajax({
+      url:"/api/reservation?id=" + data._id,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({
+        price : $("#price").val(),
+        isTaken : $('#rentalOccurred').is(":checked") ? true : false,
+        isReturned : $('#returned').is(":checked") ? true : false,
+        description : $("#notes").val(),
+        note : $("#privateNotes").val() 
+      }),
+      success: () => {
+        data.price = $("#price").val()
+        data.isTaken = $('#rentalOccurred').is(":checked") ? true : false
+        data.isReturned = $('#returned').is(":checked") ? true : false
+        data.description = $("#notes").val()
+        data.note = $("#privateNotes").val()
+        console.log("prenotazione modificata")
+        reset()
+      },
+      error: (error) => {
+        console.log("Error");
+        alert("Errore. " + error.responseText);
+      }
+    });  
   }*/
 }
 
-function remove(){
-/*   $.ajax({
-    url: "/api/reservation?id=" + data._id,
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    // Risposta del server in caso di successo
-    success: () => {
-      window.location = "http://localhost:8081/worker/navbar.html?";
-    },
-    // Risposta del server in caso di insuccesso
-    error: (error) => {
-      console.log("Error");
-      alert("Errore. " + error.responseText);
-    }
-  }); */
 
+function remove(){
+  let reservations = []
+  reservations = article.bookings
+  for (let i in reservations){
+    if(reservations[i].reservationId == data._id){
+      reservations.splice(i,1)
+    }
+  }
+  console.log(reservations)
 
   $.ajax({
     url:"/api/product?id=" + data.productId,
-    method: "GET",
+    method: "POST",
     headers: {
-        "Content-Type": "application/json"
+      "Content-Type": "application/json"
     },
-    success: (result) => {
-      let article = {}
-      article = result.data.obj.bookings
-      console.log(result.data.obj)
-      for (let i in article){
-        if(article[i].reservationId == data._id){
-          article.splice(i,1)
-        }
-      }
-      console.log(article)
-      /* $.ajax({
-        url:"/api/product?id=" + data.productId,
-        method: "POST",
+    data: JSON.stringify({
+      bookings : reservations     
+    }),
+    success: () => {
+      $.ajax({
+        url: "/api/reservation?id=" + data._id,
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json"
         },
-        data: JSON.stringify({
-          bookings : article     
-        }),
-        success: (result) => {
-          console.log(article)
+        // Risposta del server in caso di successo
+        success: () => {
+          window.location = "http://localhost:8081/worker/navbar.html?";
         },
+        // Risposta del server in caso di insuccesso
         error: (error) => {
           console.log("Error");
           alert("Errore. " + error.responseText);
         }
-      }); */
+      });
     },
     error: (error) => {
-        console.log("Error");
-        alert("Errore. " + error.responseText);
+      console.log("Error");
+      alert("Errore. " + error.responseText);
     }
-  });
+  });  
 }
