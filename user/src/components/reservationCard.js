@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Accordion } from 'react-bootstrap';
+import { Accordion, Button } from 'react-bootstrap';
 import { UpdateReservation } from './updateReservation';
 
 export class ReservationCard extends React.Component {
@@ -60,14 +60,16 @@ export class ReservationCard extends React.Component {
             </div>
           </Accordion.Header>
           <Accordion.Body>
-            {/* ID prenotazione */}
+            {/* Dati principali prenotazione */}
             <div>
               Identificativo della prenotazione:
               <br/>
               <b>{this.state.reservation._id}</b>
-              <hr/>
+
+              
             </div>
-            {/* Dati prenotazione */}
+            <hr/>
+            {/* Dati secondari prenotazione */}
             <div>
               <div className='row d-flex justify-content-between'>
                 <div className='col-8'>
@@ -117,10 +119,18 @@ export class ReservationCard extends React.Component {
                   {this.state.reservation.description}
                 </div>
               </div>
-              <hr/>
             </div>
+            <hr/>
             {/* Aggiornamento prenotazione */}
-            <UpdateReservation/>
+            {this.state.reservation.isTaken == true ? (
+              <Button
+              className='w-100'
+              disabled>
+                Prenotazione attiva
+              </Button>
+            ) : (
+              <UpdateReservation/>
+            )}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
