@@ -41,11 +41,23 @@ export class UpdateReservation extends React.Component {
         keyboard={false}>
           <Modal.Header
           closeButton>
-            <Modal.Title>Modal title</Modal.Title>
+            <Modal.Title>Modifica prenotazione</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            I will not close if you click outside me. Don't even try to press
-            escape key.
+          ciao
+          {/* {this.state.product.available ? (
+            <MakeReservation
+              bookings={this.state.product.bookings}
+              finalPrice={this.state.product.discount.onSale ? this.state.discountedPrice : this.state.product.price}
+              isAuthenticated={this.state.isAuthenticated}
+              product={this.state.product}/>
+            ) : (
+            <Button
+            disabled={true}
+            className='w-100'>
+              Prodotto non disponibile
+            </Button>
+          )} */}
           </Modal.Body>
           <Modal.Footer>
             <Button
@@ -60,20 +72,7 @@ export class UpdateReservation extends React.Component {
           </Modal.Footer>
         </Modal>
 
-        {/* <div className='mb-2'><b>Prenotazione:</b></div>
-        {this.state.product.available ? (
-          <MakeReservation
-            bookings={this.state.product.bookings}
-            finalPrice={this.state.product.discount.onSale ? this.state.discountedPrice : this.state.product.price}
-            isAuthenticated={this.state.isAuthenticated}
-            product={this.state.product}/>
-          ) : (
-          <Button
-          disabled={true}
-          className='w-100'>
-            Prodotto non disponibile
-          </Button>
-        )} */}
+
       </>
     );
   }

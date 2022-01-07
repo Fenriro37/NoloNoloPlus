@@ -109,7 +109,7 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  Note del cliente:
+                  Dettagli:
                 </div>
               </div>
               <div className='row'>
