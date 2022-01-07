@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Accordion, Button, Modal } from 'react-bootstrap';
+import { Accordion } from 'react-bootstrap';
+import { UpdateReservation } from './updateReservation';
 
 export class ReservationCard extends React.Component {
   constructor(props) {
@@ -13,20 +14,6 @@ export class ReservationCard extends React.Component {
       //   ? (props.product.price * (100 - props.product.discount.onSaleValue) / 100).toFixed(2)
       //   : (props.product.price - props.product.discount.onSaleValue).toFixed(2)
     }
-    this.handleClose = this.handleClose.bind(this);
-    this.handleShow = this.handleShow.bind(this);
-  }
-
-  handleClose() {
-    this.setState({
-      show: false
-    });
-  }
-  
-  handleShow() {
-    this.setState({
-      show: true
-    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -130,56 +117,10 @@ export class ReservationCard extends React.Component {
                   {this.state.reservation.description}
                 </div>
               </div>
+              <hr/>
             </div>
             {/* Aggiornamento prenotazione */}
-
-            <Button
-            variant="primary"
-            onClick={this.handleShow}>
-              Modifica prenotazione
-            </Button>
-
-            <Modal
-            show={this.state.show}
-            onHide={this.handleClose}
-            backdrop="static"
-            keyboard={false}>
-              <Modal.Header
-              closeButton>
-                <Modal.Title>Modal title</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                I will not close if you click outside me. Don't even try to press
-                escape key.
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                variant="secondary"
-                onClick={this.handleClose}>
-                  Close
-                </Button>
-                <Button
-                variant="primary">
-                  Understood
-                </Button>
-              </Modal.Footer>
-            </Modal>
-
-            {/* <div className='mb-2'><b>Prenotazione:</b></div>
-            {this.state.product.available ? (
-              <MakeReservation
-                bookings={this.state.product.bookings}
-                finalPrice={this.state.product.discount.onSale ? this.state.discountedPrice : this.state.product.price}
-                isAuthenticated={this.state.isAuthenticated}
-                product={this.state.product}/>
-              ) : (
-              <Button
-              disabled={true}
-              className='w-100'>
-                Prodotto non disponibile
-              </Button>
-            )} */}
-
+            <UpdateReservation/>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
