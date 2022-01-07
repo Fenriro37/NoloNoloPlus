@@ -15,7 +15,7 @@ export class Filters extends React.Component {
       // props.sort(true);
     } else if(props.type == 'reservation') {
       this.state = {
-        filter1: ['Disponibilità', 'Tutte', 'Attive', 'Concluse'],
+        filter1: ['Disponibilità', 'Tutte', 'Prenotate', 'Attive', 'Concluse'],
         choise1: 1,
         filter2: ['Ordina per', 'Data crescente', 'Data descrescente'],
         choise2: 1
@@ -70,6 +70,20 @@ export class Filters extends React.Component {
                 }}>
                   {this.state.filter1[3]}
                 </Dropdown.Item>
+                {this.props.type == 'reservation' ? (
+                  <Dropdown.Item
+                  active={this.state.choise1 == 4}
+                  onClick={() => {
+                    this.setState({
+                      choise1: 4
+                    });
+                    this.props.show(4);
+                  }}>
+                    {this.state.filter1[4]}
+                  </Dropdown.Item>
+                ) : (
+                  <></>
+                )}
               </Dropdown.Menu>
             </Dropdown>
           </div>
