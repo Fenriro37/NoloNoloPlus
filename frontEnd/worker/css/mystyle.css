@@ -1,7 +1,7 @@
 html {
     height: auto;
     min-height: 100% !important;
-    background-color: #294870;
+    background-color: rgb(201, 201, 238);
 }
 body {
     font-family: tahoma;
@@ -11,12 +11,13 @@ body {
 .container-fluid {
     margin-left: auto;
     margin-right: auto;
-    background-color: rgb(201, 201, 238);
+    background-color: transparent;
 }
-.img-thumbnail {
+.myImg {
     border: 0px;
     display: block;
-    width: 70%;
+    max-height: 100%;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 } 
@@ -89,4 +90,24 @@ background-color: rgb(156, 156, 156); */
     border: thin solid black;
     width:80%;
     margin: auto;
+}
+.delete {
+    float: right
+  }
+#formButtons{
+    visibility: hidden;
+}
+
+/* queste due servono per datepicker jquery ui */
+.relative{
+    position:relative;
+    z-index: 10000 !important; 
+}
+.absolute{
+    position:absolute
+}
+
+/* usato per nascondere select in navbar.html */
+.invisible{
+    display: none;
 }

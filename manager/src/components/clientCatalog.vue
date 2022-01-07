@@ -19,8 +19,6 @@
 </template>
 
 
-
-
 <script>
 import Functions from '../functions/function'
 export default {
