@@ -1,4 +1,9 @@
 let data = {}
+var currentDate = new Date()
+var day = currentDate.getDate()
+var month = currentDate.getMonth() + 1
+var year = currentDate.getFullYear()
+
 window.onload = function getProduct() {
   
     var url = window.location.href;
@@ -59,6 +64,7 @@ $(document).ready(function(){
       ],
       "firstDay": 1
     },
+    minDate: day+'/'+month+'/'+year,
     autoUpdateInput: false,
     showDropdowns: true, 
     isInvalidDate: function(date){
@@ -152,10 +158,6 @@ $('#formId').submit(function (evt) {
 
 function save(){
   
-    let date0 = new Date($('#date-input').val());
-    let dayInput = date0.getDate();
-    let monthInput = date0.getMonth() + 1;
-    let yearInput = date0.getFullYear();
     let dateRange = $("#dateRange").val()
     dateRange = dateRange.replace(/ /g, "")
     dateRange = dateRange.split("-")
@@ -195,9 +197,9 @@ function save(){
             clientName: user.userName,
             clientSurname: user.userSurname,
             bookingDate: {
-              day: dayInput,
-              month: monthInput,
-              year: yearInput 
+              day: day,
+              month: month,
+              year: year  
             },
             startDate: {
               day: dayStart,

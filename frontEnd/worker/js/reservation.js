@@ -1,4 +1,5 @@
 let data = {}
+let article = {}
 let editable
 let boolModify
 
@@ -6,9 +7,8 @@ window.onload = function getClient() {
   var url = window.location.href;
   var id = url.substring(url.lastIndexOf('=') + 1);
   console.log(id)
-  let customUrl = "/api/reservation?id=" + id
   $.ajax({
-      url: customUrl,
+      url: "/api/reservation?id=" + id,
       method: "GET",
       headers: {
           "Content-Type": "application/json"
@@ -17,16 +17,27 @@ window.onload = function getClient() {
       success: (result) => {
         data = result.data.obj
         console.log(data)
-        let today = new Date().toISOString().slice(0, 10)
-        let start = data.startDate.year +'-'+ data.startDate.month +'-'+ data.startDate.day
-        editable = (data.isTaken) ? false : true
-        console.log("today >= start")
-        console.log("today " + today)
-        console.log("startDate " + start)
-        console.log(editable)
-        insertData()
 
-          
+        editable = (data.isTaken) ? false : true
+        insertData()  
+        //Get product
+        $.ajax({
+          url: "/api/product?id=" + data.productId,
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          // Risposta del server in caso di successo
+          success: (result) => {
+            article = result.data.obj
+            console.log(article)  
+          },
+          // Risposta del server in caso di insuccesso
+          error: (error) => {
+            console.log("Error");
+            alert("Errore. " + error.responseText);
+          }
+        }); 
       },
       // Risposta del server in caso di insuccesso
       error: (error) => {
@@ -52,11 +63,9 @@ function fill(){
   $("#price").attr("placeholder", data.price);
   $("#price").val(data.price);
 
-  $("#bookingRequest").attr("placeholder", data.bookingDate.year +'-'+ data.bookingDate.month +'-'+ data.bookingDate.day);
-  $("#bookingRequest").val( data.bookingDate.year +'-'+ data.bookingDate.month +'-'+ data.bookingDate.day);
+  $("#bookingRequest").val( data.bookingDate.day +'/'+ data.bookingDate.month +'/'+ data.bookingDate.year);
 
-  $("#bookingStart").attr("placeholder", data.startDate.year +'-'+ data.startDate.month +'-'+ data.startDate.day);
-  $("#bookingStart").val( data.startDate.year +'-'+ data.startDate.month +'-'+ data.startDate.day);  
+  $("#bookingRange").val( data.startDate.day +'/'+ data.startDate.month +'/'+ data.startDate.year + ' - ' + data.endDate.day +'/'+ data.endDate.month +'/'+ data.endDate.year);
 
   $("#notes").attr("placeholder", data.description);
   $("#notes").val(data.description);
@@ -78,12 +87,13 @@ function fill(){
   }
 }
 
+
 function modify(){
   console.log("modify")
 
   $("#myButtons").empty()
   $("#myButtons").append(
-    '<button class="btn btn-lg btn-success">Salva</button>'+
+    '<button id="save" class="btn btn-lg btn-success">Salva</button>'+
     '<button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>' +
     '<button type="button" id="delete" class="btn btn-lg btn-danger delete" onclick="remove()">Elimina prenotazione</button>'
   )
@@ -91,10 +101,124 @@ function modify(){
     //$("#delete").prop("disabled", true)
     $("#delete").text("Prenotazione non eliminabile")
   }
+  //////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////
+
+  $( "#bookingRange" ).daterangepicker({    
+    "locale": {
+      "format": "DD/MM/YYYY",
+      "separator": " - ",
+      "applyLabel": "Seleziona",
+      "cancelLabel": "Chiudi",
+      "fromLabel": "From",
+      "toLabel": "To",
+      "customRangeLabel": "Custom",
+      "weekLabel": "W",
+      "daysOfWeek": [
+        "Do",
+        "Lu",
+        "Ma",
+        "Me",
+        "Gi",
+        "Ve",
+        "Sa",
+      ],
+      "monthNames": [
+        "Gennaio",
+        "Febbraio",
+        "Marzo",
+        "Aprile",
+        "Maggio",
+        "Giugno",
+        "Luglio",
+        "Agosto",
+        "Settembre",
+        "Ottobre",
+        "Novembre",
+        "Dicembre"
+      ],
+      "firstDay": 1
+    },
+    minDate:  data.bookingDate.day +'/'+ data.bookingDate.month +'/'+ data.bookingDate.year,
+    autoUpdateInput: false,
+    showDropdowns: true, 
+    isInvalidDate: function(date){
+      for (let i in article.bookings) {								
+          var from = new Date(article.bookings[i].startDate.month +'-'+article.bookings[i].startDate.day+'-'+article.bookings[i].startDate.year );
+          var to = new Date(article.bookings[i].endDate.month +'-'+article.bookings[i].endDate.day+'-'+article.bookings[i].endDate.year);
+          var current = new Date(date);					
+          if (current >= from && current <= to) return true;
+      }
+    return false
+    }  
+  });
 
   boolModify = true
   readOnly()
 }
+
+$('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
+  $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+});
+
+$('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
+  let block = false
+  let dateRange = $(this).val()
+  dateRange = dateRange.replace(/ /g, "")
+  dateRange = dateRange.split("-")
+  let date1 = dateRange[0]
+  let date2 = dateRange[1]
+  date1 = date1.split("/")
+  date2 = date2.split("/")
+  date1 = date1[2] * 10000  + date1[1] * 100 + date1[0]
+  date2 = date2[2] * 10000  + date2[1] * 100 + date2[0]
+  for(let i in article.bookings){
+    bookingStart = article.bookings[i].startDate.year * 10000 + article.bookings[i].startDate.month * 100 + article.bookings[i].startDate.day
+    bookingEnd = article.bookings[i].endDate.year * 10000 + article.bookings[i].endDate.month * 100 + article.bookings[i].endDate.day
+    if( date1 < bookingStart && bookingEnd < date2 )
+     block = true
+  }
+  console.log('changed');
+  console.log(block)
+  if(block){
+    $("#save").text("seleziona una data valida")
+    $("#save").prop("disabled", true)
+  }
+  else{
+    $("#save").text("Salva")
+    $("#save").prop("disabled", false)
+  }
+});
+
+$('#rentalOccurred').change(function() {
+	if (this.checked) {
+		//$('label[for=rentalOccurred]').text("Il prodotto è stato ritirato");
+  }
+	if (!this.checked) {
+		//$('label[for=rentalOccurred]').text("Il prodotto non è stato ritirato");
+    //$('label[for=returned]').text("Il prodotto non è stato restituito");
+    $('#returned').prop('checked', false);
+  } 
+})
+
+$('#returned').change(function() {
+	if (this.checked) {
+	  //$('label[for=returned]').text("Il prodotto è stato restituito");
+    //$('label[for=rentalOccurred]').text("Il prodotto è stato ritirato");
+    $('#rentalOccurred').prop('checked', true);
+  }
+	if (!this.checked) {
+		//$('label[for=returned]').text("Il prodotto non è stato restituito");
+  } 
+})
+
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 
 function readOnly(){
   console.log("readOnly")
@@ -147,8 +271,7 @@ $('#formId').submit(function (evt) {
 function save(){
   //annullare i giorni non validi
   alert("save")
-  let dateModified = false
-  let dateStart = $("#bookingStart").val()
+ /*  let dateModified = false
   console.log(dateStart)
   let dayStart, monthStart, yearStart
   //se non hai modificato la data la tiene nel formato dd/mm/yyyy
@@ -180,7 +303,7 @@ function save(){
     dayEnd = dateEnd[2]
     monthEnd = dateEnd[1]
     yearEnd = dateEnd[0]
-  } 
+  }  */
 
 /*   $.ajax({
     url:"/api/reservation?id=" + data._id,
