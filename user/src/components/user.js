@@ -3,6 +3,7 @@ import { Image, Container, Row, Col, Table } from 'react-bootstrap'
 //import 'bootstrap/dist/css/bootstrap.css';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import apiCall from '../services/apiCall'
+import {Header} from './header.js'
 
 export class User extends Component {  
   constructor(props) {
@@ -11,26 +12,11 @@ export class User extends Component {
       userId:"",
       userName:"",
       userSurname:"",
-      userBirthday: {
-        day:"",
-        month:"",
-        year:""
-      },
+      userBirthday: {day:"",month:"",year:""},
       userPhoneNumber:"",
       userEmail:"",
-      userAddress:{
-        street:"",
-        number:"",
-        city:""
-      },
-      userPayment:{
-        cardType:"",
-        cardName:"",
-        cardSurname:"",
-        cardExpireYear:"",
-        cardExpireMonth:"",
-        cardCCV:""
-      },
+      userAddress:{street:"",number:"",city:""},
+      userPayment:{cardType:"",cardName:"",cardSurname:"",cardExpireYear:"",cardExpireMonth:"",cardCCV:""},
       userSex:""
     }
   }
@@ -62,7 +48,10 @@ export class User extends Component {
 
   render() {
     return (
+      <>
+      <Header />
       <Container className="pt-2">
+        <h1>PROVA</h1>
         <Row>
           <Col xs="2">
             <i className="bi bi-person-circle"  alt="Bootstrap" role="img" aria-label="userIcon"></i>
@@ -91,6 +80,7 @@ export class User extends Component {
           </Col>
         </Row>
       </Container>
+      </>
     );
   }
 }
