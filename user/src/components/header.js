@@ -48,7 +48,7 @@ export class Header extends React.Component {
                 placeholder='Cerca... '
                 name='searchInput'
                 className='me-2'
-                aria-label='Cerca prodotti'/>
+                aria-label={this.props.type == 'product' ? 'Cerca prodotti' : 'Cerca prenotazioni'}/>
             </Form>
             <Navbar.Toggle
             style={{

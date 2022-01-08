@@ -9,28 +9,43 @@ import TextField from '@mui/material/TextField';
 import { Button, Modal } from 'react-bootstrap';
 
 import { convertDateToObject, datediff, isInArray, convertToDate } from '../services/functions';
+import ApiCall from '../services/apiCall';
 
 export class UpdateReservation extends React.Component {
   constructor(props) {
     super(props);
-
-    const datesInTime = convertToDate(props.bookings).map((val) => {
-      return val.getTime();
-    });
-
     this.state = {
+      // Date range picker
       value: [null, null],
-      dates: datesInTime,
+      dates: [],
+      bookings: [],
+      // Reservation
+      reservation: props.reservation,
+      dailyPrice: (props.reservation.price / datediff(
+        new Date(
+          props.reservation.startDate.year,
+          props.reservation.startDate.month,
+          props.reservation.startDate.day),
+        new Date(
+          props.reservation.endDate.year,
+          props.reservation.endDate.month,
+          props.reservation.endDate.day
+        ))).toFixed(2),
+      // Modal
       show: false,
-      dailyPrice: 0,
-      reservation: props.reservation
+      loading: true,
+      done: false
     }
-
-    this.disabledDays = this.disabledDays.bind(this);
-    this.checkDateRange = this.checkDateRange.bind(this);
-    // this.bookReservation = this.bookReservation.bind(this);
+    // Modal
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
+    // Date range picker
+    this.disabledDays = this.disabledDays.bind(this);
+    // Update reservation button
+    this.checkDateRange = this.checkDateRange.bind(this);
+    // API call
+    this.updateReservation = this.updateReservation.bind(this);
+    this.deleteReservation = this.deleteReservation.bind(this);
   }
 
   handleClose() {
@@ -67,21 +82,76 @@ export class UpdateReservation extends React.Component {
     return false;
   }
 
+  updateReservation() {
+    console.log('Update reservation');
+    // Modifica della prenotazione
+    ApiCall.postReservation(this.state.reservation._id, {
+      bookingDate: convertDateToObject(new Date()),
+      startDate: convertDateToObject(this.state.value[0]),
+      endDate: convertDateToObject(this.state.value[1]),
+      price: (datediff(this.state.value[0], this.state.value[1]) * this.state.dailyPrice).toFixed(2)
+    }).then(() => {
+      // Aggiornamento delle prenotazioni del prodotto
+      let bookings = this.state.bookings;
+      bookings = bookings.filter((e) => {
+        if(e.reservationId == this.state.reservation._id) {
+          e.startDate = this.state.reservation.startDate;
+          e.endDate = this.state.reservation.endDate;
+        }
+        return true;
+      });
+      ApiCall.postProduct(this.state.reservation.productId, {
+        bookings: bookings
+      }).then(() => {
+        alert('OK');
+      });
+    });
+  }
+
+  deleteReservation() {
+    console.log('Delete reservation');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Convert bookings data to an array of dates where the product is booked
+    let datesInTime = convertToDate(nextProps.bookings).map((val) => {
+      return val.getTime();
+    });
+    // Remove the days of the current booking
+    let removeDate = convertToDate([this.state.reservation]).map((val) => {
+      return val.getTime();
+    });
+    let newDates = datesInTime.filter((e) => {
+      for(let index in removeDate) {
+        if(e == removeDate[index]) {
+          return false;
+        }
+      }
+      return true;
+    });
+    // Set the new dates
+    this.setState({
+      dates: newDates,
+      bookings: nextProps.bookings
+    }); 
+  }
+
   render() {
     return (
       <>
+        {/* Trigger booking editor's modal */}
         <Button
         className='w-100'
         variant="primary"
         onClick={this.handleShow}>
           Modifica prenotazione
         </Button>
-
+        {/* Booking editor's modal */}
         <Modal
         show={this.state.show}
         onHide={this.handleClose}
-        backdrop="static"
-        keyboard={false}>
+        keyboard={false}
+        centered>
           <Modal.Header
           closeButton>
             <Modal.Title>Modifica prenotazione</Modal.Title>
@@ -92,7 +162,6 @@ export class UpdateReservation extends React.Component {
               <LocalizationProvider
               dateAdapter={AdapterDateFns}>
                 <MobileDateRangePicker
-                disabled
                 disablePast
                 shouldDisableDate={this.disabledDays}
                 startText='Data di inizio'
@@ -116,11 +185,29 @@ export class UpdateReservation extends React.Component {
                 inputFormat='dd/MM/yyyy'/>
               </LocalizationProvider>
             </Box>
-            <div>
-              Giorni di noleggio: {(this.state.value[0] && this.state.value[1]) ? datediff(this.state.value[0], this.state.value[1]) : 0 } 
+            <div className='row'>
+              <div className='col-8'>
+                Prezzo giornaliero:
+              </div>
+              <div className='col-4 text-end'>
+                {this.state.dailyPrice} €
+              </div>
             </div>
-            <div>
-              Prezzo totale: {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.price).toFixed(2) : '0.00'} €
+            <div className='row'>
+              <div className='col-8'>
+                Giorni di noleggio:
+              </div>
+              <div className='col-4 text-end'>
+                {(this.state.value[0] && this.state.value[1]) ? datediff(this.state.value[0], this.state.value[1]) : 0 }
+              </div>
+            </div>
+            <div className='row mb-2'>
+              <div className='col-8'>
+                Prezzo totale:
+              </div>
+              <div className='col-4 text-end'>
+                {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.dailyPrice).toFixed(2) : '0.00'} €
+              </div>
             </div>
           </Modal.Body>
           <Modal.Footer
@@ -131,23 +218,19 @@ export class UpdateReservation extends React.Component {
               variant='success'
               onClick={(event) => {
                 event.preventDefault();
-                this.bookReservation();
+                this.updateReservation();
               }}>
-              {this.checkDateRange(this.state.value) ? <span>Prenota ora</span> : <span>Seleziona una data valida</span>}
+              {this.checkDateRange(this.state.value) ? <span>Modifica ora</span> : <span>Seleziona una data valida</span>}
             </Button>
             <Button
-            variant="secondary"
-            onClick={this.handleClose}>
-              Esci
-            </Button>
-            <Button
-            variant="danger">
+            className='w-100'
+            variant="danger"
+            onClick={this.deleteReservation}>
               Cancella prenotazione
             </Button>
           </Modal.Footer>
         </Modal>
-
-
+        {/* Loading modal */}
       </>
     );
   }

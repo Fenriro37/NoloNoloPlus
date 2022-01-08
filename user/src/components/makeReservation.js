@@ -20,22 +20,29 @@ export class MakeReservation extends React.Component {
     });
 
     this.state = {
+      // Date range picker
       value: [null, null],
       dates: datesInTime,
+      // Product
       bookings: props.bookings,
       price: props.finalPrice,
       product: props.product,
+      // Authorization
       isAuthenticated: props.isAuthenticated,
+      // Modal
       show: false,
       loading: true,
       done: false
     }
-
-    this.disabledDays = this.disabledDays.bind(this);
-    this.checkDateRange = this.checkDateRange.bind(this);
-    this.bookReservation = this.bookReservation.bind(this);
+    // Modal
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
+    // Date range picker
+    this.disabledDays = this.disabledDays.bind(this);
+    // Update reservation button
+    this.checkDateRange = this.checkDateRange.bind(this);
+    // API call
+    this.makeReservation = this.makeReservation.bind(this);
   }
 
   handleClose() {
@@ -73,12 +80,7 @@ export class MakeReservation extends React.Component {
     return false;
   }
 
-  bookReservation() {
-    // Controllo delle date
-    if(!this.state.value[0] || !this.state.value[1]) {
-      return alert('Data prenotazione non valida');
-    }
-
+  makeReservation() {
     this.setState({
       loading: true
     });
@@ -165,11 +167,21 @@ export class MakeReservation extends React.Component {
             inputFormat='dd/MM/yyyy'/>
           </LocalizationProvider>
         </Box>
-        <div>
-          Giorni di noleggio: {(this.state.value[0] && this.state.value[1]) ? datediff(this.state.value[0], this.state.value[1]) : 0 } 
+        <div className='row'>
+          <div className='col-8'>
+            Giorni di noleggio:
+          </div>
+          <div className='col-4 text-end'>
+            {(this.state.value[0] && this.state.value[1]) ? datediff(this.state.value[0], this.state.value[1]) : 0 }
+          </div>
         </div>
-        <div>
-          Prezzo totale: {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.price).toFixed(2) : '0.00'} €
+        <div className='row mb-2'>
+          <div className='col-8'>
+            Prezzo totale:
+          </div>
+          <div className='col-4 text-end'>
+            {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.dailyPrice).toFixed(2) : '0.00'} €
+          </div>
         </div>
         {this.state.isAuthenticated ? (
         <Button
@@ -177,7 +189,7 @@ export class MakeReservation extends React.Component {
           className='mt-3 w-100'
           onClick={(event) => {
             event.preventDefault();
-            this.bookReservation();
+            this.makeReservation();
           }}>
           {this.checkDateRange(this.state.value) ? <span>Prenota ora</span> : <span>Seleziona una data valida</span>}
         </Button>

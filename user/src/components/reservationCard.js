@@ -10,13 +10,9 @@ export class ReservationCard extends React.Component {
     super(props);
     this.state = {
       reservation: props.reservation,
-      isAuthenticated: props.isAuthenticated,
       bookings: [],
       show: false,
       status: ''
-      // discountedPrice: props.product.discount.onSaleType
-      //   ? (props.product.price * (100 - props.product.discount.onSaleValue) / 100).toFixed(2)
-      //   : (props.product.price - props.product.discount.onSaleValue).toFixed(2)
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -49,14 +45,8 @@ export class ReservationCard extends React.Component {
     ApiCall.getProduct(this.state.reservation.productId).then((result) => {
       this.setState({
         bookings: result.data.data.obj.bookings
-      })
-    })
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      isAuthenticated: nextProps.isAuthenticated
-    });  
+      });
+    });
   }
 
   render() {
@@ -108,7 +98,7 @@ export class ReservationCard extends React.Component {
             <div>
               <div className='row d-flex justify-content-between'>
                 <div className='col-8'>
-                  Data prenotazione:
+                  <b>Data prenotazione:</b>
                 </div>
                 <div className='col-4 text-end'>
                   {this.state.reservation.bookingDate.day}/
@@ -118,7 +108,7 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
-                  Status:
+                  <b>Status:</b>
                 </div>
                 <div className='col-4 text-end'>
                   <b>{this.state.status}</b>
@@ -126,7 +116,7 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
-                Data di inizio noleggio:
+                <b>Data di inizio noleggio:</b>
                 </div>
                 <div className='col-4 text-end'>
                   {this.state.reservation.startDate.day}/
@@ -136,7 +126,7 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
-                  Data di fine noleggio:
+                <b>Data di fine noleggio:</b>
                 </div>
                 <div className='col-4 text-end'>
                   {this.state.reservation.endDate.day}/
@@ -146,15 +136,15 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
-                  Prezzo totale:
+                <b>Prezzo totale:</b>
                 </div>
                 <div className='col-4 text-end'>
-                  {this.state.reservation.price} €
+                  {parseFloat(this.state.reservation.price).toFixed(2)} €
                 </div>
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  Dettagli:
+                <b>Dettagli:</b>
                 </div>
               </div>
               <div className='row'>

@@ -52,10 +52,18 @@ class ApiCall {
         return http.get('/api/reservation/all' + '?filter=' + filter + '&&sort=' + sort)
     }
 
-    postReservation(reservation) {
-        return http.post('/api/reservation', reservation)
+    postReservation(id, reservation) {
+        if(id == null) {
+            return http.post('/api/reservation', reservation);
+        } else {
+            return http.post('/api/reservation' + '?id=' + id, reservation)
+        }
+        
     }
     
+    deleteReservation(reservation) {
+
+    }
 }
 
 export default new ApiCall();
