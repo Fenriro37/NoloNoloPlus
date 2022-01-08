@@ -14,18 +14,18 @@ export class Price extends React.Component {
       return (
         <div>
           <span style={{ textDecorationLine: 'line-through'}}>
-            <b>Prezzo: </b> {this.state.originalPrice} € <span style={{ fontSize: '0.75em' }}>al giorno</span>
+            <b>Prezzo: </b> {this.state.originalPrice.toFixed(2)} € <span style={{ fontSize: '0.75em' }}>al giorno</span>
           </span>
           <br/>
           <span style={{ color: 'red' }}>
-            <b>Prezzo scontato: </b> {this.state.discountedPrice} € <span style={{ fontSize: '0.75em' }}>al giorno</span>  
+            <b>Prezzo scontato: </b> {this.state.discountedPrice.toFixed(2)} € <span style={{ fontSize: '0.75em' }}>al giorno</span>  
           </span>
         </div>
       );
     } else {
       return (
         <div>
-          <b>Prezzo: </b> {this.state.originalPrice} € <span style={{ fontSize: '0.75em' }}>al giorno</span>
+          <b>Prezzo: </b> {this.state.originalPrice.toFixed(2)} € <span style={{ fontSize: '0.75em' }}>al giorno</span>
         </div>
       );
     }

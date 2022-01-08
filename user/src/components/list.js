@@ -31,10 +31,9 @@ export class List extends React.Component {
         const lista = this.props.elements.map((element) => {
           return (
             <ProductCard
-              key={element._id}
-              product={element}
-              isAuthenticated={this.state.isAuthenticated}
-            />
+            key={element._id}
+            product={element}
+            isAuthenticated={this.state.isAuthenticated}/>
           );
         });
         return (
@@ -47,10 +46,8 @@ export class List extends React.Component {
         const lista = this.props.elements.map((element) => {
           return (
             <ReservationCard
-              key={element._id}
-              reservation={element}
-              isAuthenticated={this.state.isAuthenticated}
-            />
+            key={element._id}
+            reservation={element}/>
           );
         });
         return (

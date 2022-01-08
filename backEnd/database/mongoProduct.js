@@ -36,7 +36,6 @@ exports.productsFind = async function(filter, sortBy) {
     try {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
-        const array = filter.split(' ');
         const re = new RegExp(`${filter}`, 'gi');
         const result = await products.find({
                 $or: [
@@ -190,7 +189,6 @@ exports.productsInsertOne = async function(newProductData) {
 // - error
 //   È il messaggio d'errore.
 exports.productsUpdateOne = async function(id, data) {
-    console.log(data)
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();

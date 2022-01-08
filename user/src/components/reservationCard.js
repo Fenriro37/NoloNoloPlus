@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { Accordion } from 'react-bootstrap';
+import { Accordion, Button } from 'react-bootstrap';
+import ApiCall from '../services/apiCall';
+import { Invoice } from './invoice';
 import { UpdateReservation } from './updateReservation';
 
 export class ReservationCard extends React.Component {
@@ -8,18 +10,43 @@ export class ReservationCard extends React.Component {
     super(props);
     this.state = {
       reservation: props.reservation,
-      isAuthenticated: props.isAuthenticated,
-      show: false
-      // discountedPrice: props.product.discount.onSaleType
-      //   ? (props.product.price * (100 - props.product.discount.onSaleValue) / 100).toFixed(2)
-      //   : (props.product.price - props.product.discount.onSaleValue).toFixed(2)
+      bookings: [],
+      show: false,
+      status: ''
     }
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  handleClose() {
     this.setState({
-      isAuthenticated: nextProps.isAuthenticated
-    });  
+      show: false
+    });
+  }
+  
+  handleShow() {
+    this.setState({
+      show: true
+    });
+  }
+
+  componentDidMount() {
+    let status = ''
+    if(this.state.reservation.isTaken == false && this.state.reservation.isReturned == false) {
+      status = 'Prenotato';
+    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == false) {
+      status = 'Attivo';
+    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == true) {
+      status = 'Concluso';
+    }
+    this.setState({
+      status: status
+    });
+    ApiCall.getProduct(this.state.reservation.productId).then((result) => {
+      this.setState({
+        bookings: result.data.data.obj.bookings
+      });
+    });
   }
 
   render() {
@@ -60,20 +87,20 @@ export class ReservationCard extends React.Component {
             </div>
           </Accordion.Header>
           <Accordion.Body>
-            {/* ID prenotazione */}
+            {/* Dati principali prenotazione */}
             <div>
               Identificativo della prenotazione:
               <br/>
               <b>{this.state.reservation._id}</b>
-              <hr/>
             </div>
-            {/* Dati prenotazione */}
+            <hr/>
+            {/* Dati secondari prenotazione */}
             <div>
               <div className='row d-flex justify-content-between'>
                 <div className='col-8'>
-                  Data prenotazione:
+                  <b>Data prenotazione:</b>
                 </div>
-                <div className='col-4'>
+                <div className='col-4 text-end'>
                   {this.state.reservation.bookingDate.day}/
                   {this.state.reservation.bookingDate.month}/
                   {this.state.reservation.bookingDate.year}
@@ -81,9 +108,17 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
-                Data di inizio noleggio:
+                  <b>Status:</b>
                 </div>
-                <div className='col-4'>
+                <div className='col-4 text-end'>
+                  <b>{this.state.status}</b>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-8'>
+                <b>Data di inizio noleggio:</b>
+                </div>
+                <div className='col-4 text-end'>
                   {this.state.reservation.startDate.day}/
                   {this.state.reservation.startDate.month}/
                   {this.state.reservation.startDate.year}
@@ -91,9 +126,9 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
-                  Data di fine noleggio:
+                <b>Data di fine noleggio:</b>
                 </div>
-                <div className='col-4'>
+                <div className='col-4 text-end'>
                   {this.state.reservation.endDate.day}/
                   {this.state.reservation.endDate.month}/
                   {this.state.reservation.endDate.year}  
@@ -101,15 +136,15 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
-                  Prezzo totale:
+                <b>Prezzo totale:</b>
                 </div>
-                <div className='col-4'>
-                  {this.state.reservation.price} €
+                <div className='col-4 text-end'>
+                  {parseFloat(this.state.reservation.price).toFixed(2)} €
                 </div>
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  Note del cliente:
+                <b>Dettagli:</b>
                 </div>
               </div>
               <div className='row'>
@@ -117,10 +152,25 @@ export class ReservationCard extends React.Component {
                   {this.state.reservation.description}
                 </div>
               </div>
-              <hr/>
             </div>
+            <hr/>
             {/* Aggiornamento prenotazione */}
-            <UpdateReservation/>
+            {this.state.status == 'Prenotato' ? (
+              <UpdateReservation
+              reservation={this.state.reservation}
+              bookings={this.state.bookings}
+              />
+            ) : (
+              this.state.status == 'Attivo' ? (
+                <Button
+                className='w-100'
+                disabled>
+                  Prenotazione attiva
+                </Button>
+              ) : (
+                <Invoice/>
+              )
+            )}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
