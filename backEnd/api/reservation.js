@@ -254,6 +254,7 @@ router.delete('/', async function(req, res) {
         const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
+        let result;
         if(sender.status == -1) {
             return res.status(400).json({
                 message: 'Token non valido.'
@@ -268,24 +269,30 @@ router.delete('/', async function(req, res) {
             } else {
                 // Parametro specificato    
                 result = await myMongoReservation.reservationsDeleteOne(reservationId);
-                if(result.status == 0) {
-                    // OK
-                    return res.status(200).json({
-                        message: result.message,
-                        obj: result.obj
-                    });
-                } else {
-                    // Errore del database
-                    return res.status(400).json({
-                        message: result.message,
-                        error: result.obj
-                    });
-                }
             }
         } else {
-            // È un cliente
+            // Utente che vuole cancellare una prenotazione
+            let reservationClientEmail = (await myMongoReservation.reservationsFindOne(reservationId)).obj?.clientEmail;
+            let reservationClientId = (await myMongoUser.usersFindOne({email: reservationClientEmail})).obj?._id.toString();
+            if(reservationClientId == tokenId) {
+                result = await myMongoReservation.reservationsDeleteOne(reservationId);
+            } else {
+                return res.status(400).json({
+                    message: 'Operazione non autorizzata.'
+                });
+            }
+        }
+        if(result.status == 0) {
+            // OK
+            return res.status(200).json({
+                message: result.message,
+                obj: result.obj
+            });
+        } else {
+            // Errore del database
             return res.status(400).json({
-                message: 'Operazione non autorizzata.'
+                message: result.message,
+                error: result.obj
             });
         }
     } catch(error) {

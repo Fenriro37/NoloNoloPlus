@@ -214,6 +214,7 @@ export class MakeReservation extends React.Component {
               className='d-flex align-items-center'>
                 Effetuo la prenotazione&nbsp;
                 <Spinner
+                variant="primary"
                 animation="border"
                 role="status">
                   <span

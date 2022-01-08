@@ -6,7 +6,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import MobileDateRangePicker from '@mui/lab/MobileDateRangePicker';
 import TextField from '@mui/material/TextField';
 
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Spinner } from 'react-bootstrap';
 
 import { convertDateToObject, datediff, isInArray, convertToDate } from '../services/functions';
 import ApiCall from '../services/apiCall';
@@ -32,9 +32,11 @@ export class UpdateReservation extends React.Component {
           props.reservation.endDate.day
         ))).toFixed(2),
       // Modal
-      show: false,
-      loading: true,
-      done: false
+      showEditModal: false,
+      showLoadingModal: false,
+      loading: false,
+      error: false,
+      isEditing: true
     }
     // Modal
     this.handleClose = this.handleClose.bind(this);
@@ -50,13 +52,13 @@ export class UpdateReservation extends React.Component {
 
   handleClose() {
     this.setState({
-      show: false
+      showEditModal: false
     });
   }
   
   handleShow() {
     this.setState({
-      show: true
+      showEditModal: true
     });
   }
 
@@ -83,7 +85,12 @@ export class UpdateReservation extends React.Component {
   }
 
   updateReservation() {
-    console.log('Update reservation');
+    this.setState({
+      loading: true,
+      showLoadingModal: true
+    });
+    this.handleClose();
+
     // Modifica della prenotazione
     ApiCall.postReservation(this.state.reservation._id, {
       bookingDate: convertDateToObject(new Date()),
@@ -95,21 +102,56 @@ export class UpdateReservation extends React.Component {
       let bookings = this.state.bookings;
       bookings = bookings.filter((e) => {
         if(e.reservationId == this.state.reservation._id) {
-          e.startDate = this.state.reservation.startDate;
-          e.endDate = this.state.reservation.endDate;
+          e.startDate =  convertDateToObject(this.state.value[0])
+          e.endDate = convertDateToObject(this.state.value[1])
         }
         return true;
       });
       ApiCall.postProduct(this.state.reservation.productId, {
         bookings: bookings
       }).then(() => {
-        alert('OK');
+        this.setState({
+          loading: false,
+        });
+      }).catch(() => {
+        this.setState({
+          error: true,
+          loading: false
+        });
       });
     });
   }
 
   deleteReservation() {
-    console.log('Delete reservation');
+    this.setState({
+      isEditing: false,
+      loading: true,
+      showLoadingModal: true
+    });
+    this.handleClose();
+    
+    ApiCall.deleteReservation(String(this.state.reservation._id)).then(() => {
+      let bookings = this.state.bookings;
+      bookings = bookings.filter((e) => {
+        if(e.reservationId == this.state.reservation._id) {
+          return false
+        } else {
+          return true;
+        }
+      });
+      ApiCall.postProduct(this.state.reservation.productId, {
+        bookings: bookings
+      }).then(() => {
+        this.setState({
+          loading: false,
+        });
+      }).catch(() => {
+        this.setState({
+          error: true,
+          loading: false
+        });
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -148,7 +190,7 @@ export class UpdateReservation extends React.Component {
         </Button>
         {/* Booking editor's modal */}
         <Modal
-        show={this.state.show}
+        show={this.state.showEditModal}
         onHide={this.handleClose}
         keyboard={false}
         centered>
@@ -231,6 +273,51 @@ export class UpdateReservation extends React.Component {
           </Modal.Footer>
         </Modal>
         {/* Loading modal */}
+        <Modal
+        show={this.state.showLoadingModal}
+        onHide={this.handleClose}
+        backdrop="static"
+        keyboard={false}
+        centered>
+          <Modal.Body>
+            {this.state.loading ? (
+              <div
+              className='d-flex align-items-center'>
+                Effetuo la {this.state.isEditing ? 'prenotazione.' : 'cancellazione.'}&nbsp;
+                <Spinner
+                variant="primary"
+                animation="border"
+                role="status">
+                  <span
+                  className="visually-hidden">
+                    Caricamento...
+                  </span>
+                </Spinner>
+              </div>
+            ) : (
+              this.state.error ? (
+                <>
+                  Errore durante la {this.state.isEditing ? 'prenotazione.' : 'cancellazione.'} 
+                </>
+              ) : (
+                <>
+                  {this.state.isEditing ? 'Prenotazione modificata.' : 'Cancellazione effettuata.'}
+                </>
+              )              
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+          <Button
+          variant="secondary"
+          onClick={() => {
+            this.setState({ showLoadingModal: false })
+            window.location.reload(false);
+          }}
+          disabled={this.state.loading}>
+            Chiudi
+          </Button>
+        </Modal.Footer>
+        </Modal>
       </>
     );
   }

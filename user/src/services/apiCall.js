@@ -49,20 +49,20 @@ class ApiCall {
     // }
 
     getAllReservation(filter, sort) {
-        return http.get('/api/reservation/all' + '?filter=' + filter + '&&sort=' + sort)
+        return http.get('/api/reservation/all' + '?filter=' + filter + '&&sort=' + sort);
     }
 
-    postReservation(id, reservation) {
+    postReservation(id, data) {
         if(id == null) {
-            return http.post('/api/reservation', reservation);
+            return http.post('/api/reservation', data);
         } else {
-            return http.post('/api/reservation' + '?id=' + id, reservation)
+            return http.post('/api/reservation' + '?id=' + id, data);
         }
         
     }
     
-    deleteReservation(reservation) {
-
+    deleteReservation(reservationId) {
+        return http.delete('/api/reservation?id=' + reservationId);
     }
 }
 
