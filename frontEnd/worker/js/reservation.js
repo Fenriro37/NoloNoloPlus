@@ -52,7 +52,8 @@ window.onload = function getClient() {
       // Risposta del server in caso di insuccesso
       error: (error) => {
         console.log("Error");
-        alert("Errore. " + error.responseText);
+        alert("Pagina non disponibile o inesistente");
+        window.location = "http://localhost:8081/worker/navbar.html?";
       }
   });
 }
@@ -302,7 +303,7 @@ function save(){
     data.endDate.day != dateFinish[0] || data.endDate.month != dateFinish[1] || data.endDate.year != dateFinish[2]){
       boolDataChanged = true
   }
-  /*if(boolDataChanged){
+  if(boolDataChanged){
     // se abbiamo modificato le date modifichiamo anche la prenotazione sul prodotto
     $.ajax({
       url:"/api/reservation?id=" + data._id,
@@ -410,7 +411,7 @@ function save(){
         alert("Errore. " + error.responseText);
       }
     });  
-  }*/
+  }
 }
 
 

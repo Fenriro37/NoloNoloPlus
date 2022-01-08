@@ -22,7 +22,8 @@ window.onload = function getClient() {
       // Risposta del server in caso di insuccesso
       error: (error) => {
         console.log("Error");
-        alert("Errore. " + error.responseText);
+        alert("Pagina non disponibile o inesistente");
+        window.location = "http://localhost:8081/worker/navbar.html?";
       }
   });
   //aggiungere getAllReservation di questo user
@@ -64,7 +65,8 @@ window.onload = function getClient() {
       // Risposta del server in caso di insuccesso
       error: (error) => {
         console.log("Error");
-        alert("Errore. " + error.responseText);
+        alert("Pagina non disponibile o inesistente");
+        window.location = "http://localhost:8081/worker/navbar.html?";
       }
   });
 }

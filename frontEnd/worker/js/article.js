@@ -19,7 +19,8 @@ window.onload = function getProduct() {
         // Risposta del server in caso di insuccesso
         error: (error) => {
             console.log("Error");
-            alert("Errore. " + error.responseText);
+            alert("Pagina non disponibile o inesistente");
+						window.location = "http://localhost:8081/worker/navbar.html?";
         }
     });
 }
@@ -67,12 +68,25 @@ function fill(){
 		)
 	}
 
+	let current = new Date();      
+	current = parseInt(current.getFullYear()) * 10000 + parseInt((current.getMonth()+1)) * 100 + parseInt(current.getDate())
+
+	for(let i in data.bookings){
+		bookingStart = parseInt(data.bookings[i].startDate.year) * 10000 + parseInt(data.bookings[i].startDate.month) * 100 + parseInt(data.bookings[i].startDate.day)
+		if(current <= bookingStart){
+			$('#delete').prop('disabled', true);
+			$('#delete').text('Prenotazioni attive');
+		}
+	}
+
 	if(data.available){
 		$('#flexSwitchCheckDefault').prop('checked', false);
+		$('label[for=flexSwitchCheckDefault]').text("Il prodotto è disponibile");
 	}
 	else{
 		$('#flexSwitchCheckDefault').prop('checked', true);
 		$('#rentProduct').prop('disabled', true);
+		$('label[for=flexSwitchCheckDefault]').text("Il prodotto non è disponibile");
 	}
 
 	//descrizione e note
@@ -80,24 +94,20 @@ function fill(){
 	$("#note").text(data.note)
 
 	//tabella
-	if(data.bookings.length !== 0){
-		for (let i in data.bookings){
-			console.log(data.bookings)
-			console.log(i)
-			$("#myTable").append(
-				'<tr>'+
-				'<td><a href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
-				'<td><a href="reservation.html?id=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
-				'<td>'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
-				'<td>'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
-				'</tr>'
-			)
-		}
+	for (let i in data.bookings){
+		$("#myTable").append(
+			'<tr>'+
+			'<td><a href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
+			'<td><a href="reservation.html?id=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
+			'<td>'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
+			'<td>'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
+			'</tr>'
+		)
 	}
+	
 }
 
 $("#rentProduct").click( function(){
-	let productId =  $("#productidentifier span").text()
 	location.href = "createReservation.html?product="+ data._id;
 });
 
@@ -113,11 +123,13 @@ $(document).ready(function(){
 $('#flexSwitchCheckDefault').change(function() {
 	if (this.checked) {
 		$("#rentProduct").prop("disabled", true);
+		$('label[for=flexSwitchCheckDefault]').text("Il prodotto non è disponibile");
   }
 	if (!this.checked) {
 		$("#rentProduct").prop("disabled", false);
+		$('label[for=flexSwitchCheckDefault]').text("Il prodotto è disponibile");
   } 
-/* 	$.ajax({
+	$.ajax({
     url:"/api/product?id=" + data._id,
     method: "POST",
     headers: {
@@ -127,28 +139,20 @@ $('#flexSwitchCheckDefault').change(function() {
       available : $('#flexSwitchCheckDefault').is(":checked") ? false : true
     }),
     // Risposta del server in caso di successo
-    success: (result) => {
+    success: () => {
+			alert("modifica avvenuta")
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
         console.log("Error");
         alert("Errore. " + error.responseText);
     }
-	});  */
+	});
 })
 
 function remove(){
-	let current = new Date();      
-  current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-  for(let i in data.bookings){
-    let bookingDate = data.bookings[i].endDate.year + '-' + data.bookings[i].endDate.month + '-' +  data.bookings[i].endDate.day
-    console.log(bookingDate)
-    console.log(current)
-    if(bookingDate >= current )  
-      return(alert('Il prodotto ha ancora prenotazioni attive'))
-  }
-	return(alert('Il prodotto è stato cancellato'))
-/*$.ajax({
+
+	$.ajax({
 		url: "/api/product?id=" + data._id,
 		method: "DELETE",
 		headers: {
@@ -163,7 +167,7 @@ function remove(){
 			console.log("Error");
 			alert("Errore. " + error.responseText);
 		}
-	}); */
+	}); 
 }
 
 function getModalData(){
@@ -221,29 +225,77 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-	console.log("save")
-  /*$.ajax({
+	let newTitle = ($("#productName").val() == "") ? data.title : $("#productName").val()
+	let newImage = ($("#imageLink").val() == "") ? data.image : $("#imageLink").val()
+	let newPrice = ($("#productPrice").val() == "") ? data.price : $("#productPrice").val()
+	let newDescription = ($("#productDescription").val() == "") ? data.description : $("#productDescription").val()
+
+	let newTags = []
+  if($("#productTags").val() == "") {
+		newTags =  data.tags
+	} 
+	else {
+		let newLabels = $("#productTags").val()
+		newLabels = newLabels.replace(/,/g, ' ');
+
+		newTags = [...new Set(newLabels.split(/\s+/))];
+		//potrebbe non essere l'ultimo?
+		if(newTags[newTags.length - 1] == '') {
+			newTags.pop()
+		}
+	}
+	let sale, type, value
+	if($("#onSale").is(':checked') == true && 
+	   ($("#discountAmount").is(':checked') == true || $("#discountPercentage").is(':checked') == true) &&
+		 $("#discountValue").val() != ""){
+			sale = true 
+			type = ($("#discountAmount").is(':checked') == true) ? true : false
+			value = $("#discountValue").val() 
+	}
+	else{
+		sale = false 
+		type = false
+		value = ""
+	}
+
+
+
+   $.ajax({
     url:"/api/product?id=" + data._id,
     method: "POST",
     headers: {
         "Content-Type": "application/json"
     },
     data: JSON.stringify({
-      userName: $("#name").val(),
+			title: newTitle,
+			brand: $("#productModel").val(),
+			image: newImage,
+			tags: newTags,
+			price: newPrice,
+			discount:{
+				onSale: sale, 
+				onSaleType: type, 
+				onSaleValue: value
+			},
+			description: newDescription,
+			note: $("#productNote").val(),
+			quality: $("#qualityModal").val(),
+
     }),
     // Risposta del server in caso di successo
     success: (result) => {
         console.log(result)
-        data.title = $("#productName").val()
+        data.title = newTitle
 				data.brand = $("#productModel").val()
-				data.image = $("#imageLink").val()
-				data.price = $("#productPrice").val()
+				data.image = newImage
+				data.price = newPrice
 				data.quality = $("#qualityModal").val()
-				data.discount.onSale = $('#onSale').is(":checked") ? true : false,
-				data.discount.onSaleType = $('#discountAmount').is(":checked") ? true : false,
-				data.discount.onSaleValue = $("#discountValue").val()
 
-				newLabels = $("#productTags").val()
+				data.discount.onSale = sale
+				data.discount.onSaleType = type
+				data.discount.onSaleValue = value
+
+				let newLabels = $("#productTags").val()
 				newLabels = newLabels.replace(/,/g, ' ');
 
         let newTags = [...new Set(newLabels.split(/\s+/))];
@@ -253,7 +305,7 @@ function save(){
         }
 				data.tags = newTags
 
-				data.description = $("#productDescription").val()
+				data.description = newDescription
 				data.note = $("#productNote").val()
 				
 				fill()
@@ -263,7 +315,7 @@ function save(){
         console.log("Error");
         alert("Errore. " + error.responseText);
     }
-	});  */
+	});
 }
 
 //listener per checkbox available
@@ -299,7 +351,6 @@ $('#discountPercentage').change(percentageFlat)
 function percentageFlat() {
 	if (this.checked) {
 		$('#pd').text("%")
-		console.log($('#newPrice').val() != "")
 		let total = $("#productPrice").val()
 		let sale = $('#discountValue').val()
 		let newTotal = total - total * sale / 100; 

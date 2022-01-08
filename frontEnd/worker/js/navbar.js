@@ -16,7 +16,7 @@ window.onload = function login() {
           console.log(result)
           document.cookie = 'jwt=' + result.data;
           //$("#reservationsWrap").hide();
-          getAllReservation("")
+          getAllArticle("")
 
 
           //window.location.href = "http://localhost:8081/user/index.html";
@@ -33,18 +33,21 @@ function changeTextDropdown(val){
     if (val === 0 ){
         $("#searchButton").text("Articoli") 
     }
-    else if(val === 1)
-        $("searchButton").text("Clienti") 
-    else
-        $("searchButton").text("Prenotazioni") 
+    else if(val === 1){
+        $("#searchButton").text("Clienti") 
+    }
+    else{
+        $("#searchButton").text("Prenotazioni") 
+    }
+       
 }
 
 function search(){
     let text = $("#searchText").val();
-    if($(".btn.dropdown-toggle").text() == "Articoli"){
+    if($("#searchButton").text() == "Articoli"){
         getAllArticle(text)
     }
-    else if($(".btn.dropdown-toggle").text() == "Clienti"){
+    else if($("#searchButton").text() == "Clienti"){
         getAllClient(text)
     }
     else{
@@ -193,12 +196,14 @@ function getAllReservation(text){
             $("#catalog").empty()
             reservations = result.obj
             $("#catalog").append(
-            '<button class="btn btn-secondary dropdown-toggle" id="reservationsFilter" type="button" data-bs-toggle="dropdown" aria-expanded="false">Tutte</button>'+
-            '<div class="dropdown-menu dropdown-menu-right">'+
-                '<button class="dropdown-item" type="button" id="all">Tutte</button>'+
-                '<button class="dropdown-item" type="button" id="active">Attive</button>'+
-                '<button class="dropdown-item" type="button" id="old">Concluse</button>'+
-		    '</div>'
+            '<div >'+
+                '<button class="btn btn-secondary dropdown-toggle"  id="reservationsFilter" type="button" data-bs-toggle="dropdown" aria-expanded="false">Tutte</button>'+
+                '<div class="dropdown-menu dropdown-menu-right">'+
+                    '<button class="dropdown-item" type="button" id="all">Tutte</button>'+
+                    '<button class="dropdown-item" type="button" id="active">Attive</button>'+
+                    '<button class="dropdown-item" type="button" id="old">Concluse</button>'+
+                '</div>'+
+            '</div>'
             );
             fillReservation(reservations)
             
