@@ -1,7 +1,6 @@
 <template>
 <div id="app">
   <b-navbar toggleable="lg" type="dark" variant="dark">
-
     <b-col cols='1'>
     </b-col>
 

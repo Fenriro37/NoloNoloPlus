@@ -274,3 +274,105 @@ $(document).ready(function(){
 		});
 	});
 });
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+function search(){
+  let text = $("#searchText").val();
+  if($("#searchButton").text() == "Articoli"){
+      getAllArticle(text)
+  }
+  else if($("#searchButton").text() == "Clienti"){
+      getAllClient(text)
+  }
+  else{
+      getAllReservation(text)
+  }
+
+}
+
+function getAllArticle(text){
+  let query = {
+      filter: text,
+      sort: false
+  }
+  let customUrl = "/api/product/all/?filter=" + query.filter + "&sort=" + query.sort
+
+  $.ajax({
+      url: customUrl,
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      // Risposta del server in caso di successo
+      success: (result) => {
+          console.log(result)
+          $("#main").empty()
+          $("#catalog").empty()
+          let articles = result.data
+          for (let i in articles){
+              $( "#catalog" ).append(
+                  '<div class="d-flex justify-content-center align-items-center">' +
+                      '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+                          '<div class="card-body h-100">' +
+                              '<div class="row h-100">' +
+                                  '<div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ articles[i].image +'></div>' +
+                                  '<div class="col-7 text-truncate" style="height:100%;">'+
+                                      '<h2><a href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> '+ 
+                                      '<div id="price' +i+ '"></div>' +
+                                      '<span id="star' +i+ '"></span>'+
+                                  '</div>' +
+                              '</div>'+
+                          '</div>'+
+                      '</div>'+
+                  '</div>'
+              );  
+              //prezzo
+              if(articles[i].discount.onSale){
+                  let newPrice
+                  if(articles[i].discount.onSaleType){
+                      newPrice = articles[i].price - articles[i].discount.onSaleValue;
+                  }
+                  else{
+                      newPrice = articles[i].price - articles[i].price * articles[i].discount.onSaleValue / 100;
+                  }
+                  $("#price"+ i).append(
+                      '<span class="price"><s>' +articles[i].price+'€  </s><span>' +newPrice+ '€</span></span>'
+                  )
+              }
+              else{
+                  $("#price"+ i).append(
+                      '<span class="price">' +articles[i].price+'€<span>'
+                  )
+              }
+              //stelle
+              let j;
+              for ( j = 0; j < articles[i].quality; j++){
+                  $("#star" + i).append(
+                      '<span class="bi bi-star-fill checked big-size"</span>'
+                  )
+              }
+              for (j = 0; j < 3 - articles[i].quality; j++){
+                  $("#star" + i).append(
+                      '<span class="bi bi-star big-size"</span>'
+                  )
+              }
+          }             
+          //window.location.href = "http://localhost:8081/user/index.html";
+      },
+      // Risposta del server in caso di insuccesso
+      error: (error) => {
+          console.log("Error");
+          alert("Errore. " + error.responseText);
+      }
+  });
+}

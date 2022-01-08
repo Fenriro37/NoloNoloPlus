@@ -1,6 +1,6 @@
 <template>
 
-  <div  class="container-fluid " >
+  <b-col  class="container-fluid " >
     <h1> Account </h1>
 
     <b-row>
@@ -201,7 +201,7 @@
 
 
     <b-button type="button" class="btn btn-lg btn-danger delete" @click="deleteUser">Elimina cliente</b-button>
-  </div >
+  </b-col >
 </template>
 
 <script>
