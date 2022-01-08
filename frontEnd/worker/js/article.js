@@ -369,3 +369,11 @@ function calculateDiscount(){
 		$('#newPrice').val(newTotal)
 	}
 }
+/////////////////////////////////
+////////////////////////////////////
+//////////////////////////////////
+document.addEventListener('click',function(e){
+  if(e.target && e.target.id== 'searchButton'){
+    $("#main").empty()
+  }
+});

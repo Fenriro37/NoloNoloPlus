@@ -15,7 +15,6 @@ window.onload = function login() {
       success: (result) => {
           console.log(result)
           document.cookie = 'jwt=' + result.data;
-          //$("#reservationsWrap").hide();
           getAllArticle("")
 
 
@@ -29,25 +28,25 @@ window.onload = function login() {
   });
 }
 
-function changeTextDropdown(val){
+ function changeTextDropdown(val){
     if (val === 0 ){
-        $("#searchButton").text("Articoli") 
+        $("#dropNavBar").text("Articoli") 
     }
     else if(val === 1){
-        $("#searchButton").text("Clienti") 
+        $("#dropNavBar").text("Clienti") 
     }
     else{
-        $("#searchButton").text("Prenotazioni") 
+        $("#dropNavBar").text("Prenotazioni") 
     }
        
 }
 
-function search(){
+ function search(){
     let text = $("#searchText").val();
-    if($("#searchButton").text() == "Articoli"){
+    if($("#dropNavBar").text() == "Articoli"){
         getAllArticle(text)
     }
-    else if($("#searchButton").text() == "Clienti"){
+    else if($("#dropNavBar").text() == "Clienti"){
         getAllClient(text)
     }
     else{
@@ -56,7 +55,7 @@ function search(){
 
 }
 
-function getAllArticle(text){
+ function getAllArticle(text){
     let query = {
         filter: text,
         sort: false
@@ -132,7 +131,7 @@ function getAllArticle(text){
     });
 }
       
-function getAllClient(text){
+ function getAllClient(text){
     let query = {
         filter: text,
         sort: false
@@ -177,7 +176,7 @@ function getAllClient(text){
     });
 }
 
-function getAllReservation(text){
+ function getAllReservation(text){
     let query = {
         filter: text,
         sort: false
@@ -216,7 +215,7 @@ function getAllReservation(text){
     });   
 }
 
-function fillReservation(data){
+ function fillReservation(data){
     for(let i in data) {
         $("#catalog").append(
         '<div id="'+i+'" class="d-flex justify-content-center align-items-center">' +
@@ -236,6 +235,7 @@ function fillReservation(data){
         );  
     };
 }
+
 
 document.addEventListener('click',function(e){
     if(e.target && e.target.id== 'all'){

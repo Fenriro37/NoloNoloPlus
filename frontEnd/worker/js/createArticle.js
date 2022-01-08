@@ -1,3 +1,6 @@
+//serve solo per sovrascrivere la funzione login di navbar.js
+window.onload = function hello(){}
+
 //listener per checkbox available
 $('#available').change(function() {
 	if (this.checked) {
@@ -136,3 +139,12 @@ function save() {
 		}
 	}); 
 }
+
+/////////////////////////////////
+////////////////////////////////////
+//////////////////////////////////
+document.addEventListener('click',function(e){
+  if(e.target && e.target.id== 'searchButton'){
+    $("#main").empty()
+  }
+});
