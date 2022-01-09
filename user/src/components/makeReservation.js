@@ -107,7 +107,7 @@ export class MakeReservation extends React.Component {
         note: ''
       }
       // Aggiunge la prenotazione
-      ApiCall.postReservation(reservation).then((PostReservationResult) => {
+      ApiCall.postReservation(null, reservation).then((PostReservationResult) => {
         // Modifica delle prenotazioni del prodotto
         let newBooking = {
           productId: this.state.product._id,
@@ -125,7 +125,12 @@ export class MakeReservation extends React.Component {
             loading: false,
             done: true
           });
-        }); 
+        }).catch(() => {
+          this.setState({
+            loading: false,
+            done: false
+          });
+        });
       });
     });
   }
@@ -180,7 +185,7 @@ export class MakeReservation extends React.Component {
             Prezzo totale:
           </div>
           <div className='col-4 text-end'>
-            {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.dailyPrice).toFixed(2) : '0.00'} €
+            {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.price).toFixed(2) : '0.00'} €
           </div>
         </div>
         {this.state.isAuthenticated ? (
