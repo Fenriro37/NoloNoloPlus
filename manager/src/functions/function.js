@@ -11,6 +11,7 @@ class Functions {
                 plainTextPassword: "1234567890"
             }
         );
+        console.log("AUTH");
         return result;
     }
 

@@ -13,9 +13,11 @@ import reservationCatalog from "./components/reservationCatalog.vue";
 import chart from "./components/chart.vue"
 
 Vue.use(Router);
+let ur = "http://localhost:8081/manager"
+let url = "http://localhost:8081/manager/index.html";
 
 export default new Router({
-  mode: "history",
+  mode: "hash",
   routes: [
     {
       path: "/home",
