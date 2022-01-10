@@ -1,52 +1,118 @@
-import { Component} from "react"
-import { Image, Container, Row, Col, Table } from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from "react"
 
-export class Reservation extends Component{
+import Cookie from 'js-cookie';
+
+import ApiCall from "../services/apiCall";
+import { Header } from "./header";
+import { List } from "./list";
+
+export class Reservation extends React.Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      reservations: [],
+      filteredReservations: [],
+      isAuthenticated: false
+    }
+    this.searchReservations = this.searchReservations.bind(this);
+    this.showReservations = this.showReservations.bind(this);
+    this.sortReservations = this.sortReservations.bind(this);
+  }
+
+  // Functions called by header, rendered by List
+
+  searchReservations(filter) {
+    console.log('searchReservations(' + filter + ')');
+    ApiCall.getAllReservation(filter, true).then((result) => {
+      this.setState({
+        reservations: result.data.obj,
+        filteredReservations: result.data.obj
+      });
+    });
+  }
+
+  showReservations(type) {
+    // type == 1: all products
+    // type == 2: not started
+    // type == 2: active
+    // type == 3: closed
+    console.log('showReservations(' + type + ')');
+    let reservations = [];
+    if(type > 1) {
+      for(let index in this.state.reservations) {
+        switch(type) {
+          case 2:
+            if(this.state.reservations[index].isTaken == false && this.state.reservations[index].isReturned == false) {
+              reservations.push(this.state.reservations[index]);
+            }
+            break;
+          case 3:
+            if(this.state.reservations[index].isTaken == true && this.state.reservations[index].isReturned == false) {
+              reservations.push(this.state.reservations[index]);
+            }
+            break;
+          case 4:
+            if(this.state.reservations[index].isTaken == true && this.state.reservations[index].isReturned == true) {
+              reservations.push(this.state.reservations[index]);
+            }
+            break;
+          default:
+            return
+        }
+      }
+    } else {
+      reservations = this.state.reservations;
+    }
+    this.setState({
+      filteredReservationss: reservations
+    });
+  }
+
+  sortReservations(isIncreasing) {
+    console.log('sortReservations(' + isIncreasing + ')');
+    let reservations = this.state.reservations;
+    reservations.sort((a, b) => {
+      return new Date(a.bookingDate.year, a.bookingDate.month, a.bookingDate.day,) - new Date(b.bookingDate.year, b.bookingDate.month, b.bookingDate.day);
+    });
+    if(isIncreasing == false) {
+      reservations.reverse();
+    }
+    this.setState({
+      reservations: reservations,
+      filteredReservation: reservations
+    });
+  }
+
+  componentDidMount() {
+    this.searchReservations('');
+    if(Cookie.get('jwt')) {
+      ApiCall.getUser().then(() => {
+        this.setState({
+          isAuthenticated: true
+        });
+      }).catch(() => {
+        this.setState({
+          isAuthenticated: false
+        });
+      });
+    }
+  }
+
 	render() {
 		return (
-			<> 
-			<div>
-				<Container className="mt-2">
-					<Row>
-						<Col sm="12" md="6">
-							<Image thumbnail src={this.props.prenotazione.image} alt={this.props.prenotazione.productTitle} width="100%"/>
-						<hr />
-						</Col>
-						<Col sm="12" md="6">
-								<div>
-									<h2>{this.props.prenotazione.productTitle} - {this.props.prenotazione.productBrand}</h2>
-								</div>
-							<Table bordered hover>
-								<tbody>
-									<tr>
-										<td>Product Id:</td>
-										<td>{this.props.prenotazione.productId}</td>
-									</tr>
-									<tr>
-										<td>Booking Date:</td>
-										<td>{this.props.prenotazione.bookingDate.year}-{this.props.prenotazione.bookingDate.month}-{this.props.prenotazione.bookingDate.day}</td>
-									</tr>
-									<tr>
-										<td>Start Date:</td>
-										<td>{this.props.prenotazione.startDate.year}-{this.props.prenotazione.startDate.month}-{this.props.prenotazione.startDate.day}</td>
-									</tr>
-									<tr>
-										<td>End Date:</td>
-										<td>{this.props.prenotazione.endDate.year}-{this.props.prenotazione.endDate.month}-{this.props.prenotazione.endDate.day}</td>
-									</tr>
-									<tr className="font-weight-bold">
-										<td>Total Price:</td>
-										<td>{this.props.prenotazione.price}€</td>
-									</tr>
-								</tbody>
-							</Table>
-						</Col>
-					</Row>
-				</Container>
-			</div> 
-			</>
+      <>
+        <Header
+        type='reservation'
+        search={this.searchReservations}
+        show={this.showReservations}
+        sort={this.sortReservations}
+        isAuthenticated={this.state.isAuthenticated}/>
+        <List
+        type='reservation'
+        elements={this.state.filteredReservations}
+        isAuthenticated={this.state.isAuthenticated}/>
+      </>
 		);
 	}
 }

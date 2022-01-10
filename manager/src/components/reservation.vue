@@ -192,7 +192,7 @@
         this.bookedArticles.identifier = result.data.data.obj.productId 
         this.bookedArticles.title = result.data.data.obj.productTitle 
         this.bookedArticles.brand = result.data.data.obj.productBrand
-        this.bookedArticles.image = result.data.data.obj.image 
+        this.bookedArticles.image = result.data.data.obj.productImage 
         this.bookedArticles.price = result.data.data.obj.price
 
         this.bookingRequest = result.data.data.obj.bookingDate.year + '-' + result.data.data.obj.bookingDate.month + '-' + result.data.data.obj.bookingDate.day

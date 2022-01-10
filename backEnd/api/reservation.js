@@ -99,7 +99,7 @@ router.get('/', async function(req, res) {
 //   È l'errore.
 router.get('/all', async function(req, res) {
     console.log('GET /api/reservation/all');
-    try {
+    // try {
         const token = jwt.verify(req.cookies['jwt'], config.JSONWebTokenKey)
         const sender = await myMongoAuth.auth({ '_id': ObjectId(token.id) });
         if(sender.status == -1) {
@@ -109,7 +109,7 @@ router.get('/all', async function(req, res) {
         } else if(sender.status >= 0) {
             // È un cliente o funzionario/manager
             if(req.query.filter != null && req.query.sort != null) {
-                const result = await myMongoReservation.reservationsFind(token, req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
+                const result = await myMongoReservation.reservationsFind(token, sender.status, req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
                 if(result.status == 0) {
                     // OK
                     return res.status(200).json({
@@ -135,12 +135,12 @@ router.get('/all', async function(req, res) {
                 message: 'Operazione non autorizzata.'
             });
         }
-    } catch(error) {
-        return res.status(400).json({
-            message: 'Errore di GET /api/reservation/all',
-            error: error
-        })
-    }
+    // } catch(error) {
+    //     return res.status(400).json({
+    //         message: 'Errore di GET /api/reservation/all',
+    //         error: error
+    //     })
+    // }
 });
 
 // POST /api/reservation

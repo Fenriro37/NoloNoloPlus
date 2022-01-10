@@ -6,7 +6,7 @@
     <div  v-for="reservation in reservations" :key="reservation._id">
       <b-row>
         <b-col cols="3">
-          <b-img thumbnail fluid v-bind:src="reservation.productImage"  alt="Immagine articolo"></b-img>
+          <b-img thumbnail fluid v-bind:src="reservation.productImage"  alt="Image"></b-img>
         </b-col>
         <b-col cols="6">
           <h2>Id prenotazione:<router-link :to="{name: 'reservation', params: {id: reservation._id}}">{{reservation._id}}</router-link></h2>
