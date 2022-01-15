@@ -167,6 +167,10 @@
         note: '',
       }
     },
+    created(){
+      console.log("dddd")
+      
+    },
     methods: {
       changeSale(){
         this.onSale = !this.onSale

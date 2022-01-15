@@ -1,36 +1,55 @@
 <template>
 <div id="app">
-<nav class="navbar navbar-dark bg-dark">
-	<a href="/worker/navbar.html">
-		<img src='https://cdn.discordapp.com/attachments/888778821262790686/926860373775249469/nolonoloplus.png' class="moveright" alt='logo NoloNoloPlus' height='40px'/>
-	</a>
+  <nav class="navbar navbar-dark bg-dark">
+    <a href="/manager/index.html">
+      <img src='https://cdn.discordapp.com/attachments/888778821262790686/926860373775249469/nolonoloplus.png' class="moveright" alt='logo NoloNoloPlus' height='40px'/>
+    </a>
 
-
-	<div class="input-group ">
-		<button class="btn btn-secondary dropdown-toggle" id="dropNavBar" type="button" data-bs-toggle="dropdown" aria-expanded="false">Articoli</button>
+    <div class="input-group ">
+		<button class="btn btn-secondary dropdown-toggle" id="dropNavBar" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{selected}}</button>
 		<div class="dropdown-menu dropdown-menu-right">
-			<button class="dropdown-item" type="button" onclick="changeTextDropdown(0)">Articoli</button>
-			<button class="dropdown-item" type="button" onclick="changeTextDropdown(1)">Clienti</button>
-			<button class="dropdown-item" type="button" onclick="changeTextDropdown(2)">Prenotazioni</button>
+			<button class="dropdown-item" type="button" v-on:click="selected = 'Articoli'">Articoli</button>
+			<button class="dropdown-item" type="button" v-on:click="selected = 'Clienti'">Clienti</button>
+			<button class="dropdown-item" type="button" v-on:click="selected = 'Prenotazioni'">Prenotazioni</button>
 		</div>
-		<input id="searchText" type="text" class="form-control" placeholder="Cerca..." aria-label="Recipient's username" aria-describedby="button-addon2">
-		<button class="btn btn-secondary" type="button" id="searchButton" onclick="search()">Cerca</button>
+		<input id="searchText" type="text" v-model="request" class="form-control" placeholder="Cerca..." aria-label="Recipient's username" aria-describedby="button-addon2">
+		<button class="btn btn-secondary" type="button" id="searchButton" v-on:click="search()">Cerca</button>
 	</div>
 
-	<button class="navbar-toggler moveleft" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+    <button class="navbar-toggler moveleft" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-</nav>
+  </nav>
 
-<div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
-	<div class="bg-dark p-2">
-	<p class="">Login/Logout</p>
-  <router-link to="/createArticle"  >Aggiungi articolo</router-link>
-	</div>
-</div>
+  <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
+    <div class="bg-dark p-2">
+    <p class="">Login/Logout</p>
+    <router-link to="/createArticle">Aggiungi articolo</router-link>
+    <br>
+    <router-link to="/chart"  >Grafici</router-link>
+    </div>
+  </div>
 
-<router-view :key="$route.fullPath"></router-view>
+  <!-- Articoli -->
+  <template v-if="choice == 0">
+    <Article :filter="request"/>
+  </template>
+
+  <!-- Clienti --> 
+  <template v-else-if="choice == 1">
+    <Client :filter="request"/>
+  </template>
+
+  <!-- Prenotazioni -->
+  <template v-else-if="choice == 2">
+    <Reservation :filter="request"/>
+  </template>
+
+  <!-- Tutti gli altri components -->
+  <template  v-else-if="choice == 3">
+    <router-view :key="$route.fullPath"></router-view>
+  </template>
 
 </div>
 </template>
@@ -42,79 +61,45 @@
 import Functions from './functions/function'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap";
+import Article from './components/articleCatalog'
+import Client from './components/clientCatalog'
+import Reservation from './components/reservationCatalog';
 
 export default {
     data() {
       return {
-        articles: [],
-        search: '',
-        selected: 'article',
-        options: [
-          { value: 'article', text: 'Articoli' },
-          { value: 'client', text: 'Clienti' },
-          { value: 'reservation', text: 'Prenotazioni' },
-        ]       
+        catalog: [],
+        request: '',
+        selected: 'Articoli',
+        choice: 0     
       }
+    },
+    components: {
+      Article,
+      Client,
+      Reservation
     },
     created(){
       Functions.loginAsWorker()
+
+      console.log("ccccc")
       
     },
-
-
+    methods: {
+      search(){
+        if(this.selected == 'Articoli')
+          this.choice = 0;
+        else if(this.selected == 'Clienti')
+          this.choice = 1;
+        else
+          this.choice = 2;
+      }
+    }
   }
 
 
 
 /*
-<template>
-<div id="app">
-  <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-col cols='1'>
-    </b-col>
-
-    <b-col cols='6'>
-      <b-input-group class="noborder">
-        <b-form-select v-model="selected" :options="options"></b-form-select>
-        <b-form-input id="ricerca" placeholder="Search..." v-model="search"></b-form-input>
-        <b-button @click="$router.push({name: selected + 'Catalog', params: {filter: search}}).catch(()=>{});">Click to Navigate</b-button>
-      </b-input-group>
-    </b-col>
-
-    <b-col cols='1'>
-    </b-col>
-
-    <template>
-      <div>
-        <b-button id="burgerButton" v-b-toggle.sidebar-right><b-img id="burger" src="https://icon-library.com/images/hamburger-menu-icon-png/hamburger-menu-icon-png-2.jpg"></b-img></b-button>
-        <b-sidebar id="sidebar-right" title="Operazioni" right shadow>
-          <template #default="{ hide }">
-            <div class="p-3">
-              <nav class="mb-3">
-                <b-nav vertical>
-                  <router-link to="/home" class="nav-link" >Home</router-link>
-                  <router-link to="/createArticle" class="nav-link" >Aggiungi articolo</router-link>
-                  <router-link :to="{name: 'chart', params: {products: articles}}" class="nav-link"  >Grafici</router-link>
-
-                  <a>Login/Logout</a>
-                </b-nav>
-              </nav>
-              <b-button variant="primary" block @click="hide">Close Sidebar</b-button>
-            </div>
-          </template>
-        </b-sidebar>
-      </div>
-    </template>
-
-  </b-navbar>
-  <router-view :key="$route.fullPath"></router-view>
-
-</div>
-</template>
-
-
-
-
 
 <style>
 html {
