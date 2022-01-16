@@ -1,7 +1,7 @@
 import React, { Component } from "react"
-import { Image, Container, Row, Col, Table } from 'react-bootstrap'
-//import 'bootstrap/dist/css/bootstrap.css';
-//import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import apiCall from '../services/apiCall'
 import {Header} from './header.js'
 
@@ -26,10 +26,8 @@ export class User extends Component {
       this.setState({
         userId: result.data.data._id,
         userName: result.data.data.userName,
-        userSurname: result.data.data.userName,
+        userSurname: result.data.data.userSurname,
         userBirthday: result.data.data.birthday,
-        //userBirthday.month: result.data.data.birthday.month,
-        //userBirthday.year: result.data.data.birthday.year,
         userPhoneNumber: result.data.data.phoneNumber,
         userEmail: result.data.data.email,
         userAddress: result.data.data.address,
@@ -51,36 +49,21 @@ export class User extends Component {
       <>
       <Header type={"user"}/>
       <Container className="pt-2">
-        <h1>PROVA</h1>
-        <Row>
-          <Col xs="2">
-            <i className="bi bi-person-circle"  alt="Bootstrap" role="img" aria-label="userIcon"></i>
-          </Col>
-          <Col xs="9">
-            <Table bordered hover>
-              <tbody>
-                <tr>
-                  <td>User Id:</td>
-                  <td>{this.state.userId}</td>
-                </tr>
-                <tr>
-                  <td>User:</td>
-                  <td>{this.state.userName} {this.state.userSurname}</td>
-                </tr>
-                <tr>
-                  <td>Birthday:</td>
-                  <td>{this.state.userBirthday.year}-{this.state.userBirthday.month}-{this.state.userBirthday.day}</td>
-                </tr>
-                <tr>
-                  <td>Phone Number:</td>
-                  <td>{this.state.userPhoneNumber}</td>
-                </tr>
-              </tbody>
-            </Table>        
-          </Col>
-        </Row>
+        sasa
       </Container>
       </>
     );
   }
 }
+
+/*
+<i className="bi bi-person-circle"  style={{fontSize:'4rem'}} alt="Bootstrap" role="img" aria-label="userIcon"></i>
+<Row>
+  <Col>
+    <h6>{this.state.userName} {this.state.userSurname} 
+    <Button variant="primary" size="sm">
+      <i class="bi bi-pencil-square"></i>
+    </Button></h6>
+    <hr />
+  </Col>
+</Row>*/
