@@ -272,7 +272,7 @@ function save(){
       // Risposta del server in caso di insuccesso
       error: (error) => {
           console.log("Error");
-          alert("Errore. " + error.responseText);
+          alert("La mail non esiste");
       }
     });   
 }

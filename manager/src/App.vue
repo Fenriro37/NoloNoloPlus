@@ -84,13 +84,17 @@ export default {
       var currentLocation = window.location;
       console.log(currentLocation.href)
       let shortUrl = currentLocation.href.slice(0, 59);
+      let urlArticle = currentLocation.href.slice(0, 49);
+      let urlClient = currentLocation.href.slice(0, 48);
+      let urlReservation = currentLocation.href.slice(0, 53);
       console.log(shortUrl)
       if(currentLocation == 'http://localhost:8081/manager/index.html#/createArticle' ||
-        shortUrl == 'http://localhost:8081/manager/index.html#/createReservation'){
-          console.log("auss")
+        shortUrl == 'http://localhost:8081/manager/index.html#/createReservation' ||
+        urlArticle == 'http://localhost:8081/manager/index.html#/article' ||
+        urlClient == 'http://localhost:8081/manager/index.html#/client' ||
+        urlReservation == 'http://localhost:8081/manager/index.html#/reservation' ){
         this.choice = 3
         }
-
     },
 
     methods: {

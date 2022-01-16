@@ -172,12 +172,7 @@
       },
       changeType(){ 
           this.onSaleType = !this.onSaleType 
-          if(!this.onSaleType){
-            this.newTotal = this.price - this.price *this.onSaleValue / 100
-          }
-          else {
-            this.newTotal = this.price - this.onSaleValue;
-          }
+          this.newPrice()
       },
 
       createArticle(){

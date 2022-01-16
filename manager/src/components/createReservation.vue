@@ -1,149 +1,116 @@
 <template>
-  <div class="container-fluid">
-    <h1> Aggiungi prenotazione </h1>
+<div class="container-fluid d-flex justify-content-center" id="main">
+  <div class="w-50">
+    <form name="myform" id="formId" @submit.prevent="createReservation"> 
 
-    <b-row>
-      <b-col cols="3" >
-        <p> *email cliente:</p>
-      </b-col>
-      <b-col cols="9">
-         <b-form-input  type="text" v-model="email" required></b-form-input>
-      </b-col>
-    </b-row>
+      <h1 class="mb-4"> Aggiungi prenotazione </h1>
 
-    <b-row>
-      <b-col cols="3" >
-        <p> *ID Articolo:</p>
-      </b-col>
-      <b-col cols="9" >
-         <b-form-input  type="text" v-model="articleId" readonly></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" v-model="email" id="email" aria-label="Recipient's email" aria-describedby="basic-addon1" required>
+        <label for="email"> Email cliente*</label>
+      </div>
 
-    <b-row>
-      <b-col cols="3" >
-        <p> *Data richiesta prenotazione:</p>
-      </b-col>
-      <b-col cols="9" >
-         <b-form-datepicker v-model="reservationDate" required></b-form-datepicker>
-      </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col cols="3">
-        <p> *Data inizio noleggio</p>
-      </b-col>
-      <b-col cols="9" >
-         <b-form-datepicker v-model="reservationStart" :date-disabled-fn="dateDisabled"  required></b-form-datepicker>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" v-model="articleId" id="articleId" aria-label="Recipient's email" aria-describedby="basic-addon1" disabled >
+        <label for="articleId"> ID articolo*</label>
+      </div>
   
-    <b-row>
-      <b-col cols="3" >
-        <p> *Data fine noleggio:</p>
-      </b-col>
-      <b-col cols="9" >
-         <b-form-datepicker v-model="reservationEnd" :date-disabled-fn="dateDisabled" required></b-form-datepicker>
-      </b-col>
-    </b-row>
+      <div class="row mb-3">
+        <div class="col-3">
+          <label for="date" class="mr-3">Periodo Prenotazione* </label>
+        </div>
+        <div class="col-9">
+          <date-picker :input-attr="{required: 'true'}" id="date" v-model="time" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
+        </div>
+      </div>
 
-    <b-row>
-      <b-col cols="3" >
-        <p> Ritiro:</p>
-      </b-col>
-      <b-col cols="1">
-        <b-form-checkbox
-          v-model="rentalOccurred"
-          @click="changeRentalOccured"
-          required
-        >          
-        </b-form-checkbox>
-        </b-col>
-        <b-col cols="3">
-          <p v-if="rentalOccurred">L'articolo è stato ritirato</p>
-          <p v-else>L'articolo non è stato ritirato</p>
-        </b-col>
-    </b-row>
+      <div class="row">
+        <div class="col-3">
+          <p> Ritiro:</p>
+        </div>
+        <div class="col-9">
+          <div class=" form-check">
+            <input type="checkbox" v-model="rentalOccurred" @click="changeRentalOccured" class="form-check-input" id="rentalOccurred">
+            <label v-if="rentalOccurred" class="form-check-label" for="rentalOccurred">Il prodotto è stato ritirato</label>
+            <label v-else class="form-check-label" for="rentalOccurred">Il prodotto non è stato ritirato</label>
+          </div>
+        </div>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <p> Restituzione:</p>
-      </b-col>
-      <b-col cols="1">
-        <b-form-checkbox
-          v-model="returned"
-          @click="changeReturned"
-          required
-        >          
-        </b-form-checkbox>
-      </b-col>
-      <b-col cols="3">
-        <p v-if="returned">L'articolo è stato restituito</p>
-        <p v-else>L'articolo non è stato restituito</p>
-      </b-col>
-    </b-row>
+      <div class="row">
+        <div class="col-3">
+          <p> Restituzione:</p>
+        </div>
+        <div class="col-9">
+          <div class=" form-check">
+            <input type="checkbox" v-model="returned" @click="changeReturned" class="form-check-input" id="returned">
+            <label v-if="returned" class="form-check-label" for="returned">Il prodotto è stato restituito</label>
+            <label v-else class="form-check-label" for="returned">Il prodotto non è stato restituito</label>
+          </div>
+        </div>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <p> *Prezzo:</p>
-      </b-col>
-      <b-col cols="9">
-        <b-form-input v-model="price" type="number"  min="1" required></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="number" v-model="price" min="1" step="1" class="form-control" id="price" aria-label="Recipient's price" aria-describedby="basic-addon4" required>
+        <label for="price"> Prezzo*</label>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <p> Descrizione:</p>
-      </b-col>
-      <b-col cols="9">
-        <b-form-input v-model="notes" type="text" ></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text"  v-model="notes" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" >
+        <label for="notes"> Descrizione</label>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <p> Note (non visibili ai clienti):</p>
-      </b-col>
-      <b-col cols="9">
-        <b-form-input v-model="privateNotes" type="text" required></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-4">
+        <input type="text" v-model="privateNotes" class="form-control" id="privateNotes" aria-label="Recipient's privateNotes" aria-describedby="basic-addon6" >
+        <label for="privateNotes">  Note (non visibili ai clienti)</label>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-         <b-button variant="success" @click="createReservation">Salva</b-button>
-      </b-col>
+      <div class="row">
+        <div class="col-6">
+          <button type="submit" class="btn btn-lg btn-success" id="save">Salva</button>
+        </div>
 
-      <b-col cols="3">
-         <b-button variant="danger" @click="cancel" >Annulla</b-button>
-      </b-col>
-    </b-row>
- 
-    
+        <div class="col-6">
+          <button type="button" id="clear" class="btn btn-lg btn-danger delete" @click="cancel">Annulla</button>
+        </div>
+      </div> 
+
+    </form>  
   </div>
+</div>
+
 </template>
 
 <script>
   import Functions from '../functions/function'
+  import DatePicker from 'vue2-datepicker';
+  import 'vue2-datepicker/index.css';
   export default {
     name: "create-article", 
+    components: { DatePicker },
     data() {
       return {
 
         email: '',
         articleId: '',
         price:' ',
-        bookings: [],
-
-        reservationDate:'',
-        reservationStart:'',
-        reservationEnd:'',
+        article: {},
 
         rentalOccurred: false,             //avvenuto noleggio (booleano)
         returned: false,               //avvenuta restituzione (booleano)
         notes:'',                //note 1 (dettagli sul prezzo o altro)                        
-        privateNotes:''                //note 2 (dettagli non visibili al cliente)
+        privateNotes:'',               //note 2 (dettagli non visibili al cliente)
+
+        time: null,
+        lang: {
+          formatLocale: {
+            firstDayOfWeek: 1,
+            months: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Augosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+            monthsShort: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
+            weekdaysMin: ['Do','Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa', ],
+          },
+          monthBeforeYear: false,
+        },
       }
     },
 
@@ -151,146 +118,119 @@
       this.articleId = this.$route.params.id
       this.price = (this.$route.params.price) ? this.$route.params.price : ""
       Functions.getProduct(this.articleId).then((result) => {
-        this.bookings = result.data.data.obj.bookings
+        this.article = result.data.data.obj
+        console.log(this.article)
       })
     },
 
     methods: {
       changeRentalOccured(){
-        this.rentalOccurred = !this.rentalOccurred;
+        if(!this.rentalOccurred)
+          this.rentalOccurred = true 
+        else
+          this.rentalOccurred = false
+          this.returned = false
       },
 
       changeReturned(){
-        this.returned = !this.returned;
+        if(!this.returned){
+          this.returned = true
+          this.rentalOccurred = true 
+        }
+        else
+          this.returned = false
       },
 
       createReservation(){
-        //controllare date prezzo e campi non vuoti
         let query = {};
-        
-        if(this.email == ''){ return (alert('Il campo mail non può essere vuoto'))}
-        else query.clientEmail = this.email;
-
-        if(this.articleId == ''){return(alert('Il campo ID articolo non può essere vuoto'))}
-        else query.productId = this.articleId;
-
-        if(this.price == ''){return (alert('Il campo prezzo non può essere vuoto'))}
-        if(this.price < 0){return(alert("Il prezzo deve essere maggiore di '0'"))}
-        else query.price = this.price;
-
-        if(this.reservationDate == ''){return(alert('Il campo Data richiesta di prenotazione non può essere vuoto'))}
-        else{
-          query.bookingDate = {}
-          query.bookingDate.day = this.reservationDate.charAt(8) + this.reservationDate.charAt(9)
-          query.bookingDate.month = this.reservationDate.charAt(5) + this.reservationDate.charAt(6)
-          query.bookingDate.year = this.reservationDate.charAt(0) + this.reservationDate.charAt(1) + this.reservationDate.charAt(2) + this.reservationDate.charAt(3)
-        } 
-
-        if(this.reservationStart == ''){return(alert('Il campo Data inizio prenotazione non può essere vuoto'))}
-        else{
-          query.startDate = {}
-          query.startDate.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
-          query.startDate.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)
-          query.startDate.year = this.reservationStart.charAt(0) + this.reservationStart.charAt(1) + this.reservationStart.charAt(2) + this.reservationStart.charAt(3)
-        } 
-
-        if(this.reservationDate > this.reservationStart){return(alert("La data di prenotazione non può essere superiore al primo giorno di noleggio"))}
-
-        if(this.reservationEnd == ''){return(alert('Il campo Data fine prenotazione non può essere vuoto'))}
-        else{
-          query.endDate = {}
-          query.endDate.day = this.reservationEnd.charAt(8) + this.reservationEnd.charAt(9)
-          query.endDate.month = this.reservationEnd.charAt(5) + this.reservationEnd.charAt(6)
-          query.endDate.year = this.reservationEnd.charAt(0) + this.reservationEnd.charAt(1) + this.reservationEnd.charAt(2) + this.reservationEnd.charAt(3)
-        } 
-        if(this.reservationStart > this.reservationEnd){return(alert("La data di inizio noleggio non può essere superiore al ritiro"))}
-        let bookingStart
-        let bookingEnd
-        for(let i in this.bookings){
-          bookingStart = this.bookings[i].startDate.year + '-' + this.bookings[i].startDate.month + '-' + this.bookings[i].startDate.day
-          bookingEnd = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' + this.bookings[i].endDate.day
-          if(this.reservationStart < bookingStart && bookingEnd < this.reservationEnd )
-            return (alert("Nel periodo selezionato il prodotto non può essere affittato"))
-        }
+        query.clientEmail = this.email;
+        query.productId = this.articleId;
+        query.price = this.price;
         query.isTaken = this.rentalOccurred;
         query.isReturned = this.returned;
         query.description = this.notes;
         query.note = this.privateNotes;
+      
+        let day = this.time[0].getDate()
+        let month = this.time[0].getMonth()+1
+        let year = this.time[0].getFullYear()
+        let day1 = this.time[1].getDate()
+        let month1 = this.time[1].getMonth()+1
+        let year1 = this.time[1].getFullYear()
+        const today = new Date();
+        query.bookingDate = {}
+        query.bookingDate.day = today.getDate()
+        query.bookingDate.month = today.getMonth()+1
+        query.bookingDate.year = today.getFullYear()
+        query.startDate = {}
+        query.startDate.day = day
+        query.startDate.month = month
+        query.startDate.year = year
+        query.endDate = {}
+        query.endDate.day = day1
+        query.endDate.month = month1
+        query.endDate.year = year1
+        query.productTitle = this.article.title
+        query.productBrand =  this.article.brand
+        query.productImage = this.article.image
 
-        //invio dati
-        //Get user e get article per fottermi i dati da aggiungere a query
-        
-        //Aggiorniamo l'array delle prenotazioni del prodotto
-        Functions.addReservation(query)
+        Functions.getUser(this.email, 1)
         .then( (result) => {
+          console.log('GETUSER')
           console.log(result)
-          let reservationIdentifier = result.data.data._id
-          Functions.getProduct(this.articleId)
-          .then( (result) =>{
-            console.log("GetProduct")
+          query.clientName = result.data.data.userName
+          query.clientSurname = result.data.data.userSurname
+          console.log(query)
+          Functions.addReservation(query)
+          .then( (result) => {
             console.log(result)
-            query.productTitle = result.data.data.obj.title
-            query.productBrand = result.data.data.obj.brand
-            query.image = result.data.data.obj.image
-            let queryBooking = {};
             let newBookings = {};
             newBookings.id = this.articleId
             newBookings.clientId = this.email
-            newBookings.reservationId = reservationIdentifier
+            newBookings.reservationId =  result.data.data._id
             newBookings.startDate = {}
-            newBookings.startDate.day = this.reservationStart.charAt(8) + this.reservationStart.charAt(9)
-            newBookings.startDate.month = this.reservationStart.charAt(5) + this.reservationStart.charAt(6)
-            newBookings.startDate.year = this.reservationStart.charAt(0) + this.reservationStart.charAt(1) + this.reservationStart.charAt(2) + this.reservationStart.charAt(3)
+            newBookings.startDate.day = day
+            newBookings.startDate.month = month
+            newBookings.startDate.year = year
             newBookings.endDate = {}
-            newBookings.endDate.day = this.reservationEnd.charAt(8) + this.reservationEnd.charAt(9)
-            newBookings.endDate.month = this.reservationEnd.charAt(5) + this.reservationEnd.charAt(6)
-            newBookings.endDate.year = this.reservationEnd.charAt(0) + this.reservationEnd.charAt(1) + this.reservationEnd.charAt(2) + this.reservationEnd.charAt(3)
-            queryBooking.bookings = result.data.data.obj.bookings
-            queryBooking.bookings.push(newBookings)
-
-            Functions.saveDataProduct(this.articleId, queryBooking)
-            //this.email
-            Functions.getUser(this.email, 1)
-            .then( (result) => {
-              console.log('GETUSER')
-              console.log(result)
-              query.clientName = result.data.data.userName
-              query.clientSurname = result.data.data.userSurname
-              Functions.saveReservation(reservationIdentifier, query).then( ()  =>{
+            newBookings.endDate.day = day1
+            newBookings.endDate.month = month1
+            newBookings.endDate.year = year1
+            let query = {}
+            query.bookings = this.article.bookings
+            query.bookings.push(newBookings)
+            Functions.saveDataProduct(this.articleId, query)
+            .then( ()  =>{
               this.cancel();
               alert("Creazione riuscita")       
-              })
-            })       
+            })   
           })
+        }, (error) => {
+          alert("La mail non esiste");
         })
       },
 
       cancel(){
+        this.time = null;
         this.email =  '';
-        this.articleId =  '';
-        this.reservationDate = '';
-        this.reservationStart = '';
-        this.reservationEnd = '';
         this.rentalOccurred =  false;
         this.returned =  false;
-        this.price = '';
         this.notes = '';
         this.privateNotes = '';
       },
 
-      dateDisabled(ymd, date) {         
-        //for all bookings 
-        const day = date.getDate()
-        const month = date.getMonth() + 1
-        const year = date.getFullYear() 
-        for(let i in this.bookings){
-          if(year >= this.bookings[i].startDate.year && year <= this.bookings[i].endDate.year && 
-            month >= this.bookings[i].startDate.month && month <= this.bookings[i].endDate.month && 
-            day >=  this.bookings[i].startDate.day && day <= this.bookings[i].endDate.day)
+      dateDisabled(date) {         
+        const today = new Date();
+        if(date < today)
+          return true
+
+        for(let i in this.article.bookings){
+          let start =  new Date(this.article.bookings[i].startDate.year, this.article.bookings[i].startDate.month -1, this.article.bookings[i].startDate.day) 
+          let end = new Date(this.article.bookings[i].endDate.year, this.article.bookings[i].endDate.month -1, this.article.bookings[i].endDate.day) 
+
+          if(start <= date && date <= end) 
             return true
-        } 
-        // Return `true` if the date should be disabled
-        //return (year >= 2021 && year <= 2021 && month >= 11 && month <= 12 && day >= 19 && day <= 21)     
+        }   
         return false  
       }
     },
