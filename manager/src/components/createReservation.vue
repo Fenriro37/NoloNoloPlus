@@ -149,7 +149,7 @@
 
     created(){
       this.articleId = this.$route.params.id
-      this.price = this.$route.params.price
+      this.price = (this.$route.params.price) ? this.$route.params.price : ""
       Functions.getProduct(this.articleId).then((result) => {
         this.bookings = result.data.data.obj.bookings
       })

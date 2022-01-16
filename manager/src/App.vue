@@ -25,7 +25,7 @@
   <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
     <div class="bg-dark p-2">
     <p class="">Login/Logout</p>
-    <router-link to="/createArticle">Aggiungi articolo</router-link>
+    <router-link @click.native="childEvent" :to="{ path: '/createArticle'}">Aggiungi articolo</router-link>
     <br>
     <router-link to="/chart"  >Grafici</router-link>
     </div>
@@ -33,17 +33,17 @@
 
   <!-- Articoli -->
   <template v-if="choice == 0">
-    <Article :filter="request"/>
+    <Article :filter="request" @clicked="childEvent" />
   </template>
 
   <!-- Clienti --> 
   <template v-else-if="choice == 1">
-    <Client :filter="request"/>
+    <Client :filter="request" @clicked="childEvent"/>
   </template>
 
   <!-- Prenotazioni -->
   <template v-else-if="choice == 2">
-    <Reservation :filter="request"/>
+    <Reservation :filter="request" @clicked="childEvent"/>
   </template>
 
   <!-- Tutti gli altri components -->
@@ -80,11 +80,19 @@ export default {
       Reservation
     },
     created(){
-      Functions.loginAsWorker()
+      Functions.loginAsWorker()  
+      var currentLocation = window.location;
+      console.log(currentLocation.href)
+      let shortUrl = currentLocation.href.slice(0, 59);
+      console.log(shortUrl)
+      if(currentLocation == 'http://localhost:8081/manager/index.html#/createArticle' ||
+        shortUrl == 'http://localhost:8081/manager/index.html#/createReservation'){
+          console.log("auss")
+        this.choice = 3
+        }
 
-      console.log("ccccc")
-      
     },
+
     methods: {
       search(){
         if(this.selected == 'Articoli')
@@ -93,51 +101,12 @@ export default {
           this.choice = 1;
         else
           this.choice = 2;
+      },
+      childEvent () {
+          this.choice = 3 // someValue
       }
     }
   }
-
-
-
-/*
-
-<style>
-html {
-    height: auto;
-    min-height: 100% !important;
-    background-color: #294870;
-}
-body {
-    font-family: tahoma;
-    background-color: transparent;
-    height: 100%;
-}
-.container-fluid {
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgb(201, 201, 238);
-}
-.checked {
-    color: orange;
-    border-color: rgb(0, 0, 0);
-    border-width: 0.5em;
-}
-.big-size {
-    transform: scale(1.4);
-    margin-right: 0.5em;
-}
-
-#burgerButton{
-  width: 30%;
-  height: 10%;
-}
-
-#burger{ 
-  width: 100%;
-  height: 100%;
-}
-</style>
-*/
 </script>
 
 <style>
@@ -164,77 +133,35 @@ body {
     margin-left: auto;
     margin-right: auto;
 } 
-/* padding: 0.5em;
-background-color: rgb(156, 156, 156); */
-.input-group {
-    margin-left: auto;
-    margin-right: auto;
-    width: 60%;
-}
+
 .checked {
     color: orange;
     border-color: rgb(0, 0, 0);
     border-width: 0.5em;
 }
-.price {
-    font-size: x-large;
-}
-
-.input-group-text {
-    width: 2.5em;
-}
-#myDDButton {
-    background-color: hsl(0, 0%, 82%);
-}
 .big-size {
     transform: scale(1.4);
     margin-right: 0.5em;
 }
-.badge {
-    font-size: medium;
-    margin-right: 0.125em;
+
+.price {
+    font-size: x-large;
 }
-.btn-lg {
-    margin-right: 0.5em;
-    margin-bottom: 0.5rem;
-}
-#onSalePrice {
-    color: rgb(232, 38, 38);
-}
-.form-switch {
-    margin-left: 7.2em;
-}
-.custom-switch {
-    margin-right: 0.5em;
-}
-#rentProduct {
-    color: black;
-    background-color: rgb(254, 165, 45);
-    border-color: rgb(254, 165, 45);
+
+.input-group {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
 }
 
 #burgerButton{
     width: 30%;
     height: 10%;
-  }
+}
   
 #burger{ 
     width: 100%;
     height: 100%;
-  }
-
-
-.heigt-group{
-    height: 2em;
-}
-
-#formButtons{
-    visibility: hidden;
-}
-
-/* usato per nascondere select in navbar.html */
-.invisible{
-    display: none;
 }
 
 /* css navbar*/
@@ -243,21 +170,7 @@ background-color: rgb(156, 156, 156); */
 }
 .moveright{
     margin-left: 40px;
-}
-
-.navbar-toggler{
-    width: 40px;
-    height: 40px;
-    padding: 0;
-}
-
-
-/* creazione articolo*/
-.delete {
-    float: right;
-    margin: 0;
-  }
-  
+} 
 
 </style>
 

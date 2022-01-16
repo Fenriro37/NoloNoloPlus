@@ -22,10 +22,11 @@ export default new Router({
   routes: [
     {
       path: "/createArticle",
+      name: "createArticle",
       component: createArticle
     },
     {
-      path: "/createReservation",
+      path: "/createReservation:id",
       name: "createReservation",
       component: createReservation
     },

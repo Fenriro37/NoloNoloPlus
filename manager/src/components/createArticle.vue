@@ -1,148 +1,122 @@
 <template>
-  <div class="container-fluid">
-    <h1> Aggiungi articolo </h1>
+<div class="container-fluid d-flex justify-content-center">
+	<div class="w-50">
+		<form name="myform" @submit.prevent="createArticle"> 
+			<h1 class="mb-4"> Aggiungi articolo </h1>
 
-    <b-row>
-      <b-col cols="3" >
-        <p> *Titolo:</p>
-      </b-col>
-      <b-col cols="9">
-         <b-form-input  type="text" v-model="title"></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+				<input type="text" class="form-control" v-model="title" aria-label="Recipient's title" aria-describedby="basic-addon1" required>
+				<label for="title"> Titolo*</label>
+			</div>
 
-    <b-row>
-      <b-col cols="3" >
-        <p> *Brand:</p>
-      </b-col>
-      <b-col cols="9" >
-         <b-form-input  type="text" v-model="brand"></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+				<input type="text" class="form-control" v-model="brand" aria-label="Recipient's brand" aria-describedby="basic-addon2">
+				<label for="brand"> Brand </label>
+			</div>
 
-    <b-row>
-      <b-col cols="3" >
-        <p> *Immagine (Inserisci URL):</p>
-      </b-col>
-      <b-col cols="9" >
-         <b-form-input  type="url" v-model="image"></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+				<input type="url" class="form-control" v-model="image" aria-label="Recipient's image" aria-describedby="basic-addon3" required>
+				<label for="image"> Immagine* (Inserisci URL)</label>
+			</div>
 
-    <b-row>
-      <b-col cols="3">
-        <p> *Etichette (separare con spazio o virgola):</p>
-      </b-col>
-      <b-col cols="9" >
-         <b-form-input  type="text" v-model="tags"></b-form-input>
-      </b-col>
-    </b-row>
-  
-    <b-row>
-      <b-col cols="3" >
-        <p> *Qualità:</p>
-      </b-col>
-      <b-col cols="9" >
-        <b-form-input v-model="quality" type="number" min="1" max="3" step="1"></b-form-input>
-      </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col cols="3" >
-        <p> *Prezzo:</p>
-      </b-col>
-      <b-col cols="9" >
-        <b-form-input v-model="price" type="number" min="1" step="1"></b-form-input>
-      </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col cols="3" >
-        <p> Sconto:</p>
-      </b-col>
-      <b-col cols="1">
-        <b-form-checkbox
-          v-model="onSale"
-          @click="changeSale"
-        >          
-        </b-form-checkbox>
-        </b-col>
-        <b-col cols="3">
-          <p v-if="onSale">L'articolo verrà scontato</p>
-          <p v-else>L'articolo non è scontato</p>
-        </b-col>
-    </b-row>
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" v-model="tags" aria-label="Recipient's tags" aria-describedby="basic-addon4"> 
+				<label for="tags"> Etichette (separare con spazio o virgola)</label>
+			</div>
     
-    <template v-if="onSale">
-      <b-row>
-        <b-col cols="3">
-          <p> Tipo di sconto:</p>
-        </b-col>
-        <b-col cols="3">      
-         <b-form-radio v-model="onSaleType"  value="A">Percentuale</b-form-radio> 
-        </b-col>        
-        <b-col cols="3">
-          <b-form-radio v-model="onSaleType"  value="B">Fisso</b-form-radio>
-        </b-col>
-      </b-row> 
-    <b-row>
-      <b-col cols="3" >
-        <p> Valore sconto:</p>
-      </b-col>
-      <b-col cols="9">
-        <b-form-input v-model="onSaleValue" type="number" min="1" step="1"></b-form-input>
-      </b-col>
-    </b-row>
-    </template>
+      <div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" max="3" step="1" v-model="quality" aria-label="Recipient's quality" aria-describedby="basic-addon5" required>
+				<label for="quality"> Qualità*</label>
+			</div>
 
-    <b-row>
-      <b-col cols="3">
-        <p> Disponibilità:</p>
-      </b-col>
-      <b-col cols="1">
-        <b-form-checkbox
-          v-model="available"
-          :checked="available"
-          @click="changeAvailable"
-        >          
-        </b-form-checkbox>
-      </b-col>
-      <b-col cols="3">
-        <p v-if="available">L'articolo sarà disponibile</p>
-        <p v-else>L'articolo non sarà disponile</p>
-      </b-col>
-    </b-row>
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" v-model="price" v-on:keyup="newPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<label for="price"> Prezzo*</label>
+			</div>
 
-    <b-row>
-      <b-col cols="3">
-        <p> *Descrizione:</p>
-      </b-col>
-      <b-col cols="9">
-        <b-form-input v-model="description" type="text"></b-form-input>
-      </b-col>
-    </b-row>
+			<div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" v-model="onSale"  @click="changeSale">
+						<label class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+      
+      <template v-if="onSale">
+        <div id="saleInfo" class="mt-2">
+          <div class="row">
+            <div class="col-3"><p> Tipo di sconto:</p></div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :value="false" v-model="onSaleType" :checked="!onSaleType" @click="changeType" id="percentage" required>
+                <label class="form-check-label" for="percentage">Percentuale</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio"  :value="true" v-model="onSaleType" @click="changeType"  id="flat" required>
+                <label class="form-check-label" for="flat">Fisso</label>
+                <span> {{ onSaleType }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3"> <p> Valore sconto:</p>	</div>
+            <div class="col-9">
+            <input type="number" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice" id="saleValue" aria-label="saleValue" aria-describedby="basic-addon6" required>
+            </div>
+          </div>
+          <div class="row mt-2 mb-2">
+            <div class="col-3">Prezzo scontato:</div>
+            <div class="col-9">
+              <input type="number" class="form-control"  v-model="newTotal" id="newValue" aria-label="SalePrice" aria-describedby="basic-addon6" disabled>
+          </div>
+        </div>
+      </template>
 
-    <b-row>
-      <b-col cols="3">
-        <p> Note (non visibili ai clienti):</p>
-      </b-col>
-      <b-col cols="9">
-        <b-form-input v-model="note" type="text"></b-form-input>
-      </b-col>
-    </b-row>
+      <template v-else>
+      </template>
 
-    <b-row>
-      <b-col cols="3">
-        <b-button variant="success" @click="createArticle">Salva</b-button>
-      </b-col>
+			<div class="row mb-3">
+				<div class="col-3">
+					<label><b>Disponibilità:</b></label>
+				</div>
+				<div class="col-9">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" v-model="available" :checked="available" @click="changeAvailable">
+						<label class="form-check-label" for="available" v-if="available">L'articolo sarà disponibile</label>
+            <label class="form-check-label" for="available" v-else>L'articolo non sarà disponile</label>
+					</div>
+				</div>
+			</div>
 
-      <b-col cols="3">
-        <b-button variant="danger" @click="cancel" >Annulla</b-button>
-      </b-col>
-    </b-row>
- 
-    
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" v-model="description" aria-label="Recipient's description" aria-describedby="basic-addon8" required>
+				<label for="description"> Descrizione*</label>
+			</div>
+			<div class="form-floating mb-4">
+				<input type="text" class="form-control" v-model="note" aria-label="Recipient's note" aria-describedby="basic-addon9">
+				<label for="note"> Note (non visibili ai clienti)</label>
+			</div>
+
+			<div class="row mb-5">
+				<div class="col-6">
+					<button type="submit" class="btn btn-lg btn-success" >Salva</button>
+				</div>
+
+				<div class="col-6">
+					<button type="reset" class="btn btn-lg btn-danger delete" @click="cancel">Annulla</button>
+				</div>
+			</div>
+
+		</form> 
   </div>
+</div>
 </template>
 
 <script>
@@ -160,39 +134,65 @@
         
         onSale: false,
         onSaleType: false,
-        onSaleValue: '',
+        onSaleValue: 1,
 
-        available: true,
+        newTotal: '',
+
+        available: false,
         description: '',
         note: '',
       }
     },
-    created(){
-      console.log("dddd")
-      
-    },
+
     methods: {
+      print(){
+        console.log(this.onSaleType)
+      },
       changeSale(){
-        this.onSale = !this.onSale
+        if(this.onSale){
+          this.onSale = false
+          this.onSaleType = false
+          this.onSaleValue = 1
+        }
+        else
+          this.onSale = true
       },
       changeAvailable(){
         this.available = !this.available
+      },
+
+      //fare qualcosa tipo onkeyup per price e discount e funzione per radio forse una sola da assegnare a tutti e 4
+      newPrice(){  
+          if(!this.onSaleType){
+            this.newTotal = this.price - this.price *this.onSaleValue / 100
+          }
+          else {
+            this.newTotal = this.price - this.onSaleValue;
+          }
+      },
+      changeType(){ 
+          this.onSaleType = !this.onSaleType 
+          if(!this.onSaleType){
+            this.newTotal = this.price - this.price *this.onSaleValue / 100
+          }
+          else {
+            this.newTotal = this.price - this.onSaleValue;
+          }
       },
 
       createArticle(){
       //controllare date prezzo e campi non vuoti
       let query = {};
       
-      if(this.title == ''){ return (alert('Il campo titolo non può essere vuoto'))}
-      else query.title = this.title;
+     query.title = this.title;
 
-      if(this.brand == ''){return(alert('Il campo brand non può essere vuoto'))}
-      else query.brand = this.brand;
+     query.brand = this.brand;
 
-      if(this.image == ''){return(alert('Il campo immagine non può essere vuoto'))}
-      else query.image = this.image;
+     query.image = this.image;
 
-      if(this.tags == ''){return(alert('Il campo etichette non può essere vuoto'))}
+      if(this.tags == ''){
+        query.tags = '';
+      }
       else{
         //trasformiamo le etichette in array
 
@@ -210,34 +210,29 @@
 
       query.discount = {}
       query.discount.onSale = this.onSale;
-      query.discount.onSaleType = this.onSaleType;
-      if(this.onSale == true && this.onSaleValue == '' ){return (alert('inserire lo sconto da applicare'))}
-      if(this.onSale == true && this.onSaleValue < 0 ){return (alert('lo sconto da applicare deve essere maggiore di zero'))}
-      query.discount.onSaleValue = this.onSaleValue;
+      if(this.onSale){
+        query.discount.onSaleType = this.onSaleType;
+        query.discount.onSaleValue = this.onSaleValue;
 
-      if(this.price == ''){return (alert('Il campo prezzo non può essere vuoto'))}
-      if(this.price < 0){return(alert("Il prezzo deve essere maggiore di '0'"))}
-      else query.price = this.price;
-      
-      if(this.quality < 1 || this.quality > 3 ){return(alert('Il campo qualità deve essere compreso tra 1 e 3'))}
-      else query.quality = this.quality;
-
+      }
+      else{
+        query.discount.onSaleType = false;
+        query.discount.onSaleValue = "";
+      }
+      query.price = this.price;
+      query.quality = this.quality;
       query.available = this.available;
-      
-      if(this.description == ''){return(alert('Il campo descrizione non può essere vuoto'))}
-      else query.description = this.description;
-
+      query.description = this.description;
       query.note = this.note
-
-      query.bookings = []
-
+      query.bookings = [] 
+      console.log(query)
       //invio dati
       Functions.addProduct(query)
         .then( () => {
           //svuotiamo i valori
           this.cancel();
           alert("Creazione riuscita")
-        })        
+        })  
       },
 
       cancel(){
@@ -248,18 +243,21 @@
         this.quality = 1;
         this.price = '';
 
-        this.onSale = false;
-        this.onSaleType = false;
-        this.onSaleValue = '';
+        this.changeSale()
 
-        this.available = true;
+        this.available = false;
         this.description = '';
         this.note = ''
-        //RIMANDI ALLA HOME
-      }
-
-
-
+        this.newTotal = '' 
+      },
     },
   }
 </script>
+
+<style>
+.delete {
+    float: right;
+    margin: 0;
+  }
+
+</style>

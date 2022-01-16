@@ -11,9 +11,9 @@
           <div class="row h-100">
             <div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto"  v-bind:src="reservation.productImage"></div>
             <div class="col-7" style="height:100%;"> 
-              <h4 class="text-truncate">Id: <router-link :to="{name: 'reservation', params: {id: reservation._id}}">{{reservation._id}}</router-link></h4>
-              <h4 class="text-truncate">Articolo: <router-link :to="{name: 'article',  params: { id: reservation.productId}}">{{reservation.productTitle + ' ' + reservation.productBrand}}</router-link></h4>
-              <h4 class="text-truncate">Cliente: <router-link :to="{name: 'client', params: {email: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h4>
+              <h4 class="text-truncate">Id: <router-link @click.native="switchComponent" :to="{name: 'reservation', params: {id: reservation._id}}">{{reservation._id}}</router-link></h4>
+              <h4 class="text-truncate">Articolo: <router-link @click.native="switchComponent" :to="{name: 'article',  params: { id: reservation.productId}}">{{reservation.productTitle + ' ' + reservation.productBrand}}</router-link></h4>
+              <h4 class="text-truncate">Cliente: <router-link @click.native="switchComponent" :to="{name: 'client', params: {email: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h4>
             </div>
           </div>
         </div>
@@ -82,13 +82,12 @@ export default {
               this.reservations.push(this.catalog[i])
           }
         }
+      },
+      switchComponent (event) {
+         this.$emit('clicked')
       }
     },
     computed: {    },
   }
 
-
-/*
-<b-img thumbnail fluid :src="reservations.productImage"  alt="Image 1"></b-img>
-*/ 
 </script>
