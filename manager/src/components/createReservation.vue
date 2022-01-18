@@ -323,34 +323,34 @@
         query.productImage = this.article.image
 
         ///////prezzzi
-        query.price = this.dailyPrice
+        query.variablePrice = this.dailyPrice
         query.fixedPrice = this.fixedPrice
-        query.total = this.newTotal
+        query.totalPrice = this.newTotal
 
-        query.discount = {}
+        query.fixedDiscount = {}
         if(this.onSale){
-          query.discount.onSale = true
-          query.discount.onSaleType = this.onSaleType
-          query.discount.onSaleValue = this.onSaleValue
+          query.fixedDiscount.onSale = true
+          query.fixedDiscount.onSaleType = this.onSaleType
+          query.fixedDiscount.onSaleValue = this.onSaleValue
         }
         else{
-          query.discount.onSale = false
-          query.discount.onSaleType = false
-          query.discount.onSaleValue = ''
+          query.fixedDiscount.onSale = false
+          query.fixedDiscount.onSaleType = false
+          query.fixedDiscount.onSaleValue = ''
         }
 
-        query.overDays = {}
+        query.variableDiscount = {}
         if(this.overOnSale){
-          query.overDays.onSale = true
-          query.overDays.onSaleType = this.overOnSaleType
-          query.overDays.days = this.overDaysCount
-          query.overDays.onSaleValue = this.overOnSaleValue
+          query.variableDiscount.onSale = true
+          query.variableDiscount.onSaleType = this.overOnSaleType
+          query.variableDiscount.days = this.overDaysCount
+          query.variableDiscount.onSaleValue = this.overOnSaleValue
         }
         else{
-          query.overDays.days = ''
-          query.overDays.onSale = false
-          query.overDays.onSaleType = false
-          query.overDays.onSaleValue = ''
+          query.variableDiscount.days = ''
+          query.variableDiscount.onSale = false
+          query.variableDiscount.onSaleType = false
+          query.variableDiscount.onSaleValue = ''
         }
 
         Functions.getUser(this.email, 1)

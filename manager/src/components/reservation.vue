@@ -1,242 +1,260 @@
 <template>
-  <div class="container-fluid ">
-    <b-row>
-      <b-col cols="6">
-        <b-img v-bind:src="bookedArticles.image" class="img-thumbnail"></b-img>
-      </b-col>
-      <b-col cols="6">
+<div class="container-fluid d-flex justify-content-center" id="main">
+  <div class="w-50">
+    <div class="row mt-3">
+      <div class="col-6" id="img">
+        <b-img v-bind:src="reservation.productImage" class="img-thumbnail"></b-img>
+      </div>
+      <div class="col-6" id="info">
         <p>Id prenotazione: {{reservationId}} </p>
-        <p><router-link :to="{ name: 'article',  params: { id: bookedArticles.identifier} }">{{bookedArticles.title + ' ' +bookedArticles.brand}}</router-link></p>
-        <p><router-link :to="{name: 'client1', params:{email: clientEmail, choice: 1}}" >{{clientEmail}}</router-link></p>
+        <p><router-link :to="{ name: 'article',  params: { id: reservation.productId} }">{{reservation.productTitle + ' ' +reservation.productBrand}}</router-link></p>
+        <p><router-link :to="{name: 'client', params:{email: reservation.clientEmail, choice: 1}}" >{{reservation.clientEmail}}</router-link></p>
+      </div>
+    </div>
+    <form name="myform" id="formId" @submit.prevent="saveData">
 
-        <template v-if="!boolModify">
-          <p>Prezzo: {{bookedArticles.price}}€ (da rivedere)</p>
-        </template>
-        <template v-else>
-          <b-row>
-            <b-col cols="2">
-              <p>Prezzo:</p>
-            </b-col>
-            <b-col cols="6">
-              <b-form-input type="number" v-model="copyPrice"></b-form-input>
-            </b-col>
-          </b-row>
-        </template>
+      <div class="form-floating mb-3 mt-3">
+        <input id="bookingRequest" :value="bookingRequest" class="form-control" type="text" aria-label="bookingRequest" aria-describedby="basic-addon" readonly disabled>
+        <label for="bookingRequest"> Data richiesta prenotazione</label>
+      </div>
 
-      </b-col>
-    </b-row>
-    <b-row>
-      <p  v-if="!boolModify">Data richiesta prenotazione: {{bookingRequest}}</p>  
-      <template v-else>
-        <b-col cols="3">
-          <p  >Data richiesta prenotazione: </p>
-        </b-col>
-        <b-col cols="3">  
-          <b-form-datepicker  v-model="copyBookingRequest" :placeholder="copyBookingRequest"  format="DD/MM/yyyy" ></b-form-datepicker>
-        </b-col>
-      </template>
-    </b-row>
+      <div class="row mb-3">
+        <div class="col-3">
+          <label for="date" class="mr-3">Periodo Prenotazione </label>
+        </div>
+        <div class="col-9">
+          <date-picker :input-attr="{required: 'true'}"  id="date" v-model="time" @change="newPrice" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
+        </div>
+      </div>
 
-    <b-row>
-      <template v-if="!boolModify && !boolVerify">
-        <b-col cols="4">
-          <p v-if="!boolModify">Data inizio prenotazione: {{bookingStart}}</p>
-        </b-col>
-        <b-col cols="4">
-          <b-form-checkbox v-if="!boolModify" :checked="rentalOccurred" :disabled="!boolModify">
-            Avvenuta consegna
-          </b-form-checkbox>
-        </b-col>  
-      </template>
-        
-      <template v-else-if="boolModify">
-        <b-col cols="3">
-          <p  >Data inizio prenotazione: </p>
-        </b-col>
+      <div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" :readonly="!boolModify" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Recipient's fixedprice" aria-describedby="basic-addon6" required>
+				<label for="price"> Prezzo Fisso*</label>
+			</div>
 
-        <b-col cols="3">  
-          <b-form-datepicker v-model="copyBookingStart" :placeholder="copyBookingStart"  ></b-form-datepicker> 
-        </b-col>
-        <b-col cols="3">
-          <b-form-checkbox          
-          :checked="copyRentalOccurred"
-          v-model="copyRentalOccurred"          
-          >
-            Avvenuta consegna
-          </b-form-checkbox>
-        </b-col>
-      </template>
-      <template v-else>
-        <b-col cols="4">
-          <p v-if="!boolModify">Data inizio prenotazione: {{bookingStart}}</p>
-        </b-col>
-        <b-col cols="3">
-          <b-form-checkbox          
-          :checked="copyRentalOccurred"
-          v-model="copyRentalOccurred"          
-          >
-            Avvenuta consegna
-          </b-form-checkbox>
-        </b-col>
-      </template>
-    </b-row>
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto Prezzo fisso:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" :disabled="!boolModify" :checked="onSale"  @click="changeSale">
+						<label class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
 
-    <b-row>
-      
-      <template v-if="!boolModify && !boolVerify">
-        <b-col cols="4">
-          <p>Data fine prenotazione: {{bookingEnd}}</p> 
-        </b-col>
-        <b-col cols="4">
-          <b-form-checkbox :checked="returned" :disabled="!boolModify">
-            Avvenuta Restituzione 
-          </b-form-checkbox>
-        </b-col>
+      <template v-if="onSale">
+        <div id="saleInfo" class="mt-2">
+          <div class="row">
+            <div class="col-3"><p> Tipo di sconto:</p></div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :disabled="!boolModify" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
+                <label class="form-check-label" for="percentage">Percentuale</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :disabled="!boolModify" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
+                <label class="form-check-label" for="flat">Fisso</label>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-3"> <p> Valore sconto:</p>	</div>
+            <div class="col-9">
+            <input type="number" class="form-control" min="1" step="1" :readonly="!boolModify" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" aria-label="saleValue" aria-describedby="basic-addon6" required>
+            </div>
+          </div>
+        </div>
       </template>
 
-      <template v-else-if="boolModify">
-        <b-col cols="3">
-          <p  >Data Fine prenotazione: </p>
-        </b-col>
-        <b-col cols="3">  
-          <b-form-datepicker v-model="copyBookingEnd" :placeholder="copyBookingEnd"  format="DD/MM/yyyy"></b-form-datepicker> 
-        </b-col>        
-        <b-col cols="3">
-          <b-form-checkbox :checked="copyReturned" v-model="copyReturned">
-            Avvenuta Restituzione 
-          </b-form-checkbox>
-        </b-col>
+
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" :readonly="!boolModify" v-model="dailyPrice" v-on:keyup="newPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<label for="price"> Prezzo Giornaliero*</label>
+			</div>
+
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto Prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" :disabled="!boolModify" :checked="overOnSale"  @click="changeDailySale">
+						<label class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+      <template v-if="overOnSale">
+        <div id="saleInfoOver" class="mt-2">
+          <div class="row">
+            <div class="col-3"><p> Tipo di sconto:</p></div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :disabled="!boolModify" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
+                <label class="form-check-label" for="percentage">Percentuale</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :disabled="!boolModify" :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
+                <label class="form-check-label" for="flat">Fisso</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3"> <p> Valore sconto:</p>	</div>
+            <div class="col-9">
+            <input type="number" class="form-control" min="1" step="1" :readonly="!boolModify" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" aria-label="saleValueOver" aria-describedby="basic-addon6" required>
+            </div>
+          </div>
+          <div class="row mt-2 mb-2">
+            <div class="col-3">Giorni per sconto:</div>
+            <div class="col-9">
+              <input type="number" class="form-control" min="1" step="1" :readonly="!boolModify"  v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount" aria-label="daysDiscount" aria-describedby="basic-addon6" required>
+          </div>
+        </div>
       </template>
 
-      <template v-else>
-        <b-col cols="4">
-          <p>Data fine prenotazione: {{bookingEnd}}</p> 
-        </b-col>
-        <b-col cols="3">
-          <b-form-checkbox :checked="copyReturned" v-model="copyReturned">
-            Avvenuta Restituzione 
-          </b-form-checkbox>
-        </b-col>
-      </template>
-    </b-row>
+      <div class="form-floating mb-3">
+				<input type="number" class="form-control" :value="newTotal" aria-label="Recipient's price" aria-describedby="basic-addon6" readonly>
+				<label for="price"> Prezzo Totale</label>
+			</div>
+       
 
-    <b-row>
-      <p  v-if="!boolModify">{{notes}}</p>
-      <b-form-input v-else type="text" v-model="copyNotes"  ></b-form-input>
-    </b-row>
-    <b-row>
-      <p  v-if="!boolModify">{{privateNotes}}</p>
-      <b-form-input v-else type="text" v-model="copyPrivateNotes"></b-form-input>
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text" id="notes" class="form-control" :readonly="!boolModify"  v-model="notes" aria-label="notes" aria-describedby="basic-addon"  >
+        <label for="notes"> Descrizione</label>
+      </div>
 
-    <b-button v-if="!boolModify && !boolVerify" type="button" class="btn btn-lg btn-secondary" @click="modify">Modifica</b-button>
-    <b-button v-if="boolModify || boolVerify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
-    <b-button v-if="boolModify || boolVerify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
-    <button class="btn btn-lg btn-danger delete" @click="deleteReservation"> Cancella prenotazione</button>
-  </div>
+      <div class="form-floating mb-3">
+        <input type="text" id="privateNotes" class="form-control" :readonly="!boolModify" v-model="privateNotes"  aria-label="privateNotes" aria-describedby="basic-addon" >
+        <label for="privateNotes"> Note(non visibili ai clienti)</label>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-6 form-check ">
+          <input class="form-check-input" type="checkbox" :disabled="!boolModify" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
+          <label v-if="rentalOccurred" class="form-check-label" for="flexCheckDefault">Il prodotto è stato ritirato</label>
+          <label v-else class="form-check-label" for="flexCheckDefault">Il prodotto non è stato ritirato</label>
+        </div>
+        <div class="col-6 form-check">
+          <input class="form-check-input" type="checkbox" :disabled="!boolModify" :checked="returned" @click="changeReturned" id="flexCheckDefault2">
+          <label v-if="returned" class="form-check-label" for="flexCheckDefault"> Il prodotto è stato restituito </label>
+          <label v-else class="form-check-label" for="flexCheckDefault"> Il prodotto non è stato restituito </label>
+        </div>
+      </div>
+
+
+    <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" @click="modify">Modifica</b-button>
+    <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" @click="saveData" >Salva</b-button>
+    <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
+    <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" @click="deleteReservation" disabled> Cancella prenotazione</button>
+    </form>
+  </div> 
+</div> 
   
 </template>
 
 <script>
   import Functions from '../functions/function'
+  import DatePicker from 'vue2-datepicker';
+  import 'vue2-datepicker/index.css';
+
   export default {
+    components: { DatePicker },
     data() {
       return {
+        reservation: {},
+        bookings: [],
+        available:'',
+
         reservationId: '',
-        clientEmail:'', //IDcliente(nome cognome)
-        bookedArticles: {     //uno o più articoli [](se ci sono più articoli le date combaciano)
-          identifier:'',
-          title:'',
-          brand:'',
-          image:'',
-          price: '',
-          discount: {    //per risalire allo sconto 
-            onSale: false,
-            onSaleType: false,  //percentuale o fisso
-            onSaleValue: 0
-          },
-        },
+
         bookingRequest: '', //richiesta noleggio
         bookingStart: '',   //inizio noleggio
         bookingEnd:'',   //fine noleggio
+
+        dailyPrice:'',
+        fixedPrice: '',
+        newTotal: '',
+        onSale: false,
+        onSaleType: false,
+        onSaleValue: 0,
+        overDaysCount: '',
+        overOnSale: false,
+        overOnSaleType : false,
+        overOnSaleValue: 0,   
         
         rentalOccurred: true,             //avvenuto noleggio (booleano)
         returned: false,               //avvenuta restituzione (booleano)
-        
         notes:'',                //note 1 (dettagli sul prezzo o altro)                        
         privateNotes:'',                //note 2 (dettagli non visibili al cliente)
+        
+        time: null,
+        lang: {
+          formatLocale: {
+            firstDayOfWeek: 1,
+            months: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Augosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+            monthsShort: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
+            weekdaysMin: ['Do','Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa', ],
+          },
+          monthBeforeYear: false,
+        },
 
         boolModify: false,
-        boolVerify: false,
-
-        //Copia dei dati
-        copyPrice: 0,
-        copyOnSale: false,
-        copyOnSaleType: false,  //percentuale o fisso
-        copyOnSaleValue: '',
-        copyBookingRequest:'',
-        copyBookingStart:'',
-        copyBookingEnd :'',
-        copyRentalOccurred:'',
-        copyReturned :'',
-        copyNotes : '',
-        copyPrivateNotes:'',
 
       }
     },
     created() {
       Functions.getReservation(this.$route.params.id).then((result) => {
-        console.log(result)
-        this.reservationId = this.$route.params.id
-        this.clientEmail = result.data.data.obj.clientEmail 
-        this.bookedArticles.identifier = result.data.data.obj.productId 
-        this.bookedArticles.title = result.data.data.obj.productTitle 
-        this.bookedArticles.brand = result.data.data.obj.productBrand
-        this.bookedArticles.image = result.data.data.obj.productImage 
-        this.bookedArticles.price = result.data.data.obj.price
-
-        this.bookingRequest = result.data.data.obj.bookingDate.year + '-' + result.data.data.obj.bookingDate.month + '-' + result.data.data.obj.bookingDate.day
-        this.bookingStart = result.data.data.obj.startDate.year + '-' + result.data.data.obj.startDate.month + '-' + result.data.data.obj.startDate.day
-        this.bookingEnd = result.data.data.obj.endDate.year + '-' + result.data.data.obj.endDate.month + '-' + result.data.data.obj.endDate.day 
         
-        this.rentalOccurred = result.data.data.obj.isTaken 
-        this.returned = result.data.data.obj.isReturned 
-        this.notes = result.data.data.obj.description 
-        this.privateNotes = result.data.data.obj.note    
+        this.reservationId = this.$route.params.id
+        this.reservation = result.data.data.obj
+        console.log(this.reservation)
 
+        this.undoChange()
+
+        Functions.getProduct(this.reservation.productId).then((result)=> {
+          this.bookings = result.bookings
+          this.available = result.available
+        })
         
       })
     },
 
     methods: {
-      modify(){
-        const current = new Date();      
-        const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate()
-        if(currentDate >= this.bookingStart) {
-          this.boolVerify = true
-          this.copyRentalOccurred = this.rentalOccurred
-          this.copyReturned = this.returned
-        }
-        else{
-          this.copyPrice = this.bookedArticles.price
-          this.copyOnSale = this.bookedArticles.discount.onSale
-          this.copyOnSaleType = this.bookedArticles.discount.onSaleType
-          this.copyOnSaleValue = this.bookedArticles.discount.onSaleValue
-          this.copyBookingRequest = this.bookingRequest
-          this.copyBookingStart = this.bookingStart
-          this.copyBookingEnd = this.bookingEnd
-          this.copyRentalOccurred = this.rentalOccurred
-          this.copyReturned = this.returned
-          this.copyNotes = this.notes
-          this.copyPrivateNotes  = this.privateNotes
-          this.boolModify = true
-        }
 
+      modify(){
+        this.boolModify = true
       },
 
       undoChange(){
-        this.boolModify = false
-        this.boolVerify = false
+        this.dailyPrice = this.reservation.variablePrice
+        this.fixedPrice = this.reservation.fixedPrice
+        this.newTotal = this.reservation.totalPrice
+        this.onSale = this.reservation.fixedDiscount.onSale
+        this.onSaleType = this.reservation.fixedDiscount.onSaleType
+        this.onSaleValue = this.reservation.fixedDiscount.onSaleValue
+        this.overDaysCount = this.reservation.variableDiscount.days
+        this.overOnSale = this.reservation.variableDiscount.onSale
+        this.overOnSaleType = this.reservation.variableDiscount.onSaleType
+        this.overOnSaleValue = this.reservation.variableDiscount.onSaleValue
+
+        this.bookingRequest = this.reservation.bookingDate.day + '-' + this.reservation.bookingDate.month + '-' + this.reservation.bookingDate.year
+        this.bookingStart = this.reservation.startDate.year + '-' + this.reservation.startDate.month + '-' + this.reservation.startDate.day
+        this.bookingEnd = this.reservation.endDate.year + '-' + this.reservation.endDate.month + '-' + this.reservation.endDate.day 
+        
+        this.rentalOccurred = this.reservation.isTaken 
+        this.returned = this.reservation.isReturned 
+        this.notes = this.reservation.description 
+        this.privateNotes = this.reservation.note
+        this.boolModify = false 
       },
 
       saveData(){
@@ -422,6 +440,103 @@
           })
 
         })
+      },
+
+      changeRentalOccured(){
+        if(!this.rentalOccurred)
+          this.rentalOccurred = true 
+        else
+          this.rentalOccurred = false
+          this.returned = false
+      },
+
+      changeReturned(){
+        if(!this.returned){
+          this.returned = true
+          this.rentalOccurred = true 
+        }
+        else
+          this.returned = false
+      },
+      changeSale(){
+        if(this.onSale){
+          this.onSale = false
+          this.onSaleType = false
+          this.onSaleValue = 1
+        }
+        else
+          this.onSale = true
+        this.newPrice()
+      },
+      changeOnSaleType(){
+        this.onSaleType = !this.onSaleType
+        this.newPrice()
+      },
+
+      changeDailySale(){
+        if(this.overOnSale){
+        this.overOnSale = false
+        this.overOnSaleType = false
+        this.overOnSaleValue = 1
+        }
+        else
+          this.overOnSale = true
+        this.newPrice()
+      },
+
+      changeType(){ 
+          this.overOnSaleType = !this.overOnSaleType 
+          this.newPrice()
+      },
+      newPrice(){
+        if (this.time!= null){
+          let day = this.time[0].getDate()
+          let month = this.time[0].getMonth()+1
+          let year = this.time[0].getFullYear()
+          let day1 = this.time[1].getDate()
+          let month1 = this.time[1].getMonth()+1
+          let year1 = this.time[1].getFullYear()
+          let start = year * 10000 + month * 100 + day
+          let end = year1 * 10000 + month1 * 100 + day1
+          let days = end - start + 1
+          let addendum1, addendum2
+
+
+          if(this.onSale){
+            if(this.onSaleType)
+              addendum1 = this.fixedPrice - this.fixedPrice * this.onSaleValue /100
+            else
+              addendum1 = this.fixedPrice - this.onSaleValue
+          }
+          else{
+            addendum1 = this.fixedPrice
+          }
+          if(this.overOnSale && days > this.overDaysCount ){
+            if(this.overOnSaleType)
+              addendum2 = this.dailyPrice * days - this.dailyPrice * this.overOnSaleValue / 100
+            else
+              addendum2 = this.dailyPrice * days - this.overOnSaleValue
+          }
+          else{
+            addendum2 = this.dailyPrice * days
+          }
+          console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
+          this.newTotal = parseInt(addendum1)+ parseInt(addendum2)
+          }
+      },
+      dateDisabled(date) {         
+        const today = new Date();
+        if(date < today)
+          return true
+
+        for(let i in this.bookings){
+          let start =  new Date(this.bookings[i].startDate.year, this.bookings[i].startDate.month -1, this.bookings[i].startDate.day) 
+          let end = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month -1, this.bookings[i].endDate.day) 
+
+          if(start <= date && date <= end) 
+            return true
+        }   
+        return false  
       }
     }
   }
