@@ -1,184 +1,122 @@
 <template>
 
-  <b-col  class="container-fluid " >
-    <h1> Account </h1>
+<div class="container-fluid d-flex justify-content-center" id="main">
+  <div class="w-50">
+    <form name="myform" id="formId" @submit.prevent="saveData">
+      <h1 class="mb-3"> Account </h1>
 
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>Nome:</p>
-      </b-col>
-      <b-col cols="9">
-        <!-- ModifyOn/Off -->
-        <b-form-input v-if="!boolModify" type="text" :value="name"  readonly ></b-form-input>
-        <b-form-input v-else type="text" v-model="copyName"  ></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text" id="name" v-model="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1" :readonly="!boolModify" required>
+        <label for="name"> Nome </label>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>Cognome:</p>
-      </b-col>
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="surname" readonly ></b-form-input>
-        <b-form-input v-else type="text" v-model="copySurname"  ></b-form-input>
-      </b-col>
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text" id="surname"  v-model="surname" class="form-control" aria-label="surname" aria-describedby="basic-addon2" :readonly="!boolModify" required>
+        <label for="surname"> Cognome</label>
+      </div>  
 
-    <b-row>
-      <b-col cols="3">
-        <p>ID:<span v-if="boolModify">(non modificabile)</span></p>
-      </b-col>
-      <b-col  class="col-9 ">
-        <b-form-input type="text" :value="id" readonly ></b-form-input>
-      </b-col>
-    </b-row>
-    
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>Sesso:</p>
-      </b-col >
-      <b-col cols="9">
-        <b-form-select v-if="!boolModify" :disabled="!boolModify" :value="sex" :options="options">
+      <div class="form-floating mb-3">
+        <input type="text" id="identifier"  :value="id" class="form-control" aria-label="identifier" aria-describedby="basic-addon3" readonly required>
+        <label for="identifier"> ID<span v-if="boolModify">(non modificabile)</span></label>
+      </div>
 
-        </b-form-select>
+      <div class="form-floating mb-3">
+        <select id="sex" class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="sex"  aria-label="Default select example" >
+          <option value="male">M</option>
+          <option value="female">F</option>
+          <option value="other">Altro</option>
+        </select>
+        <label for="sex"> Sesso </label>
+      </div>
+        
+      <div class="form-floating mb-3">
+        <input type="tel" id="phone"  v-model="phoneNumber" class="form-control" aria-label="phone" aria-describedby="basic-addon5" :readonly="!boolModify" required>
+        <label for="phone"> Numero di telefono</label>
+      </div>
+        
+      <div class="form-floating mb-3">
+        <input type="email" id="mail"  v-model="email" class="form-control" aria-label="mail" aria-describedby="basic-addon6" :readonly="!boolModify" required>
+        <label for="mail"> E-mail</label>
+      </div>
 
-        <b-form-select v-else v-model="copySex" :options="options"> 
+      <hr>
 
-        </b-form-select>
-      </b-col >
-    </b-row>
-      
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>Numbero di Telefono:</p>
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="phoneNumber" readonly></b-form-input>
-        <b-form-input v-else type="text" v-model="copyPhoneNumber" ></b-form-input>
-      </b-col >
-    </b-row>
-      
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>E-mail:</p>
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="email" readonly></b-form-input>
-        <b-form-input v-else type="text" v-model="copyEmail"  ></b-form-input>
-      </b-col >
-    </b-row>
+      <div class="form-floating mb-3">
+        <b-form-datepicker id="birthday" v-model="birthday"  class="form-control" type="date" aria-label="birthday" aria-describedby="basic-addon7" :readonly="!boolModify" required></b-form-datepicker>
+        <label for="birthday"> Data di nascita</label>
+      </div>
 
-    <hr>
+      <hr>
 
-    <b-row>
-      <b-col cols="3">
-        <b>Data di nascita</b>
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="birthday"  readonly></b-form-input>
-        <b-form-datepicker v-else v-model="copyDate" :placeholder="birthday"  ></b-form-datepicker>
-      </b-col>
-    </b-row>
+      <div class="row mb-3">
+        <h3>Indirizzo</h3>
+      </div>
 
-    <hr>
+      <div class="form-floating mb-3">
+        <input type="text" id="street"  v-model="address.addressStreet" class="form-control" aria-label="street" aria-describedby="basic-addon8" :readonly="!boolModify" required>
+        <label for="street"> Via</label>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <b>Indirizzo</b>
-      </b-col >
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="number"  id="num"  v-model="address.addressNumber" class="form-control" aria-label="city" aria-describedby="basic-addon10" step="1" min="1"  :readonly="!boolModify" required>
+        <label for="num"> Numero</label>
+      </div> 
 
-    <b-row>
-      <b-col cols="3">
-        <span v-if="boolModify">* </span>Via:
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="address.addressStreet"  readonly></b-form-input>
-        <b-form-input v-else type="text" v-model="copyAddressStreet"  ></b-form-input>
-      </b-col >
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text" id="city"  v-model="address.addressCity" class="form-control" aria-label="city" aria-describedby="basic-addon10" :readonly="!boolModify" required>
+        <label for="city"> Città</label>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <span v-if="boolModify">* </span>Numero:
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="number" :value="address.addressNumber" readonly></b-form-input>
-        <b-form-input v-else type="number" v-model="copyAddressNumber" min='1'  ></b-form-input>
-      </b-col >
-    </b-row> 
+      <hr>
 
-    <b-row>
-      <b-col cols="3">
-        <span v-if="boolModify">* </span>Città:
-      </b-col >
-      <b-col cols="9">
-        <b-form-input  v-if="!boolModify" type="text" :value="address.addressCity"  readonly></b-form-input>
-        <b-form-input v-else type="text" v-model="copyAddressCity"  ></b-form-input>
-      </b-col >
-    </b-row>
+      <div class="row mb-3">
+        <h3>Metodo di pagamento</h3>
+      </div>
 
-    <hr>
+      <div class="form-floating mb-3">
+        <input type="text" id="cardType"  v-model="payment.cardType" class="form-control" aria-label="cardType" aria-describedby="basic-addon11" :readonly="!boolModify" required>
+        <label for="cardType"> Tipo di carta</label>
+      </div>
 
-    <b-row>
-      <b>Pagamenti</b>
-    </b-row>
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>Tipo di carta:</p>
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="payment.cardType"  readonly></b-form-input>
-        <b-form-input v-else type="text" v-model="copyCardType"  ></b-form-input>        
-      </b-col >
-    </b-row>
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>Nome carta:</p>
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="payment.cardName"  readonly></b-form-input>
-        <b-form-input v-else type="text" v-model="copyCardName"></b-form-input>
-      </b-col >
-    </b-row>
-    <b-row>
-      <b-col cols="3">
-        <p><span v-if="boolModify">* </span>Proprietario:</p>
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="text" :value="payment.cardSurname"  readonly></b-form-input>
-        <b-form-input v-else type="text" v-model="copyCardSurname"></b-form-input>
-      </b-col >
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text" id="cardName"   v-model="payment.cardName"  class="form-control" aria-label="cardName" aria-describedby="basic-addon12" :readonly="!boolModify" required>
+        <label for="cardName"> Nome carta</label>
+      </div>
 
-    <b-row>
-      <b-col cols="3">
-        <p>Data scadenza:</p>
-      </b-col >
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="text" id="owner"  v-model="payment.cardSurname" class="form-control" aria-label="owner" aria-describedby="basic-addon13" :readonly="!boolModify" required>
+        <label for="owner"> Proprietario</label>
+      </div>
 
-    <b-row >
-      <b-col  class="col-3 tab">
-        <p><span v-if="boolModify">* </span>Mese:</p>
-      </b-col >
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="number" :value="payment.cardExpireMonth"   readonly> </b-form-input>
-        <b-form-input v-else type="number" v-model="copyCardExpireMonth"  min="1" max="12" ></b-form-input>
-      </b-col >
-    </b-row>
+      <div class="row mb-3">
+          <b>Data scadenza</b>
+      </div>
 
-    <b-row>
-      <b-col  class="col-3 tab">
-        <p><span v-if="boolModify">* </span>Anno:</p>
-      </b-col >        
-      <b-col cols="9">
-        <b-form-input v-if="!boolModify" type="number" :value="payment.cardExpireYear" readonly></b-form-input>
-        <b-form-input v-else type="number" v-model="copyCardExpireYear"  min="2021" max="2025" ></b-form-input>
-      </b-col >
-    </b-row>
+      <div class="form-floating mb-3">
+        <input type="number"  v-model="payment.cardExpireMonth"  min="1" max="12" step="1" id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" :readonly="!boolModify" required>
+        <label for="cardMonth"> Mese</label>
+      </div>
 
-    <hr>
+      <div class="form-floating mb-3">
+        <input type="number"  v-model="payment.cardExpireYear" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" :readonly="!boolModify" required>
+        <label for="cardYear"> Anno</label>
+      </div>
+
+      <div id="myButtons">
+        <!-- Bottoni -->
+        <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" @click="modify">Modifica</b-button>
+        <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" >Salva</b-button>
+        <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
+
+        <b-button type="button" class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" :disabled="boolDelete" @click="deleteUser">Elimina cliente</b-button>
+        <span>{{boolDelete}}</span>
+      </div>
+
+    </form>
+
     <!-- Da qui parte la tabella delle prenotazioni -->
+    <template v-if="bookings.length !== 0">
+    <hr>
     <h3>Lista prenotazioni</h3>
     <div class="p-3">
       <b-row>
@@ -193,15 +131,10 @@
         </b-table>
       </b-row>
     </div>
-    
-    <!-- Bottoni -->
-    <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary" @click="modify">Modifica</b-button>
-    <b-button v-if="boolModify" type="button" class="btn btn-lg btn-success" @click="saveData" >Salva</b-button>
-    <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger" @click="undoChange">Annulla</b-button>
+    </template>
 
-
-    <b-button type="button" class="btn btn-lg btn-danger delete" @click="deleteUser">Elimina cliente</b-button>
-  </b-col >
+  </div>
+</div>
 </template>
 
 <script>
@@ -210,15 +143,11 @@
   export default {
     data() {
       return {
+        user: {},
         id: '',
         name: '',
         surname: '',
         sex: '',
-        options: [
-          { value: 'Male', text:'M'},
-          { value: 'Female', text:'F'},
-          { value: 'Other',text:'Altro'},
-        ],
         birthday: '',
         phoneNumber: '',
         email: '',
@@ -236,7 +165,7 @@
           cardExpireYear: '',
           cardCVV: ''
         },      
-        bookings: [],
+        bookings: {},
         fields: [
          {
             key: 'product',
@@ -261,202 +190,148 @@
         ],
         //Modalità Modifica
         boolModify: false,
-
-        //Copia dei dati
-        copyName :'',
-        copySurname :'',
-        copySex :'',
-        copyDate :'',
-        copyPhoneNumber :'',
-        copyEmail :'',
-        copyPassword :'',
-        copyAddressStreet :'',
-        copyAddressNumber :'',
-        copyAddressCity :'',
-        copyCardType :'',
-        copyCardName :'',
-        copyCardSurname :'',
-        copyCardExpireMonth :'', 
-        copyCardExpireYear :'',
-        copyCardCVV :'',
-
+        boolDelete: false
       }
     },
 
-      created() {
-        console.log(this.$route.params)
-        //comporre il getUser con id o email '?id/email=' + value
-        //{'filter': 'han.chu@studio.unibo.it', 'sort': 'true'}
-        let query,n
-        if ( this.$route.params.id !== undefined){
-          query = this.$route.params.id 
-          n = 0
-        }
-        else {
-          query = this.$route.params.email 
-          n = 1
-        } 
-        Functions.getUser(query, n).then((result) => {
-          console.log(result)
-          this.id = result.data.data._id
-          this.name = result.data.data.userName
-          this.surname = result.data.data.userSurname
-          this.birthday = result.data.data.birthday.year + '-' + result.data.data.birthday.month + '-' + result.data.data.birthday.day
-          this.sex = result.data.data.sex
-          this.phoneNumber = result.data.data.phoneNumber
-          this.email = result.data.data.email
-          this.address.addressStreet = result.data.data.address.addressStreet
-          this.address.addressNumber = result.data.data.address.addressNumber
-          this.address.addressCity = result.data.data.address.addressCity
-          this.payment.cardType = result.data.data.payment.cardType
-          this.payment.cardName = result.data.data.payment.cardName
-          this.payment.cardSurname = result.data.data.payment.cardSurname
-          this.payment.cardExpireMonth = result.data.data.payment.cardExpireMonth
-          this.payment.cardExpireYear = result.data.data.payment.cardExpireYear
-          this.payment.cardCVV = result.data.data.payment.cardCVV
+    created() {
+      //console.log(this.$route.params)
+      //comporre il getUser con id o email '?id/email=' + value
+      //{'filter': 'han.chu@studio.unibo.it', 'sort': 'true'}
+      let query,n
+      query = this.$route.params.email 
+      n = 1
+      Functions.getUser(query, n).then((result) => {
+        console.log(result)
+        this.user = result.data.data
+        this.undoChange()
+      })
 
-          let query = {
-            filter: this.email,
-            sort: false
-          }
-          Functions.getAllReservation(query)
-          .then( (result) => {
-            console.log(result.data.obj)
-            if(result.data.obj.length === 0) console.log("vuoto")
-            else {
-              let current = new Date();      
-              current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-              for (let i in result.data.obj){
-                let row = {}
-                row.productId =
-                row.product = {}
-                row.product.id =  result.data.obj[i].productId 
-                row.product.title = result.data.obj[i].productTitle + ' ' + result.data.obj[i].productBrand
-                row.price = result.data.obj[i].price
-                row.reservation = result.data.obj[i]._id
-                row.startDate = result.data.obj[i].startDate.year + '-' + result.data.obj[i].startDate.month + '-' + result.data.obj[i].startDate.day
-                row.endDate = result.data.obj[i].endDate.year + '-' + result.data.obj[i].endDate.month + '-' + result.data.obj[i].endDate.day
-                
-                if(row.endDate >= current)
-                  row._rowVariant = 'danger'
-                this.bookings.push(row)
-              }
-            }
-          })            
-        })
-      },
-
-
+      let query1 = {
+        filter: this.$route.params.email,
+        sort: false
+      }
+      Functions.getAllReservation(query1)
+      .then( (result) => {
+        console.log(result.data.obj)
+        let bookings = result.data.obj
+        let current = new Date();      
+        /* for (let i in this.bookings){
+          let row = {}
+          row.product = {}
+          row.product.id =  this.bookings[i].productId 
+          row.product.title = this.bookings[i].productTitle + ' ' + this.bookings[i].productBrand
+          row.price = this.bookings[i].price
+          row.reservation = this.bookings[i]._id
+          row.startDate =  new Date(this.bookings[i].startDate.year, this.bookings[i].startDate.month-1, this.bookings[i].startDate.day)
+          row.endDate = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month-1, this.bookings[i].endDate.day)
+          
+          if(row.endDate >= current){
+            this.boolDelete = true
+            row._rowVariant = 'danger'
+          } 
+        } */
+      })            
+    },
+  
     methods: {
 
       modify(){
-        this.copyName = this.name,
-        this.copySurname = this.surname,
-        this.copySex = this.sex,
-        this.copyDate = this.birthday,
-        this.copyPhoneNumber = this.phoneNumber,
-        this.copyEmail = this.email,
-        this.copyAddressStreet = this.address.addressStreet,
-        this.copyAddressNumber = this.address.addressNumber,
-        this.copyAddressCity = this.address.addressCity,
-        this.copyCardType = this.payment.cardType,
-        this.copyCardName = this.payment.cardName,
-        this.copyCardSurname = this.payment.cardSurname,
-        this.copyCardExpireMonth = this.payment.cardExpireMonth ,
-        this.copyCardExpireYear =  this.payment.cardExpireYear,
-        this.copyCardCVV =  this.payment.cardCVV
         this.boolModify = true
       },
 
       undoChange(){
+        this.id = this.user._id
+        this.name = this.user.userName
+        this.surname = this.user.userSurname
+        this.birthday = this.user.birthday.year + '-' +this.user.birthday.month + '-' +this.user.birthday.day
+        this.sex = this.user.sex
+        this.phoneNumber = this.user.phoneNumber
+        this.email = this.user.email
+        this.address.addressStreet = this.user.address.addressStreet
+        this.address.addressNumber = this.user.address.addressNumber
+        this.address.addressCity = this.user.address.addressCity
+        this.payment.cardType = this.user.payment.cardType
+        this.payment.cardName = this.user.payment.cardName
+        this.payment.cardSurname = this.user.payment.cardSurname
+        this.payment.cardExpireMonth = this.user.payment.cardExpireMonth
+        this.payment.cardExpireYear = this.user.payment.cardExpireYear
+        this.payment.cardCVV = this.user.payment.cardCVV
+
         this.boolModify = false;
       },
 
       saveData(){
         let query = {}
-        if(this.copyName != this.name)
-          query.userName = this.copyName;
+        if(this.user.userName != this.name)
+          query.userName = this.name;
+
+        if(this.user.userSurname != this.surname)
+          query.userSurname = this.surname;
           
-        if(this.copySurname != this.surname)
-          query.userSurname = this.copySurname;
-          
-        if(this.copySex != this.sex)
-          query.sex = this.copySex; 
+        if(this.user.sex != this.sex)
+          query.sex = this.sex; 
         
-        if(this.copyDate != this.date){
-          query.date = {}
-          query.date.day = this.copyDate.charAt(8) + this.copyDate.charAt(9)
-          query.date.month = this.copyDate.charAt(5) + this.copyDate.charAt(6)
-          query.date.year = this.copyDate.charAt(0) + this.copyDate.charAt(1) + this.copyDate.charAt(2) + this.copyDate.charAt(3)
+        let date = this.birthday.split('-')
+        if(date[0] != this.user.birthday.year ||  date[1] != this.user.birthday.month || date[2] != this.user.birthday.day){
+          query.birthday = {}
+          query.birthday.day = date[2]
+          query.birthday.month = date[1]
+          query.birthday.year = date[0]
         }
           
+        if(this.user.phoneNumber != this.phoneNumber)
+          query.phoneNumber = this.phoneNumber;
           
-        if(this.copyPhoneNumber != this.phoneNumber)
-          query.phoneNumber = this.copyPhoneNumber;
+        if(this.user.email != this.email)
+          query.email = this.email;
           
-        if(this.copyEmail != this.email)
-          query.email = this.copyEmail;
-          
-        if(this.copyAddressStreet != this.address.addressStreet || this.copyAddressNumber != this.address.addressNumber || this.copyAddressCity != this.address.addressCity){
+        if(this.user.address.addressStreet != this.address.addressStreet || this.user.address.addressNumber != this.address.addressNumber || this.user.address.addressCity != this.address.addressCity){
           query.address = {}
-          query.address.addressStreet = this.copyAddressStreet;
-          query.address.addressNumber = this.copyAddressNumber;
-          query.address.addressCity = this.copyAddressCity;
+          query.address.addressStreet =  this.address.addressStreet;
+          query.address.addressNumber = this.address.addressNumber
+          query.address.addressCity =  this.address.addressCity;
         }
 
-        if(this.copyCardType != this.payment.cardType || this.copyCardName != this.payment.cardName || this.copyCardSurname != this.payment.cardSurname || this.copyCardExpireMonth != this.payment.cardExpireMonth || this.copyCardExpireYear != this.payment.cardExpireYear){
+        if(this.user.payment.cardType != this.payment.cardType || this.user.payment.cardName != this.payment.cardName || this.user.payment.cardSurname != this.payment.cardSurname || this.user.payment.cardExpireMonth != this.payment.cardExpireMonth || this.user.payment.cardExpireYear != this.payment.cardExpireYear){
           query.payment = {}
-          query.payment.cardType = this.copyCardType;
-          query.payment.cardName = this.copyCardName;
-          query.payment.cardSurname = this.copyCardSurname;       
-          query.payment.cardExpireMonth = this.copyCardExpireMonth;
-          query.payment.cardExpireYear = this.copyCardExpireYear;
+          query.payment.cardType = this.payment.cardType
+          query.payment.cardName = this.payment.cardName
+          query.payment.cardSurname = this.payment.cardSurname     
+          query.payment.cardExpireMonth = this.payment.cardExpireMonth
+          query.payment.cardExpireYear = this.payment.cardExpireYear;
         }
-        
-        console.log(query) 
-        console.log(this.id);
+        console.log(query)
         Functions.saveDataClient(this.id, query)
         .then( () => {
-            this.name = this.copyName
-            this.surname = this.copySurname
-            this.sex = this.copySex
-            this.phoneNumber = this.copyPhoneNumber
-            this.email = this.copyEmail
-            this.birthday = this.copyDate
+            alert("modifica riuscita")
+            this.user.userName = this.name 
+            this.user.userSurname = this.surname 
+            this.user.sex = this.sex 
+            this.user.phoneNumber = this.phoneNumber 
+            this.user.email = this.email 
+            
+            this.user.birthday = date[0] + '-' + date[1] + '-' + date[2] 
 
-            this.address.addressStreet = this.copyAddressStreet
-            this.address.addressNumber = this.copyAddressNumber
-            this.address.addressCity = this.copyAddressCity
-            this.payment.cardType = this.copyCardType
-            this.payment.cardName = this.copyCardName
-            this.payment.cardSurname = this.copyCardSurname
-            this.payment.cardExpireMonth = this.copyCardExpireMonth
-            this.payment.cardExpireYear = this.copyCardExpireYear
+            this.user.address.addressStreet = this.address.addressStreet 
+            this.user.address.addressNumber = this.address.addressNumber 
+            this.user.address.addressCity = this.address.addressCity 
+            this.user.payment.cardType = this.payment.cardType 
+            this.user.payment.cardName = this.payment.cardName 
+            this.user.payment.cardSurname = this.payment.cardSurname 
+            this.user.payment.cardExpireMonth = this.payment.cardExpireMonth 
+            this.user.payment.cardExpireYear = this.payment.cardExpireYear 
 
-            this.boolModify = false;        
-        })
+            this.boolModify = false
+        }) 
       },
 
-      deleteUser(){
-        if(this.bookings.length === 0){
-          Functions.deleteUser(this.id)
-          .then( () =>{
-            this.$router.push({name: 'clientCatalog'  , params: {filter: ""}})
-          })
-        }         
-        else{
-          for(let i in this.bookings){
-            let bookingDate = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' +  this.bookings[i].endDate.day
-            let current = new Date();      
-            current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-            if(bookingDate >= current )   return(alert('Il prodotto ha ancora prenotazioni attive'))
-          }
-          Functions.deleteUser(this.id)
-          .then( () =>{
-             this.$router.push({name: 'clientCatalog'  , params: {filter: ""}})
-          })                   
-        } 
-      }
+      deleteUser(){        
+        Functions.deleteUser(this.id)
+        .then( () =>{
+          this.$router.replace('')
+        })                   
+      } 
     }
   }
 //////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
@@ -469,3 +344,8 @@
     });
   });
 </script>
+<style scoped>
+.zIndex{
+  z-index: absolute;
+}
+</style>

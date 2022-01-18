@@ -239,7 +239,6 @@ function save(){
 		newLabels = newLabels.replace(/,/g, ' ');
 
 		newTags = [...new Set(newLabels.split(/\s+/))];
-		//potrebbe non essere l'ultimo?
 		if(newTags[newTags.length - 1] == '') {
 			newTags.pop()
 		}

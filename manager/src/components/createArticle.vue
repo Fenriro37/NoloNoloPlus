@@ -30,13 +30,18 @@
 			</div>
 
 			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" aria-label="Recipient's fixedprice" aria-describedby="basic-addon6" required>
+				<label for="price"> Prezzo Fisso*</label>
+			</div>
+
+			<div class="form-floating mb-3">
 				<input type="number" class="form-control" min="1" step="1" v-model="price" v-on:keyup="newPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
-				<label for="price"> Prezzo*</label>
+				<label for="price"> Prezzo Giornaliero*</label>
 			</div>
 
 			<div class="row mb-3" id="saleRow">
 				<div class="col-3">
-					<label><b>Sconto:</b></label>
+					<label><b>Sconto Prezzo fisso:</b></label>
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
@@ -53,15 +58,14 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" :value="false" v-model="onSaleType" :checked="!onSaleType" @click="changeType" id="percentage" required>
+                <input class="form-check-input" type="radio" :value="false" v-model="onSaleType" id="percentage" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio"  :value="true" v-model="onSaleType" @click="changeType"  id="flat" required>
+                <input class="form-check-input" type="radio"  :value="true" v-model="onSaleType" id="flat" required>
                 <label class="form-check-label" for="flat">Fisso</label>
-                <span> {{ onSaleType }}</span>
               </div>
             </div>
           </div>
@@ -79,7 +83,47 @@
         </div>
       </template>
 
-      <template v-else>
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto Prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" v-model="overOnSale"  @click="changeDailySale">
+						<label class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+      <template v-if="overOnSale">
+        <div id="saleInfoOver" class="mt-2">
+          <div class="row">
+            <div class="col-3"><p> Tipo di sconto:</p></div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :value="false" v-model="overOnSaleType"  @click="changeType" id="percentageOver" required>
+                <label class="form-check-label" for="percentage">Percentuale</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio"  :value="true" v-model="overOnSaleType" @click="changeType"  id="flatOver" required>
+                <label class="form-check-label" for="flat">Fisso</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3"> <p> Valore sconto:</p>	</div>
+            <div class="col-9">
+            <input type="number" class="form-control" min="1" step="1" v-model="overOnSaleValue" id="saleValueOVer" aria-label="saleValueOver" aria-describedby="basic-addon6" required>
+            </div>
+          </div>
+          <div class="row mt-2 mb-2">
+            <div class="col-3">Giorni per sconto:</div>
+            <div class="col-9">
+              <input type="number" class="form-control" min="1" step="1"  v-model="overDays" id="daysDiscount" aria-label="daysDiscount" aria-describedby="basic-addon6" required>
+          </div>
+        </div>
       </template>
 
 			<div class="row mb-3">
@@ -131,6 +175,12 @@
         tags: '',
         quality: 1,
         price: '',
+        dailyPrice:'',
+
+        overDays: "",
+        overOnSale: false,
+        overOnSaleType: false,
+        overOnSaleValue: "",
         
         onSale: false,
         onSaleType: false,
@@ -157,6 +207,14 @@
         else
           this.onSale = true
       },
+
+      changeDailySale(){
+        if(this.overOnSale)
+        this.overOnSale = false
+        this.overOnSaleType = false
+        this.overOnSaleValue = 1
+      },
+
       changeAvailable(){
         this.available = !this.available
       },
@@ -214,7 +272,24 @@
         query.discount.onSaleType = false;
         query.discount.onSaleValue = "";
       }
-      query.price = this.price;
+      
+      query.overDays = {}
+      if(this.overOnSale){
+        query.overDays.onSale  =  this.overOnSale
+        query.overDays.onSaleType = this.overOnSaleType
+        query.overDays.onSaleValue  =  this.overOnSaleValue
+        query.overDays.days = this.overDays
+      }
+      else{
+        query.overDays.onSale  =  false
+        query.overDays.onSaleType = false
+        query.overDays.onSaleValue  =  ''
+        query.overDays.days = ''
+
+      }
+
+      query.price =  this.dailyPrice
+      query.fixedPrice = this.price;
       query.quality = this.quality;
       query.available = this.available;
       query.description = this.description;
@@ -222,12 +297,12 @@
       query.bookings = [] 
       console.log(query)
       //invio dati
-      Functions.addProduct(query)
+      /* Functions.addProduct(query)
         .then( () => {
           //svuotiamo i valori
           this.cancel();
           alert("Creazione riuscita")
-        })  
+        })   */
       },
 
       cancel(){
@@ -239,6 +314,7 @@
         this.price = '';
 
         this.changeSale()
+        this.changeDailySale()
 
         this.available = false;
         this.description = '';

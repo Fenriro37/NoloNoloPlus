@@ -117,10 +117,14 @@
     created(){
       this.articleId = this.$route.params.id
       this.price = (this.$route.params.price) ? this.$route.params.price : ""
-      Functions.getProduct(this.articleId).then((result) => {
+      Functions.getProduct(this.articleId)
+      .then((result) => {
         this.article = result.data.data.obj
         console.log(this.article)
-      })
+      }, (error) => {
+          alert("La pagina non esiste")
+          this.$router.replace('')
+        })
     },
 
     methods: {

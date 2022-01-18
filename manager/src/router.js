@@ -36,12 +36,12 @@ export default new Router({
       component: article
     },
     {
-      path: "/client:id",
+      path: "/client:email",
       name: "client",
       component: client,
     },
     {
-      path: "/client1:email",
+      path: "/client1:id",
       name: "client1",
       component: client,
     },
