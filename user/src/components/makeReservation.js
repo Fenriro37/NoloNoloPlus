@@ -25,7 +25,9 @@ export class MakeReservation extends React.Component {
       dates: datesInTime,
       // Product
       bookings: props.bookings,
-      price: props.finalPrice,
+      fixedPrice: props.finalFixedPrice,
+      variablePrice: props.originalVariablePrice,
+      variableDiscount: props.variableDiscount,
       product: props.product,
       // Authorization
       isAuthenticated: props.isAuthenticated,
@@ -34,6 +36,8 @@ export class MakeReservation extends React.Component {
       loading: true,
       done: false
     }
+    // Price
+    this.priceCalculator = this.priceCalculator.bind(this);
     // Modal
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -43,6 +47,24 @@ export class MakeReservation extends React.Component {
     this.checkDateRange = this.checkDateRange.bind(this);
     // API call
     this.makeReservation = this.makeReservation.bind(this);
+  }
+
+  priceCalculator() {
+    if((this.state.value[0] && this.state.value[1])) {
+      if(this.state.variableDiscount.onSale == true && datediff(this.state.value[0], this.state.value[1]) > this.state.variableDiscount.days) {
+        let variableTotalPrice
+        if(this.state.variableDiscount.onSaleType == true) {
+          variableTotalPrice = (datediff(this.state.value[0], this.state.value[1]) * this.state.variablePrice) * (100 - this.state.variableDiscount.onSaleValue) / 100;
+        } else {
+          variableTotalPrice = (datediff(this.state.value[0], this.state.value[1]) * this.state.variablePrice) - this.state.variableDiscount.onSaleValue;
+        }
+        return (parseFloat(this.state.fixedPrice) + variableTotalPrice).toFixed(2);
+      } else {
+        return (parseFloat(this.state.fixedPrice) + (datediff(this.state.value[0], this.state.value[1]) * this.state.variablePrice)).toFixed(2)
+      }
+    } else {
+      return '0.00'
+    }
   }
 
   handleClose() {
@@ -88,6 +110,16 @@ export class MakeReservation extends React.Component {
 
     // Cerca le informazioni dell'utente
     ApiCall.getUser().then((getUserResult) => {
+      
+      // let description = 'Sconto ';
+      // description += this.state.variableDiscount.onSaleType ? 'del ' : 'di ';
+      // description += (parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)).toString();
+      // description += this.state.variableDiscount.onSaleType ? '% ' : '€ '
+      // description += 'sul costo giornaliero se superi ';
+      // description += this.state.variableDiscount.days
+      // description += parseInt(this.state.variableDiscount.days) > 1 ? ' giorni ' : ' giorno ';
+      // description += 'di noleggio.';
+
       // Crea la prenotazione
       const reservation = {
         clientEmail: getUserResult.data.data.email,
@@ -102,7 +134,11 @@ export class MakeReservation extends React.Component {
         endDate: convertDateToObject(this.state.value[1]),
         isTaken: false,
         isReturned: false,
-        price: (datediff(this.state.value[0], this.state.value[1]) * this.state.price).toFixed(2),
+        totalPrice: this.priceCalculator(),
+        fixedPrice: this.state.product.fixedPrice,
+        variablePrice: this.state.product.price,
+        fixedDiscount: this.state.product.discount,
+        variableDiscount: this.state.product.overDays,
         description: '',
         note: ''
       }
@@ -185,7 +221,7 @@ export class MakeReservation extends React.Component {
             Prezzo totale:
           </div>
           <div className='col-4 text-end'>
-            {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.price).toFixed(2) : '0.00'} €
+            {this.priceCalculator()} €
           </div>
         </div>
         {this.state.isAuthenticated ? (

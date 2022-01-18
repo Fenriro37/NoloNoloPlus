@@ -35,8 +35,9 @@ export class User extends Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     apiCall.getUser().then((result) => {
+      console.log(result)
       this.setState({
         userId: result.data.data._id,
         userName: result.data.data.userName,
@@ -57,7 +58,9 @@ export class User extends Component {
         //userPayment.cardCCV: result.data.data.payment.card,
         userSex: result.data.data.sex,
       })
-    })
+    }).catch((error) => {
+      console.log(error);
+      alert('Errore')});
   }
 
   render() {

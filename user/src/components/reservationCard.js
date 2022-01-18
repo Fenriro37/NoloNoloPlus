@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Accordion, Button } from 'react-bootstrap';
 import ApiCall from '../services/apiCall';
+import { datediff } from '../services/functions';
 import { Invoice } from './invoice';
 import { UpdateReservation } from './updateReservation';
 
@@ -50,6 +51,31 @@ export class ReservationCard extends React.Component {
   }
 
   render() {
+    let finalFixedPrice;
+    let finalVariablePrice;
+    if(this.state.reservation.fixedDiscount.onSale == true) {
+      if(this.state.reservation.fixedDiscount.onSaleType == true) {
+        finalFixedPrice = parseFloat(this.state.reservation.fixedPrice) * (100 - parseFloat(this.state.reservation.fixedDiscount.onSaleValue)) / 100;
+      } else {
+        finalFixedPrice = parseFloat(this.state.reservation.fixedPrice) - parseFloat(this.state.reservation.fixedDiscount.onSaleValue);
+      }
+    } else {
+      finalFixedPrice = parseFloat(this.state.reservation.fixedPrice);
+    }
+
+    const days = datediff(
+      new Date(this.state.reservation.startDate.year, this.state.reservation.startDate.month, this.state.reservation.startDate.day),
+      new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month, this.state.reservation.endDate.day));
+    if(this.state.reservation.variableDiscount.onSale == true && days > parseInt(this.state.reservation.variableDiscount.days)) {
+      if(this.state.reservation.variableDiscount.onSaleType == true) {
+        finalVariablePrice = days * parseFloat(this.state.reservation.variablePrice) * (100 - parseFloat(this.state.reservation.variableDiscount.onSaleValue)) / 100;
+      } else {
+        finalVariablePrice = days * parseFloat(this.state.reservation.variablePrice) - parseFloat(this.state.reservation.variableDiscount.onSaleValue);
+      }
+    } else {
+      finalVariablePrice = days * parseFloat(this.state.reservation.variablePrice);
+    }
+
     return (
       <Accordion
       className='m-2 bg-light rounded-3 border border-dark'>
@@ -136,10 +162,26 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-8'>
+                <b>Prezzo fisso:</b>
+                </div>
+                <div className='col-4 text-end'>
+                  {parseFloat(finalFixedPrice).toFixed(2)} €
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-8'>
+                <b>Prezzo variabile:</b>
+                </div>
+                <div className='col-4 text-end'>
+                  {parseFloat(finalVariablePrice).toFixed(2)} €
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-8'>
                 <b>Prezzo totale:</b>
                 </div>
                 <div className='col-4 text-end'>
-                  {parseFloat(this.state.reservation.price).toFixed(2)} €
+                  {parseFloat(this.state.reservation.totalPrice).toFixed(2)} €
                 </div>
               </div>
               <div className='row'>

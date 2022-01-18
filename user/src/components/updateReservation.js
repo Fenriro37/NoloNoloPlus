@@ -21,16 +21,7 @@ export class UpdateReservation extends React.Component {
       bookings: [],
       // Reservation
       reservation: props.reservation,
-      dailyPrice: (props.reservation.price / datediff(
-        new Date(
-          props.reservation.startDate.year,
-          props.reservation.startDate.month,
-          props.reservation.startDate.day),
-        new Date(
-          props.reservation.endDate.year,
-          props.reservation.endDate.month,
-          props.reservation.endDate.day
-        ))).toFixed(2),
+      variableDiscount: props.reservation.variableDiscount,
       // Modal
       showEditModal: false,
       showLoadingModal: false,
@@ -38,6 +29,8 @@ export class UpdateReservation extends React.Component {
       error: false,
       isEditing: true
     }
+    // Price
+    this.priceCalculator = this.priceCalculator.bind(this);
     // Modal
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -48,6 +41,36 @@ export class UpdateReservation extends React.Component {
     // API call
     this.updateReservation = this.updateReservation.bind(this);
     this.deleteReservation = this.deleteReservation.bind(this);
+  }
+
+  priceCalculator() {
+    let fixedPrice;
+    if(this.state.reservation.fixedDiscount.onSale == true) {
+      if(this.state.reservation.fixedDiscount.onSaleType == true) {
+        fixedPrice = (parseFloat(this.state.reservation.fixedPrice) * (100 - parseFloat(this.state.reservation.fixedDiscount.onSaleValue)) / 100);
+      } else {
+        fixedPrice = (parseFloat(this.state.reservation.fixedPrice) - parseFloat(this.state.reservation.fixedDiscount.onSaleValue));
+      }
+    } else {
+      fixedPrice = parseFloat(this.state.reservation.fixedPrice);
+    }
+
+    if((this.state.value[0] && this.state.value[1])) {
+      const days = datediff(this.state.value[0], this.state.value[1])
+      if(this.state.variableDiscount.onSale == true && days > parseInt(this.state.variableDiscount.days)) {
+        let variableTotalPrice
+        if(this.state.variableDiscount.onSaleType == true) {
+          variableTotalPrice = (days * parseFloat(this.state.reservation.variablePrice)) * (100 - parseFloat(this.state.variableDiscount.onSaleValue)) / 100;
+        } else {
+          variableTotalPrice = (days * parseFloat(this.state.reservation.variablePrice)) - parseFloat(this.state.variableDiscount.onSaleValue);
+        }
+        return (fixedPrice + variableTotalPrice).toFixed(2);
+      } else {
+        return (fixedPrice + (days * parseFloat(this.state.reservation.variablePrice))).toFixed(2);
+      }
+    } else {
+      return '0.00';
+    }
   }
 
   handleClose() {
@@ -96,7 +119,7 @@ export class UpdateReservation extends React.Component {
       bookingDate: convertDateToObject(new Date()),
       startDate: convertDateToObject(this.state.value[0]),
       endDate: convertDateToObject(this.state.value[1]),
-      price: (datediff(this.state.value[0], this.state.value[1]) * this.state.dailyPrice).toFixed(2)
+      price: this.priceCalculator()
     }).then(() => {
       // Aggiornamento delle prenotazioni del prodotto
       let bookings = this.state.bookings;
@@ -179,6 +202,17 @@ export class UpdateReservation extends React.Component {
   }
 
   render() {
+    let finalFixedPrice;
+    if(this.state.reservation.fixedDiscount.onSale == true) {
+      if(this.state.reservation.fixedDiscount.onSaleType == true) {
+        finalFixedPrice = parseFloat(this.state.reservation.fixedPrice) * (100 - parseFloat(this.state.reservation.fixedDiscount.onSaleValue)) / 100;
+      } else {
+        finalFixedPrice = parseFloat(this.state.reservation.fixedPrice) - parseFloat(this.state.reservation.fixedDiscount.onSaleValue);
+      }
+    } else {
+      finalFixedPrice = parseFloat(this.state.reservation.fixedPrice);
+    }
+
     return (
       <>
         {/* Trigger booking editor's modal */}
@@ -229,10 +263,18 @@ export class UpdateReservation extends React.Component {
             </Box>
             <div className='row'>
               <div className='col-8'>
+                Prezzo fisso:
+              </div>
+              <div className='col-4 text-end'>
+                {(finalFixedPrice).toFixed(2)} €
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-8'>
                 Prezzo giornaliero:
               </div>
               <div className='col-4 text-end'>
-                {this.state.dailyPrice} €
+                {parseFloat(this.state.reservation.variablePrice).toFixed(2)} €
               </div>
             </div>
             <div className='row'>
@@ -248,7 +290,7 @@ export class UpdateReservation extends React.Component {
                 Prezzo totale:
               </div>
               <div className='col-4 text-end'>
-                {(this.state.value[0] && this.state.value[1]) ? (datediff(this.state.value[0], this.state.value[1]) * this.state.dailyPrice).toFixed(2) : '0.00'} €
+                {this.priceCalculator()} €
               </div>
             </div>
           </Modal.Body>
