@@ -20,7 +20,7 @@
           <label for="date" class="mr-3">Periodo Prenotazione* </label>
         </div>
         <div class="col-9">
-          <date-picker :input-attr="{required: 'true'}" id="date" v-model="time" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
+          <date-picker :input-attr="{required: 'true'}" id="date" v-model="time" @change="newPrice" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
         </div>
       </div>
 
@@ -50,10 +50,104 @@
         </div>
       </div>
 
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Recipient's fixedprice" aria-describedby="basic-addon6" required>
+				<label for="price"> Prezzo Fisso*</label>
+			</div>
+
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto Prezzo fisso:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" :checked="onSale"  @click="changeSale">
+						<label class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+      
+      <template v-if="onSale">
+        <div id="saleInfo" class="mt-2">
+          <div class="row">
+            <div class="col-3"><p> Tipo di sconto:</p></div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
+                <label class="form-check-label" for="percentage">Percentuale</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
+                <label class="form-check-label" for="flat">Fisso</label>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-3"> <p> Valore sconto:</p>	</div>
+            <div class="col-9">
+            <input type="number" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" aria-label="saleValue" aria-describedby="basic-addon6" required>
+            </div>
+          </div>
+        </div>
+      </template>
+
+
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" v-model="dailyPrice" v-on:keyup="newPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<label for="price"> Prezzo Giornaliero*</label>
+			</div>
+
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto Prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" :checked="overOnSale"  @click="changeDailySale">
+						<label class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+      <template v-if="overOnSale">
+        <div id="saleInfoOver" class="mt-2">
+          <div class="row">
+            <div class="col-3"><p> Tipo di sconto:</p></div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
+                <label class="form-check-label" for="percentage">Percentuale</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio"  :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
+                <label class="form-check-label" for="flat">Fisso</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3"> <p> Valore sconto:</p>	</div>
+            <div class="col-9">
+            <input type="number" class="form-control" min="1" step="1" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" aria-label="saleValueOver" aria-describedby="basic-addon6" required>
+            </div>
+          </div>
+          <div class="row mt-2 mb-2">
+            <div class="col-3">Giorni per sconto:</div>
+            <div class="col-9">
+              <input type="number" class="form-control" min="1" step="1"  v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount" aria-label="daysDiscount" aria-describedby="basic-addon6" required>
+          </div>
+        </div>
+      </template>
+
       <div class="form-floating mb-3">
-        <input type="number" v-model="price" min="1" step="1" class="form-control" id="price" aria-label="Recipient's price" aria-describedby="basic-addon4" required>
-        <label for="price"> Prezzo*</label>
-      </div>
+				<input type="number" class="form-control" :value="newTotal" aria-label="Recipient's price" aria-describedby="basic-addon6" readonly>
+				<label for="price"> Prezzo Totale</label>
+			</div>
 
       <div class="form-floating mb-3">
         <input type="text"  v-model="notes" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" >
@@ -90,11 +184,22 @@
     components: { DatePicker },
     data() {
       return {
+        article: {},
 
         email: '',
         articleId: '',
-        price:' ',
-        article: {},
+
+        dailyPrice:'',
+        fixedPrice: '',
+        newTotal: '',
+        onSale: false,
+        onSaleType: false,
+        onSaleValue: 0,
+        overDaysCount: '',
+        overOnSale: false,
+        overOnSaleType : false,
+        overOnSaleValue: 0,        
+
 
         rentalOccurred: false,             //avvenuto noleggio (booleano)
         returned: false,               //avvenuta restituzione (booleano)
@@ -116,18 +221,57 @@
 
     created(){
       this.articleId = this.$route.params.id
-      this.price = (this.$route.params.price) ? this.$route.params.price : ""
       Functions.getProduct(this.articleId)
       .then((result) => {
         this.article = result.data.data.obj
         console.log(this.article)
+        this.dailyPrice = this.article.price
+        this.fixedPrice = this.article.fixedPrice
+        this.onSale = this.article.discount.onSale
+        this.onSaleType = this.article.discount.onSaleType
+        this.onSaleValue = this.article.discount.onSaleValue
+        this.overDaysCount = this.article.overDays.days
+        this.overOnSale = this.article.overDays.onSale
+        this.overOnSaleType = this.article.overDays.onSaleType
+        this.overOnSaleValue = this.article.overDays.onSaleValue
+
       }, (error) => {
           alert("La pagina non esiste")
           this.$router.replace('')
-        })
+      })
     },
 
     methods: {
+      changeSale(){
+        if(this.onSale){
+          this.onSale = false
+          this.onSaleType = false
+          this.onSaleValue = 1
+        }
+        else
+          this.onSale = true
+        this.newPrice()
+      },
+      changeOnSaleType(){
+        this.onSaleType = !this.onSaleType
+        this.newPrice()
+      },
+
+      changeDailySale(){
+        if(this.overOnSale){
+        this.overOnSale = false
+        this.overOnSaleType = false
+        this.overOnSaleValue = 1
+        }
+        else
+          this.overOnSale = true
+        this.newPrice()
+      },
+
+      changeType(){ 
+          this.overOnSaleType = !this.overOnSaleType 
+          this.newPrice()
+      },
       changeRentalOccured(){
         if(!this.rentalOccurred)
           this.rentalOccurred = true 
@@ -149,7 +293,7 @@
         let query = {};
         query.clientEmail = this.email;
         query.productId = this.articleId;
-        query.price = this.price;
+
         query.isTaken = this.rentalOccurred;
         query.isReturned = this.returned;
         query.description = this.notes;
@@ -177,6 +321,37 @@
         query.productTitle = this.article.title
         query.productBrand =  this.article.brand
         query.productImage = this.article.image
+
+        ///////prezzzi
+        query.price = this.dailyPrice
+        query.fixedPrice = this.fixedPrice
+        query.total = this.newTotal
+
+        query.discount = {}
+        if(this.onSale){
+          query.discount.onSale = true
+          query.discount.onSaleType = this.onSaleType
+          query.discount.onSaleValue = this.onSaleValue
+        }
+        else{
+          query.discount.onSale = false
+          query.discount.onSaleType = false
+          query.discount.onSaleValue = ''
+        }
+
+        query.overDays = {}
+        if(this.overOnSale){
+          query.overDays.onSale = true
+          query.overDays.onSaleType = this.overOnSaleType
+          query.overDays.days = this.overDaysCount
+          query.overDays.onSaleValue = this.overOnSaleValue
+        }
+        else{
+          query.overDays.days = ''
+          query.overDays.onSale = false
+          query.overDays.onSaleType = false
+          query.overDays.onSaleValue = ''
+        }
 
         Functions.getUser(this.email, 1)
         .then( (result) => {
@@ -208,7 +383,7 @@
               this.cancel();
               alert("Creazione riuscita")       
             })   
-          })
+          }) 
         }, (error) => {
           alert("La mail non esiste");
         })
@@ -221,6 +396,43 @@
         this.returned =  false;
         this.notes = '';
         this.privateNotes = '';
+      },
+
+      newPrice(){
+        if (this.time!= null){
+          let day = this.time[0].getDate()
+          let month = this.time[0].getMonth()+1
+          let year = this.time[0].getFullYear()
+          let day1 = this.time[1].getDate()
+          let month1 = this.time[1].getMonth()+1
+          let year1 = this.time[1].getFullYear()
+          let start = year * 10000 + month * 100 + day
+          let end = year1 * 10000 + month1 * 100 + day1
+          let days = end - start + 1
+          let addendum1, addendum2
+
+
+          if(this.onSale){
+            if(this.onSaleType)
+              addendum1 = this.fixedPrice - this.fixedPrice * this.onSaleValue /100
+            else
+              addendum1 = this.fixedPrice - this.onSaleValue
+          }
+          else{
+            addendum1 = this.fixedPrice
+          }
+          if(this.overOnSale && days > this.overDaysCount ){
+            if(this.overOnSaleType)
+              addendum2 = this.dailyPrice * days - this.dailyPrice * this.overOnSaleValue / 100
+            else
+              addendum2 = this.dailyPrice * days - this.overOnSaleValue
+          }
+          else{
+            addendum2 = this.dailyPrice * days
+          }
+          console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
+          this.newTotal = parseInt(addendum1)+ parseInt(addendum2)
+          }
       },
 
       dateDisabled(date) {         
@@ -237,6 +449,9 @@
         }   
         return false  
       }
-    },
+    }
   }
+
+
+  
 </script>

@@ -168,7 +168,7 @@
                       </b-row>
                       <b-row class="mb-3">
                         <b-col cols="6" class="d-flex align-items-center">
-                          Prezzo scontato
+                          Prezzo Fisso scontato 
                         </b-col>
                         <b-col cols="6">
                           <div class="input-group">
