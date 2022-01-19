@@ -109,7 +109,6 @@
         <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
 
         <b-button type="button" class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" :disabled="boolDelete" @click="deleteUser">Elimina cliente</b-button>
-        <span>{{boolDelete}}</span>
       </div>
 
     </form>
@@ -123,7 +122,7 @@
         <b-table hover :items="bookings" :fields="fields">
           <!-- item è la riga -->
           <template v-slot:cell(product)="{ item }">
-            <router-link :to="{ name: 'article',  params: { id: item.product.id}}">{{ item.product.title }}</router-link>
+            <router-link :to="{ name: 'article',  params: { id: item.id}}">{{ item.title }}</router-link>
           </template>
           <template v-slot:cell(reservation)="{ item }">
             <router-link :to="{ name: 'reservation',  params: { id: item.reservation}}">{{ item.reservation }}</router-link>
@@ -165,7 +164,7 @@
           cardExpireYear: '',
           cardCVV: ''
         },      
-        bookings: {},
+        bookings: [],
         fields: [
          {
             key: 'product',
@@ -175,10 +174,10 @@
             key: 'reservation',
             sortable: false
           },
-          {
+          /*{
             key: 'price',
             sortable: true
-          },
+          },*/
           {
             key: 'startDate',
             sortable: true
@@ -214,23 +213,25 @@
       Functions.getAllReservation(query1)
       .then( (result) => {
         console.log(result.data.obj)
-        let bookings = result.data.obj
         let current = new Date();      
-        /* for (let i in this.bookings){
+        for (let i in result.data.obj){
           let row = {}
-          row.product = {}
-          row.product.id =  this.bookings[i].productId 
-          row.product.title = this.bookings[i].productTitle + ' ' + this.bookings[i].productBrand
-          row.price = this.bookings[i].price
-          row.reservation = this.bookings[i]._id
-          row.startDate =  new Date(this.bookings[i].startDate.year, this.bookings[i].startDate.month-1, this.bookings[i].startDate.day)
-          row.endDate = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month-1, this.bookings[i].endDate.day)
+          row.title = result.data.obj[i].productTitle
+          row.id =  result.data.obj[i].productId 
+
+          //row.price = this.bookings[i].price
+          row.reservation = result.data.obj[i]._id
+          row.startDate =  result.data.obj[i].startDate.day +'-'+ result.data.obj[i].startDate.month +'-'+ result.data.obj[i].startDate.year
+          row.endDate = result.data.obj[i].endDate.day +'-'+ result.data.obj[i].endDate.month +'-'+ result.data.obj[i].endDate.year
+          let endDate = new Date(result.data.obj[i].endDate.year, result.data.obj[i].endDate.month-1, result.data.obj[i].endDate.day)
           
-          if(row.endDate >= current){
+          if(endDate >= current){
             this.boolDelete = true
-            row._rowVariant = 'danger'
+            //row._rowVariant = 'danger'
           } 
-        } */
+          console.log(row)
+          this.bookings.push(row)
+        } 
       })            
     },
   
@@ -327,9 +328,8 @@
       },
 
       deleteUser(){        
-        Functions.deleteUser(this.id)
-        .then( () =>{
-          this.$router.replace('')
+        Functions.deleteUser(this.id).then( () =>{
+          this.$router.replace(' ')
         })                   
       } 
     }

@@ -20,33 +20,7 @@
           <label for="date" class="mr-3">Periodo Prenotazione* </label>
         </div>
         <div class="col-9">
-          <date-picker :input-attr="{required: 'true'}" id="date" v-model="time" @change="newPrice" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p> Ritiro:</p>
-        </div>
-        <div class="col-9">
-          <div class=" form-check">
-            <input type="checkbox" v-model="rentalOccurred" @click="changeRentalOccured" class="form-check-input" id="rentalOccurred">
-            <label v-if="rentalOccurred" class="form-check-label" for="rentalOccurred">Il prodotto è stato ritirato</label>
-            <label v-else class="form-check-label" for="rentalOccurred">Il prodotto non è stato ritirato</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <p> Restituzione:</p>
-        </div>
-        <div class="col-9">
-          <div class=" form-check">
-            <input type="checkbox" v-model="returned" @click="changeReturned" class="form-check-input" id="returned">
-            <label v-if="returned" class="form-check-label" for="returned">Il prodotto è stato restituito</label>
-            <label v-else class="form-check-label" for="returned">Il prodotto non è stato restituito</label>
-          </div>
+          <date-picker :input-attr="{required: 'true'}" id="date" v-model="time" @change="changeData" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
         </div>
       </div>
 
@@ -139,7 +113,7 @@
           <div class="row mt-2 mb-2">
             <div class="col-3">Giorni per sconto:</div>
             <div class="col-9">
-              <input type="number" class="form-control" min="1" step="1"  v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount" aria-label="daysDiscount" aria-describedby="basic-addon6" required>
+              <input type="number" class="form-control" min="1" step="1" v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount" aria-label="daysDiscount" aria-describedby="basic-addon6" required>
           </div>
         </div>
       </template>
@@ -200,9 +174,6 @@
         overOnSaleType : false,
         overOnSaleValue: 0,        
 
-
-        rentalOccurred: false,             //avvenuto noleggio (booleano)
-        returned: false,               //avvenuta restituzione (booleano)
         notes:'',                //note 1 (dettagli sul prezzo o altro)                        
         privateNotes:'',               //note 2 (dettagli non visibili al cliente)
 
@@ -272,30 +243,15 @@
           this.overOnSaleType = !this.overOnSaleType 
           this.newPrice()
       },
-      changeRentalOccured(){
-        if(!this.rentalOccurred)
-          this.rentalOccurred = true 
-        else
-          this.rentalOccurred = false
-          this.returned = false
-      },
 
-      changeReturned(){
-        if(!this.returned){
-          this.returned = true
-          this.rentalOccurred = true 
-        }
-        else
-          this.returned = false
-      },
 
       createReservation(){
         let query = {};
         query.clientEmail = this.email;
         query.productId = this.articleId;
 
-        query.isTaken = this.rentalOccurred;
-        query.isReturned = this.returned;
+        query.isTaken = false;
+        query.isReturned = false;
         query.description = this.notes;
         query.note = this.privateNotes;
       
@@ -392,10 +348,19 @@
       cancel(){
         this.time = null;
         this.email =  '';
-        this.rentalOccurred =  false;
-        this.returned =  false;
         this.notes = '';
         this.privateNotes = '';
+
+        this.dailyPrice = this.article.price
+        this.fixedPrice = this.article.fixedPrice
+        this.onSale = this.article.discount.onSale
+        this.onSaleType = this.article.discount.onSaleType
+        this.onSaleValue = this.article.discount.onSaleValue
+        this.overDaysCount = this.article.overDays.days
+        this.overOnSale = this.article.overDays.onSale
+        this.overOnSaleType = this.article.overDays.onSaleType
+        this.overOnSaleValue = this.article.overDays.onSaleValue
+        this.newPrice()
       },
 
       newPrice(){
@@ -433,6 +398,21 @@
           console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
           this.newTotal = parseInt(addendum1)+ parseInt(addendum2)
           }
+      },
+
+      changeData(){
+        let start = new Date( this.time[0].getFullYear(), this.time[0].getMonth(), this.time[0].getDate())
+        let end = new Date( this.time[1].getFullYear(), this.time[1].getMonth(), this.time[1].getDate())
+        for(let i in this.article.bookings){
+          if( this.article.bookings[i].reservationId != this.reservationId){
+            let reservationEnd = new Date(this.article.bookings[i].endDate.year, this.article.bookings[i].endDate.month-1, this.article.bookings[i].endDate.day)
+            let reservationStart = new Date(this.article.bookings[i].startDate.year, this.article.bookings[i].startDate.month-1, this.article.bookings[i].startDate.day)
+            if(start <= reservationStart  && reservationEnd <= end)
+              this.time = null
+          }        
+        }
+        
+        this.newPrice()
       },
 
       dateDisabled(date) {         

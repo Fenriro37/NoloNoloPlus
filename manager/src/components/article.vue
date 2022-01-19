@@ -32,10 +32,10 @@
         </div>
           <!-- Bottoni -->
           <div id="buttons">
-            <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-secondary">Affitta</router-link>
+            <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-warning">Affitta</router-link>
             <b-button v-else id="rentProduct" class="btn btn-lg btn-secondary" disabled>Affitta</b-button>
             <b-button type="button" class="btn btn-lg " variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</b-button>
-            <b-button type="button" class="btn btn-lg btn-danger" v-on:click="deleteProduct">Elimina</b-button>
+            <b-button type="button" class="btn btn-lg btn-danger" :disabled="boolDelete" v-on:click="deleteProduct">Elimina</b-button>
             <div class="form-check form-switch big-size">
               <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
               <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
@@ -316,6 +316,7 @@
       <b-row class="mb-3 p-3 border border-secondary border-3 bg-white">
         {{ note }}
       </b-row>
+      <template v-if="bookings.length !== 0">
       <b-row>
         <!-- Da qui parte la tabella delle prenotazioni -->
         <h3>Lista prenotazioni</h3>
@@ -332,14 +333,15 @@
           </thead>
           <tbody id="myTable">
             <tr v-for="(iter, index) in bookings" :key="index">
-              <td><router-link :to="{name: 'reservation', params:{id: iter.id}}">{{iter.id}}</router-link></td>
-              <td><router-link :to="{name: 'client', params:{id: iter.clientId}}">{{iter.clientId}}</router-link></td>
+              <td><router-link :to="{name: 'reservation', params:{id: iter.reservationId}}">{{iter.reservationId}}</router-link></td>
+              <td><router-link :to="{name: 'client', params:{email: iter.clientId}}">{{iter.clientId}}</router-link></td>
               <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
               <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
             </tr>
           </tbody>
         </table>
       </b-row>
+      </template>
     </div>
   </div>
 </template>
@@ -395,6 +397,7 @@
         noteModal: '',
 
         available: false,
+        boolDelete: false,
         bookings: [],
   
       }
@@ -424,6 +427,14 @@
           this.description = this.article.description
           this.bookings = this.article.bookings
           this.note = this.article.note
+
+          let current = new Date(); 
+          for(let i in this.bookings){
+            let endDate = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month-1, this.bookings[i].endDate.day)
+            if(endDate >= current){
+              this.boolDelete = true
+            } 
+          }
 
         }, (error) => {
           alert(error);
@@ -578,26 +589,11 @@
       }, 
       
       deleteProduct(){
-        if(this.bookings.length === 0){
           Functions.deleteProduct(this.identifier)
           .then( () =>{
-            this.$router.push({name: 'articleCatalog'  , params: {filter: ""}})
+             this.$router.replace(' ')
           })
         }         
-        else{
-          for(let i in this.bookings){
-            let bookingDate = this.bookings[i].endDate.year + '-' + this.bookings[i].endDate.month + '-' +  this.bookings[i].endDate.day
-            let current = new Date();      
-            current = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-            if(bookingDate >= current  )   return(alert('Il prodotto ha ancora prenotazioni attive'))
-          }
-          Functions.deleteProduct(this.identifier)
-          .then( () =>{
-            this.$router.push({name: 'articleCatalog'  , params: {filter: ""}})
-          })                   
-        } 
-      }
-
 
     },
     computed: {

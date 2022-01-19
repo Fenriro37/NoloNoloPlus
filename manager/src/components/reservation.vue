@@ -23,7 +23,8 @@
           <label for="date" class="mr-3">Periodo Prenotazione </label>
         </div>
         <div class="col-9">
-          <date-picker :disabled="!boolModify" :placeholder="bookingStart + ' ~ ' + bookingEnd" id="date" v-model="time" @change="newPrice" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
+          <date-picker :disabled="!boolModify || !available" :placeholder="bookingStart + ' ~ ' + bookingEnd" id="date" v-model="time" @change="changeData" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
+          <label v-if="!available" for="date" class="mr-3">Non disponibile in giorni diversi </label>
         </div>
       </div>
 
@@ -124,8 +125,7 @@
       <div class="form-floating mb-3">
 				<input type="number" class="form-control" :value="newTotal" aria-label="Recipient's price" aria-describedby="basic-addon6" readonly>
 				<label for="price"> Prezzo Totale</label>
-			</div>
-       
+			</div>       
 
       <div class="form-floating mb-3">
         <input type="text" id="notes" class="form-control" :readonly="!boolModify"  v-model="notes" aria-label="notes" aria-describedby="basic-addon"  >
@@ -137,24 +137,24 @@
         <label for="privateNotes"> Note(non visibili ai clienti)</label>
       </div>
 
-      <div class="row mb-3">
+      <div class="row mb-3 ml-3">
         <div class="col-6 form-check ">
-          <input class="form-check-input" type="checkbox" :disabled="!boolModify" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
+          <input class="form-check-input noPad" type="checkbox" :disabled="!boolModify && !boolDelete" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
           <label v-if="rentalOccurred" class="form-check-label" for="flexCheckDefault">Il prodotto è stato ritirato</label>
           <label v-else class="form-check-label" for="flexCheckDefault">Il prodotto non è stato ritirato</label>
         </div>
         <div class="col-6 form-check">
-          <input class="form-check-input" type="checkbox" :disabled="!boolModify" :checked="returned" @click="changeReturned" id="flexCheckDefault2">
+          <input class="form-check-input" type="checkbox" :disabled="!boolModify && !boolDelete " :checked="returned" @click="changeReturned" id="flexCheckDefault2">
           <label v-if="returned" class="form-check-label" for="flexCheckDefault"> Il prodotto è stato restituito </label>
           <label v-else class="form-check-label" for="flexCheckDefault"> Il prodotto non è stato restituito </label>
         </div>
       </div>
 
 
-    <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" @click="modify">Modifica</b-button>
-    <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2"  >Salva</b-button>
-    <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
-    <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" @click="deleteReservation" disabled> Cancella prenotazione</button>
+    <b-button v-if="!boolModify && !boolDelete" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" @click="modify">Modifica</b-button>
+    <b-button v-if="boolModify || boolDelete" type="submit" class="btn btn-lg btn-success m-2"  >Salva</b-button>
+    <b-button v-if="boolModify || boolDelete" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
+    <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" @click="deleteReservation" :disabled="boolActive"> Cancella prenotazione</button>
     </form>
   </div> 
 </div> 
@@ -208,6 +208,8 @@
         },
 
         boolModify: false,
+        boolDelete: false,
+        boolActive: false
 
       }
     },
@@ -219,6 +221,11 @@
         console.log(this.reservation)
 
         this.undoChange()
+
+        let current = new Date(); 
+        let startDate = new Date(this.reservation.startDate.year, this.reservation.startDate.month-1, this.reservation.startDate.day)
+        if(startDate <= current)
+            this.boolActive = true
 
         Functions.getProduct(this.reservation.productId).then((result)=> {
           this.bookings = result.data.data.obj.bookings
@@ -232,7 +239,11 @@
     methods: {
 
       modify(){
-        this.boolModify = true
+        if(this.boolActive){
+          this.boolDelete = true
+        }
+        else
+          this.boolModify = true
       },
 
       undoChange(){
@@ -257,6 +268,7 @@
         this.privateNotes = this.reservation.note
         this.time = null
         this.boolModify = false 
+        this.boolDelete = false
       },
 
       saveData(){
@@ -268,6 +280,8 @@
           query.variablePrice = this.dailyPrice;
         if(this.fixedPrice != this.reservation.fixedPrice)
           query.fixedPrice = this.fixedPrice;
+        if(this.newTotal != this.reservation.totalPrice)
+          query.totalPrice = this.newTotal;
 
         if( this.onSale != this.reservation.fixedDiscount.onSale || this.onSaleType != this.reservation.fixedDiscount.onSaleType || this.onSaleValue != this.reservation.fixedDiscount.onSaleValue){
           query.fixedDiscount = {}
@@ -356,37 +370,26 @@
 
         this.time = null
         this.boolModify = false 
+        this.boolDelete = false
         
         })     
       },
 
       deleteReservation(){
-        const current = new Date();      
-        const date = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate() 
-        //controlliamo se possiamo eliminare la prenotazione
-        if(date >= this.bookingStart) return(alert('La prenotazione non è modificabile'))
-        if(this.boolModify){
-          if(!this.copyRentalOccurred) return(alert('Il prodotto non è stato consegnato'))
-          if(!this.copyReturned) return(alert('Il prodotto non è stato restituito'))
-        }
-        else{
-          if(!this.rentalOccurred) return(alert('Il prodotto non è stato consegnato'))
-          if(!this.returned) return(alert('Il prodotto non è stato restituito'))
-        }
-        Functions.getProduct(this.bookedArticles.identifier)
-        .then( (result) =>{
-          let query = {}
-          query.bookings = result.data.data.obj.bookings
-          for (let i in query.bookings){
-            if(query.bookings[i].reservationId == this.reservationId)
-              query.bookings.splice(i, 1);
+        //cancellare da article la prenotazione
+        let query = {}
+        for(let i in this.bookings){
+          if( this.bookings[i].reservationId != this.reservationId){
+            this.bookings.splice(i, 1);
+            break;
           }
-          Functions.saveDataProduct(this.bookedArticles.identifier, query)
+        }
+        query.bookings = this.bookings
+        Functions.saveDataProduct(this.reservation.productId, query)
           .then( () =>{
-            Functions.deleteReservation(this.reservationId)
-            this.$router.push({name: 'reservationCatalog'  , params: {filter: ""}})
+          Functions.deleteReservation(this.reservationId).then( () =>{
+             this.$router.replace(' ')
           })
-
         })
       },
 
@@ -437,6 +440,22 @@
           this.overOnSaleType = !this.overOnSaleType 
           this.newPrice()
       },
+
+      changeData(){
+        let start = new Date( this.time[0].getFullYear(), this.time[0].getMonth(), this.time[0].getDate())
+        let end = new Date( this.time[1].getFullYear(), this.time[1].getMonth(), this.time[1].getDate())
+        for(let i in this.bookings){
+          if( this.bookings[i].reservationId != this.reservationId){
+            let reservationEnd = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month-1, this.bookings[i].endDate.day)
+            let reservationStart = new Date(this.bookings[i].startDate.year, this.bookings[i].startDate.month-1, this.bookings[i].startDate.day)
+            if(start <= reservationStart  && reservationEnd <= end)
+              this.time = null
+          }        
+        }
+        
+        this.newPrice()
+      },
+
       newPrice(){
         let day, month, year, day1, month1, year1, start, end
         if (this.time != null){
@@ -506,4 +525,7 @@
 </script>
 
 <style>
-@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+.noPad{
+  padding: 0px;
+}
+</style>

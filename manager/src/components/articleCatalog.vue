@@ -9,8 +9,15 @@
             <div class="col-5 align-items-center h-100"> <img class="myImg" alt="immagine prodotto" v-bind:src="article.image"></div>
             <div class="col-7" style="height:100%;">
               <h2 class="mb-2 text-truncate"> <router-link @click.native="switchComponent" :to="{ name: 'article',  params: { id: article._id} }">{{article.title + ' ' + article.brand }}</router-link></h2>   
-              <div class="mb-2 price" v-if="article.discount.onSale"><s>{{article.price}}€ </s> {{ discount(article) }} </div>
-              <div class="mb-2 price" v-else>{{article.price}}€</div>
+              <div class="row">
+                <div class="col-5">
+                  <div class="mb-2 price" v-if="article.discount.onSale"><s>{{article.fixedPrice}}€ </s> {{ discount(article) }} </div>
+                  <div class="mb-2 price" v-else>{{article.fixedPrice}}€</div>
+                </div>
+                <div class="col-5">
+                  <div class="mb-2 price"> {{article.price }} €/giorno </div> 
+                </div>
+              </div>
               <span v-for="i in parseInt(article.quality)" class="fa fa-star checked big-size" :key="i"> </span>
               <span v-for="j in (3 - parseInt(article.quality))" class="fa fa-star big-size" :key="j"> </span>
             </div>
@@ -35,11 +42,12 @@ export default {
     },
 
     created(){
-      // (this.$route.params.filter !== undefined) ? this.$route.params.filter : ""
+      // (this.$route.params.filter !== undefined) ? this.$route.params.filter : 
       this.getArticles()
     },
 
     update(){ //non funziona
+      this.catalog = []
       this.getArticles()
     },
 
@@ -58,9 +66,9 @@ export default {
       },
       discount: function (article) {
         if(article.discount.onSaleType) //flat
-          return article.price - article.discount.onSaleValue;
+          return article.fixedPrice - article.discount.onSaleValue;
         else  
-          return article.price - article.price * article.discount.onSaleValue / 100;
+          return article.fixedPrice - article.fixedPrice * article.discount.onSaleValue / 100;
       },
       switchComponent (event) {
          this.$emit('clicked')

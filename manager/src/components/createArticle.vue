@@ -302,12 +302,12 @@
       query.bookings = [] 
       console.log(query)
       //invio dati
-      /* Functions.addProduct(query)
+      Functions.addProduct(query)
         .then( () => {
           //svuotiamo i valori
           this.cancel();
           alert("Creazione riuscita")
-        })   */
+        })  
       },
 
       cancel(){
