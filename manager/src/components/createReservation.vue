@@ -423,7 +423,7 @@
           }
           if(this.overOnSale && days > this.overDaysCount ){
             if(this.overOnSaleType)
-              addendum2 = this.dailyPrice * days - this.dailyPrice * this.overOnSaleValue / 100
+              addendum2 = this.dailyPrice * days - this.dailyPrice * days * this.overOnSaleValue / 100
             else
               addendum2 = this.dailyPrice * days - this.overOnSaleValue
           }

@@ -23,7 +23,7 @@
           <label for="date" class="mr-3">Periodo Prenotazione </label>
         </div>
         <div class="col-9">
-          <date-picker :input-attr="{required: 'true'}"  id="date" v-model="time" @change="newPrice" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
+          <date-picker :disabled="!boolModify" :placeholder="bookingStart + ' ~ ' + bookingEnd" id="date" v-model="time" @change="newPrice" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
         </div>
       </div>
 
@@ -152,7 +152,7 @@
 
 
     <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" @click="modify">Modifica</b-button>
-    <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" @click="saveData" >Salva</b-button>
+    <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2"  >Salva</b-button>
     <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
     <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" @click="deleteReservation" disabled> Cancella prenotazione</button>
     </form>
@@ -221,8 +221,9 @@
         this.undoChange()
 
         Functions.getProduct(this.reservation.productId).then((result)=> {
-          this.bookings = result.bookings
-          this.available = result.available
+          this.bookings = result.data.data.obj.bookings
+          console.log(this.bookings)
+          this.available = result.data.data.obj.available
         })
         
       })
@@ -247,169 +248,116 @@
         this.overOnSaleValue = this.reservation.variableDiscount.onSaleValue
 
         this.bookingRequest = this.reservation.bookingDate.day + '-' + this.reservation.bookingDate.month + '-' + this.reservation.bookingDate.year
-        this.bookingStart = this.reservation.startDate.year + '-' + this.reservation.startDate.month + '-' + this.reservation.startDate.day
-        this.bookingEnd = this.reservation.endDate.year + '-' + this.reservation.endDate.month + '-' + this.reservation.endDate.day 
+        this.bookingStart = this.reservation.startDate.day + '-' + this.reservation.startDate.month + '-' + this.reservation.startDate.year
+        this.bookingEnd = this.reservation.endDate.day + '-' + this.reservation.endDate.month + '-' + this.reservation.endDate.year 
         
         this.rentalOccurred = this.reservation.isTaken 
         this.returned = this.reservation.isReturned 
         this.notes = this.reservation.description 
         this.privateNotes = this.reservation.note
+        this.time = null
         this.boolModify = false 
       },
 
       saveData(){
-        if(this.boolModify){
-          if(this.copyPrice <= 0){ return (alert('Il prezzo deve essere un numero positivo'))}
-          if(this.copyBookingRequest > this.copyBookingStart){ return (alert('Il campo Data richiesta prenotazione non può essere superiore rispetto alla data inizio prenotazione'))}
-          if(this.copyBookingStart > this.copyBookingEnd){ return (alert('Il campo Data inizio prenotazione non può essere superiore rispetto alla data fine prenotazione'))}
-          if(this.copyRentalOccurred == false && this.copyReturned){ return (alert("L'articolo non può essere stato restituito se non è stato consegnato"))}
-          
-          let query = {}
 
-          if(this.copyPrice != this.bookedArticles.price)
-            query.price = this.copyPrice;
+        let query = {}
 
-          /*if(this.copyOnSale != this.bookedArticles.discount.onSale)
-              query.onSale = this.copyOnSale;
+        //controlliamo i prezzi
+        if(this.dailyPrice != this.reservation.variablePrice)
+          query.variablePrice = this.dailyPrice;
+        if(this.fixedPrice != this.reservation.fixedPrice)
+          query.fixedPrice = this.fixedPrice;
 
-            if(this.copyOnSaleType != this.bookedArticles.discount.onSaleType)
-              query.onSaleType = this.copyOnSaleType;
+        if( this.onSale != this.reservation.fixedDiscount.onSale || this.onSaleType != this.reservation.fixedDiscount.onSaleType || this.onSaleValue != this.reservation.fixedDiscount.onSaleValue){
+          query.fixedDiscount = {}
 
-            if(this.copyOnSaleValue != this.bookedArticles.discount.onSaleValue)
-              query.onSaleValue = this.copyOnSaleValue;  */
-            
-          let dateChanged = false 
-          if(this.copyBookingRequest != this.bookingRequest){
-            query.bookingDate = {}
-            query.bookingDate.day = this.copyBookingRequest.charAt(8) + this.copyBookingRequest.charAt(9)
-            query.bookingDate.month = this.copyBookingRequest.charAt(5) + this.copyBookingRequest.charAt(6)
-            query.bookingDate.year = this.copyBookingRequest.charAt(0) + this.copyBookingRequest.charAt(1) + this.copyBookingRequest.charAt(2) + this.copyBookingRequest.charAt(3)
-          }
-            
-          if(this.copyBookingStart != this.bookingStart){
-            dateChanged = true
-            query.startDate = {}
-            query.startDate.day = this.copyBookingStart.charAt(8) + this.copyBookingStart.charAt(9)
-            query.startDate.month = this.copyBookingStart.charAt(5) + this.copyBookingStart.charAt(6)
-            query.startDate.year = this.copyBookingStart.charAt(0) + this.copyBookingStart.charAt(1) + this.copyBookingStart.charAt(2) + this.copyBookingStart.charAt(3)
-          }
-          
-          if(this.copyBookingEnd != this.bookingEnd){
-            dateChanged= true
-            query.endDate = {}
-            query.endDate.day = this.copyBookingEnd.charAt(8) + this.copyBookingEnd.charAt(9)
-            query.endDate.month = this.copyBookingEnd.charAt(5) + this.copyBookingEnd.charAt(6)
-            query.endDate.year = this.copyBookingEnd.charAt(0) + this.copyBookingEnd.charAt(1) + this.copyBookingEnd.charAt(2) + this.copyBookingEnd.charAt(3)
-          }        
-          
-          if(this.copyRentalOccurred != this.rentalOccurred)
-            query.isTaken = this.copyRentalOccurred;
-
-          if(this.copyReturned != this.returned)
-            query.isReturned = this.copyReturned;
-
-          if(this.copyNotes != this.notes)
-            query.description = this.copyNotes;
-            
-          if(this.copyPrivateNotes != this.privateNotes)
-            query.note = this.copyPrivateNotes;
-            
-          console.log(query);
-          Functions.saveReservation(this.reservationId, query)
-          .then( () => {
-            if(dateChanged){
-              console.log('dataModificata')
-            
-              Functions.getProduct(this.bookedArticles.identifier)
-              .then( (result) =>{
-                console.log('trovato id')
-                console.log(result)
-                let query = {};
-                let newBookings = {};
-                newBookings.id = this.bookedArticles.identifier
-                newBookings.clientId = this.clientEmail
-                newBookings.startDate = {}
-                let d1 = this.copyBookingStart.split('-')
-                newBookings.startDate.day = d1[2]
-                newBookings.startDate.month = d1[1]
-                newBookings.startDate.year = d1[0]
-                let d2 = this.copyBookingEnd.split('-')
-                newBookings.endDate = {}
-                newBookings.endDate.day = d2[2]
-                newBookings.endDate.month = d2[1]
-                newBookings.endDate.year = d2[0]
-
-                console.log(result)
-
-                let d3 = this.bookingStart.split('-')
-                let oldStartDate = {}
-                oldStartDate.day = d3[2]
-                oldStartDate.month = d3[1]
-                oldStartDate.year = d3[0] 
-                let d4 = this.bookingEnd.split('-')
-                let oldEndDate = {}
-                oldEndDate.day = d4[2]
-                oldEndDate.month = d4[1]
-                oldEndDate.year = d4[0]
-
-
-                query.bookings = result.data.data.obj.bookings
-                for (let i in query.bookings){
-                  if(query.bookings[i].id == newBookings.id  && JSON.stringify(query.bookings[i].startDate) === JSON.stringify(oldStartDate) && JSON.stringify(query.bookings[i].endDate) === JSON.stringify(oldEndDate)){                  
-                    query.bookings[i].startDate.day = newBookings.startDate.day
-                    query.bookings[i].startDate.month = newBookings.startDate.month
-                    query.bookings[i].startDate.year = newBookings.startDate.year
-                    query.bookings[i].endDate.day = newBookings.endDate.day
-                    query.bookings[i].endDate.month = newBookings.endDate.month
-                    query.bookings[i].endDate.year = newBookings.endDate.year
-                  }
-                }
-                Functions.saveDataProduct(this.bookedArticles.identifier, query)
-                .then(  () =>{
-                  //Aggiorniamo l'articolo
-                  this.bookedArticles.price = this.copyPrice 
-                  this.bookingRequest = this.copyBookingRequest
-                  this.bookingStart = this.copyBookingStart
-                  this.bookingEnd = this.copyBookingEnd
-                  this.rentalOccurred = this.copyRentalOccurred
-                  this.returned = this.copyReturned
-                  this.notes  = this.copyNotes
-                  this.privateNotes  = this.copyPrivateNotes
-                    
-                  this.boolModify = false;    
-                  alert("Modifica data riuscita") 
-                }) 
-              })
-            }
-            else{
-                  this.bookedArticles.price = this.copyPrice 
-                  this.bookingRequest = this.copyBookingRequest
-                  this.rentalOccurred = this.copyRentalOccurred
-                  this.returned = this.copyReturned
-                  this.notes  = this.copyNotes
-                  this.privateNotes  = this.copyPrivateNotes
-                    
-                  this.boolModify = false;    
-                  alert("Modifica data riuscita") 
-            }                                       
-          })   
+            query.fixedDiscount.onSale = this.onSale
+            query.fixedDiscount.onSaleType = this.onSaleType
+            query.fixedDiscount.onSaleValue = this.onSaleValue
         }
-        else if(this.boolVerify){
-          console.log("BoolVerify")
-          if(this.copyRentalOccurred == false && this.copyReturned){ return (alert("L'articolo non può essere stato restituito se non è stato consegnato"))}
-          if (this.copyRentalOccurred !=  this.rentalOccurred || this.copyReturned != this.returned){
-            let query = {}
-            query.isTaken = this.copyRentalOccurred;
-            query.isReturned = this.copyReturned;
-            Functions.saveReservation(this.reservationId, query).then( ()  =>{
-              console.log("saveReservation")
-              this.rentalOccurred = this.copyRentalOccurred;
-              this.returned = this.copyReturned
-              this.boolVerify = false;
-              alert("Modifica effettuata")       
-            })
+
+        if( this.overDaysCount != this.reservation.variableDiscount.days || this.overOnSale != this.reservation.variableDiscount.onSale || this.overOnSaleType != this.reservation.variableDiscount.onSaleType || this.overOnSaleValue != this.reservation.variableDiscount.onSaleValue){
+        query.variableDiscount = {}
+        query.variableDiscount.onSale = this.overOnSale
+        query.variableDiscount.onSaleType = this.overOnSaleType
+        query.variableDiscount.days = this.overDaysCount
+        query.variableDiscount.onSaleValue = this.overOnSaleValue
+        }
+
+        if(this.rentalOccurred != this.reservation.isTaken)
+          query.isTaken = this.rentalOccurred;
+        if(this.returned != this.reservation.isReturned)
+          query.isReturned = this.returned;
+        if(this.notes != this.reservation.description)
+          query.description = this.notes;
+        if(this.privateNotes != this.reservation.note)
+          query.note = this.privateNotes;
+
+        if(this.time != null){
+          //prendere i dati
+          let day = this.time[0].getDate()
+          let month = this.time[0].getMonth()+1
+          let year = this.time[0].getFullYear()
+          let day1 = this.time[1].getDate()
+          let month1 = this.time[1].getMonth()+1
+          let year1 = this.time[1].getFullYear()
+          //modificare reservation
+          query.startDate = {}
+          query.startDate.day = day
+          query.startDate.month = month
+          query.startDate.year = year
+          query.endDate = {}
+          query.endDate.day = day1
+          query.endDate.month = month1
+          query.endDate.year = year1
+          this.bookingStart = day + '-' + month + '-' + year
+          this.bookingEnd = day1 + '-' + month1 + '-' + year1
+          //modificare bookins
+          for(let i in this.bookings){
+            if(this.reservationId == this.bookings[i].reservationId){
+              this.bookings[i].startDate.day = day
+              this.bookings[i].startDate.month = month
+              this.bookings[i].startDate.year = year
+              this.bookings[i].endDate.day = day1
+              this.bookings[i].endDate.month = month1
+              this.bookings[i].endDate.year = year1
+            }
           }
-        } 
+          //update product
+          let query1 = {}
+          query1.bookings = this.bookings
+          Functions.saveDataProduct(this.reservation.productId, query1)
+          .then( () => {
+            alert("Articolo Modificato")
+          })          
+        }
+            
+        console.log(query);
+        Functions.saveReservation(this.reservationId, query)
+        .then( () => {
+        //update current date
+        alert("Modifica Riuscita")
+        this.reservation.variablePrice = this.dailyPrice
+        this.reservation.fixedPrice = this.fixedPrice
+        this.reservation.totalPrice = this.newTotal
+        this.reservation.fixedDiscount.onSale = this.onSale
+        this.reservation.fixedDiscount.onSaleType = this.onSaleType
+        this.reservation.fixedDiscount.onSaleValue = this.onSaleValue
+        this.reservation.variableDiscount.days = this.overDaysCount
+        this.reservation.variableDiscount.onSale = this.overOnSale
+        this.reservation.variableDiscount.onSaleType = this.overOnSaleType
+        this.reservation.variableDiscount.onSaleValue = this.overOnSaleValue
+        
+        this.reservation.isTaken = this.rentalOccurred
+        this.reservation.isReturned = this.returned
+        this.reservation.description =  this.notes
+        this.reservation.note =  this.privateNotes
+
+        this.time = null
+        this.boolModify = false 
+        
+        })     
       },
 
       deleteReservation(){
@@ -462,7 +410,7 @@
         if(this.onSale){
           this.onSale = false
           this.onSaleType = false
-          this.onSaleValue = 1
+          this.onSaleValue = ''
         }
         else
           this.onSale = true
@@ -477,7 +425,8 @@
         if(this.overOnSale){
         this.overOnSale = false
         this.overOnSaleType = false
-        this.overOnSaleValue = 1
+        this.overOnSaleValue = ''
+        this.overDaysCount = ''
         }
         else
           this.overOnSale = true
@@ -489,52 +438,65 @@
           this.newPrice()
       },
       newPrice(){
-        if (this.time!= null){
-          let day = this.time[0].getDate()
-          let month = this.time[0].getMonth()+1
-          let year = this.time[0].getFullYear()
-          let day1 = this.time[1].getDate()
-          let month1 = this.time[1].getMonth()+1
-          let year1 = this.time[1].getFullYear()
-          let start = year * 10000 + month * 100 + day
-          let end = year1 * 10000 + month1 * 100 + day1
-          let days = end - start + 1
-          let addendum1, addendum2
+        let day, month, year, day1, month1, year1, start, end
+        if (this.time != null){
+          day = this.time[0].getDate()
+          month = this.time[0].getMonth()+1
+          year = this.time[0].getFullYear()
+          day1 = this.time[1].getDate()
+          month1 = this.time[1].getMonth()+1
+          year1 = this.time[1].getFullYear()
+          start = year * 10000 + month * 100 + day
+          end = year1 * 10000 + month1 * 100 + day1
+          }
+        else{
+          let d1 = new Date(this.reservation.startDate.year, this.reservation.startDate.month-1, this.reservation.startDate.day)
+          let d2 = new Date(this.reservation.endDate.year, this.reservation.endDate.month-1, this.reservation.endDate.day) 
+          start = parseInt(d1.getFullYear()) * 10000 + (parseInt(d1.getMonth()) + 1) * 100 +parseInt(d1.getDate()) 
+          end = parseInt(d2.getFullYear()) * 10000 + (parseInt(d2.getMonth()) + 1) * 100 +parseInt(d2.getDate()) 
+        }
+
+        let days = end - start + 1
+        let addendum1, addendum2
 
 
-          if(this.onSale){
-            if(this.onSaleType)
-              addendum1 = this.fixedPrice - this.fixedPrice * this.onSaleValue /100
-            else
-              addendum1 = this.fixedPrice - this.onSaleValue
-          }
-          else{
-            addendum1 = this.fixedPrice
-          }
-          if(this.overOnSale && days > this.overDaysCount ){
-            if(this.overOnSaleType)
-              addendum2 = this.dailyPrice * days - this.dailyPrice * this.overOnSaleValue / 100
-            else
-              addendum2 = this.dailyPrice * days - this.overOnSaleValue
-          }
-          else{
-            addendum2 = this.dailyPrice * days
-          }
-          console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
-          this.newTotal = parseInt(addendum1)+ parseInt(addendum2)
-          }
+        if(this.onSale){
+          if(this.onSaleType)
+            addendum1 = this.fixedPrice - this.fixedPrice * this.onSaleValue /100
+          else
+            addendum1 = this.fixedPrice - this.onSaleValue
+        }
+        else{
+          addendum1 = this.fixedPrice
+        }
+        if(this.overOnSale && days > this.overDaysCount ){
+          console.log("yeas")
+          if(this.overOnSaleType)
+            addendum2 = this.dailyPrice * days - this.dailyPrice * days * this.overOnSaleValue / 100
+          else
+            addendum2 = this.dailyPrice * days - this.overOnSaleValue
+        }
+        else{
+          addendum2 = this.dailyPrice * days
+        }
+        console.log(days +'-'+ addendum1 +'-'+ addendum2)
+        this.newTotal = parseInt(addendum1)+ parseInt(addendum2)
+          
       },
+
       dateDisabled(date) {         
         const today = new Date();
         if(date < today)
           return true
 
         for(let i in this.bookings){
+          if(this.bookings[i].reservationId != this.reservationId){
           let start =  new Date(this.bookings[i].startDate.year, this.bookings[i].startDate.month -1, this.bookings[i].startDate.day) 
           let end = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month -1, this.bookings[i].endDate.day) 
 
           if(start <= date && date <= end) 
             return true
+          }
         }   
         return false  
       }
