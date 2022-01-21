@@ -35,8 +35,8 @@
       </div>
         
       <div class="form-floating mb-3">
-        <input type="email" id="mail"  v-model="email" class="form-control" aria-label="mail" aria-describedby="basic-addon6" :readonly="!boolModify" required>
-        <label for="mail"> E-mail</label>
+        <input type="email" id="mail"  v-model="email" class="form-control" aria-label="mail" aria-describedby="basic-addon6" readonly required>
+        <label for="mail"> E-mail <span v-if="boolModify">(non modificabile)</label>
       </div>
 
       <hr>
@@ -111,6 +111,8 @@
         <b-button type="button" class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" :disabled="boolDelete" @click="deleteUser">Elimina cliente</b-button>
       </div>
 
+      <router-link :to="{ name: 'clientChart',  params: { id: id}}">{{ id }}</router-link>
+
     </form>
 
     <!-- Da qui parte la tabella delle prenotazioni -->
@@ -123,6 +125,9 @@
           <!-- item è la riga -->
           <template v-slot:cell(product)="{ item }">
             <router-link :to="{ name: 'article',  params: { id: item.id}}">{{ item.title }}</router-link>
+          </template>
+          <template v-slot:cell(price)="{ item }">
+            <span>{{ item.price + '€'}}</span>
           </template>
           <template v-slot:cell(reservation)="{ item }">
             <router-link :to="{ name: 'reservation',  params: { id: item.reservation}}">{{ item.reservation }}</router-link>
@@ -174,10 +179,10 @@
             key: 'reservation',
             sortable: false
           },
-          /*{
+          {
             key: 'price',
             sortable: true
-          },*/
+          },
           {
             key: 'startDate',
             sortable: true
@@ -197,14 +202,18 @@
       //console.log(this.$route.params)
       //comporre il getUser con id o email '?id/email=' + value
       //{'filter': 'han.chu@studio.unibo.it', 'sort': 'true'}
-      let query,n
+      let query
       query = this.$route.params.email 
-      n = 1
-      Functions.getUser(query, n).then((result) => {
-        console.log(result)
+      Functions.getUser(query).then((result) => {
+        //console.log(result)
         this.user = result.data.data
         this.undoChange()
-      })
+      }, (error) => {
+          alert('La pagina non esiste');
+          this.$router.replace(' ')
+          this.$emit('clicked')
+        }
+      )
 
       let query1 = {
         filter: this.$route.params.email,
@@ -219,7 +228,7 @@
           row.title = result.data.obj[i].productTitle
           row.id =  result.data.obj[i].productId 
 
-          //row.price = this.bookings[i].price
+          row.price = result.data.obj[i].totalPrice 
           row.reservation = result.data.obj[i]._id
           row.startDate =  result.data.obj[i].startDate.day +'-'+ result.data.obj[i].startDate.month +'-'+ result.data.obj[i].startDate.year
           row.endDate = result.data.obj[i].endDate.day +'-'+ result.data.obj[i].endDate.month +'-'+ result.data.obj[i].endDate.year
@@ -234,6 +243,11 @@
         } 
       })            
     },
+    
+    /*beforeRouteLeave (from, to, next){
+      if(next == 'localhost8081...')
+      this.$emit('clicked')
+    },*/
   
     methods: {
 
@@ -330,6 +344,7 @@
       deleteUser(){        
         Functions.deleteUser(this.id).then( () =>{
           this.$router.replace(' ')
+          this.$emit('clicked')
         })                   
       } 
     }

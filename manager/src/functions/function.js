@@ -40,11 +40,8 @@ class Functions {
     //////////////API relative ai clienti///////////////////////////////////////////////
     //0 id 
     //1 email
-    getUser(id, choice) {
-        if(choice === 0)
-            return http.get("/api/user?id=" + id)
-        else     
-            return http.get("/api/user?email=" + id)
+    getUser(id) {   
+        return http.get("/api/user?email=" + id)
     }
     
     getAllUser(query){

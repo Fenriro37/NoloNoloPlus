@@ -207,11 +207,16 @@
         this.overOnSaleValue = this.article.overDays.onSaleValue
 
       }, (error) => {
-          alert("La pagina non esiste")
-          this.$router.replace('')
-      })
+          alert('La pagina non esiste');
+          this.$router.replace(' ')
+          this.$emit('clicked')
+        }
+      )
     },
-
+    
+    /* beforeRouteLeave (){
+      this.$emit('clicked')
+    }, */
     methods: {
       changeSale(){
         if(this.onSale){
@@ -331,6 +336,7 @@
             newBookings.endDate.day = day1
             newBookings.endDate.month = month1
             newBookings.endDate.year = year1
+            newBookings.total = this.newTotal
             let query = {}
             query.bookings = this.article.bookings
             query.bookings.push(newBookings)

@@ -8,7 +8,7 @@
       <div class="col-6" id="info">
         <p>Id prenotazione: {{reservationId}} </p>
         <p><router-link :to="{ name: 'article',  params: { id: reservation.productId} }">{{reservation.productTitle + ' ' +reservation.productBrand}}</router-link></p>
-        <p><router-link :to="{name: 'client', params:{email: reservation.clientEmail, choice: 1}}" >{{reservation.clientEmail}}</router-link></p>
+        <p><router-link :to="{name: 'client', params:{email: reservation.clientEmail}}" >{{reservation.clientEmail}}</router-link></p>
       </div>
     </div>
     <form name="myform" id="formId" @submit.prevent="saveData">
@@ -233,8 +233,17 @@
           this.available = result.data.data.obj.available
         })
         
-      })
+      },(error) => {
+          alert('La pagina non esiste');
+          this.$router.replace(' ')
+          this.$emit('clicked')
+        }
+      )
     },
+      
+    /*beforeRouteLeave (){
+      this.$emit('clicked')
+    },*/
 
     methods: {
 
@@ -280,8 +289,6 @@
           query.variablePrice = this.dailyPrice;
         if(this.fixedPrice != this.reservation.fixedPrice)
           query.fixedPrice = this.fixedPrice;
-        if(this.newTotal != this.reservation.totalPrice)
-          query.totalPrice = this.newTotal;
 
         if( this.onSale != this.reservation.fixedDiscount.onSale || this.onSaleType != this.reservation.fixedDiscount.onSaleType || this.onSaleValue != this.reservation.fixedDiscount.onSaleValue){
           query.fixedDiscount = {}
@@ -308,34 +315,46 @@
         if(this.privateNotes != this.reservation.note)
           query.note = this.privateNotes;
 
-        if(this.time != null){
+
+        if(this.time != null || this.newTotal != this.reservation.totalPrice ){
+          query.totalPrice = this.newTotal;
           //prendere i dati
-          let day = this.time[0].getDate()
-          let month = this.time[0].getMonth()+1
-          let year = this.time[0].getFullYear()
-          let day1 = this.time[1].getDate()
-          let month1 = this.time[1].getMonth()+1
-          let year1 = this.time[1].getFullYear()
-          //modificare reservation
-          query.startDate = {}
-          query.startDate.day = day
-          query.startDate.month = month
-          query.startDate.year = year
-          query.endDate = {}
-          query.endDate.day = day1
-          query.endDate.month = month1
-          query.endDate.year = year1
-          this.bookingStart = day + '-' + month + '-' + year
-          this.bookingEnd = day1 + '-' + month1 + '-' + year1
-          //modificare bookins
-          for(let i in this.bookings){
-            if(this.reservationId == this.bookings[i].reservationId){
-              this.bookings[i].startDate.day = day
-              this.bookings[i].startDate.month = month
-              this.bookings[i].startDate.year = year
-              this.bookings[i].endDate.day = day1
-              this.bookings[i].endDate.month = month1
-              this.bookings[i].endDate.year = year1
+          if(this.time!=null){
+            let day = this.time[0].getDate()
+            let month = this.time[0].getMonth()+1
+            let year = this.time[0].getFullYear()
+            let day1 = this.time[1].getDate()
+            let month1 = this.time[1].getMonth()+1
+            let year1 = this.time[1].getFullYear()
+            //modificare reservation
+            query.startDate = {}
+            query.startDate.day = day
+            query.startDate.month = month
+            query.startDate.year = year
+            query.endDate = {}
+            query.endDate.day = day1
+            query.endDate.month = month1
+            query.endDate.year = year1
+            this.bookingStart = day + '-' + month + '-' + year
+            this.bookingEnd = day1 + '-' + month1 + '-' + year1
+            //modificare bookins
+            for(let i in this.bookings){
+              if(this.reservationId == this.bookings[i].reservationId){
+                this.bookings[i].startDate.day = day
+                this.bookings[i].startDate.month = month
+                this.bookings[i].startDate.year = year
+                this.bookings[i].endDate.day = day1
+                this.bookings[i].endDate.month = month1
+                this.bookings[i].endDate.year = year1
+                this.bookings[i].total = this.newTotal;
+              }
+            }
+          }
+          else{
+            for(let i in this.bookings){
+              if(this.reservationId == this.bookings[i].reservationId){
+                this.bookings[i].total = this.newTotal;
+              }
             }
           }
           //update product
@@ -389,6 +408,7 @@
           .then( () =>{
           Functions.deleteReservation(this.reservationId).then( () =>{
              this.$router.replace(' ')
+             this.$emit('clicked')
           })
         })
       },

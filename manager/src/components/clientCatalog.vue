@@ -26,6 +26,21 @@ import Functions from '../functions/function'
 export default {
     name: "clientCatalog",
     props : ['filter'],
+    watch: { 
+      filter: function(newVal, oldVal) { // watch it
+        console.log(newVal)
+        let query = {
+        filter: newVal,
+        sort: false
+        }
+        console.log(query)
+        Functions.getAllUser(query)
+          .then( (result) => {
+          console.log(result)
+          this.catalog = result.data.data
+        }) 
+      }
+    },
     data() {
       return {
         catalog: [],              

@@ -317,32 +317,31 @@
         {{ note }}
       </b-row>
       <template v-if="bookings.length !== 0">
-      <b-row>
         <!-- Da qui parte la tabella delle prenotazioni -->
         <h3>Lista prenotazioni</h3>
-        <b-form-input  type="text" class="form-control" id="myInput" placeholder="Search.."></b-form-input>
-        <br>
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>ID noleggio</th>
-              <th>ID cliente</th>
-              <th>Inizio noleggio</th>
-              <th>Fine noleggio</th>
-            </tr>
-          </thead>
-          <tbody id="myTable">
-            <tr v-for="(iter, index) in bookings" :key="index">
-              <td><router-link :to="{name: 'reservation', params:{id: iter.reservationId}}">{{iter.reservationId}}</router-link></td>
-              <td><router-link :to="{name: 'client', params:{email: iter.clientId}}">{{iter.clientId}}</router-link></td>
-              <td >{{iter.startDate.day + '/' + iter.startDate.month + '/' + iter.startDate.year}}</td>
-              <td >{{iter.endDate.day + '/' + iter.endDate.month + '/' + iter.endDate.year}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </b-row>
+        <div class="p-3">
+          <b-row>
+            <b-table hover :items="bookings" :fields="fields">
+              <!-- item è la riga -->
+              <template v-slot:cell(email)="{ item }">
+                <router-link :to="{ name: 'client',  params: { email: item.clientId}}">{{ item.clientId }}</router-link>
+              </template>
+              <template v-slot:cell(totale)="{ item }">
+                <span>{{ item.total + '€'}}</span>
+              </template>
+              <template v-slot:cell(prenotazione)="{ item }">
+                <router-link :to="{ name: 'reservation',  params: { id: item.reservationId}}">{{ item.reservationId }}</router-link>
+              </template>
+              <template v-slot:cell(inizio)="{ item }">
+                <span>{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>
+              </template>
+              <template v-slot:cell(fine)="{ item }">
+                <span>{{item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year}}</span>
+              </template>
+            </b-table>
+          </b-row>
+        </div>
       </template>
-    </div>
   </div>
 </template>
 
@@ -399,7 +398,29 @@
         available: false,
         boolDelete: false,
         bookings: [],
-  
+
+        fields: [
+         {
+            key: 'email',
+            sortable: false
+          },
+          {
+            key: 'prenotazione',
+            sortable: false
+          },
+          {
+            key: 'totale',
+            sortable: true
+          },
+          {
+            key: 'inizio',
+            sortable: true
+          },
+          {
+            key: 'fine',
+            sortable: true
+          },
+        ],
       }
     },
 
@@ -426,6 +447,7 @@
           this.available = this.article.available          
           this.description = this.article.description
           this.bookings = this.article.bookings
+          console.log(this.bookings)
           this.note = this.article.note
 
           let current = new Date(); 
@@ -437,9 +459,16 @@
           }
 
         }, (error) => {
-          alert(error);
-        })
+          alert('La pagina non esiste');
+          this.$router.replace(' ')
+          this.$emit('clicked')
+        }
+      )
     },
+
+    /* beforeRouteLeave (){
+      this.$emit('clicked')
+    }, */
 
     methods: {
 
@@ -592,6 +621,7 @@
           Functions.deleteProduct(this.identifier)
           .then( () =>{
              this.$router.replace(' ')
+             this.$emit('clicked')
           })
         }         
 

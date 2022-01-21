@@ -6,11 +6,8 @@ import createReservation from "./components/createReservation.vue";
 import article from "./components/article.vue";
 import client from "./components/client.vue"
 import reservation from "./components/reservation.vue"
-import chart from "./components/chart.vue"
+import clientChart from "./components/clientChart.vue"
 
-import articleCatalog from "./components/articleCatalog.vue";
-import clientCatalog from "./components/clientCatalog.vue";
-import reservationCatalog from "./components/reservationCatalog.vue";
 
 
 Vue.use(Router);
@@ -41,19 +38,14 @@ export default new Router({
       component: client,
     },
     {
-      path: "/client1:id",
-      name: "client1",
-      component: client,
-    },
-    {
       path: "/reservation:id",
       name: "reservation",
       component: reservation
     },
     {
-      path: "/chart",
-      name: "chart",
-      component: chart
+      path: "/chartClient:email",
+      name: "clientChart",
+      component: clientChart
     }
   ]
 });

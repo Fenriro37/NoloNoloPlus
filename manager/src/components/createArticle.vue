@@ -195,6 +195,10 @@
       }
     },
 
+    /* beforeRouteLeave (){
+      this.$emit('clicked')
+    }, */
+
     methods: {
       print(){
         console.log(this.onSaleType)

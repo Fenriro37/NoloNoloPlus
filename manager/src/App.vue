@@ -12,7 +12,7 @@
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Clienti'">Clienti</button>
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Prenotazioni'">Prenotazioni</button>
 		</div>
-		<input id="searchText" type="text" v-model="request" class="form-control" placeholder="Cerca..." aria-label="Recipient's username" aria-describedby="button-addon2">
+		<input id="searchText" type="text" v-model="text" class="form-control" placeholder="Cerca..." aria-label="Recipient's username" aria-describedby="button-addon2">
 		<button class="btn btn-secondary" type="button" id="searchButton" v-on:click="search()">Cerca</button>
 	</div>
 
@@ -29,6 +29,10 @@
     <br>
     <router-link to="/chart"  >Grafici</router-link>
     </div>
+  </div>
+
+  <div>
+    {{choice}}
   </div>
 
   <!-- Articoli -->
@@ -48,7 +52,7 @@
 
   <!-- Tutti gli altri components -->
   <template  v-else-if="choice == 3">
-    <router-view :key="$route.fullPath"></router-view>
+    <router-view :key="$route.fullPath" @clicked="backToCatalog"></router-view>
   </template>
 
 </div>
@@ -69,6 +73,7 @@ export default {
     data() {
       return {
         catalog: [],
+        text: '',
         request: '',
         selected: 'Articoli',
         choice: 0     
@@ -87,18 +92,21 @@ export default {
       let urlArticle = currentLocation.href.slice(0, 49);
       let urlClient = currentLocation.href.slice(0, 48);
       let urlReservation = currentLocation.href.slice(0, 53);
+      let urlClientChart = currentLocation.href.slice(0, 53);
       console.log(shortUrl)
       if(currentLocation == 'http://localhost:8081/manager/index.html#/createArticle' ||
         shortUrl == 'http://localhost:8081/manager/index.html#/createReservation' ||
         urlArticle == 'http://localhost:8081/manager/index.html#/article' ||
         urlClient == 'http://localhost:8081/manager/index.html#/client' ||
-        urlReservation == 'http://localhost:8081/manager/index.html#/reservation' ){
+        urlReservation == 'http://localhost:8081/manager/index.html#/reservation' ||
+        urlClientChart == 'http://localhost:8081/manager/index.html#/chartClient'){
         this.choice = 3
         }
     },
 
     methods: {
       search(){
+        this.request = this.text
         if(this.selected == 'Articoli')
           this.choice = 0;
         else if(this.selected == 'Clienti')
@@ -106,9 +114,14 @@ export default {
         else
           this.choice = 2;
       },
+
       childEvent () {
           this.choice = 3 // someValue
-      }
+      },
+      backToCatalog(){
+        this.choice = 0
+      },
+      
     }
   }
 </script>
