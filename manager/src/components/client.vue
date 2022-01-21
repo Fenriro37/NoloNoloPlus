@@ -111,7 +111,7 @@
         <b-button type="button" class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" :disabled="boolDelete" @click="deleteUser">Elimina cliente</b-button>
       </div>
 
-      <router-link :to="{ name: 'clientChart',  params: { id: id}}">{{ id }}</router-link>
+      <router-link :to="{ name: 'clientChart',  params: { email: email}}">{{ email }}</router-link>
 
     </form>
 

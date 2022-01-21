@@ -43,7 +43,7 @@ export default new Router({
       component: reservation
     },
     {
-      path: "/chartClient:email",
+      path: "/chartClient",
       name: "clientChart",
       component: clientChart
     }
