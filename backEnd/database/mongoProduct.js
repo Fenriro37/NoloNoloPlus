@@ -71,6 +71,50 @@ exports.productsFind = async function(filter, sortBy) {
     }
 }
 
+// productsFindByTag
+// ----------------------------------------------------------------------------
+// Cerca nel DB i prodotti con un certo tag.
+//
+// Parametri: (tag)
+// - tag
+//   È il valore che viene cercato come stringa (esatta) nei tag
+//
+// Valore di ritorno: { status, message, obj, error }
+// - status 
+//   Indica se il programma è andato a buon fine; può essere:
+//      -  0 -> OK 
+//      - -1 -> Errore generico
+// - message
+//   È un messaggio descrittivo.
+// - obj
+//   È l'oggetto che ritorna dalle API di mongodb.
+// - error
+//   È il messaggio d'errore.
+exports.productsFindByTag = async function(filter) {
+    console.log(filter)
+    const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
+    try {
+        await mongo.connect();
+        const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
+        const re = new RegExp(`\\b${filter}\\b`, 'i');
+        const result = await products.find({ tags: re });
+        let x = await result.toArray();
+        await mongo.close();
+        return {
+            status: 0,
+            message: 'Ricerca effettuata con successo',
+            obj: x
+        }
+    } catch(error) {
+        await mongo.close();
+        return {
+            status: -1,
+            message: 'Errore di productsFindbyTag.',
+            error: error
+        }
+    }
+}
+
 // productsFindOne
 // ----------------------------------------------------------------------------
 // Cerca nel DB il prodotto con un certo id.
