@@ -125,8 +125,9 @@ export class UpdateReservation extends React.Component {
       let bookings = this.state.bookings;
       bookings = bookings.filter((e) => {
         if(e.reservationId == this.state.reservation._id) {
-          e.startDate =  convertDateToObject(this.state.value[0])
-          e.endDate = convertDateToObject(this.state.value[1])
+          e.startDate =  convertDateToObject(this.state.value[0]);
+          e.endDate = convertDateToObject(this.state.value[1]);
+          e.total = this.priceCalculator()
         }
         return true;
       });
@@ -275,6 +276,15 @@ export class UpdateReservation extends React.Component {
               </div>
               <div className='col-4 text-end'>
                 {parseFloat(this.state.reservation.variablePrice).toFixed(2)} €
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-12' style={{textAlign: 'justify'}}>
+                Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
+                {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
+                {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
+                sul costo giornaliero se superi {this.state.variableDiscount.days} {parseInt(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno '} 
+                di noleggio.
               </div>
             </div>
             <div className='row'>

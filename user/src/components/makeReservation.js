@@ -126,7 +126,7 @@ export class MakeReservation extends React.Component {
         clientName: getUserResult.data.data.userName,
         clientSurname: getUserResult.data.data.userSurname,
         productId: this.state.product._id,
-        prodcutTitle: this.state.product.title,
+        productTitle: this.state.product.title,
         productBrand: this.state.product.brand,
         productImage: this.state.product.image,
         bookingDate: convertDateToObject(new Date()),
@@ -150,7 +150,8 @@ export class MakeReservation extends React.Component {
           clientId: getUserResult.data.data.email,
           reservationId: PostReservationResult.data.data._id,
           startDate: convertDateToObject(this.state.value[0]),
-          endDate: convertDateToObject(this.state.value[1])
+          endDate: convertDateToObject(this.state.value[1]),
+          total: this.priceCalculator()
         }
         let oldBookings = this.state.bookings;
         oldBookings.push(newBooking);
