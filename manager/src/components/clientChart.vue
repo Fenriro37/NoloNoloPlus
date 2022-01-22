@@ -19,10 +19,7 @@
       </div>
 
       <template v-if="newTotal !== 0">
-
-
         <div class="mb-5 mt-3">
-
           <h4>Statistiche</h4>
 
           <div class="form-floating mb-3">

@@ -92,17 +92,18 @@ export default {
       let urlClient = currentLocation.href.slice(0, 48);
       let urlReservation = currentLocation.href.slice(0, 53);
       let urlClientChart = currentLocation.href.slice(0, 53);
+      let urlArticleChart = currentLocation.href.slice(0, 54);
       console.log(shortUrl)
       if(currentLocation == 'http://localhost:8081/manager/index.html#/createArticle' ||
         shortUrl == 'http://localhost:8081/manager/index.html#/createReservation' ||
         urlArticle == 'http://localhost:8081/manager/index.html#/article' ||
         urlClient == 'http://localhost:8081/manager/index.html#/client' ||
         urlReservation == 'http://localhost:8081/manager/index.html#/reservation' ||
-        urlClientChart == 'http://localhost:8081/manager/index.html#/chartClient'){
+        urlClientChart == 'http://localhost:8081/manager/index.html#/chartClient' ||
+        urlArticleChart == 'http://localhost:8081/manager/index.html#/chartArticle' ){
         this.choice = 3
-        }
+      }
     },
-
     methods: {
       search(){
         this.request = this.text

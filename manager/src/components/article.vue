@@ -37,11 +37,11 @@
             <b-button type="button" class="btn btn-lg " variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</b-button>
             <b-button type="button" class="btn btn-lg btn-danger" :disabled="boolDelete" v-on:click="deleteProduct">Elimina</b-button>
             <div class="form-check form-switch big-size">
+            <div> <router-link :to="{ name: 'chartArticle', props: {id: identifier}}" :disabled="bookings.length === 0"> Analytics </router-link> </div>
               <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
               <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
               <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
             </div>
-            <!-- Modal da mettere in un altro file???? -->
             <div class="modal" id="myModal">
               <div class="modal-dialog">
                 <div class="modal-content">
