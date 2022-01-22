@@ -102,16 +102,20 @@
         <label for="cardYear"> Anno</label>
       </div>
 
-      <div id="myButtons">
+      <div id="myButtons" class="row">
         <!-- Bottoni -->
-        <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" @click="modify">Modifica</b-button>
-        <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" >Salva</b-button>
-        <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
-
-        <b-button type="button" class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" :disabled="boolDelete" @click="deleteUser">Elimina cliente</b-button>
+        <div class="col">
+          <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2" @click="modify">Modifica</b-button>
+          <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" >Salva</b-button>
+          <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger mb-2 mt-2" @click="undoChange">Annulla</b-button>
+        </div>
+        <div class="col">
+          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="bookings.length===0" @click="chart">Analytics</b-button>
+        </div>
+        <div class="col">
+          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="boolDelete" @click="deleteUser">Elimina cliente</b-button>
+        </div>
       </div>
-
-      <router-link :to="{ name: 'clientChart',  params: { email: email}}">{{ email }}</router-link>
 
     </form>
 
@@ -346,7 +350,10 @@
           this.$router.replace(' ')
           this.$emit('clicked')
         })                   
-      } 
+      },
+      chart(){
+        this.$router.push({ name: 'clientChart', params: { email: this.email} })
+      }
     }
   }
 //////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////

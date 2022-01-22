@@ -24,10 +24,9 @@
 
   <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
     <div class="bg-dark p-2">
-    <p class="">Login/Logout</p>
-    <router-link @click.native="childEvent" :to="{ path: '/createArticle'}">Aggiungi articolo</router-link>
-    <br>
-    <router-link to="/chart"  >Grafici</router-link>
+      <p class="">Login/Logout</p>
+      <p><router-link @click.native="childEvent" :to="{ path: '/createArticle'}">Aggiungi articolo</router-link></p>
+      <p><router-link @click.native="childEvent" :to="{ path: '/chartClient'}">Analytics Clienti</router-link></p>
     </div>
   </div>
 
