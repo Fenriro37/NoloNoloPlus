@@ -1,5 +1,6 @@
 // import $ from 'jquery'
 import http from './http'
+import config from '../config.js'
 
 class Functions {
 
@@ -7,12 +8,22 @@ class Functions {
         let result = http.post(
             "/api/public/login",
             {
-                email: "han.chu@worker.com",
+                email: "han.chu@manager.com",
                 plainTextPassword: "1234567890"
             }
         );
         console.log("AUTH");
         return result;
+    }
+    checkCookie(){
+        console.log("Cookie");  
+        http.get("/api/public/auth").then( (result) => {
+            if(result.data.obj !== 2){
+                window.location = config.site202131Url + "/public/login.html";
+            }
+        }).catch( (result) => {
+            window.location = config.site202131Url + "/public/login.html";
+        })      
     }
 
     //////////////API relative ai prodotti///////////////////////////////////////////////

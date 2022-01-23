@@ -15,7 +15,6 @@ const userApi = require('./user.js');
 console.log('/api/index.js');
 
 router.use('/public/', publicApi);
-// router.use(authMiddleware);
 router.use('/invoice/', invoiceApi);
 router.use('/product/', productApi);
 router.use('/reservation/', reservationApi);

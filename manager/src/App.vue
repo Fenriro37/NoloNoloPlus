@@ -24,9 +24,10 @@
 
   <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
     <div class="bg-dark p-2">
-      <p class="">Login/Logout</p>
+      <p> <a @click="logOut" href="http://localhost:8081/public/login.html">Logout</a></p>
       <p><router-link @click.native="childEvent" :to="{ path: '/createArticle'}">Aggiungi articolo</router-link></p>
       <p><router-link @click.native="childEvent" :to="{ path: '/chartClient'}">Analytics Clienti</router-link></p>
+      <p><router-link @click.native="childEvent" :to="{ path: '/chartCatalog'}">Analytics Catalogo</router-link></p>
     </div>
   </div>
 
@@ -84,7 +85,9 @@ export default {
       Reservation
     },
     created(){
-      Functions.loginAsWorker()  
+      //Functions.loginAsWorker()
+      Functions.checkCookie()  
+
       var currentLocation = window.location;
       console.log(currentLocation.href)
       let shortUrl = currentLocation.href.slice(0, 59);
@@ -93,6 +96,7 @@ export default {
       let urlReservation = currentLocation.href.slice(0, 53);
       let urlClientChart = currentLocation.href.slice(0, 53);
       let urlArticleChart = currentLocation.href.slice(0, 54);
+      let urlCatalogChart = currentLocation.href.slice(0, 54);
       console.log(shortUrl)
       if(currentLocation == 'http://localhost:8081/manager/index.html#/createArticle' ||
         shortUrl == 'http://localhost:8081/manager/index.html#/createReservation' ||
@@ -100,7 +104,8 @@ export default {
         urlClient == 'http://localhost:8081/manager/index.html#/client' ||
         urlReservation == 'http://localhost:8081/manager/index.html#/reservation' ||
         urlClientChart == 'http://localhost:8081/manager/index.html#/chartClient' ||
-        urlArticleChart == 'http://localhost:8081/manager/index.html#/chartArticle' ){
+        urlArticleChart == 'http://localhost:8081/manager/index.html#/chartArticle' ||
+        urlCatalogChart == 'http://localhost:8081/manager/index.html#/chartCatalog' ){
         this.choice = 3
       }
     },
@@ -121,6 +126,10 @@ export default {
       backToCatalog(){
         this.choice = 0
       },
+
+      logOut(){
+        this.$cookies.remove("jwt")
+      }
       
     }
   }
