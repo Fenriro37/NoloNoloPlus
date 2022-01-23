@@ -27,7 +27,9 @@ router.get('/user/page', (req, res) => {
 router.get('/user/reservation', (req, res) => {
     res.sendFile(path.join(userPath + '/index.html'));
 });
-
+router.get('/user/invoice', (req, res) => {
+    res.sendFile(path.join(userPath + '/index.html'));
+});
 
 router.use('/public/', express.static(publicPath + '/html/'));
 router.use('/public/css', express.static(publicPath + '/css/'));
