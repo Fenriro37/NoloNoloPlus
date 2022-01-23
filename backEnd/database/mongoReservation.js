@@ -37,22 +37,24 @@ const config = require('./../config');
 //   È l'oggetto che ritorna dalle API di mongodb
 // - error
 //   È il messaggio d'errore 
-exports.reservationsFind = async function(token, filter, sortBy) {
+exports.reservationsFind = async function(token, status, filter, sortBy) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
     try {
         await mongo.connect();
         const reservations = mongo.db(config.databaseName).collection(config.databaseReservationCollectionName);
-        const re = new RegExp(`\\b${filter}\\b`, 'gi');
+        const re = new RegExp(`${filter}`, 'gi');
         let result;
-        if(token.status == 0) {
+        if(status == 0) {
             result = await reservations.find({
                 $and: [
                     { clientEmail: token.email },
-                    $or [
-                        { productId: re },
-                        { productTitle: re },
-                        { productBrand: re }
-                    ]
+                    {
+                        $or: [
+                            { productId: re },
+                            { productTitle: re },
+                            { productBrand: re }
+                        ]
+                    }
                 ]}).sort({ 'bookingDate.year': sortBy, 'bookingDate.month': sortBy, 'bookingDate.day': sortBy});
         } else {
             result = await reservations.find({

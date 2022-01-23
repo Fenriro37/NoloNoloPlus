@@ -8,6 +8,7 @@ const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 const myMongoAuth = require('./../database/mongoAuth.js');
 const myMongoReservation = require('./../database/mongoReservation.js');
+const myMongoUser = require('./../database/mongoUser.js');
 const config = require('./../config');
 
 // GET /api/reservation
@@ -99,7 +100,7 @@ router.get('/', async function(req, res) {
 //   È l'errore.
 router.get('/all', async function(req, res) {
     console.log('GET /api/reservation/all');
-    try {
+    // try {
         const token = jwt.verify(req.cookies['jwt'], config.JSONWebTokenKey)
         const sender = await myMongoAuth.auth({ '_id': ObjectId(token.id) });
         if(sender.status == -1) {
@@ -109,7 +110,7 @@ router.get('/all', async function(req, res) {
         } else if(sender.status >= 0) {
             // È un cliente o funzionario/manager
             if(req.query.filter != null && req.query.sort != null) {
-                const result = await myMongoReservation.reservationsFind(token, req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
+                const result = await myMongoReservation.reservationsFind(token, sender.status, req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
                 if(result.status == 0) {
                     // OK
                     return res.status(200).json({
@@ -135,12 +136,12 @@ router.get('/all', async function(req, res) {
                 message: 'Operazione non autorizzata.'
             });
         }
-    } catch(error) {
-        return res.status(400).json({
-            message: 'Errore di GET /api/reservation/all',
-            error: error
-        })
-    }
+    // } catch(error) {
+    //     return res.status(400).json({
+    //         message: 'Errore di GET /api/reservation/all',
+    //         error: error
+    //     })
+    // }
 });
 
 // POST /api/reservation
@@ -181,19 +182,28 @@ router.post('/', async function(req, res) {
             });
         } else {
             // È un utente autenticato 
-            if(reservationId == null && sender.status >= 0) {
+            if(reservationId == null) {
                 // Parametro non specificato
-                // Creazione di una nuova prenotazione da parte del funzionario
-                result = await myMongoReservation.reservationsInsertOne(req.body);                
-            } else if(sender.status > 0) {
-                // Parametro specificato
-                // Modifica di una prenotazione da parte del funzionario
-                result = await myMongoReservation.reservationsUpdateOne(reservationId, req.body);
+                // Creazione di una nuova prenotazione da parte di chiunque (autorizzato)
+                result = await myMongoReservation.reservationsInsertOne(req.body);         
             } else {
-                // Cliente che cerca di modificare una prenotazione di un altro cliente
-                return res.status(401).json({
-                    message: 'Operazione non autorizzata.'
-                });
+                // Parametro specificato
+                if(sender.status > 0) {
+                    // Modifica di una prenotazione da parte del funzionario
+                    result = await myMongoReservation.reservationsUpdateOne(reservationId, req.body);
+                } else {
+                    // Utente che vuole modificare una prenotazione
+                    let reservationClientEmail = (await myMongoReservation.reservationsFindOne(reservationId)).obj?.clientEmail;
+                    let reservationClientId = (await myMongoUser.usersFindOne({email: reservationClientEmail})).obj?._id.toString();
+                    if(reservationClientId == tokenId) {
+                        result = await myMongoReservation.reservationsUpdateOne(reservationId, req.body);
+                    } else {
+                        // Cliente che cerca di modificare una prenotazione di un altro cliente
+                        return res.status(401).json({
+                            message: 'Operazione non autorizzata.'
+                        });
+                    }
+                }
             }
             if(result.status == 0) {
                 // OK
@@ -244,6 +254,7 @@ router.delete('/', async function(req, res) {
         const token = req.cookies['jwt'];
         const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
+        let result;
         if(sender.status == -1) {
             return res.status(400).json({
                 message: 'Token non valido.'
@@ -258,24 +269,30 @@ router.delete('/', async function(req, res) {
             } else {
                 // Parametro specificato    
                 result = await myMongoReservation.reservationsDeleteOne(reservationId);
-                if(result.status == 0) {
-                    // OK
-                    return res.status(200).json({
-                        message: result.message,
-                        obj: result.obj
-                    });
-                } else {
-                    // Errore del database
-                    return res.status(400).json({
-                        message: result.message,
-                        error: result.obj
-                    });
-                }
             }
         } else {
-            // È un cliente
+            // Utente che vuole cancellare una prenotazione
+            let reservationClientEmail = (await myMongoReservation.reservationsFindOne(reservationId)).obj?.clientEmail;
+            let reservationClientId = (await myMongoUser.usersFindOne({email: reservationClientEmail})).obj?._id.toString();
+            if(reservationClientId == tokenId) {
+                result = await myMongoReservation.reservationsDeleteOne(reservationId);
+            } else {
+                return res.status(400).json({
+                    message: 'Operazione non autorizzata.'
+                });
+            }
+        }
+        if(result.status == 0) {
+            // OK
+            return res.status(200).json({
+                message: result.message,
+                obj: result.obj
+            });
+        } else {
+            // Errore del database
             return res.status(400).json({
-                message: 'Operazione non autorizzata.'
+                message: result.message,
+                error: result.obj
             });
         }
     } catch(error) {

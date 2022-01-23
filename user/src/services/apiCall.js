@@ -15,10 +15,6 @@ class ApiCall {
         return http.post('/api/public/login', body);
     }
 
-    signUp() {
-
-    }
-
     // Chiamate alle API sul cliente autenticato
     getUser(id) {
         const query = id ? '?id=' + id : '';
@@ -39,8 +35,8 @@ class ApiCall {
         return http.get('/api/product/?id=' + id)
     }
 
-    getAllProduct(filter, isDecreasing) {
-        return http.get('/api/product/all' + '?filter=' + filter + '&&sort=' + isDecreasing)
+    getAllProduct(filter, sort) {
+        return http.get('/api/product/all' + '?filter=' + filter + '&&sort=' + sort)
     }
 
     postProduct(id, bookings) {
@@ -48,18 +44,26 @@ class ApiCall {
     }
 
     // Chiamate alle API sulle prenotazioni
-    getReservation(id) {
-        return http.get('/api/reservation/?id=' + id)
-    }
+    // getReservation(id) {
+    //     return http.get('/api/reservation/?id=' + id)
+    // }
 
     getAllReservation(filter, sort) {
-        return http.get('/api/reservation/all', {'filter': filter , 'sort': sort})
+        return http.get('/api/reservation/all' + '?filter=' + filter + '&&sort=' + sort);
     }
 
-    postReservation(reservation) {
-        return http.post('/api/reservation', reservation)
+    postReservation(id, data) {
+        if(id == null) {
+            return http.post('/api/reservation', data);
+        } else {
+            return http.post('/api/reservation' + '?id=' + id, data);
+        }
+        
     }
-
+    
+    deleteReservation(reservationId) {
+        return http.delete('/api/reservation?id=' + reservationId);
+    }
 }
 
 export default new ApiCall();

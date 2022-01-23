@@ -10,7 +10,6 @@ window.addEventListener("load", () => {
         // Controllo dei dati
         var allDataOk = true
         for(index in data) {
-            console.log(data[index])
             if(data[index] == "") {
                 alert("Non hai inserito tutti i dati.");
                 allDataOk = false;
@@ -32,7 +31,6 @@ window.addEventListener("load", () => {
                 }),
                 // Risposta del server in caso di successo
                 success: (result) => {
-                    console.log(result.data)
                     document.cookie = 'jwt=' + result.data.token;
                     switch(result.data.userType) {
                         case 1:
