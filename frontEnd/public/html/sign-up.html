@@ -11,16 +11,15 @@
         <!-- jQuery CDN file -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="/public/css/sign-up.css">
         <script src="/public/js/sign-up.js"></script>
     </head>
     <body class="bg-transparent">
-        <div class="container pt-2">
-            <h1 class="text-center">Registrazione</h1>
-            <form class="card w-100 mb-1 p-2 align-items-center">
+        <div class="card align-items-center p-3 m-3 bg-light rounded-3">
+            <h1 class="text-center">NoloNoloPlus Registrazione</h1>
+            <form class="w-sm-50 mt-3 mb-0">
                 
-                <h2>Dati personali</h2>
-                <div class="row">
+                <h2 class="mb-3">Dati personali</h2>
+                <div class="row d-flex align-items-center mb-2">
                     <div class="col-4">
                         <label for="name">Nome:</label>
                     </div>
@@ -28,7 +27,7 @@
                         <input id="name" class="form-control" type="text">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row d-flex align-items-center mb-2">
                     <div class="col-4">
                         <label for="surname">Cognome:</label>
                     </div>
@@ -36,19 +35,19 @@
                         <input id="surname" class="form-control" type="text">    
                     </div>
                 </div>
-                <div class="row mb-0">
-                    <div class="col-8">
+                <div class="row mb-0 d-flex align-items-center">
+                    <div class="col-7">
                         <label for="birthday">Data di nascita:</label>
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
                         <label for="sex">Sesso:</label>                            
                     </div>
                 </div>
-                <div class="row mt-0">
-                    <div class="col-8">
+                <div class="row mt-0 mb-3 d-flex align-items-center align-items-center">
+                    <div class="col-7">
                         <input id="birthday" class="form-control" type="date">                            
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
                         <select id="sex" class="form-select">
                             <option value="male">Uomo</option>
                             <option value="female">Donna</option>
@@ -56,7 +55,7 @@
                             </select>                                 
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 d-flex align-items-center">
                     <div class="col-4">
                         <label for="phoneNumber">Cellulare:</label>
                     </div>
@@ -64,7 +63,7 @@
                         <input id="phoneNumber" class="form-control" type="tel">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 d-flex align-items-center">
                     <div class="col-4">
                         <label for="email">Email:</label>
                     </div>
@@ -72,7 +71,7 @@
                         <input id="email" class="form-control" type="email">    
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 d-flex align-items-center">
                     <div class="col-4">
                         <label for="password">Password:</label>
                     </div>
@@ -85,10 +84,10 @@
                         <label for="addressStreet">Indirizzo:</label>
                     </div>
                     <div class="col-3">
-                        <label for="addressNumber">N°:</label>
+                        <label for="addressNumber">N:</label>
                     </div>
                 </div>
-                <div class="row mt-0">
+                <div class="row mt-0 mb-3 d-flex align-items-center">
                     <div class="col-9">
                         <input id="addressStreet" class="form-control" type="text">
                     </div>
@@ -96,7 +95,7 @@
                         <input id="addressNumber" class="form-control" type="text">
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-3 d-flex align-items-center">
                     <div class="col-4">
                         <label for="addressCity">Città:</label>
                     </div>
@@ -105,8 +104,8 @@
                     </div>
                 </div>
 
-                <h2 class="text-center">Metodo di pagamento</h2>
-                <div class="row">
+                <h2 class="mb-3">Metodo di pagamento</h2>
+                <div class="row mb-2 d-flex align-items-center">
                     <div class="col-4">
                         <label for="paymentCardType">Tipologia:</label>
                     </div>
@@ -118,7 +117,7 @@
                         </select>    
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 d-flex align-items-center">
                     <div class="col-4">
                         <label for="paymentCardOwnerName">Nome:</label>
                     </div>
@@ -126,7 +125,7 @@
                         <input id="paymentCardOwnerName" class="form-control" type="text">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 d-flex align-items-center">
                     <div class="col-4">
                         <label for="paymentCardOwnerSurname">Cognome:</label>
                     </div>
@@ -145,7 +144,7 @@
                         <label for="paymentCardCCV">CCV:</label>
                     </div>
                 </div>             
-                <div class="row mt-0">
+                <div class="row mt-0 mb-3 d-flex align-items-center">
                     <div class="col-4">
                         <select id="paymentCardExpireMonth" class="form-select">
                             <option value="1">01</option>
@@ -176,9 +175,9 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row mb-0">
                     <div class="col">
-                        <input id="signUpButton" class="btn-primary rounded-2 mb-3 w-100 text-center d-block" type="button" value="Registrati">
+                        <input id="signUpButton" class="btn btn-primary rounded-3 w-100 text-center d-block" type="button" value="Registrati">
                     </div>
                 </div>
             </form>

@@ -210,7 +210,17 @@ export class ReservationCard extends React.Component {
                   Prenotazione attiva
                 </Button>
               ) : (
-                <Invoice/>
+                <Button
+                className='w-100'
+                onClick={() => {
+                  // Get dati utente
+                  
+                  // Call invoice
+                  
+                }}
+                href='./invoice'>
+                  Richiedi fattura
+                </Button>  
               )
             )}
           </Accordion.Body>

@@ -89,6 +89,9 @@ export class MakeReservation extends React.Component {
 
   checkDateRange(range) {
     if(range.length == 2 && this.state.dates != null && range[0] && range[1]) {
+      if(range[0] > range[1] || range[0].toString() == 'Invalid Date' || range[1].toString() != 'Invalid Date') {
+        return false;
+      }
       let currentDate = range[0];
       let endDate = range[1];
       while(currentDate <= endDate) {
@@ -97,7 +100,7 @@ export class MakeReservation extends React.Component {
         }
         currentDate = currentDate.addDays(1);
       }
-      return true;
+      return true;  
     }
     return false;
   }
@@ -110,16 +113,6 @@ export class MakeReservation extends React.Component {
 
     // Cerca le informazioni dell'utente
     ApiCall.getUser().then((getUserResult) => {
-      
-      // let description = 'Sconto ';
-      // description += this.state.variableDiscount.onSaleType ? 'del ' : 'di ';
-      // description += (parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)).toString();
-      // description += this.state.variableDiscount.onSaleType ? '% ' : '€ '
-      // description += 'sul costo giornaliero se superi ';
-      // description += this.state.variableDiscount.days
-      // description += parseInt(this.state.variableDiscount.days) > 1 ? ' giorni ' : ' giorno ';
-      // description += 'di noleggio.';
-
       // Crea la prenotazione
       const reservation = {
         clientEmail: getUserResult.data.data.email,
@@ -213,8 +206,9 @@ export class MakeReservation extends React.Component {
           <div className='col-8'>
             Giorni di noleggio:
           </div>
-          <div className='col-4 text-end'>
-            {(this.state.value[0] && this.state.value[1]) ? datediff(this.state.value[0], this.state.value[1]) : 0 }
+          <div
+          className='col-4 text-end'>
+            {this.checkDateRange(this.state.value) ? datediff(this.state.value[0], this.state.value[1]) : 0 }
           </div>
         </div>
         <div className='row mb-2'>
@@ -222,7 +216,7 @@ export class MakeReservation extends React.Component {
             Prezzo totale:
           </div>
           <div className='col-4 text-end'>
-            {this.priceCalculator()} €
+            {this.checkDateRange(this.state.value) ? this.priceCalculator() : '0.00'} €
           </div>
         </div>
         {this.state.isAuthenticated ? (
