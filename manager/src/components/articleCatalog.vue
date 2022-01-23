@@ -11,7 +11,7 @@
               <h2 class="mb-2 text-truncate"> <router-link @click.native="switchComponent" :to="{ name: 'article',  params: { id: article._id} }">{{article.title + ' ' + article.brand }}</router-link></h2>   
               <div class="row">
                 <div class="col-5">
-                  <div class="mb-2 price" v-if="article.discount.onSale"><s>{{article.fixedPrice}}€ </s> {{ discount(article) }} </div>
+                  <div class="mb-2 price" v-if="article.discount.onSale"><s>{{article.fixedPrice}}€ </s> {{ discount(article) }}€ </div>
                   <div class="mb-2 price" v-else>{{article.fixedPrice}}€</div>
                 </div>
                 <div class="col-5">

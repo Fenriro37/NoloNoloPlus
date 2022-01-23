@@ -40,12 +40,12 @@ function fill(){
 	let j;
 	for ( j = 0; j < data.quality; j++){
 			$("#stars").append(
-					'<span class="bi bi-star-fill checked big-size"</span>'
+					'<span class="bi bi-star-fill checked big-size"></span>'
 			)
 	}
 	for (j = 0; j < 3 - data.quality; j++){
 			$("#stars").append(
-					'<span class="bi bi-star big-size"</span>'
+					'<span class="bi bi-star big-size"></span>'
 			)
 	}
 	//prezzo
@@ -75,7 +75,8 @@ function fill(){
 		bookingStart = parseInt(data.bookings[i].startDate.year) * 10000 + parseInt(data.bookings[i].startDate.month) * 100 + parseInt(data.bookings[i].startDate.day)
 		if(current <= bookingStart){
 			$('#delete').prop('disabled', true);
-			$('#delete').text('Prenotazioni attive');
+			//<button type="button" id="delete" class="btn btn-lg btn-danger" onclick="remove()">Elimina</button>
+			//data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover"
 		}
 	}
 

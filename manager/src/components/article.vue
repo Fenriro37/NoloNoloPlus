@@ -30,6 +30,7 @@
         <div class="mt-3 mb-3">
           <span  class="price">{{ dailyPrice }} <span id="fixedPrice">€/giorno</span>
         </div>
+      </div>
           <!-- Bottoni -->
           <div id="buttons">
             <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-warning">Affitta</router-link>
@@ -295,7 +296,6 @@
             </div>
           </div>
         </div>
-      </div>
       <!-- Etichette -->
       <div class="row">
         <h3>Categorie</h3>
