@@ -76,17 +76,34 @@
 
 			<div class="form-floating mb-3">
 				<input type="number" class="form-control" min="1" step="1" id="price" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
-				<label for="price"> Prezzo*</label>
+				<label for="price"> Prezzo fisso*</label>
 			</div>
 
 			<div class="row mb-3" id="saleRow">
 				<div class="col-3">
-					<label><b>Sconto:</b></label>
+					<label><b>Sconto prezzo fisso:</b></label>
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
 						<input type="checkbox" class="form-check-input" id="sale">
 						<label class="form-check-label" for="sale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step="1" id="dayliPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<label for="dayliPrice"> Prezzo giornaliero*</label>
+			</div>
+
+			<div class="row mb-3" id="dayliSaleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" id="dailySale">
+						<label class="form-check-label" for="dailySale">Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>

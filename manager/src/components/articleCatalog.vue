@@ -6,7 +6,7 @@
       <div class="card mb-1 " style="height: 10em; width:60%; ">
         <div class="card-body h-100">
           <div class="row h-100">
-            <div class="col-5 align-items-center h-100"> <img class="myImg" alt="immagine prodotto" v-bind:src="article.image"></div>
+            <div class="col-5 d-flex align-items-center h-100"> <img class="myImg" alt="immagine prodotto" v-bind:src="article.image"></div>
             <div class="col-7" style="height:100%;">
               <h2 class="mb-2 text-truncate"> <router-link @click.native="switchComponent" :to="{ name: 'article',  params: { id: article._id} }">{{article.title + ' ' + article.brand }}</router-link></h2>   
               <div class="row">

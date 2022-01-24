@@ -164,11 +164,7 @@ body {
     color: orange;
     border-color: rgb(0, 0, 0);
     border-width: 0.5em;
-}
-.big-size {
-    transform: scale(1.4);
-    margin-right: 0.5em;
-}
+}s
 
 .price {
     font-size: x-large;

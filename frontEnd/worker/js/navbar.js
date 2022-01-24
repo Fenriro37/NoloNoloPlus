@@ -79,10 +79,17 @@ window.onload = function login() {
                         '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
                             '<div class="card-body h-100">' +
                                 '<div class="row h-100">' +
-                                    '<div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ articles[i].image +'></div>' +
-                                    '<div class="col-7 text-truncate" style="height:100%;">'+
-                                        '<h2><a href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> '+ 
-                                        '<div id="price' +i+ '"></div>' +
+                                    '<div class="col-5 d-flex align-items-center h-100"> <img class="myImg " alt="immagine prodotto" src='+ articles[i].image +'></div>' +
+                                    '<div class="col-7" style="height:100%;">'+
+                                        '<h2 class="text-truncate"><a href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> '+ 
+                                        '<div class="row">' +
+                                            '<div class="col-5">'+
+                                                '<div id="price' +i+ '"></div>' +
+                                            '</div>'+
+                                            '<div class="col-5">'+
+                                                '<div id="dailyPrice' +i+ '"></div>' +
+                                            '</div>'+
+                                        '</div>'+
                                         '<span id="star' +i+ '"></span>'+
                                     '</div>' +
                                 '</div>'+
@@ -94,20 +101,23 @@ window.onload = function login() {
                 if(articles[i].discount.onSale){
                     let newPrice
                     if(articles[i].discount.onSaleType){
-                        newPrice = articles[i].price - articles[i].discount.onSaleValue;
+                        newPrice = articles[i].fixedPrice - articles[i].discount.onSaleValue;
                     }
                     else{
-                        newPrice = articles[i].price - articles[i].price * articles[i].discount.onSaleValue / 100;
+                        newPrice = articles[i].fixedPrice - articles[i].fixedPrice * articles[i].discount.onSaleValue / 100;
                     }
                     $("#price"+ i).append(
-                        '<span class="price"><s>' +articles[i].price+'€  </s><span>' +newPrice+ '€</span></span>'
+                        '<span class="price"><s>' +articles[i].fixedPrice+'€  </s><span>' +newPrice+ '€</span></span>'
                     )
                 }
                 else{
                     $("#price"+ i).append(
-                        '<span class="price">' +articles[i].price+'€<span>'
+                        '<span class="price">' +articles[i].fixedPrice+'€<span>'
                     )
                 }
+                $("#dailyPrice"+ i).append(
+                    '<span class="price">' +articles[i].price+'€/giorno </span>'
+                )
                 //stelle
                 let j;
                 for ( j = 0; j < articles[i].quality; j++){

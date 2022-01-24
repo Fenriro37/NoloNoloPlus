@@ -52,28 +52,24 @@
             </div>
             <!-- Colonne informazioni articolo -->
             <div class="col-6">
-                <div id="productidentifier">
-                    <p id="productidentifier"></p>      
+                <div >
+                    <span id="productidentifier"></span>      
                 </div>   
                 <!-- Titolo -->
                 <div>
                     <h4 id="title">  </h4>
                 </div>
                 <!-- Stars -->
-                <div id="stars">
+                <div id="stars" tabindex=0>
                 </div>
                 <!-- Prezzo -->
-                <div class="mt-2 mb-1" id="">
-                    prezzo
+                <div class="mt-2 mb-1" id="fixedPrice" tabindex="0">
                 </div>
-                <div class="mt-2 mb-1" id="">
-                    sconto
+                <div class="mt-2 mb-1" id="fixedDiscount">
                 </div>
-                <div class="mt-2 mb-1" id="">
-                    prezzp
+                <div class="mt-2 mb-1" id="dailyPrice">
                 </div>
-                <div class="mt-2 mb-1" id="">
-                    sconto 15% se superi 22 giorni
+                <div class="mt-2 mb-1" id="dailyDiscount">
                 </div>
                 <!-- Bottoni -->
 
@@ -126,91 +122,133 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                <label for="productQuality" class="form-label">Qualità</label>
+                                    <label for="qualityModal" class="form-label">Qualità</label>
                                 </div>
                                 <div class="col-6">
-                                <label for="productPrice">Prezzo di listino</label>												
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                <select class="form-select" id="qualityModal">
-                                    <option value=1 >1 - Condizioni accettabili</option>
-                                    <option value=2 >2 - Buone condizioni</option>
-                                    <option value=3 >3 - Come nuovo</option>
-                                </select>
-                                </div>
-                                <div class="col-6">
-                                <div class="input-group">
-                                    <input type="text" id="productPrice" class="form-control text-end">
-                                    <span class="input-group-text justify-content-center">€</span>
-                                </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row mb-2 d-flex align-items-center justify-content-between">
-                                <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="onSale" >
-                                    <label class="form-check-label" for="onSale">Sconto</label>
-                                </div>
-                                </div>
-                                <div class="col-3">
-                                <div class="form-check">
-                                    <input
-                                    class="form-check-input"
-                                    type="radio" 
-                                    name="discount" 
-                                    id="discountPercentage" 
-                                    disabled
-                                    > 
-                                    <label class="form-check-label" for="discountPercentage">Percentuale</label>
-                                </div>
-                                </div>
-                                <div class="col-3">
-                                <div class="form-check">
-                                    <input
-                                    id="discountAmount" 	
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="discount"
-                                    disabled 
-                                    >
-                                    <label class="form-check-label" for="discountAmount">Fisso</label>													
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row mb-2 d-flex justify-content-end">
-                                <div class="col-6 d-flex align-items-center">
-                                Sconto applicato
-                                </div>
-                                <div class="col-6">
-                                <div class="input-group">
-                                <!-- <span class="input-group-text justify-content-center">-</span>-->
-                                    <input type="number" class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()"  readonly>
-                                    <span id="pd" class="input-group-text justify-content-center"></span>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-6 d-flex align-items-center">
-                                Prezzo scontato
-                                </div>
-                                <div class="col-6">
-                                <div class="input-group">
-                                    <input 
-                                    type="number"
-                                    class="form-control text-end"
-                                    readonly
-                                    id="newPrice">
-                                    <span class="input-group-text justify-content-center">€</span>
-                                </div>
+                                    <select class="form-select" id="qualityModal">
+                                        <option value=1 >1 - Condizioni accettabili</option>
+                                        <option value=2 >2 - Buone condizioni</option>
+                                        <option value=3 >3 - Come nuovo</option>
+                                    </select>
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
+                                <div class="col-6 mt-3 mb-3">
+                                    <label for="productPrice">Prezzo Fisso</label>												
+                                </div>
+                                <div class="col-6  mt-3 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" id="productPrice" class="form-control text-end">
+                                        <span class="input-group-text justify-content-center">€</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2 d-flex align-items-center justify-content-between">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="onSale" >
+                                        <label class="form-check-label" for="onSale">Sconto</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="discount" id="discountPercentage" disabled> 
+                                        <label class="form-check-label" for="discountPercentage">Percentuale</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input id="discountAmount" class="form-check-input" type="radio" name="discount" disabled>
+                                        <label class="form-check-label" for="discountAmount">Fisso</label>													
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2 d-flex justify-content-end">
+                                <div class="col-6 d-flex align-items-center">
+                                    Sconto applicato
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                    <!-- <span class="input-group-text justify-content-center">-</span>-->
+                                        <input type="number" class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()"  readonly>
+                                        <span id="pd" class="input-group-text justify-content-center"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6 d-flex align-items-center">
+                                    Prezzo scontato
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control text-end" readonly id="newPrice">
+                                        <span class="input-group-text justify-content-center">€</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-6 mt-3 mb-3">
+                                    <label for="dailyPriceModal">Prezzo Giornaliero</label>												
+                                </div>
+                                <div class="col-6  mt-3 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" id="dailyPriceModal" class="form-control text-end">
+                                        <span class="input-group-text justify-content-center">€</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2 d-flex align-items-center justify-content-between">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="dailySale" >
+                                        <label class="form-check-label" for="dailySale">Sconto</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="discount" id="dailyDiscountPercentage" disabled> 
+                                        <label class="form-check-label" for="dailyDiscountPercentage">Percentuale</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input id="dailyDiscountAmount" class="form-check-input" type="radio" name="discount" disabled>
+                                        <label class="form-check-label" for="dailyDiscountAmount">Fisso</label>													
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2 d-flex justify-content-end">
+                                <div class="col-6 d-flex align-items-center">
+                                    <label class="form-check-label" for="dailyDiscountValue">Sconto applicato</label> 
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                    <!-- <span class="input-group-text justify-content-center">-</span>-->
+                                        <input type="number" class="form-control text-end" id="dailyDiscountValue"  readonly>
+                                        <span id="pd1" class="input-group-text justify-content-center"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6 d-flex align-items-center">
+                                    <label class="form-check-label" for="daysDiscount">Giorni per sconto</label> 
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control text-end" readonly id="daysDiscount">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row">
                                 <div class="col">
-                                <label for="productDescription" class="form-label">Descrizione</label>
+                                    <label for="productDescription" class="form-label">Descrizione</label>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -276,7 +314,7 @@
         <div class="row mb-3 p-3 border border-secondary border-3 bg-white" id="note">
               
         </div>
-        <div class="row">
+        <div class="row" id="Table">
             <!-- Da qui parte la tabella delle prenotazioni -->
             <h3>Lista prenotazioni</h3>
             <input class="form-control" id="myInput" type="text" placeholder="Search..">

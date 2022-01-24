@@ -1,301 +1,309 @@
 <template>
 <div class="container-fluid d-flex justify-content-center" id="main">
     <div class="w-50">
-      <div class="row mb-5 mt-3">
-        <div class="col-6">
+      <div class="row mb-3 mt-3">
         <!-- Colonne immagine -->
-          <img id="img" class="img-thumbnail" alt="immagine prodotto" v-bind:src="image">
+        <div class="col-6 d-flex align-items-center" style="height: 15em;">
+          <img id="img" class="myImg" alt="immagine prodotto" v-bind:src="image">
         </div>
 
         <div class="col-6">
-        <div id="productidentifier">
-          <p> ID: {{ identifier }} </p>      
-        </div> 
+          <div id="productidentifier">
+            <span> ID: {{ identifier }} </span>      
+          </div> 
+          <!-- Titolo -->
+          <div>
+            <h4>{{ title + ' ' + brand }}  </h4>
+          </div>
+          <!-- Stars -->
+          <div>
+            <span v-for="iter in parseInt(quality)" class="fa fa-star checked big-size" :key="iter"> </span>
+            <span v-for="mimmo in (3 - parseInt(quality))" class="fa fa-star big-size" :key="mimmo"> </span>
+          </div>
+          <div class="mt-1 mb-1">
+            <span  class="">{{'Prezzo Fisso: ' + fixedPrice +'€' }} <span id="fixedPrice"></span>
+          </div>
+            <!-- Prezzo -->
+          <div class="mt-1 mb-1">
+            <span v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice }}€</span></span>
+          </div>
+          <div class="mt-1 mb-1">
+            <span  class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
+          </div>
+          <div class="mt-1 mb-1">
+            <span  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}} <span id="fixedPrice"></span>
+          </div>
 
-        <!-- Titolo -->
-        <div>
-          <h4>{{ title + ' ' + brand }}  </h4>
-        </div>
-        <!-- Stars -->
-        <div>
-          <span v-for="iter in parseInt(quality)" class="fa fa-star checked big-size" :key="iter"> </span>
-          <span v-for="mimmo in (3 - parseInt(quality))" class="fa fa-star big-size" :key="mimmo"> </span>
-        </div>
-          <!-- Prezzo -->
-        <div class="mt-3 mb-3">
-          <span v-if="discount.onSale" class="price"><s>{{ fixedPrice }}€</s> <span id="onSalePrice">{{ getDiscountedPrice }}€</span></span>
-          <span v-else class="price">{{ fixedPrice }} €</span>
-        </div>
-        <!-- Prezzo fisso -->
-        <div class="mt-3 mb-3">
-          <span  class="price">{{ dailyPrice }} <span id="fixedPrice">€/giorno</span>
         </div>
       </div>
-          <!-- Bottoni -->
-          <div id="buttons">
-            <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-warning">Affitta</router-link>
-            <b-button v-else id="rentProduct" class="btn btn-lg btn-secondary" disabled>Affitta</b-button>
-            <b-button type="button" class="btn btn-lg " variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</b-button>
-            <b-button type="button" class="btn btn-lg btn-danger" :disabled="boolDelete" v-on:click="deleteProduct">Elimina</b-button>
-            <div class="form-check form-switch big-size">
-            <div> <router-link :to="{ name: 'chartArticle', props: {id: identifier}}" :disabled="bookings.length === 0"> Analytics </router-link> </div>
-              <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
-              <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
-              <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
-            </div>
-            <div class="modal" id="myModal">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <!-- Modal Header -->
-                  <div class="modal-header">
-                    <h4 class="modal-title">Modifica prodotto</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>	
-                  </div>
-                  <!-- Modal body -->
-                  <div class="modal-body">
-                    <form>
-                      <b-row>
-                        <b-col cols="6">
-                          <label for="productName" class="form-label">Nome</label>
-                        </b-col>
-                        <b-col cols="6">
-                          <label for="productModel" class="form-label">Marca</label>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-3">
-                        <b-col cols="6">
-                          <b-form-input  type="text" class="form-control" id="productname" v-model="titleModal" :placeholder="titleModal"></b-form-input>	
-                        </b-col>
-                        <b-col cols="6">
-                          <b-form-input type="text" class="form-control" id="productModel" v-model="brandModal"></b-form-input>	
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col>
-                          <label for="productTags" class="form-label">Etichette (separare con uno spazio)</label>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-3">
-                        <b-col>
-                          <textarea class="form-control w-80" id="productTags" rows="3" v-model="tagsModal"></textarea>
-                        </b-col>
-                      </b-row>
-                      <!-- da sistemare -->
-                      <b-row class="mb-3 d-flex align-items-center justify-content-between">
-                        <b-col cols="4">
-                          <label for="imageLink" class="form-label">Immagine (link)</label>
-                        </b-col>
-                        <b-col cols="8">
-                          <b-form-input type="text"  class="form-control" id="imageLink" v-model="imageModal"></b-form-input>	
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col cols="6" class="mt-2 mb-3">
-                          <label for="productQuality" class="form-label">Qualità</label>
-                        </b-col>
-                        <b-col cols="6" class="mt-2 mb-3">
-                          <select class="form-select" v-model="qualityModal">
-                            <option :value="1">1 - Condizioni accettabili</option>
-                            <option :value="2" selected>2 - Buone condizioni</option>
-                            <option :value="3">3 - Come nuovo</option>
-                          </select>
-                        </b-col>
-                        <hr>
+      <!-- Bottoni -->
+      <div class="row d-flex justify-content-between">
+        <div class="col align-items-center">
+          <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-warning m-1">Affitta</router-link>
+          <b-button v-else id="rentProduct" class="btn btn-lg btn-secondary m-1" disabled>Affitta</b-button>
+          <b-button type="button" class="btn btn-lg m-1" variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</b-button>
+          <b-button type="button" class="btn btn-lg btn-danger m-1" :disabled="boolDelete" v-on:click="deleteProduct">Elimina</b-button>
+          <router-link :to="{ name: 'chartArticle', props: {id: identifier}}" :disabled="bookings.length === 0" class="btn btn-lg btn-warning m-1"> Analytics </router-link>
+        </div>
+      </div>
+
+      <div class="form-check form-switch ">
+        <input class="form-check-input custom-switch " type="checkbox" id="flexSwitchCheckDefault" :checked="available" v-model="available" @click="changeInStock">
+        <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
+        <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
+      </div>
+
+      <div class="modal" id="myModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Modifica prodotto</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>	
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                  <form>
+                    <b-row>
+                      <b-col cols="6">
+                        <label for="productName" class="form-label">Nome</label>
+                      </b-col>
+                      <b-col cols="6">
+                        <label for="productModel" class="form-label">Marca</label>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-3">
+                      <b-col cols="6">
+                        <b-form-input  type="text" class="form-control" id="productname" v-model="titleModal" :placeholder="titleModal"></b-form-input>	
+                      </b-col>
+                      <b-col cols="6">
+                        <b-form-input type="text" class="form-control" id="productModel" v-model="brandModal"></b-form-input>	
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <label for="productTags" class="form-label">Etichette (separare con uno spazio)</label>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-3">
+                      <b-col>
+                        <textarea class="form-control w-80" id="productTags" rows="3" v-model="tagsModal"></textarea>
+                      </b-col>
+                    </b-row>
+                    <!-- da sistemare -->
+                    <b-row class="mb-3 d-flex align-items-center justify-content-between">
+                      <b-col cols="4">
+                        <label for="imageLink" class="form-label">Immagine (link)</label>
+                      </b-col>
+                      <b-col cols="8">
+                        <b-form-input type="text"  class="form-control" id="imageLink" v-model="imageModal"></b-form-input>	
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col cols="6" class="mt-2 mb-3">
+                        <label for="productQuality" class="form-label">Qualità</label>
+                      </b-col>
+                      <b-col cols="6" class="mt-2 mb-3">
+                        <select class="form-select" v-model="qualityModal">
+                          <option :value="1">1 - Condizioni accettabili</option>
+                          <option :value="2" selected>2 - Buone condizioni</option>
+                          <option :value="3">3 - Come nuovo</option>
+                        </select>
+                      </b-col>
+                      <hr>
+                    <b-row >
+                      <b-col cols="6" class="mt-3 mb-3">
+                        <label for="productPrice">Prezzo Fisso</label>												
+                      </b-col>
+                      <b-col cols="6" class="mt-2 mb-2">
+                        <div class="input-group">
+                          <b-form-input type="text" id="productPrice" class="form-control text-end" v-model="fixedModal"></b-form-input>	
+                          <span class="input-group-text justify-content-center">€</span>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-2 d-flex align-items-center justify-content-between">
+                      <b-col cols="6">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="onSale" :checked="onSaleModal" @click="changeOnSale">
+                          <label class="form-check-label" for="onSale">Sconto</label>
+                        </div>
+                      </b-col>
+                      <b-col cols="3">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio" 
+                            name="discount" 
+                            id="discountPercentage" 
+                            :value="true" 
+                            :disabled="!onSaleModal" 
+                            :checked="onSaleModal && onSaleTypeModal"
+                            @click="changeDiscountType">
+                          <label class="form-check-label" for="discountPercentage">Percentuale</label>
+                        </div>
+                      </b-col>
+                      <b-col cols="3">
+                        <div class="form-check">
+                          <input
+                            id="discountAmount" 	
+                            class="form-check-input"
+                            type="radio"
+                            name="discount"
+                            :value="false"
+                            :disabled="!onSaleModal" 
+                            :checked="onSaleModal && onSaleTypeModal == false"
+                            @click="changeDiscountType" >
+                          <label class="form-check-label" for="discountAmount">Fisso</label>													
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-2 d-flex justify-content-end">
+                      <b-col cols="6" class="d-flex align-items-center">
+                        Sconto applicato
+                      </b-col>
+                      <b-col cols="6">
+                        <div class="input-group">
+                          <span class="input-group-text justify-content-center">-</span>
+                          <input
+                            type="text"
+                            class="form-control text-end"
+                            min="1"
+                            step="1"
+                            v-model="onSaleValueModal"
+                            :disabled="!onSaleModal">
+                          <span v-if="onSaleTypeModal" id="pd" class="input-group-text justify-content-center">%</span>
+                          <span v-else id="pd" class="input-group-text justify-content-center">€</span>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-3">
+                      <b-col cols="6" class="d-flex align-items-center">
+                        Prezzo Fisso scontato 
+                      </b-col>
+                      <b-col cols="6">
+                        <div class="input-group">
+                          <input 
+                            type="text"
+                            class="form-control text-end"
+                            disabled :placeholder="getDiscountedModal">
+                          <span class="input-group-text justify-content-center">€</span>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <hr>
                       <b-row >
-                        <b-col cols="6" class="mt-3 mb-3">
-                          <label for="productPrice">Prezzo Fisso</label>												
-                        </b-col>
-                        <b-col cols="6" class="mt-2 mb-2">
-                          <div class="input-group">
-                            <b-form-input type="text" id="productPrice" class="form-control text-end" v-model="fixedModal"></b-form-input>	
-                            <span class="input-group-text justify-content-center">€</span>
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-2 d-flex align-items-center justify-content-between">
-                        <b-col cols="6">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="onSale" :checked="onSaleModal" @click="changeOnSale">
-                            <label class="form-check-label" for="onSale">Sconto</label>
-                          </div>
-                        </b-col>
-                        <b-col cols="3">
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="radio" 
-                              name="discount" 
-                              id="discountPercentage" 
-                              :value="true" 
-                              :disabled="!onSaleModal" 
-                              :checked="onSaleModal && onSaleTypeModal"
-                              @click="changeDiscountType">
-                            <label class="form-check-label" for="discountPercentage">Percentuale</label>
-                          </div>
-                        </b-col>
-                        <b-col cols="3">
-                          <div class="form-check">
-                            <input
-                              id="discountAmount" 	
-                              class="form-check-input"
-                              type="radio"
-                              name="discount"
-                              :value="false"
-                              :disabled="!onSaleModal" 
-                              :checked="onSaleModal && onSaleTypeModal == false"
-                              @click="changeDiscountType" >
-                            <label class="form-check-label" for="discountAmount">Fisso</label>													
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-2 d-flex justify-content-end">
-                        <b-col cols="6" class="d-flex align-items-center">
-                          Sconto applicato
-                        </b-col>
-                        <b-col cols="6">
-                          <div class="input-group">
-                            <span class="input-group-text justify-content-center">-</span>
-                            <input
-                              type="text"
-                              class="form-control text-end"
-                              min="1"
-                              step="1"
-                              v-model="onSaleValueModal"
-                              :disabled="!onSaleModal">
-                            <span v-if="onSaleTypeModal" id="pd" class="input-group-text justify-content-center">%</span>
-                            <span v-else id="pd" class="input-group-text justify-content-center">€</span>
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-3">
-                        <b-col cols="6" class="d-flex align-items-center">
-                          Prezzo Fisso scontato 
-                        </b-col>
-                        <b-col cols="6">
-                          <div class="input-group">
-                            <input 
-                              type="text"
-                              class="form-control text-end"
-                              disabled :placeholder="getDiscountedModal">
-                            <span class="input-group-text justify-content-center">€</span>
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <hr>
-                       <b-row >
-                        <b-col cols="6" class="mt-3 mb-3">
-                          <label for="dailyPrice">Prezzo Giornaliero</label>												
-                        </b-col>
-                        <b-col cols="6" class="mt-2 mb-2">
-                          <div class="input-group">
-                            <b-form-input type="text" id="dailyPrice" class="form-control text-end" v-model="dailyModal"></b-form-input>	
-                            <span class="input-group-text justify-content-center">€</span>
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-2 d-flex align-items-center justify-content-between">
-                        <b-col cols="6">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="overSale" :checked="overSaleModal" @click="changeOnSaleOverDays">
-                            <label class="form-check-label" for="overSale">Sconto</label>
-                          </div>
-                        </b-col>
-                        <b-col cols="3">
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="radio" 
-                              name="discountOver" 
-                              id="overPercentage"
-                              :value="true" 
-                              :disabled="!overSaleModal" 
-                              :checked="overSaleModal && overSaleTypeModal == true"
-                              @click="changeDiscountTypeOverDays">
-                            <label class="form-check-label" for="discountPercentage">Percentuale</label>
-                          </div>
-                        </b-col>
-                        <b-col cols="3">
-                          <div class="form-check">
-                            <input
-                              id="overFlat" 	
-                              class="form-check-input"
-                              type="radio"
-                              name="discountOver" 
-                              :value="false"
-                              :disabled="!overSaleModal" 
-                              :checked="overSaleModal && overSaleTypeModal == false"
-                              @click="changeDiscountTypeOverDays" >
-                            <label class="form-check-label" for="discountAmount">Fisso</label>													
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-2 d-flex justify-content-end">
-                        <b-col cols="6" class="d-flex align-items-center">
-                          Sconto applicato
-                        </b-col>
-                        <b-col cols="6">
-                          <div class="input-group">
-                            <span class="input-group-text justify-content-center">-</span>
-                            <input
-                              type="text"
-                              class="form-control text-end"
-                              min="1"
-                              step="1"
-                              v-model="overSaleValueModal"
-                              :disabled="!overSaleModal">
-                            <span v-if="overSaleTypeModal" id="pd" class="input-group-text justify-content-center">%</span>
-                            <span v-else id="pd" class="input-group-text justify-content-center">€</span>
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-3">
-                        <b-col cols="6" class="d-flex align-items-center">
-                          Giorni per sconto
-                        </b-col>
-                        <b-col cols="6">
-                          <div class="input-group">
-                            <input 
-                              type="number"
-                              class="form-control text-end"
-                              min="1"
-                              step="1"
-                              v-model="overDaysModal">
-                          </div>
-                        </b-col>
-                      </b-row>
-                      <hr>
-                      <b-row>
-                        <b-col >
-                          <label for="productDescription" class="form-label">Descrizione</label>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-3">
-                        <b-col>
-                          <textarea class="form-control w-80" id="productDescription" rows="3" v-model="descriptionModal"></textarea>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col>
-                          <label for="productNote" class="form-label">Note (non sono visibli al cliente)</label>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mb-3">
-                        <b-col >
-                          <textarea class="form-control w-80" id="productNote" rows="3" v-model="noteModal"></textarea>
-                        </b-col>
-                      </b-row>
-                    </form>
-                  </div>
-                  <!-- Modal footer -->
-                  <div class="modal-footer d-flex justify-content-between">
-                    <b-button type="button" class="float-left" variant="primary" @click="saveData"  data-bs-dismiss="modal">Salva</b-button>  
-                    <b-button type="button" class="btn-danger float-right" data-bs-dismiss="modal">Chiudi</b-button>
-                  </div>
+                      <b-col cols="6" class="mt-3 mb-3">
+                        <label for="dailyPrice">Prezzo Giornaliero</label>												
+                      </b-col>
+                      <b-col cols="6" class="mt-2 mb-2">
+                        <div class="input-group">
+                          <b-form-input type="text" id="dailyPrice" class="form-control text-end" v-model="dailyModal"></b-form-input>	
+                          <span class="input-group-text justify-content-center">€</span>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-2 d-flex align-items-center justify-content-between">
+                      <b-col cols="6">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="overSale" :checked="overSaleModal" @click="changeOnSaleOverDays">
+                          <label class="form-check-label" for="overSale">Sconto</label>
+                        </div>
+                      </b-col>
+                      <b-col cols="3">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio" 
+                            name="discountOver" 
+                            id="overPercentage"
+                            :value="true" 
+                            :disabled="!overSaleModal" 
+                            :checked="overSaleModal && overSaleTypeModal == true"
+                            @click="changeDiscountTypeOverDays">
+                          <label class="form-check-label" for="discountPercentage">Percentuale</label>
+                        </div>
+                      </b-col>
+                      <b-col cols="3">
+                        <div class="form-check">
+                          <input
+                            id="overFlat" 	
+                            class="form-check-input"
+                            type="radio"
+                            name="discountOver" 
+                            :value="false"
+                            :disabled="!overSaleModal" 
+                            :checked="overSaleModal && overSaleTypeModal == false"
+                            @click="changeDiscountTypeOverDays" >
+                          <label class="form-check-label" for="discountAmount">Fisso</label>													
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-2 d-flex justify-content-end">
+                      <b-col cols="6" class="d-flex align-items-center">
+                        Sconto applicato
+                      </b-col>
+                      <b-col cols="6">
+                        <div class="input-group">
+                          <span class="input-group-text justify-content-center">-</span>
+                          <input
+                            type="text"
+                            class="form-control text-end"
+                            min="1"
+                            step="1"
+                            v-model="overSaleValueModal"
+                            :disabled="!overSaleModal">
+                          <span v-if="overSaleTypeModal" id="pd" class="input-group-text justify-content-center">%</span>
+                          <span v-else id="pd" class="input-group-text justify-content-center">€</span>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-3">
+                      <b-col cols="6" class="d-flex align-items-center">
+                        Giorni per sconto
+                      </b-col>
+                      <b-col cols="6">
+                        <div class="input-group">
+                          <input 
+                            type="number"
+                            class="form-control text-end"
+                            min="1"
+                            step="1"
+                            v-model="overDaysModal">
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <hr>
+                    <b-row>
+                      <b-col >
+                        <label for="productDescription" class="form-label">Descrizione</label>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-3">
+                      <b-col>
+                        <textarea class="form-control w-80" id="productDescription" rows="3" v-model="descriptionModal"></textarea>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <label for="productNote" class="form-label">Note (non sono visibli al cliente)</label>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mb-3">
+                      <b-col >
+                        <textarea class="form-control w-80" id="productNote" rows="3" v-model="noteModal"></textarea>
+                      </b-col>
+                    </b-row>
+                  </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer d-flex justify-content-between">
+                  <b-button type="button" class="float-left" variant="primary" @click="saveData"  data-bs-dismiss="modal">Salva</b-button>  
+                  <b-button type="button" class="btn-danger float-right" data-bs-dismiss="modal">Chiudi</b-button>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+      </div>
       <!-- Etichette -->
       <div class="row">
         <h3>Categorie</h3>
@@ -342,6 +350,7 @@
           </b-row>
         </div>
       </template>
+    </div>
   </div>
 </template>
 

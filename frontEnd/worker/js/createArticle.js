@@ -11,7 +11,7 @@ $('#available').change(function() {
   } 
 })
 
-//listener per checkbox available
+//prezzo fisso
 $('#sale').change(function() {
 	if (this.checked) {
 		$('label[for=sale]').text("Il prodotto è scontato");
@@ -50,6 +50,48 @@ $('#sale').change(function() {
 	if (!this.checked) {
 		$('label[for=sale]').text("Il prodotto non è scontato");
 	  $("#saleInfo").remove()
+  } 
+})
+
+//prezzo giornaliero
+$('#dailySale').change(function() {
+	if (this.checked) {
+		$('label[for=dailySale]').text("Il prodotto è scontato");
+		$("#dayliSaleRow").append(
+			'<div id="dailySaleInfo" class="mt-2">' +
+				'<div class="row">' +
+						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyPercentage" required>' +
+								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
+							'</div>' +
+						'</div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyFlat" required>' +
+								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
+							'</div>' +
+						'</div>' +
+				'</div>'+
+				'<div class="row">' +
+					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
+					'<div class="col-9">' +
+					'<input type="number" class="form-control" min="1" step="1" id="dailySaleValue" onkeyup="calculateDiscount()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'</div>' +
+				'</div>' +
+				'<div class="row mt-2">'+
+					'<div class="col-3">Giorni per sconto:</div>' +
+					'<div class="col-9">' +
+						'<input type="number" class="form-control"  id="daysCount" aria-label="SalePrice" aria-describedby="basic-addon6" required>' +
+					'</div>'+
+				'</div>'+
+			'</div>'
+		);  	
+  }
+	if (!this.checked) {
+		$('label[for=dailySale]').text("Il prodotto non è scontato");
+	  $("#dailySaleInfo").remove()
   } 
 })
 
@@ -92,14 +134,27 @@ function save() {
 		}
 	}    
 	onSale = $("#sale").is(':checked') ? true : false
-			if(onSale){
-				onSaleType = $("#percentage").is(':checked') ? true  : false
-				onSaleValue = $('#saleValue').val()
-			}
-			else{
-				onSaleType = false,
-				onSaleValue = ""
-			}
+	if(onSale){
+		onSaleType = $("#percentage").is(':checked') ? true  : false
+		onSaleValue = $('#saleValue').val()
+	}
+	else{
+		onSaleType = false,
+		onSaleValue = ""
+	}
+
+	let dailySale = $("#dailySale").is(':checked') ? true : false
+	let dayliType, dayliValue, days
+	if(dailySale){
+		dayliType = $("#dailyPercentage").is(':checked') ? true  : false
+		dayliValue = $('#dailySaleValue').val()
+		days = $('#daysCount').val()
+	}
+	else{
+		dayliType = false
+		dayliValue = ''
+		days = ''
+	}
 	//ajax post
  	$.ajax({
 		url:"/api/product",
@@ -119,8 +174,15 @@ function save() {
 				onSaleValue: onSaleValue
 			},
 			available: $("#available").is(':checked') ? true : false,
-		
-			price:  $('#price').val(),
+
+			fixedPrice: $('#price').val(),
+			overDays:{
+				days: days,
+				onSale: dailySale,
+				onSaleType: dayliType,
+				onSaleValue: dayliValue
+			},
+			price:  $('#dayliPrice').val(),
 			quality:  $('#quality').val(),
 			description:  $('#description').val(),
 			note:  $('#note').val(),
