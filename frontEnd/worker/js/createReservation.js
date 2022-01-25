@@ -190,13 +190,13 @@ function changeDailySale() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyPercentage" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault1" id="dailyPercentage" required>' +
 								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyFlat" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault1" id="dailyFlat" required>' +
 								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -386,10 +386,10 @@ function save(){
             },
             variablePrice:  $("#dailyPrice").val(),
             variableDiscount: {
-              days: dailySale,
-              onSale: dailyType,
-              onSaleType: dailyValue,
-              onSaleValue: dailyDays
+              days: dailyDays,
+              onSale: dailySale,
+              onSaleType: dailyType ,
+              onSaleValue: dailyValue
             },
             totalPrice: $("#newTotal").val(),
             description:  $("#notes").val(),

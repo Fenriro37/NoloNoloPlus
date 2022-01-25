@@ -59,11 +59,6 @@
     <form name="myform" id="formId" onSubmit="">
 
       <div class="form-floating mb-3 mt-3">
-        <input id="price" type="number" step="1" min="1" class="form-control" aria-label="price" aria-describedby="basic-addon" readonly required>
-        <label for="price"> Prezzo*</label>
-      </div>
-
-      <div class="form-floating mb-3">
         <input id="bookingRequest" class="form-control" type="text" aria-label="bookingRequest" aria-describedby="basic-addon" readonly disabled>
         <label for="bookingRequest"> Data richiesta prenotazione</label>
       </div>
@@ -71,25 +66,47 @@
 
       <div class="form-floating mb-3">
         <input id="bookingRange" class="form-control" type="text" aria-label="bookingRange" aria-describedby="basic-addon2" readonly required>
-        <label for="bookingRange"> Data inizio prenotazione*</label>
+        <label for="bookingRange"> Periodo prenotazione*</label>
       </div>
 
-
-      <div class="row mb-3">
-        <div class="col-6">
-          <input class="form-check-input" type="checkbox" value="" id="rentalOccurred" disabled>
-          <label class="form-check-label" for="rentalOccurred">
-            Avvenuta consegna
-          </label>
-        </div>  
-
-        <div class="col-6">
-          <input class="form-check-input" type="checkbox" value="" id="returned" disabled>
-          <label class="form-check-label" for="returned">
-            Avvenuta restituzione
-          </label>
-        </div>  
+      <div class="form-floating mb-3">
+        <input type="number" min="1" step="1" class="form-control" id="fixedPrice" onkeyup="calculateTotal()" aria-label="Recipient's price" aria-describedby="basic-addon4" readonly required>
+        <label for="price"> Prezzo fisso*</label>
       </div>
+
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo fisso:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" id="sale" disabled>
+						<label class="form-check-label" for="sale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+      <div class="form-floating mb-3">
+        <input type="number" min="1" step="1" class="form-control" id="dailyPrice" onkeyup="calculateTotal()" aria-label="Recipient's price" aria-describedby="basic-addon4" readonly required>
+        <label for="price"> Prezzo giornaliero*</label>
+      </div>
+
+      <div class="row mb-3" id="dayliSaleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" id="dailySale" disabled>
+						<label class="form-check-label" for="dailySale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+      <div class="form-floating mb-3">
+				<input type="number" class="form-control" id="newTotal" aria-label="Recipient's price" aria-describedby="basic-addon6" readonly>
+				<label for="price"> Prezzo Totale</label>
+			</div>
 
       <div class="form-floating mb-3">
         <input type="text" id="notes" class="form-control"  aria-label="notes" aria-describedby="basic-addon" readonly >
@@ -99,6 +116,22 @@
       <div class="form-floating mb-3">
         <input type="text" id="privateNotes" class="form-control"  aria-label="privateNotes" aria-describedby="basic-addon" readonly >
         <label for="privateNotes"> Note(non visibili ai clienti)</label>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-6">
+          <input class="form-check-input" type="checkbox" value="" id="rentalOccurred" disabled>
+          <label class="form-check-label" for="rentalOccurred">
+            
+          </label>
+        </div>  
+
+        <div class="col-6">
+          <input class="form-check-input" type="checkbox" value="" id="returned" disabled>
+          <label class="form-check-label" for="returned">
+            
+          </label>
+        </div>  
       </div>
 
       <div id="myButtons">

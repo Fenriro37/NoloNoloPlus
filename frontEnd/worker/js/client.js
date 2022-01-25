@@ -47,10 +47,8 @@ window.onload = function getClient() {
         else{
           let current = new Date();      
           current = parseInt(current.getFullYear()) * 10000 + parseInt((current.getMonth()+1)) * 100 + parseInt(current.getDate())
-          console.log(current)
           for(let i in bookings){
             bookingEnd = parseInt(bookings[i].endDate.year) * 10000 + parseInt(bookings[i].endDate.month) * 100 + parseInt(bookings[i].endDate.day)
-            console.log(bookingEnd)
             if(current <= bookingEnd){
               deletable = false
             }
@@ -60,6 +58,7 @@ window.onload = function getClient() {
               '<tr>'+
               '<td><a href="reservation.html?id=' +bookings[i]._id+'">'+bookings[i]._id+'</td>'+
               '<td class="text-truncate"><a href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
+              '<td>'+bookings[i].totalPrice+'€</td>'+
               '<td>'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
               '<td>'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
               '</tr>'

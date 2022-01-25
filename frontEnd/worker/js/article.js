@@ -98,6 +98,7 @@ function fill(){
 				'<tr>'+
 				'<td><a href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
 				'<td><a href="client.html?email=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
+				'<td>'+data.bookings[i].total+'€</td>'+
 				'<td>'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
 				'<td>'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
 				'</tr>'
@@ -220,7 +221,7 @@ function getModalData(){
 
 		$("#discountValue").val(data.discount.onSaleValue);
 		$("#discountValue").attr("placeholder", data.discount.onSaleValue);
-		if(data.discount.onSaleType){
+		if(!data.discount.onSaleType){
 			$('#discountAmount').prop('checked', true);
 			$('#pd').text("€")
 			$('#newPrice').val(data.fixedPrice - data.discount.onSaleValue)
