@@ -47,11 +47,11 @@ export class Hamburger extends React.Component {
           </Nav.Link>
           <Nav.Link
           href='./page'>
-            Personal page
+            Pagina utente
           </Nav.Link>
           <Nav.Link
           href='./reservation'>
-            Reservation
+            Prenotazioni
           </Nav.Link>
           <Nav.Link
           onClick={this.logout}>
@@ -66,20 +66,23 @@ export class Hamburger extends React.Component {
         navbarScroll>
           <Nav.Link
           className='w-100'>
-            <Form
-              className='element-to-hide-over-350'
-              onSubmit={(e) => {
-                e.preventDefault();
-                this.props.search(e.target.searchInput.value);
-              }}>
-              <FormControl
-                type='search'
-                placeholder='Cerca'
-                name='searchInput'
-                className='me-2'
-                aria-label='Cerca'/>
-            </Form>
-          </Nav.Link>
+            { this.props.type == 'user'
+              ? null
+              : <Form
+                className='element-to-hide-over-350'
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  this.props.search(e.target.searchInput.value);
+                }}>
+                <FormControl
+                  type='search'
+                  placeholder='Cerca'
+                  name='searchInput'
+                  className='me-2'
+                  aria-label='Cerca'/>
+              </Form>
+            }
+            </Nav.Link>
           <Nav.Link
           href='/public/login.html'>
             login

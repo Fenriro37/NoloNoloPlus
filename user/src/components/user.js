@@ -141,15 +141,7 @@ export class User extends Component {
     return (
       <>
       <Header type={"user"} isAuthenticated={this.state.isAuth} />
-      <Container className="mb-2">
-        <Row className="align-items-center">
-          <Col xs={4}>
-            <i className="bi bi-person-circle"  style={{fontSize:'4rem'}} alt="Bootstrap" role="img" aria-label="userIcon"></i>
-          </Col>
-          <Col xs={8} className="text-center">
-            <h1>Personal Page</h1>
-          </Col>
-        </Row>
+      <Container className="mb-2 pt-2">
         <form onSubmit={this.handleSubmit}>
           <fieldset disabled={!this.state.boolModifying} >
             <Form.Group className="mb-2">
