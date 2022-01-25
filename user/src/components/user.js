@@ -5,16 +5,11 @@ import apiCall from '../services/apiCall'
 import functions from '../services/functions'
 import {Header} from './header.js'
 
-import {Container, Form, Button, Row, Col, Image} from 'react-bootstrap'
-//import Form from 'react-bootstrap/Form';
-//import Button from 'react-bootstrap/Button';
+import {Container, Form, Button, Row, Col} from 'react-bootstrap'
 
 export class User extends Component {
   constructor(props) {
     super(props);
-
-    /* 1. Initialize Ref */
-    this.textInput = React.createRef(); 
 
     this.state = {
       userId:"",
@@ -24,11 +19,9 @@ export class User extends Component {
       userPhoneNumber:"",
       userEmail:"",
       userAddress:{street:"",number:"",city:""},
-      userPayment:{cardType:"",cardName:"",cardSurname:"",cardExpireYear:"",cardExpireMonth:"",cardCCV:""},
+      userPayment:{cardType:"",cardName:"",cardSurname:"",cardExpireYear:"",cardExpireMonth:"",cardCVV:""},
       userSex:"",
 
-      boolModifying: false,
-      isAuth: false,
       yearList: [
         {key: 1, year: '2022'},
         {key: 2, year: '2023'}, 
@@ -50,12 +43,17 @@ export class User extends Component {
         {key: 11, month: 'Novembre'},
         {key: 12, month: 'Dicembre'}
       ],      
-
+      
+      //Copy
       newSex: "",
       newCardType: "",
       newExprYear: "",
       newExprMonth: "",
-      newBirthday: {year: "", month: "", day: ""}
+      newBirthday: {year: "", month: "", day: ""},
+      
+      //Settings
+      boolModifying: false,
+      isAuth: false,
     }
     
     this.switchModifying = this.switchModifying.bind(this);
@@ -63,9 +61,10 @@ export class User extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     apiCall.getUser().then((result) => {
       this.setState({
+        //Init
         userId: result.data.data._id,
         userName: result.data.data.userName,
         userSurname: result.data.data.userSurname,
@@ -87,16 +86,18 @@ export class User extends Component {
           cardType: result.data.data.payment.cardType,
           cardExpireYear: result.data.data.payment.cardExpireYear,
           cardExpireMonth: result.data.data.payment.cardExpireMonth,
-          cardCCV: result.data.data.payment.cardCCV
+          cardCVV: result.data.data.payment.cardCVV
         },
         userSex: result.data.data.sex,
 
+        //Copy
         newSex: result.data.data.sex,
         newCardType: result.data.data.payment.cardType,
         newExprYear: result.data.data.payment.cardExpireYear,
         newExprMonth: result.data.data.payment.cardExpireMonth,
         newBirthday: {year: result.data.data.birthday.year, month: result.data.data.birthday.month, day: result.data.data.birthday.day},
 
+        //Settings
         isAuth: true
       })
     })
@@ -109,20 +110,101 @@ export class User extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event.target.querySelectorAll('input'));
 
     var tmp = event.target.querySelectorAll('input');
-    for (var el in tmp) {
-      console.log(tmp[el].value);
-    }
 
     if (this.state.boolModifying) {
-      //Post API
-      //const query = {
-      //  userName: event.target[0].value,
-      //  userSurname: event.target[1].value,
-      //}
-      //console.log(query);
+      var query = {};
+
+      //Preparo l'indirizzo e il pagamento (oggetto)
+      var address = {
+        addressCity: '',
+        addressStreet: '',
+        addressNumber: ''
+      }
+      var payment = {
+        cardName: "",
+        cardSurname: "",
+        cardExpireYear: this.state.newExprYear,
+        cardExpireMonth: this.state.newExprMonth,
+        cardType: this.state.newCardType,
+        cardCVV: ""
+      }
+      for (var i in tmp) {
+        if(tmp[i].name == 'userAddressCity') {
+          address.addressCity = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userAddressStreet') {
+          address.addressStreet = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userAddressNumber') {
+          address.addressNumber = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userPaymentName') {
+          payment.cardName = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userPaymentSurname') {
+          payment.cardSurname = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userPaymentCVV') {
+          payment.cardCVV = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        }
+      }
+
+      //Controllo le modifiche degli input
+      for (var i in tmp) {
+        console.log('Value di ' + tmp[i].name + ': ' + tmp[i].value);
+        console.log('Placeholder di ' + tmp[i].name + ': ' + tmp[i].placeholder);
+        //Inserisco a prescindere la via
+
+        if(tmp[i].value != tmp[i].placeholder) {
+          if(tmp[i].name == 'userBirthday') {
+            //Data modificata
+            query.birthday = {
+              year: tmp[i].value.split('-')[0],
+              month: tmp[i].value.split('-')[1],
+              day: tmp[i].value.split('-')[2]
+            }
+          } else if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
+            //Indirizzo modificato
+            query.address = address
+          } else if(
+            tmp[i].name == 'userPaymentName'
+            || tmp[i].name == 'userPaymentSurname'
+            || this.state.newCardType != this.state.cardType
+            || this.state.newExprMonth != this.state.cardExpireMonth
+            || this.state.newExprYear != this.state.cardExpireYear) {
+            query.payment = payment
+          } else {
+            query[tmp[i].name] = tmp[i].value;
+          }
+        }
+      }
+
+      
+      
+      //Controllo le modifiche degli Selector
+      if(this.state.userSex != this.state.newSex) {
+        query.sex = this.state.newSex;
+      }
+      // if(this.state.userPayment.cardExpireYear != this.state.newExprYear){
+      //   query.payment = {
+      //     cardExpireYear: this.state.newExprYear
+      //   }
+      // }
+      // if(this.state.userPayment.cardExpireMonth != this.state.newExprMonth){
+      //   query.payment = {
+      //     cardExpireMonth: this.state.newExprMonth
+      //   }
+      // }
+      // if(this.state.userPayment.cardType != this.state.newCardType){
+      //   query.payment = {
+      //     cardType: this.state.newCardType
+      //   }
+      // }
+
+      // cardType
+      // cardName
+      // cardSurname
+      // cardExpireMonth
+
+      //Controllo della query
+      console.log(query);
 
       //apiCall.postUser(null, query).then(() => {
       //    alert('success');
@@ -146,17 +228,17 @@ export class User extends Component {
           <fieldset disabled={!this.state.boolModifying} >
             <Form.Group className="mb-2">
               <Form.Label>User Name:</Form.Label>
-              <Form.Control type="text" name="name" placeholder={this.state.userName} aria-label="Username" aria-describedby="basic-addon1"/>
+              <Form.Control type="text" name="userName" placeholder={this.state.userName} aria-label="Username" aria-describedby="basic-addon1"/>
             </Form.Group>   
 
             <Form.Group className="mb-2">
               <Form.Label>User Surname:</Form.Label>
-              <Form.Control type="text" name="surName" placeholder={this.state.userSurname} />
+              <Form.Control type="text" name="userSurname" placeholder={this.state.userSurname} />
             </Form.Group>    
 
             <Form.Group className="mb-2">
               <Form.Label>User Password:</Form.Label>
-              <Form.Control type="password" placeholder="password" />
+              <Form.Control type="password" name="password" placeholder="password" />
             </Form.Group>
 
             <Form.Label>User Sex:</Form.Label>
@@ -173,6 +255,7 @@ export class User extends Component {
               <Form.Label>User Birthday:</Form.Label>
               <Form.Control type="date" 
               value={this.state.newBirthday.year + "-" + this.state.newBirthday.month + "-" + this.state.newBirthday.day} 
+              name="userBirthday"
               onChange={(event)=>{
                 var x = event.target.value.split('-');
                 this.setState({newBirthday: {year: x[0], month: x[1], day: x[2]}})
@@ -181,39 +264,39 @@ export class User extends Component {
             
             <Form.Group as={Col} className="mb-2">
               <Form.Label>Address City:</Form.Label>
-              <Form.Control type="text" placeholder={this.state.userAddress.city} />
+              <Form.Control type="text" name="userAddressCity" placeholder={this.state.userAddress.city} />
             </Form.Group>
               
             <Row>
               <Form.Group as={Col} xs={8} className="mb-2">
                 <Form.Label>Address Street:</Form.Label>
-                <Form.Control type="text" placeholder={this.state.userAddress.street} />
+                <Form.Control type="text" name="userAddressStreet" placeholder={this.state.userAddress.street} />
               </Form.Group>
 
               <Form.Group as={Col} xs={4} className="mb-2">
                 <Form.Label>Number:</Form.Label>
-                <Form.Control type="text" placeholder={this.state.userAddress.number} />
+                <Form.Control type="text" name="userAddressNumber" placeholder={this.state.userAddress.number} />
               </Form.Group>
             </Row>
 
             <Form.Group className="mb-2">
               <Form.Label>User Phone Number:</Form.Label>
-              <Form.Control type="text" placeholder={this.state.userPhoneNumber} />
+              <Form.Control type="text" name="userPhoneNumber" placeholder={this.state.userPhoneNumber} />
             </Form.Group>
             
             <Form.Group className="mb-2">
               <Form.Label>User Email:</Form.Label>
-              <Form.Control type="email" placeholder={this.state.userEmail} />
+              <Form.Control type="email" name="userEmail" readOnly disabled placeholder={this.state.userEmail} />
             </Form.Group>
             
             <Form.Group className="mt-1 mb-2">
               <Form.Label>Card Name:</Form.Label>
-              <Form.Control type="text" placeholder={this.state.userPayment.cardName} />
+              <Form.Control type="text" name="userPaymentName" placeholder={this.state.userPayment.cardName} />
             </Form.Group>
             
             <Form.Group className="mt-1 mb-2">
               <Form.Label>Card Surname:</Form.Label>
-              <Form.Control type="text" placeholder={this.state.userPayment.cardSurname} />
+              <Form.Control type="text" name="userPaymentSurname" placeholder={this.state.userPayment.cardSurname} />
             </Form.Group>
             
             <Form.Label>Tipo di carta:</Form.Label>
@@ -252,7 +335,10 @@ export class User extends Component {
             
             <Form.Group className="mb-2">
               <Form.Label>Card CVV:</Form.Label>
-              <Form.Control type="text" placeholder={this.state.userPayment.cardCCV} />
+              <Form.Control
+              type="text"
+              name="userPaymentCVV"
+              placeholder={this.state.userPayment.cardCVV} />
             </Form.Group>
           </fieldset>
           

@@ -13,6 +13,9 @@ router.use('/worker/js', express.static(workerPath + '/js/'));
 router.use('/worker/media', express.static(workerPath + '/media/'));
 
 router.use('/manager/', express.static(managerPath + '/'));
+router.get('/manager/index', (req, res) => {
+    res.sendFile(path.join(mangerPath + '/index.html'));
+});
 
 router.use('/user/page/static/css', express.static(userPath + '/static/css'));
 router.use('/user/page/static/js', express.static(userPath + '/static/js'));
@@ -24,7 +27,9 @@ router.get('/user/page', (req, res) => {
 router.get('/user/reservation', (req, res) => {
     res.sendFile(path.join(userPath + '/index.html'));
 });
-
+router.get('/user/invoice', (req, res) => {
+    res.sendFile(path.join(userPath + '/index.html'));
+});
 
 router.use('/public/', express.static(publicPath + '/html/'));
 router.use('/public/css', express.static(publicPath + '/css/'));

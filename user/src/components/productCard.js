@@ -12,10 +12,15 @@ export class ProductCard extends React.Component {
     super(props);
     this.state = {
       product: props.product,
-      isAuthenticated: props.isAuthenticated,
-      discountedPrice: props.product.discount.onSaleType
-        ? (props.product.price * (100 - props.product.discount.onSaleValue) / 100).toFixed(2)
-        : (props.product.price - props.product.discount.onSaleValue).toFixed(2)
+      isAuthenticated: props.isAuthenticated,      
+      discountedFixedPrice: props.product.discount.onSale
+        ? (
+          props.product.discount.onSaleType
+            ? (props.product.fixedPrice * parseFloat(100 - props.product.discount.onSaleValue) / 100).toFixed(2)
+            : (props.product.fixedPrice - props.product.discount.onSaleValue).toFixed(2)
+        ) : (
+          props.product.fixedPrice
+        )
     }
   }
 
@@ -67,14 +72,18 @@ export class ProductCard extends React.Component {
             <Stars
             quality={this.state.product.quality}/>
             <Price
-            discountedPrice={this.state.discountedPrice}
-            originalPrice={this.state.product.price}/>
+            originalFixedPrice={parseFloat(this.state.product.fixedPrice).toFixed(2)}
+            discountedFixdedPrice={parseFloat(this.state.discountedFixedPrice).toFixed(2)}
+            originalVariablePrice={parseFloat(this.state.product.price).toFixed(2)}
+            variableDiscount={this.state.product.overDays}/>
             <hr/>
             <div className='mb-2'><b>Prenotazione:</b></div>
             {this.state.product.available ? (
               <MakeReservation
                 bookings={this.state.product.bookings}
-                finalPrice={this.state.product.discount.onSale ? this.state.discountedPrice : this.state.product.price}
+                finalFixedPrice={this.state.product.discount.onSale ? this.state.discountedFixedPrice : this.state.product.fixedPrice}
+                originalVariablePrice={this.state.product.price}
+                variableDiscount={this.state.product.overDays}
                 isAuthenticated={this.state.isAuthenticated}
                 product={this.state.product}/>
               ) : (

@@ -36,7 +36,7 @@ exports.usersFind = async function(filter, sortBy) {
     try {
         await mongo.connect();
         const users = mongo.db(config.databaseName).collection(config.databaseUserCollectionName);
-        const re = new RegExp(`\\b${filter}\\b`, 'gi');
+        const re = new RegExp(`${filter}`, 'gi');
         const result = await users.find({
                 $or: [
                     { userName: re },
