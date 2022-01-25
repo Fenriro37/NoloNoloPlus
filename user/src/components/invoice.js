@@ -9,7 +9,7 @@ export class Invoice extends React.Component {
 
   render() {
     return(
-      <Card className='m-3 p-4'>
+      <Card className='m-3 p-4 w-100'>
         <div className='row d-flex justify-content-between'>
           <div className='col-4'>
             Intestazione Destinatario
@@ -36,6 +36,7 @@ export class Invoice extends React.Component {
               <th>Quantità</th>
               <th>Prezzo</th>
               <th>Sconto</th>
+              <td>Iva</td>
               <th>Imponibile</th>
             </tr>
           </thead>
@@ -46,18 +47,29 @@ export class Invoice extends React.Component {
               <td>1</td>
               <td>Prezzo</td>
               <td>Sconto</td>
+              <td>22</td>
               <td>Imponibile</td>
             </tr>
-            <td>2</td>
+            <tr>
+              <td>2</td>
               <td>Noleggio Titolo + Brand + id?</td>
-              <td>Giorni di noleggio</td>
+              <td>1</td>
               <td>Prezzo</td>
               <td>Sconto</td>
+              <td>22</td>
               <td>Imponibile</td>
+            </tr>
             <tr>
-              <td> </td>
-              <td colSpan={4}>Totale imponibile</td>
+              <td colSpan={6}>Totale imponibile</td>
               <td>totalPrice scorporato</td>
+            </tr>
+            <tr>
+              <td colSpan={6}>IVA</td>
+              <td>IVA</td>
+            </tr>
+            <tr>
+              <td colSpan={6}>Totale Fattura</td>
+              <td>Tot</td>
             </tr>
           </tbody>
         </Table>
