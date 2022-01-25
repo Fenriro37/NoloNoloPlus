@@ -39,11 +39,10 @@
       <!-- Bottoni -->
       <div class="row d-flex justify-content-between">
         <div class="col align-items-center">
-          <router-link v-if="available" :to="{name: 'createReservation', params:{id:identifier, price:price}}" id="rentProduct" class="btn btn-lg btn-warning m-1">Affitta</router-link>
-          <b-button v-else id="rentProduct" class="btn btn-lg btn-secondary m-1" disabled>Affitta</b-button>
-          <b-button type="button" class="btn btn-lg m-1" variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" v-on:click="getModalData">Modifica</b-button>
-          <b-button type="button" class="btn btn-lg btn-danger m-1" :disabled="boolDelete" v-on:click="deleteProduct">Elimina</b-button>
-          <router-link :to="{ name: 'chartArticle', props: {id: identifier}}" :disabled="bookings.length === 0" class="btn btn-lg btn-warning m-1"> Analytics </router-link>
+          <b-button v-if="available" id="rentProduct" class="btn btn-lg btn-warning m-1" :disabled="enter" @click="rent">Affitta</b-button>
+          <b-button type="button" class="btn btn-lg m-1" variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" :disabled="enter" v-on:click="getModalData">Modifica</b-button>
+          <b-button type="button" class="btn btn-lg btn-danger m-1" :disabled="boolDelete || enter" v-on:click="deleteProduct">Elimina</b-button>
+          <b-button :disabled="bookings.length === 0 || enter" class="btn btn-lg btn-warning m-1" @click="stats"> Analytics </b-button>
         </div>
       </div>
 
@@ -364,6 +363,7 @@
   export default {
     data() {
       return {
+        enter: false,
         identifier: '',
         title: '',
         brand: '',
@@ -470,17 +470,20 @@
 
         }, (error) => {
           alert('La pagina non esiste');
-          this.$router.replace(' ')
-          this.$emit('clicked')
+           this.$router.push({ name: 'home'})
         }
       )
     },
 
-    /* beforeRouteLeave (){
-      this.$emit('clicked')
-    }, */
-
     methods: {
+
+      rent(){
+         this.$router.push({ name: 'createReservation' , params: { id: this.identifier}})
+      },
+      
+      stats(){
+         this.$router.push({ name: 'chartArticle' , params: { id: this.identifier}})
+      },
 
       getModalData(){
         this.titleModal = this.title;
@@ -545,6 +548,7 @@
       },
 
       saveData(){
+        this.enter = true
         let query = {}
         
         if(this.titleModal != this.title && this.titleModal != '') 
@@ -624,15 +628,17 @@
             this.overDays.onSaleValu = this.overSaleValueModal  
             this.description = this.descriptionModal  
             this.note = this.noteModal  
+            this.enter = false
         }) 
       }, 
       
       deleteProduct(){
-          Functions.deleteProduct(this.identifier)
-          .then( () =>{
-             this.$router.push({ name: 'articleCatalog' , params: { filter: '', id: Math.round(Math.random() * 1000)}})
-          })
-        }         
+        this.enter = true
+        Functions.deleteProduct(this.identifier)
+        .then( () =>{
+            this.$router.push({ name: 'articleCatalog' , params: { filter: ''}})
+        })
+      }         
 
     },
     computed: {

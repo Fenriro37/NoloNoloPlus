@@ -141,9 +141,8 @@ export default {
       
     }, 
     (error) => {
-          alert('La pagina non esiste');
-          this.$router.replace(' ')
-          this.$emit('clicked')
+        alert('La pagina non esiste');
+        this.$router.push({ name: 'home'})
     })
 
   }, 

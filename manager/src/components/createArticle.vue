@@ -155,7 +155,7 @@
 				</div>
 
 				<div class="col-6">
-					<button type="reset" class="btn btn-lg btn-danger delete" @click="cancel">Annulla</button>
+					<button type="reset" class="btn btn-lg btn-danger delete" :disabled="enter" @click="cancel">Annulla</button>
 				</div>
 			</div>
 

@@ -61,11 +61,11 @@ export default {
       search(){
         this.request = this.text
         if(this.selected == 'Articoli')
-          this.$router.push({ name: 'articleCatalog' , params: { filter: this.text, id: Math.round(Math.random() * 1000)}})
+          this.$router.push({ name: 'articleCatalog' , params: { filter: this.text}}).catch(()=>{})
         else if(this.selected == 'Clienti')
-          this.$router.push({ name: 'clientCatalog', params: { filter: this.text, id: Math.round(Math.random() * 1000)} })
+          this.$router.push({ name: 'clientCatalog', params: { filter: this.text} }).catch(()=>{})
         else
-          this.$router.push({ name: 'reservationCatalog', params: { filter: this.text, id: Math.round(Math.random() * 1000)} })
+          this.$router.push({ name: 'reservationCatalog', params: { filter: this.text} }).catch(()=>{})
       },
 
       logOut(){

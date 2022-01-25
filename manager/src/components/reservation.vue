@@ -151,10 +151,10 @@
       </div>
 
 
-    <b-button v-if="!boolModify && !boolDelete" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" @click="modify">Modifica</b-button>
-    <b-button v-if="boolModify || boolDelete" type="submit" class="btn btn-lg btn-success m-2"  >Salva</b-button>
-    <b-button v-if="boolModify || boolDelete" type="button" class="btn btn-lg btn-danger m-2" @click="undoChange">Annulla</b-button>
-    <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" @click="deleteReservation" :disabled="boolActive"> Cancella prenotazione</button>
+    <b-button v-if="!boolModify && !boolDelete" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" :disabled="enter" @click="modify">Modifica</b-button>
+    <b-button v-if="boolModify || boolDelete" type="submit" class="btn btn-lg btn-success m-2"  :disabled="enter" >Salva</b-button>
+    <b-button v-if="boolModify || boolDelete" type="button" class="btn btn-lg btn-danger m-2" :disabled="enter" @click="undoChange">Annulla</b-button>
+    <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" @click="deleteReservation" :disabled="boolActive || enter" > Cancella prenotazione</button>
     </form>
   </div> 
 </div> 
@@ -170,6 +170,7 @@
     components: { DatePicker },
     data() {
       return {
+        enter: false,
         reservation: {},
         bookings: [],
         available:'',
@@ -235,8 +236,7 @@
         
       },(error) => {
           alert('La pagina non esiste');
-          this.$router.replace(' ')
-          this.$emit('clicked')
+          this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
         }
       )
     },
@@ -281,7 +281,7 @@
       },
 
       saveData(){
-
+        this.enter = true
         let query = {}
 
         //controlliamo i prezzi
@@ -361,7 +361,6 @@
           query1.bookings = this.bookings
           Functions.saveDataProduct(this.reservation.productId, query1)
           .then( () => {
-            alert("Articolo Modificato")
           })          
         }
             
@@ -389,12 +388,13 @@
         this.time = null
         this.boolModify = false 
         this.boolDelete = false
-        
+        this.enter = false
         })     
       },
 
       deleteReservation(){
         //cancellare da article la prenotazione
+        this.enter = true
         let query = {}
         for(let i in this.bookings){
           if( this.bookings[i].reservationId != this.reservationId){
@@ -406,8 +406,7 @@
         Functions.saveDataProduct(this.reservation.productId, query)
           .then( () =>{
           Functions.deleteReservation(this.reservationId).then( () =>{
-             this.$router.replace(' ')
-             this.$emit('clicked')
+             this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
           })
         })
       },

@@ -135,11 +135,11 @@
 
       <div class="row">
         <div class="col-6">
-          <button type="submit" class="btn btn-lg btn-success" id="save">Salva</button>
+          <button type="submit" class="btn btn-lg btn-success" id="save" :disabled="enter">Salva</button>
         </div>
 
         <div class="col-6">
-          <button type="button" id="clear" class="btn btn-lg btn-danger delete" @click="cancel">Annulla</button>
+          <button type="button" id="clear" class="btn btn-lg btn-danger delete" :disabled="enter" @click="cancel">Annulla</button>
         </div>
       </div> 
 
@@ -158,6 +158,7 @@
     components: { DatePicker },
     data() {
       return {
+        enter: false,
         article: {},
 
         email: '',
@@ -208,8 +209,7 @@
 
       }, (error) => {
           alert('La pagina non esiste');
-          this.$router.replace(' ')
-          this.$emit('clicked')
+           this.$router.push({ name: 'home'})
         }
       )
     },
@@ -251,6 +251,7 @@
 
 
       createReservation(){
+        this.enter = true
         let query = {};
         query.clientEmail = this.email;
         query.productId = this.articleId;
@@ -343,6 +344,7 @@
             Functions.saveDataProduct(this.articleId, query)
             .then( ()  =>{
               this.cancel();
+              this.enter = false
               alert("Creazione riuscita")       
             })   
           }) 

@@ -105,15 +105,15 @@
       <div id="myButtons" class="row">
         <!-- Bottoni -->
         <div class="col">
-          <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2" @click="modify">Modifica</b-button>
-          <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" >Salva</b-button>
-          <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger mb-2 mt-2" @click="undoChange">Annulla</b-button>
+          <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2" :disabled="enter" @click="modify">Modifica</b-button>
+          <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" :disabled="enter">Salva</b-button>
+          <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="enter" @click="undoChange">Annulla</b-button>
         </div>
         <div class="col">
-          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="bookings.length===0" @click="chart">Analytics</b-button>
+          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="bookings.length===0 || enter" @click="chart">Analytics</b-button>
         </div>
         <div class="col">
-          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="boolDelete" @click="deleteUser">Elimina cliente</b-button>
+          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="boolDelete || enter" @click="deleteUser">Elimina cliente</b-button>
         </div>
       </div>
 
@@ -151,6 +151,7 @@
   export default {
     data() {
       return {
+        enter: false,
         user: {},
         id: '',
         name: '',
@@ -214,8 +215,7 @@
         this.undoChange()
       }, (error) => {
           alert('La pagina non esiste');
-          this.$router.replace(' ')
-          this.$emit('clicked')
+          this.$router.push({ name: 'clientCatalog' , params: { filter: ''}})
         }
       )
 
@@ -278,6 +278,7 @@
       },
 
       saveData(){
+        this.enter = true
         let query = {}
         if(this.user.userName != this.name)
           query.userName = this.name;
@@ -339,13 +340,14 @@
             this.user.payment.cardExpireYear = this.payment.cardExpireYear 
 
             this.boolModify = false
+            this.enter = false
         }) 
       },
 
       deleteUser(){        
+        this.enter = true
         Functions.deleteUser(this.id).then( () =>{
-          this.$router.replace(' ')
-          this.$emit('clicked')
+          this.$router.push({ name: 'clientCatalog' , params: { filter: ''}})
         })                   
       },
       chart(){

@@ -28,17 +28,17 @@ export default new Router({
       component: articleCatalog
     },
     {
-      path: "/articleCatalog:id",
+      path: "/articleCatalog:filter",
       name: "articleCatalog",
       component: articleCatalog
     },
     {
-      path: "/clientCatalog:id",
+      path: "/clientCatalog:filter",
       name: "clientCatalog",
       component: clientCatalog
     },
     {
-      path: "/reservationCatalog:id",
+      path: "/reservationCatalog:filter",
       name: "reservationCatalog",
       component: reservationCatalog
     },
