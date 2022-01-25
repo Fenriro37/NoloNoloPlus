@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import apiCall from '../services/apiCall'
-import functions from '../services/functions'
+import functions, { convertDateToObject } from '../services/functions'
 import {Header} from './header.js'
 
 import {Container, Form, Button, Row, Col} from 'react-bootstrap'
@@ -114,9 +114,9 @@ export class User extends Component {
     var tmp = event.target.querySelectorAll('input');
 
     if (this.state.boolModifying) {
+      // Preparo la query da inviare al server
       var query = {};
-
-      //Preparo l'indirizzo e il pagamento (oggetto)
+      // Preparo l'indirizzo e il pagamento (oggetto)
       var address = {
         addressCity: '',
         addressStreet: '',
@@ -146,62 +146,39 @@ export class User extends Component {
         }
       }
 
-      //Controllo le modifiche degli input
+      // Controllo le modifiche degli Input
       for (var i in tmp) {
-        console.log('Value di ' + tmp[i].name + ': ' + tmp[i].value);
-        console.log('Placeholder di ' + tmp[i].name + ': ' + tmp[i].placeholder);
-        //Inserisco a prescindere la via
-
-        if(tmp[i].value != tmp[i].placeholder) {
-          if(tmp[i].name == 'userBirthday') {
-            //Data modificata
-            query.birthday = {
-              year: tmp[i].value.split('-')[0],
-              month: tmp[i].value.split('-')[1],
-              day: tmp[i].value.split('-')[2]
-            }
-          } else if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
-            //Indirizzo modificato
-            query.address = address
-          } else if(
-            tmp[i].name == 'userPaymentName'
-            || tmp[i].name == 'userPaymentSurname'
-            || this.state.newCardType != this.state.cardType
-            || this.state.newExprMonth != this.state.cardExpireMonth
-            || this.state.newExprYear != this.state.cardExpireYear) {
-            query.payment = payment
-          } else {
-            query[tmp[i].name] = tmp[i].value;
+        if(tmp[i].value && tmp[i].placeholder) {
+          if(tmp[i].value != '' && tmp[i].value != tmp[i].placeholder) {
+            if(tmp[i].name == 'userBirthday') {
+              // È stato modificato la data
+              query.birthday = {
+                year: tmp[i].value.split('-')[0],
+                month: tmp[i].value.split('-')[1],
+                day: tmp[i].value.split('-')[2]
+              }
+            } else if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
+              // È stato modificato l'indirizzo
+              query.address = address
+            } else if(tmp[i].name == 'userPaymentName' || tmp[i].name == 'userPaymentSurname' || tmp[i].name == 'userPaymentCVV') {
+              // È stato modificato il nome o cognome del metodo di pagamento
+              query.payment = payment            
+            } else {
+              console.log(tmp[i].name)
+              query[tmp[i].name] = tmp[i].value;
+            }           
           }
         }
       }
 
-      
-      
-      //Controllo le modifiche degli Selector
+      // Controllo le modifiche degli Selector
       if(this.state.userSex != this.state.newSex) {
         query.sex = this.state.newSex;
       }
-      // if(this.state.userPayment.cardExpireYear != this.state.newExprYear){
-      //   query.payment = {
-      //     cardExpireYear: this.state.newExprYear
-      //   }
-      // }
-      // if(this.state.userPayment.cardExpireMonth != this.state.newExprMonth){
-      //   query.payment = {
-      //     cardExpireMonth: this.state.newExprMonth
-      //   }
-      // }
-      // if(this.state.userPayment.cardType != this.state.newCardType){
-      //   query.payment = {
-      //     cardType: this.state.newCardType
-      //   }
-      // }
-
-      // cardType
-      // cardName
-      // cardSurname
-      // cardExpireMonth
+      if(this.state.newCardType != this.state.userPayment.cardType || this.state.newExprMonth != this.state.userPayment.cardExpireMonth || this.state.newExprYear != this.state.userPayment.cardExpireYear) {
+        console.log('OK')
+        query.payment = payment;
+      }
 
       //Controllo della query
       console.log(query);
