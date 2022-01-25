@@ -1,6 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 //import App from "./App.vue"
+import articleCatalog from "./components/articleCatalog.vue";
+import clientCatalog from "./components/clientCatalog.vue";
+import reservationCatalog from "./components/reservationCatalog.vue";
 import createArticle from "./components/createArticle.vue";
 import createReservation from "./components/createReservation.vue";
 import article from "./components/article.vue";
@@ -19,6 +22,26 @@ let url = "http://localhost:8081/manager/index.html";
 export default new Router({
   mode: "hash",
   routes: [
+    {
+      path: "/",
+      name: "home",
+      component: articleCatalog
+    },
+    {
+      path: "/articleCatalog:id",
+      name: "articleCatalog",
+      component: articleCatalog
+    },
+    {
+      path: "/clientCatalog:id",
+      name: "clientCatalog",
+      component: clientCatalog
+    },
+    {
+      path: "/reservationCatalog:id",
+      name: "reservationCatalog",
+      component: reservationCatalog
+    },
     {
       path: "/createArticle",
       name: "createArticle",

@@ -140,10 +140,10 @@ function readOnly(){
       $(this).prop("readonly", false); 
     });
     $("#identifier").prop("readonly", true); 
+    $("#mail").prop("readonly", true); 
     $("select").prop("disabled", false);
   }
 }
-
 
 document.addEventListener('click',function(e){
   if(e.target && e.target.id== 'reset'){

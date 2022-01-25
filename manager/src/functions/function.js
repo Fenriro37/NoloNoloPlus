@@ -4,17 +4,6 @@ import config from '../config.js'
 
 class Functions {
 
-    loginAsWorker() {
-        let result = http.post(
-            "/api/public/login",
-            {
-                email: "han.chu@manager.com",
-                plainTextPassword: "1234567890"
-            }
-        );
-        console.log("AUTH");
-        return result;
-    }
     checkCookie(){
         console.log("Cookie");  
         http.get("/api/public/auth").then( (result) => {

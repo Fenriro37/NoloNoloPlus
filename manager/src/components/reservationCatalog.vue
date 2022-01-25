@@ -11,9 +11,9 @@
           <div class="row h-100">
             <div class="col-5 align-items-center h-100"> <img class="myImg " alt="immagine prodotto"  v-bind:src="reservation.productImage"></div>
             <div class="col-7" style="height:100%;"> 
-              <h4 class="text-truncate">Id: <router-link @click.native="switchComponent" :to="{name: 'reservation', params: {id: reservation._id}}">{{reservation._id}}</router-link></h4>
-              <h4 class="text-truncate">Articolo: <router-link @click.native="switchComponent" :to="{name: 'article',  params: { id: reservation.productId}}">{{reservation.productTitle + ' ' + reservation.productBrand}}</router-link></h4>
-              <h4 class="text-truncate">Cliente: <router-link @click.native="switchComponent" :to="{name: 'client', params: {email: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h4>
+              <h4 class="text-truncate">Id: <router-link :to="{name: 'reservation', params: {id: reservation._id}}">{{reservation._id}}</router-link></h4>
+              <h4 class="text-truncate">Articolo: <router-link :to="{name: 'article',  params: { id: reservation.productId}}">{{reservation.productTitle + ' ' + reservation.productBrand}}</router-link></h4>
+              <h4 class="text-truncate">Cliente: <router-link :to="{name: 'client', params: {email: reservation.clientEmail}}">{{reservation.clientEmail}}</router-link></h4>
             </div>
           </div>
         </div>
@@ -26,23 +26,6 @@
 <script>
 import Functions from '../functions/function'
 export default {
-    name: "ReservationCatalog",
-    props : ['filter'],
-    watch: { 
-      filter: function(newVal, oldVal) { // watch it
-        console.log(newVal)
-        let query = {
-        filter: newVal,
-        sort: false
-        }
-        console.log(query)
-        Functions.getAllUser(query)
-          .then( (result) => {
-          console.log(result)
-          this.catalog = result.data.data
-        }) 
-      }
-    },
     data() {
       return {
         reservations: [],
@@ -56,9 +39,10 @@ export default {
       }
     },
 
-    created(){
+    mounted(){
+      let filter = (this.$route.params.filter !== undefined) ? this.$route.params.filter : ''
       let query = {
-       filter: this.filter,
+       filter: filter,
        sort: false
       }
       Functions.getAllReservation(query)
@@ -98,9 +82,6 @@ export default {
           }
         }
       },
-      switchComponent (event) {
-         this.$emit('clicked')
-      }
     },
     computed: {    },
   }

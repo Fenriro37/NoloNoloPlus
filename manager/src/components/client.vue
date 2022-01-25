@@ -248,10 +248,7 @@
       })            
     },
     
-    /*beforeRouteLeave (from, to, next){
-      if(next == 'localhost8081...')
-      this.$emit('clicked')
-    },*/
+
   
     methods: {
 

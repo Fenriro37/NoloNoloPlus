@@ -630,8 +630,7 @@
       deleteProduct(){
           Functions.deleteProduct(this.identifier)
           .then( () =>{
-             this.$router.replace(' ')
-             this.$emit('clicked')
+             this.$router.push({ name: 'articleCatalog' , params: { filter: '', id: Math.round(Math.random() * 1000)}})
           })
         }         
 

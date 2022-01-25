@@ -292,10 +292,9 @@
 
         if( this.onSale != this.reservation.fixedDiscount.onSale || this.onSaleType != this.reservation.fixedDiscount.onSaleType || this.onSaleValue != this.reservation.fixedDiscount.onSaleValue){
           query.fixedDiscount = {}
-
-            query.fixedDiscount.onSale = this.onSale
-            query.fixedDiscount.onSaleType = this.onSaleType
-            query.fixedDiscount.onSaleValue = this.onSaleValue
+          query.fixedDiscount.onSale = this.onSale
+          query.fixedDiscount.onSaleType = this.onSaleType
+          query.fixedDiscount.onSaleValue = this.onSaleValue
         }
 
         if( this.overDaysCount != this.reservation.variableDiscount.days || this.overOnSale != this.reservation.variableDiscount.onSale || this.overOnSaleType != this.reservation.variableDiscount.onSaleType || this.overOnSaleValue != this.reservation.variableDiscount.onSaleValue){

@@ -30,8 +30,8 @@
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" aria-label="Recipient's fixedprice" aria-describedby="basic-addon6" required>
-				<label for="price"> Prezzo Fisso*</label>
+				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Recipient's fixedprice" aria-describedby="basic-addon6" required>
+				<label for="fixedPrice"> Prezzo Fisso*</label>
 			</div>
 
 			<div class="row mb-3" id="saleRow">
@@ -40,7 +40,7 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" v-model="onSale"  @click="changeSale">
+						<input type="checkbox" class="form-check-input" v-model="onSale"  @change="newPrice">
 						<label class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
             <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
 					</div>
@@ -53,13 +53,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" :value="true" v-model="onSaleType" id="percentage" required>
+                <input class="form-check-input" type="radio" :value="true" v-model="onSaleType"  @click="changeType" id="percentage" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio"  :value="false" v-model="onSaleType" id="flat" required>
+                <input class="form-check-input" type="radio"  :value="false" v-model="onSaleType" @click="changeType" id="flat" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -79,7 +79,7 @@
       </template>
 
       <div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="price" v-on:keyup="newPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<input type="number" class="form-control" min="1" step="1" v-model="dailyPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
 				<label for="price"> Prezzo Giornaliero*</label>
 			</div>
 
@@ -89,9 +89,9 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" v-model="overOnSale"  @click="changeDailySale">
-						<label class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
-            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+						<input type="checkbox" class="form-check-input" v-model="overOnSale"  @click="changeDailySale" id="dailySale">
+						<label class="form-check-label" for="dailySale"  v-if="overOnSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="dailySale"  v-else>Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
@@ -102,14 +102,14 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" :value="true" v-model="overOnSaleType"  @click="changeType" id="percentageOver" required>
-                <label class="form-check-label" for="percentage">Percentuale</label>
+                <input class="form-check-input" type="radio" :value="true" v-model="overOnSaleType" id="percentageOver" required>
+                <label class="form-check-label" for="percentageOver">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio"  :value="false" v-model="overOnSaleType" @click="changeType"  id="flatOver" required>
-                <label class="form-check-label" for="flat">Fisso</label>
+                <input class="form-check-input" type="radio"  :value="false" v-model="overOnSaleType" id="flatOver" required>
+                <label class="form-check-label" for="flatOver">Fisso</label>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@
 
 			<div class="row mb-5">
 				<div class="col-6">
-					<button type="submit" class="btn btn-lg btn-success" >Salva</button>
+					<button type="submit" class="btn btn-lg btn-success" :disabled="enter">Salva</button>
 				</div>
 
 				<div class="col-6">
@@ -165,84 +165,84 @@
 </template>
 
 <script>
-  import Functions from '../functions/function'
-  export default {
-    name: "create-article", 
-    data() {
-      return {
-        title: '',
-        brand: '',
-        image: '',
-        tags: '',
-        quality: 1,
-        price: '',
-        dailyPrice:'',
+import Functions from '../functions/function'
+export default {
+  name: "create-article", 
+  data() {
+    return {
+      enter: false,
+      title: '',
+      brand: '',
+      image: '',
+      tags: '',
+      quality: 1,
+      fixedPrice: '',
+      dailyPrice:'',
 
-        overDays: "",
-        overOnSale: false,
-        overOnSaleType: false,
-        overOnSaleValue: "",
-        
-        onSale: false,
-        onSaleType: false,
-        onSaleValue: 1,
+      overDays: "",
+      overOnSale: false,
+      overOnSaleType: false,
+      overOnSaleValue: "",
+      
+      onSale: false,
+      onSaleType: false,
+      onSaleValue: 1,
 
-        newTotal: '',
+      newTotal: '',
 
-        available: false,
-        description: '',
-        note: '',
+      available: false,
+      description: '',
+      note: '',
+    }
+  },
+
+  methods: {
+
+    changeSale(){
+      if(this.onSale){
+        this.onSale = false
+        this.onSaleType = false
+        this.onSaleValue = 1
+      }
+      else
+        this.onSale = true
+      this.newPrice()
+    },
+
+    changeType(){
+      this.onSaleType = !this.onSaleType
+      this.newPrice()
+    },
+
+    changeDailySale(){
+      if(this.overOnSale){
+      this.overOnSale = false
+      this.overOnSaleType = false
+      this.overOnSaleValue = 1
+      }
+      else{
+        this.overOnSale = true
       }
     },
 
-    /* beforeRouteLeave (){
-      this.$emit('clicked')
-    }, */
+    changeAvailable(){
+      this.available = !this.available
+    },
 
-    methods: {
-      print(){
-        console.log(this.onSaleType)
-      },
-      changeSale(){
-        if(this.onSale){
-          this.onSale = false
-          this.onSaleType = false
-          this.onSaleValue = 1
+    //fare qualcosa tipo onkeyup per price e discount e funzione per radio forse una sola da assegnare a tutti e 4
+    newPrice(){
+      if(this.onSale){  
+        if(this.onSaleType){
+          this.newTotal = this.fixedPrice - this.fixedPrice *this.onSaleValue / 100
         }
-        else
-          this.onSale = true
-      },
-
-      changeDailySale(){
-        if(this.overOnSale){
-        this.overOnSale = false
-        this.overOnSaleType = false
-        this.overOnSaleValue = 1
+        else {
+          this.newTotal = this.fixedPrice - this.onSaleValue;
         }
-        else{
-          this.overOnSale = true
-        }
-      },
+      }
+    },
 
-      changeAvailable(){
-        this.available = !this.available
-      },
-
-      //fare qualcosa tipo onkeyup per price e discount e funzione per radio forse una sola da assegnare a tutti e 4
-      newPrice(){  
-          if(!this.onSaleType){
-            this.newTotal = this.price - this.price *this.onSaleValue / 100
-          }
-          else {
-            this.newTotal = this.price - this.onSaleValue;
-          }
-      },
-      changeType(){ 
-          this.overOnSaleType = !this.overOnSaleType 
-          this.newPrice()
-      },
-
-      createArticle(){
+    createArticle(){
+      this.enter = true
       //controllare date prezzo e campi non vuoti
       let query = {};
       
@@ -298,7 +298,7 @@
       }
 
       query.price =  this.dailyPrice
-      query.fixedPrice = this.price;
+      query.fixedPrice = this.fixedPrice;
       query.quality = this.quality;
       query.available = this.available;
       query.description = this.description;
@@ -310,25 +310,28 @@
         .then( () => {
           //svuotiamo i valori
           this.cancel();
+           this.enter = false
           alert("Creazione riuscita")
-        })  
+        }) 
       },
 
-      cancel(){
-        this.title = '';
-        this.brand = '';
-        this.image = '';
-        this.tags = '';
-        this.quality = 1;
-        this.price = '';
-
+    cancel(){
+      this.title = '';
+      this.brand = '';
+      this.image = '';
+      this.tags = '';
+      this.quality = 1;
+      this.fixedPrice = '';
+      this.dailyPrice = '';
+      if(this.onSale)
         this.changeSale()
+      if(this.overOnSale)
         this.changeDailySale()
 
-        this.available = false;
-        this.description = '';
-        this.note = ''
-        this.newTotal = '' 
+      this.available = false;
+      this.description = '';
+      this.note = ''
+      this.newTotal = '' 
       },
     },
   }

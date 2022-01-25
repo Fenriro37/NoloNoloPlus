@@ -1,29 +1,24 @@
 let reservations = []
 
 window.onload = function login() {
+  console.log("Cookie");  
   $.ajax({
-      url: "/api/public/login",
-      method: "POST",
+      url: "/api/public/auth",
+      method: "GET",
       headers: {
           "Content-Type": "application/json"
       },
-      data: JSON.stringify({
-          email: "han.chu@worker.com",
-          plainTextPassword: "1234567890"
-      }),
       // Risposta del server in caso di successo
       success: (result) => {
-          console.log(result)
-          document.cookie = 'jwt=' + result.data;
-          getAllArticle("")
-
-
-          //window.location.href = "http://localhost:8081/user/index.html";
+        console.log(result)
+        if(result.obj !== 1){
+            window.location = "../public/login.html";
+        }
+        getAllArticle("")
       },
       // Risposta del server in caso di insuccesso
       error: (error) => {
-          console.log("Error");
-          alert("Errore. " + error.responseText);
+        window.location = "../public/login.html"
       }
   });
 }
@@ -39,6 +34,12 @@ window.onload = function login() {
         $("#dropNavBar").text("Prenotazioni") 
     }
        
+}
+
+function logout(){
+    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+    window.location = "http:/localhost:8081/public/login.html";
 }
 
  function search(){
@@ -205,7 +206,7 @@ window.onload = function login() {
             $("#catalog").empty()
             reservations = result.obj
             $("#catalog").append(
-            '<div >'+
+            '<div class="mt-2">'+
                 '<button class="btn btn-secondary dropdown-toggle"  id="reservationsFilter" type="button" data-bs-toggle="dropdown" aria-expanded="false">Tutte</button>'+
                 '<div class="dropdown-menu dropdown-menu-right">'+
                     '<button class="dropdown-item" type="button" id="all">Tutte</button>'+
