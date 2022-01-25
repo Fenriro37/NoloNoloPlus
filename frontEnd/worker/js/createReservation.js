@@ -19,7 +19,32 @@ window.onload = function getProduct() {
 					data = result.data.obj
 					console.log(data)
           $("#articleId").val(id + " " + data.title + " " + data.brand) 
-          $("#price").val(data.price)       
+          $("#fixedPrice").val(data.fixedPrice) 
+          $("#dailyPrice").val(data.price)      
+          if(data.discount.onSale){
+            $('#sale').prop('checked', true);
+            changeSale()
+            $("#saleValue").val(data.discount.onSaleValue);
+            $("#saleValue").attr("placeholder", data.discount.onSaleValue);
+            if(data.discount.onSaleType)
+              $('#percentage').prop('checked', true);
+            
+            else 
+              $('#flat').prop('checked', true);
+          }
+          if(data.overDays.onSale){
+            $('#dailySale').prop('checked', true);
+            changeDailySale()
+            $("#dailySaleValue").val(data.overDays.onSaleValue);
+            $("#dailySaleValue").attr("placeholder", data.overDays.onSaleValue);
+            $("#daysCount").val(data.overDays.days);
+            $("#daysCount").attr("placeholder", data.overDays.days);
+            if(data.overDays.onSaleType)
+              $('#dailyPercentage').prop('checked', true);
+            
+            else 
+              $('#dailyFlat').prop('checked', true);
+          }
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
@@ -66,7 +91,6 @@ $(document).ready(function(){
       ],
       "firstDay": 1
     },
-    minDate: day+'/'+month+'/'+year,
     autoUpdateInput: false,
     showDropdowns: true, 
     isInvalidDate: function(date){
@@ -84,10 +108,6 @@ $(document).ready(function(){
 $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
   $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
 });
-
-function check(){
-  console.log("smigle")
-}
 
 $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
   let block = false
@@ -116,31 +136,137 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
     $("#save").text("Salva")
     $("#save").prop("disabled", false)
   }
+  calculateTotal()
 });
 
+//prezzo fisso
+$('#sale').change(changeSale)
 
-$('#rentalOccurred').change(function() {
-	if (this.checked) {
-		$('label[for=rentalOccurred]').text("Il prodotto è stato ritirato");
+function changeSale() {
+  if ($('#sale').is(":checked") == true) {
+		$('label[for=sale]').text("Il prodotto è scontato");
+		$("#saleRow").append(
+			'<div id="saleInfo" class="mt-2">' +
+				'<div class="row">' +
+						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="percentage" required>' +
+								'<label class="form-check-label" for="percentage">Percentuale</label>' +
+							'</div>' +
+						'</div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="flat" required>' +
+								'<label class="form-check-label" for="flat">Fisso</label>' +
+							'</div>' +
+						'</div>' +
+				'</div>'+
+				'<div class="row">' +
+					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
+					'<div class="col-9">' +
+					'<input type="number" class="form-control" min="1" step="1" id="saleValue" onkeyup="calculateTotal()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
+		);  	
   }
-	if (!this.checked) {
-		$('label[for=rentalOccurred]').text("Il prodotto non è stato ritirato");
-    $('label[for=returned]').text("Il prodotto non è stato restituito");
-    $('#returned').prop('checked', false);
+	else {
+		$('label[for=sale]').text("Il prodotto non è scontato");
+	  $("#saleInfo").remove()
   } 
-})
+  calculateTotal()
+}
 
-$('#returned').change(function() {
-	if (this.checked) {
-		$('label[for=returned]').text("Il prodotto è stato restituito");
-    $('label[for=rentalOccurred]').text("Il prodotto è stato ritirato");
-    $('#rentalOccurred').prop('checked', true);
+//prezzo giornaliero
+$('#dailySale').change(changeDailySale)
+
+function changeDailySale() {
+	if ($('#dailySale').is(":checked")) {
+		$('label[for=dailySale]').text("Il prodotto è scontato");
+		$("#dayliSaleRow").append(
+			'<div id="dailySaleInfo" class="mt-2">' +
+				'<div class="row">' +
+						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyPercentage" required>' +
+								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
+							'</div>' +
+						'</div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyFlat" required>' +
+								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
+							'</div>' +
+						'</div>' +
+				'</div>'+
+				'<div class="row">' +
+					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
+					'<div class="col-9">' +
+					'<input type="number" class="form-control" min="1" step="1" id="dailySaleValue" onkeyup="calculateTotal()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'</div>' +
+				'</div>' +
+				'<div class="row mt-2">'+
+					'<div class="col-3">Giorni per sconto:</div>' +
+					'<div class="col-9">' +
+						'<input type="number" class="form-control"  id="daysCount" onkeyup="calculateTotal()" aria-label="SalePrice" aria-describedby="basic-addon6" required>' +
+					'</div>'+
+				'</div>'+
+			'</div>'
+		);  	
   }
-	if (!this.checked) {
-		$('label[for=returned]').text("Il prodotto non è stato restituito");
-  } 
-})
+	else {
+		$('label[for=dailySale]').text("Il prodotto non è scontato");
+	  $("#dailySaleInfo").remove()
+  }
+  calculateTotal() 
+}
 
+document.addEventListener('click',function(e){
+  if(e.target && (e.target.id== 'dailyFlat' || e.target.id== 'dailyPercentage' || e.target.id== 'percentage' || e.target.id== 'flat')){
+      calculateTotal()
+   }
+});
+
+function calculateTotal(){
+  if ($('#dateRange').val()!= ''){
+    let dateRange = $("#dateRange").val()
+    dateRange = dateRange.replace(/ /g, "")
+    dateRange = dateRange.split("-")
+    let date1 = dateRange[0]
+    let date2 = dateRange[1]
+    date1 = date1.split("/")
+    date2 = date2.split("/")
+
+    let start = date1[2] * 10000 + date1[1] * 100 + date1[0]
+    let end = date2[2] * 10000 + date2[1] * 100 + date2[0]
+    let days = end - start + 1
+    let addendum1, addendum2
+
+
+    if($('#sale').is(":checked") == true){
+      if($('#percentage').is(":checked") == true)
+        addendum1 = $('#fixedPrice').val()  - $('#fixedPrice').val() * $('#saleValue').val() /100
+      else
+        addendum1 = $('#fixedPrice').val() - $('#saleValue').val()
+    }
+    else{
+      addendum1 = $('#fixedPrice').val()
+    }
+    if( $('#dailySale').is(":checked") == true && $('#daysCount').val() != '' && days > $('#daysCount').val() ){
+      if($('#dailyPercentage').is(":checked") == true)
+        addendum2 = $('#dailyPrice').val() * days - $('#dailyPrice').val() * days * $('#dailySaleValue').val() / 100
+      else
+        addendum2 =  $('#dailyPrice').val() * days - $('#dailySaleValue').val()
+    }
+    else{
+      addendum2 = $('#dailyPrice').val() * days
+    }
+    console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
+    $('#newTotal').val(parseInt(addendum1) + parseInt(addendum2))  
+  }
+}
 
 $("#clear").click(reset)
 
@@ -162,7 +288,6 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-  
     let dateRange = $("#dateRange").val()
     dateRange = dateRange.replace(/ /g, "")
     dateRange = dateRange.split("-")
@@ -177,6 +302,41 @@ function save(){
     let dayEnd = date2[0]
     let monthEnd = date2[1]
     let yearEnd = date2[2] 
+    let today = year*10000+month*100+day
+    let start = parseInt(yearStart)*10000+parseInt(monthStart)*100+parseInt(dayStart)
+
+    if(today > start){
+      day = dayStart
+      month = monthStart 
+      year = yearStart
+    }
+
+    let sale, type, value
+    if($("#sale").is(':checked') == true){
+      sale = true 
+      type = ($("#flat").is(':checked') == true) ? false : true
+      value = $("#saleValue").val() 
+    }
+    else{
+      sale = false 
+      type = false
+      value = ""
+    }
+
+    let dailySale, dailyType, dailyValue, dailyDays
+    if($("#dailySale").is(':checked') == true){
+      dailySale = true 
+      dailyType = ($("#dailyFlat").is(':checked') == true) ? false : true
+      dailyValue = $("#dailySaleValue").val() 
+      dailyDays = $("#daysCount").val()
+    }
+    else{
+      dailySale = false 
+      dailyType = false
+      dailyValue = ""
+      dailyDays = ""
+    }
+
     $.ajax({
       url:"/api/user?email=" + $("#email").val(),
       method: "GET",
@@ -216,9 +376,22 @@ function save(){
               month: monthEnd,
               year: yearEnd 
             }, 
-            isTaken: $("#rentalOccurred").is(':checked') ? true  : false,
-            isReturned: $("#returned").is(':checked') ? true  : false,
-            price:  $("#price").val(),
+            isTaken: false,
+            isReturned: false,
+            fixedPrice:  $("#fixedPrice").val(),
+            fixedDiscount: {
+              onSale: sale,
+              onSaleType: type,
+              onSaleValue: value
+            },
+            variablePrice:  $("#dailyPrice").val(),
+            variableDiscount: {
+              days: dailySale,
+              onSale: dailyType,
+              onSaleType: dailyValue,
+              onSaleValue: dailyDays
+            },
+            totalPrice: $("#newTotal").val(),
             description:  $("#notes").val(),
             note: $("#privateNotes").val(),
           }),
@@ -232,6 +405,7 @@ function save(){
             newBooking.productId = data._id
             newBooking.clientId = user.email
             newBooking.reservationId = result.data._id
+            newBooking.total  = $("#newTotal").val()
             newBooking.startDate = {}
             newBooking.startDate.day = dayStart
             newBooking.startDate.month = monthStart
@@ -274,7 +448,7 @@ function save(){
           console.log("Error");
           alert("La mail non esiste");
       }
-    });   
+    });
 }
 
 /////////////////////////////////

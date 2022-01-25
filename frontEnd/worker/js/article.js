@@ -55,7 +55,7 @@ function fill(){
 	$("#fixedDiscount").empty()
 	if(data.discount.onSale){
 		let newPrice
-		if(data.discount.onSaleType){
+		if(!data.discount.onSaleType){
 			newPrice = data.fixedPrice - data.discount.onSaleValue;
 		}
 		else{
@@ -97,7 +97,7 @@ function fill(){
 			$("#myTable").append(
 				'<tr>'+
 				'<td><a href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
-				'<td><a href="reservation.html?id=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
+				'<td><a href="client.html?email=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
 				'<td>'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
 				'<td>'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
 				'</tr>'
@@ -313,14 +313,12 @@ function save(){
 	if($("#dailySale").is(':checked') == true && 
 	($("#dailyDiscountAmount").is(':checked') == true || $("#dailyDiscountPercentage").is(':checked') == true) &&
 	$("#dailyDiscountValue").val() != "" && $("#daysDiscount").val() != ""){
-		console.log('deh')
 		dailySale = true 
 		dailyType = ($("#dailyDiscountAmount").is(':checked') == true) ? false : true
 		dailyValue = $("#dailyDiscountValue").val() 
 		dailyDays = $("#daysDiscount").val()
 	}
 	else{
-		console.log('suca')
 		dailySale = false 
 		dailyType = false
 		dailyValue = ""

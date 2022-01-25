@@ -65,38 +65,48 @@
       </div>
     
       <div class="form-floating mb-3">
-        <input type="text" id="dateRange" class="form-control" onkeyup="check()" required>
+        <input type="text" id="dateRange" class="form-control" required>
         <label for="dateRange"> Periodo noleggio*</label>
       </div>
 
-      <div class="row">
-        <div class="col-3">
-          <p> Ritiro:</p>
-        </div>
-        <div class="col-9">
-          <div class=" form-check">
-              <input type="checkbox" class="form-check-input" id="rentalOccurred">
-              <label class="form-check-label" for="rentalOccurred">Il prodotto non è stato ritirato</label>
-          </div>
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-3">
-          <p> Restituzione:</p>
-        </div>
-        <div class="col-9">
-          <div class=" form-check">
-              <input type="checkbox" class="form-check-input" id="returned">
-              <label class="form-check-label" for="returned">Il prodotto non è stato restituito</label>
-          </div>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="number" min="1" step="1" class="form-control" id="fixedPrice" onkeyup="calculateTotal()" aria-label="Recipient's price" aria-describedby="basic-addon4" required>
+        <label for="price"> Prezzo fisso*</label>
       </div>
 
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo fisso:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" id="sale">
+						<label class="form-check-label" for="sale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
       <div class="form-floating mb-3">
-        <input type="number" min="1" step="1" class="form-control" id="price" aria-label="Recipient's price" aria-describedby="basic-addon4" required>
-        <label for="price"> Prezzo*</label>
+        <input type="number" min="1" step="1" class="form-control" id="dailyPrice" onkeyup="calculateTotal()" aria-label="Recipient's price" aria-describedby="basic-addon4" required>
+        <label for="price"> Prezzo giornaliero*</label>
       </div>
+
+      <div class="row mb-3" id="dayliSaleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" id="dailySale">
+						<label class="form-check-label" for="dailySale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+      <div class="form-floating mb-3">
+				<input type="number" class="form-control" id="newTotal" aria-label="Recipient's price" aria-describedby="basic-addon6" readonly>
+				<label for="price"> Prezzo Totale</label>
+			</div>
 
       <div class="form-floating mb-3">
         <input type="text" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" >

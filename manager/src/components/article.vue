@@ -269,6 +269,7 @@
                             class="form-control text-end"
                             min="1"
                             step="1"
+                            :disabled="!overSaleModal"
                             v-model="overDaysModal">
                         </div>
                       </b-col>
