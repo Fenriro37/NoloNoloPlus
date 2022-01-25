@@ -36,7 +36,6 @@ export class Header extends React.Component {
                 alt='logo NoloNoloPlus'
                 height='45px'/>
             </Navbar.Brand>
-<<<<<<< HEAD
             { this.props.type == 'user'
               ? 'Pagina utente'
               : <Form
@@ -54,22 +53,6 @@ export class Header extends React.Component {
                   aria-label='Cerca prodotti'/>
               </Form>
             }
-=======
-            <Form
-              className='element-to-hide-under-350'
-              style={{ width: '60%' }}
-              onSubmit={(e) => {
-                e.preventDefault();
-                this.props.search(e.target.searchInput.value);
-              }}>
-              <FormControl
-                type='search'
-                placeholder='Cerca... '
-                name='searchInput'
-                className='me-2'
-                aria-label={this.props.type == 'product' ? 'Cerca prodotti' : 'Cerca prenotazioni'}/>
-            </Form>
->>>>>>> Law
             <Navbar.Toggle
             style={{
               height: '45px',

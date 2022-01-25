@@ -84,14 +84,8 @@ export class User extends Component {
         },
         userSex: result.data.data.sex
       })
-<<<<<<< HEAD
       console.log(this.state.boolModifying);
     })
-=======
-    }).catch((error) => {
-      console.log(error);
-      alert('Errore')});
->>>>>>> Law
   }
 
   switchModifying = () => {
