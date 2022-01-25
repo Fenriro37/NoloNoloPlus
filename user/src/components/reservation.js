@@ -35,13 +35,13 @@ export class Reservation extends React.Component{
   showReservations(type) {
     // type == 1: all products
     // type == 2: not started
-    // type == 2: active
-    // type == 3: closed
+    // type == 3: active
+    // type == 4: closed
     console.log('showReservations(' + type + ')');
     let reservations = [];
-    if(type > 1) {
+    if(parseInt(type) > 1) {
       for(let index in this.state.reservations) {
-        switch(type) {
+        switch(parseInt(type)) {
           case 2:
             if(this.state.reservations[index].isTaken == false && this.state.reservations[index].isReturned == false) {
               reservations.push(this.state.reservations[index]);
@@ -65,7 +65,7 @@ export class Reservation extends React.Component{
       reservations = this.state.reservations;
     }
     this.setState({
-      filteredReservationss: reservations
+      filteredReservations: reservations
     });
   }
 

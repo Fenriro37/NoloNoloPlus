@@ -55,8 +55,9 @@ export class User extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     apiCall.getUser().then((result) => {
+      console.log(result)
       this.setState({
         userId: result.data.data._id,
         userName: result.data.data.userName,
@@ -83,8 +84,14 @@ export class User extends Component {
         },
         userSex: result.data.data.sex
       })
+<<<<<<< HEAD
       console.log(this.state.boolModifying);
     })
+=======
+    }).catch((error) => {
+      console.log(error);
+      alert('Errore')});
+>>>>>>> Law
   }
 
   switchModifying = () => {

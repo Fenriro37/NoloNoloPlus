@@ -39,13 +39,12 @@ const config = require('./../config');
 //   È il messaggio d'errore 
 exports.reservationsFind = async function(token, status, filter, sortBy) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
-    // try {
+    try {
         await mongo.connect();
         const reservations = mongo.db(config.databaseName).collection(config.databaseReservationCollectionName);
         const re = new RegExp(`${filter}`, 'gi');
         let result;
         if(status == 0) {
-            console.log(token.email)
             result = await reservations.find({
                 $and: [
                     { clientEmail: token.email },
@@ -83,7 +82,9 @@ exports.reservationsFind = async function(token, status, filter, sortBy) {
                         startDate: 1,
                         endDate: 1,
                         isTaken: 1,
-                        isReturned: 1
+                        isReturned: 1,
+                        description: 1,
+                        note: 1
                     }
                 }).sort({ 'bookingDate.year': sortBy, 'bookingDate.month': sortBy, 'bookingDate.day': sortBy});
         }
@@ -94,14 +95,14 @@ exports.reservationsFind = async function(token, status, filter, sortBy) {
             message: 'Ricerca effettuata con successo',
             obj: x
         };
-    // } catch (error) {
-    //     await mongo.close();
-    //     return {
-    //         status: -1,
-    //         message: 'Errore di reservationsFind.',
-    //         obj: error
-    //     };
-    // }
+    } catch (error) {
+        await mongo.close();
+        return {
+            status: -1,
+            message: 'Errore di reservationsFind.',
+            obj: error
+        };
+    }
 }
 
 // reservationsFindOne

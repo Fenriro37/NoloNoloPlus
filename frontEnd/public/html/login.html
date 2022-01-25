@@ -12,30 +12,29 @@
         <!-- jQuery CDN file -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="/public/css/login.css">
         <script src="/public/js/login.js"></script>
     </head>
     <body class="bg-transparent">
-        <div class="card align-items-center p-3 mt-4">
-            <h1 class="mb-3">Login</h1>
-            <form>
-                <div class="input-group mb-3">
-                    <span class="input-group-text bg-white border-0">
-                        <img src="/public/media/login-icon-user.png" height="40em">
+        <div class="card align-items-center p-3 m-3 bg-light rounded-3">
+            <h1 class="mt-4 mb-0">NoloNoloPlus Login</h1>
+            <form class="w-sm-50 mt-3 mb-4">
+                <div class="input-group mb-3 w-100">
+                    <span class="input-group-text">
+                        <img src="/public/media/login-icon-user.png" height="40em" alt="Icona utente">
                     </span>
-                    <input type="email" class="form-control bg-white border-0" id="inputEmail" placeholder="Email">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Email">
                 </div>
                 <div class="input-group mb-2">
-                    <span class="input-group-text bg-white border-0">
-                        <img src="/public/media/login-icon-lock.png" height="40em">
+                    <span class="input-group-text">
+                        <img src="/public/media/login-icon-lock.png" height="40em" alt="Icona password">
                     </span>
-                    <input type="password" class="form-control bg-white border-0" id="inputPassword" placeholder="Password">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
                 </div>
                 <div class="mb-2">
                     <a href="/public/sign-up.html">Crea un account</a>
                 </div>
                 <div>
-                    <button id="loginButton" class="btn w-100">Log in</button>
+                    <button id="loginButton" class="btn btn-primary w-100">Log in</button>
                 </div>
             </form>  
         </div>
