@@ -36,20 +36,23 @@ export class Header extends React.Component {
                 alt='logo NoloNoloPlus'
                 height='45px'/>
             </Navbar.Brand>
-            <Form
-              className='element-to-hide-under-350'
-              style={{ width: '60%' }}
-              onSubmit={(e) => {
-                e.preventDefault();
-                this.props.search(e.target.searchInput.value);
-              }}>
-              <FormControl
-                type='search'
-                placeholder='Cerca... '
-                name='searchInput'
-                className='me-2'
-                aria-label='Cerca prodotti'/>
-            </Form>
+            { this.props.type == 'user'
+              ? 'Pagina utente'
+              : <Form
+                className='element-to-hide-under-350'
+                style={{ width: '60%' }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  this.props.search(e.target.searchInput.value);
+                }}>
+                <FormControl
+                  type='search'
+                  placeholder='Cerca... '
+                  name='searchInput'
+                  className='me-2'
+                  aria-label='Cerca prodotti'/>
+              </Form>
+            }
             <Navbar.Toggle
             style={{
               height: '45px',
@@ -60,7 +63,8 @@ export class Header extends React.Component {
             <Navbar.Collapse
               id='navbarScroll'>
               <Hamburger
-                isAuthenticated={this.state.isAuthenticated}/>
+                isAuthenticated={this.state.isAuthenticated}
+                type={this.props.type}/>
             </Navbar.Collapse>
           </Container>
         </Navbar>
