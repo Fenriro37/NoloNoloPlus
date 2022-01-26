@@ -10,10 +10,6 @@ const myMongoAuth = require('./../database/mongoAuth.js');
 const myMongoUser = require('./../database/mongoUser.js');
 const config = require('./../config');
 const bcrypt = require('bcryptjs');
-<<<<<<< HEAD
-=======
-const { query } = require('express');
->>>>>>> GP
 
 // GET /api/user
 // ----------------------------------------------------------------------------
