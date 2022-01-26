@@ -30,7 +30,7 @@ export class Hamburger extends React.Component {
         className='text-center d-flex align-items-center'
         navbarScroll>
           {
-            this.props.type != 'user'
+            this.props.type == 'product' || this.props.type == 'reservation'
             ? (
               <Nav.Link>
                 <Form
@@ -91,19 +91,20 @@ export class Hamburger extends React.Component {
           className='w-100'>
             { this.props.type == 'user'
               ? null
-              : <Form
-                className='element-to-hide-over-350'
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  this.props.search(e.target.searchInput.value);
-                }}>
+              : (
+              <Form
+              className='element-to-hide-over-350'
+              onSubmit={(e) => {
+                e.preventDefault();
+                this.props.search(e.target.searchInput.value);
+              }}>
                 <FormControl
                   type='search'
                   placeholder={this.props.type == 'product' ? 'Cerca un prodotto' : 'Cerca una prenotazione'}
                   name='searchInput'
                   className='me-2'
                   aria-label='Cerca'/>
-              </Form>
+              </Form>)
             }
             </Nav.Link>
           <Nav.Link

@@ -55,6 +55,9 @@ html {
     margin-left: auto;
     margin-right: auto;
   }
+  .element-to-hide-over-768 {
+    display: none;
+  }
 }
 
 @media (min-width: 992px) {

@@ -36,22 +36,24 @@ export class Header extends React.Component {
                 alt='logo NoloNoloPlus'
                 height='45px'/>
             </Navbar.Brand>
-            { this.props.type == 'user'
+            { this.props.type == 'user' 
               ? <h1>Pagina utente</h1>
-              : <Form
-                className='element-to-hide-under-350'
-                style={{ width: '60%' }}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  this.props.search(e.target.searchInput.value);
-                }}>
-                <FormControl
-                  type='search'
-                  placeholder={this.props.type == 'product' ? 'Cerca un prodotto' : 'Cerca una prenotazione'}
-                  name='searchInput'
-                  className='me-2'
-                  aria-label='Cerca prodotti'/>
-              </Form>
+              : this.props.type == 'invoice'
+                ? <h1>Fattura</h1>
+                : <Form
+                  className='element-to-hide-under-350'
+                  style={{ width: '60%' }}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    this.props.search(e.target.searchInput.value);
+                  }}>
+                  <FormControl
+                    type='search'
+                    placeholder={this.props.type == 'product' ? 'Cerca un prodotto' : 'Cerca una prenotazione'}
+                    name='searchInput'
+                    className='me-2'
+                    aria-label='Cerca prodotti'/>
+                </Form>
             }
             <Navbar.Toggle
             style={{
@@ -68,10 +70,13 @@ export class Header extends React.Component {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        <Filters
-          show={this.props.show}
-          sort={this.props.sort}
-          type={this.props.type}/>
+        { this.props.type=='product' || this.props.type=='reservation'
+          ? <Filters
+            show={this.props.show}
+            sort={this.props.sort}
+            type={this.props.type}/>
+          : <></>
+        }
       </div>
     );
   }
