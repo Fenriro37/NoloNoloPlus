@@ -10,6 +10,10 @@ const myMongoAuth = require('./../database/mongoAuth.js');
 const myMongoUser = require('./../database/mongoUser.js');
 const config = require('./../config');
 const bcrypt = require('bcryptjs');
+<<<<<<< HEAD
+=======
+const { query } = require('express');
+>>>>>>> GP
 
 // GET /api/user
 // ----------------------------------------------------------------------------
@@ -206,6 +210,11 @@ router.post('/', async function(req, res) {
                 return res.status(400).json({
                     message: 'Parametro mancante.'
                 });
+            } else if(req.body.password != null) {
+                // Funzionario o manager che vuole cambiare la password
+                return res.status(401).json({
+                    message: 'Operazione non autorizzata.'
+                });                
             } else {
                 // Parametro specificato                
                 result = await myMongoUser.usersUpdateOne(paramId, req.body);
@@ -220,13 +229,12 @@ router.post('/', async function(req, res) {
             else {
                 let query = req.body
                 if(query.password =! null) {
-                    console.log('Cambio PWD')
                     // L'utente vuole aggiornare anche la password
                     // Cifrazione della password
                     const hashedPassword = await bcrypt.hash(query.password, 10);
                     query.password = hashedPassword;
                 }
-                result = await myMongoUser.usersUpdateOne(tokenId, query.body);
+                result = await myMongoUser.usersUpdateOne(tokenId, query);
             }
         }
         if(result.status == 0) {
