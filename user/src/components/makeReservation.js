@@ -89,20 +89,22 @@ export class MakeReservation extends React.Component {
 
   checkDateRange(range) {
     if(range.length == 2 && this.state.dates != null && range[0] && range[1]) {
-      if(range[0] > range[1] || range[0].toString() == 'Invalid Date' || range[1].toString() != 'Invalid Date') {
+      if(range[0] > range[1] || range[0].toString() == 'Invalid Date' || range[1].toString() == 'Invalid Date') {
         return false;
-      }
-      let currentDate = range[0];
-      let endDate = range[1];
-      while(currentDate <= endDate) {
-        if(isInArray(this.state.dates, currentDate) == true) {
-          return false;
+      } else {
+        let currentDate = range[0];
+        let endDate = range[1];
+        while(currentDate <= endDate) {
+          if(isInArray(this.state.dates, currentDate) == true) {
+            return false;
+          }
+          currentDate = currentDate.addDays(1);
         }
-        currentDate = currentDate.addDays(1);
+        return true;
       }
-      return true;  
+    } else {
+      return false;
     }
-    return false;
   }
 
   makeReservation() {

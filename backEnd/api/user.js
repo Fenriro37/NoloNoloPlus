@@ -9,6 +9,7 @@ const { ObjectId } = require('mongodb');
 const myMongoAuth = require('./../database/mongoAuth.js');
 const myMongoUser = require('./../database/mongoUser.js');
 const config = require('./../config');
+const bcrypt = require('bcryptjs');
 
 // GET /api/user
 // ----------------------------------------------------------------------------
@@ -217,7 +218,15 @@ router.post('/', async function(req, res) {
                 });
             } 
             else {
-                result = await myMongoUser.usersUpdateOne(tokenId, req.body);
+                let query = req.body
+                if(query.password =! null) {
+                    console.log('Cambio PWD')
+                    // L'utente vuole aggiornare anche la password
+                    // Cifrazione della password
+                    const hashedPassword = await bcrypt.hash(query.password, 10);
+                    query.password = hashedPassword;
+                }
+                result = await myMongoUser.usersUpdateOne(tokenId, query.body);
             }
         }
         if(result.status == 0) {

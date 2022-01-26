@@ -100,9 +100,6 @@ router.post('/login', async function(req, res) {
         let email = req.body.email
         let plainTextPassword = req.body.plainTextPassword
 
-        console.log(email)
-        console.log(plainTextPassword)
-
         const mongoRes = await myMongoAuth.login(email, plainTextPassword);
         if(mongoRes.status < 0) {
             // Errore nel login
