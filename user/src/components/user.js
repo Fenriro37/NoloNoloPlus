@@ -5,7 +5,7 @@ import apiCall from '../services/apiCall'
 import functions, { convertDateToObject } from '../services/functions'
 import {Header} from './header.js'
 
-import {Container, Form, Button, Row, Col} from 'react-bootstrap'
+import {Container, Form, Button, Row, Col, Modal, Spinner} from 'react-bootstrap'
 
 export class User extends Component {
   constructor(props) {
@@ -54,11 +54,18 @@ export class User extends Component {
       //Settings
       boolModifying: false,
       isAuth: false,
+
+      //Modal
+      show: false,
+      loading: true,
+      done: false,
     }
     
     this.switchModifying = this.switchModifying.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
   }
 
   componentDidMount() {
@@ -146,27 +153,22 @@ export class User extends Component {
         }
       }
 
-      // Controllo le modifiche degli Input
-      for (var i in tmp) {
+       // Controllo le modifiche degli Input
+       for (var i in tmp) {
         if(tmp[i].value && tmp[i].placeholder) {
           if(tmp[i].value != '' && tmp[i].value != tmp[i].placeholder) {
-            if(tmp[i].name == 'userBirthday') {
-              // È stato modificato la data
-              query.birthday = {
-                year: tmp[i].value.split('-')[0],
-                month: tmp[i].value.split('-')[1],
-                day: tmp[i].value.split('-')[2]
-              }
-            } else if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
+            if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
               // È stato modificato l'indirizzo
               query.address = address
             } else if(tmp[i].name == 'userPaymentName' || tmp[i].name == 'userPaymentSurname' || tmp[i].name == 'userPaymentCVV') {
               // È stato modificato il nome o cognome del metodo di pagamento
-              query.payment = payment            
+              query.payment = payment
             } else {
-              console.log(tmp[i].name)
               query[tmp[i].name] = tmp[i].value;
-            }           
+            }          
+          }
+          if(tmp[i].name == 'userPassword' && tmp[i].value == 'password'){
+            query.password = tmp[i].value
           }
         }
       }
@@ -176,18 +178,33 @@ export class User extends Component {
         query.sex = this.state.newSex;
       }
       if(this.state.newCardType != this.state.userPayment.cardType || this.state.newExprMonth != this.state.userPayment.cardExpireMonth || this.state.newExprYear != this.state.userPayment.cardExpireYear) {
-        console.log('OK')
         query.payment = payment;
+      }
+      // Controllo della data
+      if(
+        this.state.newBirthday.day != this.state.userBirthday.day ||
+        this.state.newBirthday.month != this.state.userBirthday.month ||
+        this.state.newBirthday.year != this.state.userBirthday.year
+        ) {
+        query.birthday = this.state.newBirthday;
       }
 
       //Controllo della query
       console.log(query);
 
-      //apiCall.postUser(null, query).then(() => {
-      //    alert('success');
-      //  }).catch(() => {
-      //    alert('error');
-      //  });
+      this.handleShow();
+
+      apiCall.postUser(null, query).then(() => {
+        this.setState({
+          loading: false,
+          done: true
+        });
+      }).catch(() => {
+        this.setState({
+          loading: false,
+          done: false
+        });
+      });
     }
     this.switchModifying();
   }
@@ -196,29 +213,45 @@ export class User extends Component {
     this.setState({value: event.target.value});
   }
 
+  handleClose() {
+    this.setState({
+      show: false
+    });
+    window.location.reload(false);
+  }
+  
+  handleShow() {
+    this.setState({
+      show: true
+    });
+  }
+
   render() {
     return (
       <>
       <Header type={"user"} isAuthenticated={this.state.isAuth} />
-      <Container className="mb-2 pt-2">
+      <div id="cont" className="mb-2 mt-2">
         <form onSubmit={this.handleSubmit}>
           <fieldset disabled={!this.state.boolModifying} >
+
+          <h2 className="mt-1">Dati personali</h2>
+
             <Form.Group className="mb-2">
-              <Form.Label>User Name:</Form.Label>
+              <Form.Label>Nome:</Form.Label>
               <Form.Control type="text" name="userName" placeholder={this.state.userName} aria-label="Username" aria-describedby="basic-addon1"/>
             </Form.Group>   
 
             <Form.Group className="mb-2">
-              <Form.Label>User Surname:</Form.Label>
+              <Form.Label>Cognome:</Form.Label>
               <Form.Control type="text" name="userSurname" placeholder={this.state.userSurname} />
             </Form.Group>    
 
             <Form.Group className="mb-2">
-              <Form.Label>User Password:</Form.Label>
-              <Form.Control type="password" name="password" placeholder="password" />
+              <Form.Label>Password:</Form.Label>
+              <Form.Control type="password" name="userPassword" placeholder="password" />
             </Form.Group>
 
-            <Form.Label>User Sex:</Form.Label>
+            <Form.Label>Genere:</Form.Label>
             <Form.Select className="mb-2" 
             value={this.state.newSex}
             onChange={(event) => {this.setState({newSex: event.target.value})} } 
@@ -229,7 +262,7 @@ export class User extends Component {
             </Form.Select>
 
             <Form.Group as={Col} className="mb-2">
-              <Form.Label>User Birthday:</Form.Label>
+              <Form.Label>Data di Nascita:</Form.Label>
               <Form.Control type="date" 
               value={this.state.newBirthday.year + "-" + this.state.newBirthday.month + "-" + this.state.newBirthday.day} 
               name="userBirthday"
@@ -240,43 +273,45 @@ export class User extends Component {
             </Form.Group>
             
             <Form.Group as={Col} className="mb-2">
-              <Form.Label>Address City:</Form.Label>
+              <Form.Label>Paese/Città di residenza:</Form.Label>
               <Form.Control type="text" name="userAddressCity" placeholder={this.state.userAddress.city} />
             </Form.Group>
               
             <Row>
               <Form.Group as={Col} xs={8} className="mb-2">
-                <Form.Label>Address Street:</Form.Label>
+                <Form.Label>Via di Residenza:</Form.Label>
                 <Form.Control type="text" name="userAddressStreet" placeholder={this.state.userAddress.street} />
               </Form.Group>
 
-              <Form.Group as={Col} xs={4} className="mb-2">
-                <Form.Label>Number:</Form.Label>
+              <Form.Group as={Col} xs={4} className="mb-2 pl-0">
+                <Form.Label>Numero:</Form.Label>
                 <Form.Control type="text" name="userAddressNumber" placeholder={this.state.userAddress.number} />
               </Form.Group>
             </Row>
 
             <Form.Group className="mb-2">
-              <Form.Label>User Phone Number:</Form.Label>
+              <Form.Label>Numero di Telefono:</Form.Label>
               <Form.Control type="text" name="userPhoneNumber" placeholder={this.state.userPhoneNumber} />
             </Form.Group>
             
             <Form.Group className="mb-2">
-              <Form.Label>User Email:</Form.Label>
+              <Form.Label>Email:</Form.Label>
               <Form.Control type="email" name="userEmail" readOnly disabled placeholder={this.state.userEmail} />
             </Form.Group>
             
+            <h2 className="mt-3">Metodo di Pagamento</h2>
+
             <Form.Group className="mt-1 mb-2">
-              <Form.Label>Card Name:</Form.Label>
-              <Form.Control type="text" name="userPaymentName" placeholder={this.state.userPayment.cardName} />
+              <Form.Label>Numero della Carta:</Form.Label>
+              <Form.Control type="number" name="userPaymentName" placeholder={this.state.userPayment.cardName} />
             </Form.Group>
             
             <Form.Group className="mt-1 mb-2">
-              <Form.Label>Card Surname:</Form.Label>
+              <Form.Label>Intestatario:</Form.Label>
               <Form.Control type="text" name="userPaymentSurname" placeholder={this.state.userPayment.cardSurname} />
             </Form.Group>
             
-            <Form.Label>Tipo di carta:</Form.Label>
+            <Form.Label>Tipo di Carta:</Form.Label>
             <Form.Select className="mb-2" 
             value={this.state.newCardType}
             onChange={(event) => {this.setState({newCardType: event.target.value})} } 
@@ -287,9 +322,9 @@ export class User extends Component {
             </Form.Select>
             
             <Row>
-              <Form.Label>Card Expiration:</Form.Label>
+              <Form.Label>Scadenza della Carta:</Form.Label>
               <Col xs={8} className="mr-2">
-                <Form.Select className="mb-2 mr-0" 
+                <Form.Select className="mb-2" 
                 value={this.state.newExprMonth}
                 onChange={(event) => {this.setState({newExprMonth: event.target.value})} } 
                 aria-label="Select Card Expiration Month">
@@ -298,7 +333,7 @@ export class User extends Component {
                   ))}
                 </Form.Select>
               </Col>
-              <Col xs={4} className="ml-0">
+              <Col xs={4} className="pl-0">
                 <Form.Select className="mb-2" 
                 value={this.state.newExprYear}
                 onChange={(event) => {this.setState({newExprYear: event.target.value})} }
@@ -311,7 +346,7 @@ export class User extends Component {
             </Row>
             
             <Form.Group className="mb-2">
-              <Form.Label>Card CVV:</Form.Label>
+              <Form.Label>CVV:</Form.Label>
               <Form.Control
               type="text"
               name="userPaymentCVV"
@@ -319,12 +354,45 @@ export class User extends Component {
             </Form.Group>
           </fieldset>
           
-          <Button type="submit" value="submit" variant={this.state.boolModifying ? "success" : "primary"}>
+          <Button className="mt-2 mb-1 w-100" type="submit" value="submit" variant={this.state.boolModifying ? "success" : "primary"}>
             {this.state.boolModifying ? "Salva" : "Modifica"}
           </Button>
 
         </form>
-      </Container>
+      </div>
+      <Modal
+      show={this.state.show}
+      onHide={this.handleClose}
+      backdrop="static"
+      keyboard={false}
+      centered>
+        <Modal.Body>
+          {this.state.loading ? (
+            <div
+            className='d-flex align-items-center'>
+              Salvataggio&nbsp;
+              <Spinner
+              variant="primary"
+              animation="border"
+              role="status">
+                <span
+                className="visually-hidden">
+                  Caricamento...
+                </span>
+              </Spinner>
+            </div>
+          ) : (this.state.done ? (<>Modifiche effettuate.</>) : (<>Errore durante il salvataggio delle modifiche.</>)
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+        <Button
+        variant="secondary"
+        onClick={this.handleClose}
+        disabled={this.state.loading}>
+          Chiudi
+        </Button>
+      </Modal.Footer>
+      </Modal>
       </>
     );
   }

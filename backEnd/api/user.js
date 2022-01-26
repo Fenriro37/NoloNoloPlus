@@ -224,7 +224,7 @@ router.post('/', async function(req, res) {
             } 
             else {
                 let query = req.body
-                if(query.password =! null) {
+                if(req.body.password) {
                     // L'utente vuole aggiornare anche la password
                     // Cifrazione della password
                     const hashedPassword = await bcrypt.hash(query.password, 10);
