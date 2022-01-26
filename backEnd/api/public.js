@@ -122,6 +122,24 @@ router.post('/login', async function(req, res) {
         });
     }
 });
+
+// GET /api/public/auth
+// ----------------------------------------------------------------------------
+// [Tutti] Effettua l'autenticazione tramite il cookie, ritornando il valore
+// della tipologia di utente (cliente, funzionario o manager).
+// 
+// Header:
+// - Cookies jwt
+//   È il token per autenticare il chiamante.
+// Body: vuoto
+//
+// Valori di ritorno: { message, data, error }
+// - message
+//   È un messaggio descrittivo.
+// - obj
+//   Sono i dati da ritornare al chiamante.
+// - error
+//   È l'errore.
 router.get('/auth', async function(req, res) {
     console.log('api/public/auth');
     try {
@@ -161,47 +179,6 @@ router.get('/auth', async function(req, res) {
             error: error
         });
     } 
-})
-
-router.get('/auth', async function(req, res) {
-    console.log('api/public/auth');
-    try {
-        const token = req.cookies['jwt'];
-        const tokenId = (jwt.verify(token, config.JSONWebTokenKey)).id;
-        const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
-        switch(sender.status) {
-            case -2:
-                return res.status(401).json({
-                    message: 'Token non valido.',
-                    obj: -2
-                });
-            case -1:
-                return res.status(400).json({
-                    message: 'Errore di myMongoAuth.auth.',
-                    obj: -1
-                });
-            case 0:
-                return res.status(200).json({
-                    message: 'Cliente',
-                    obj: 0
-                });
-            case 1:
-                return res.status(200).json({
-                    message: 'Funzionario',
-                    obj: 1
-                });
-            case 2:
-                return res.status(200).json({
-                    message: 'Manager',
-                    obj: 2
-                });
-        }
-    } catch(error) {
-        return res.status(400).json({
-            message: 'Errore di POST /api/public/login/',
-            error: error
-        });
-    }
 })
 
 module.exports = router;
