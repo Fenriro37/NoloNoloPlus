@@ -277,7 +277,7 @@ export class MakeReservation extends React.Component {
           <Button
           variant="secondary"
           onClick={this.handleClose}
-          disabled={!this.state.done}>
+          disabled={this.state.loading}>
             Chiudi
           </Button>
         </Modal.Footer>

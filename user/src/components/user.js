@@ -54,11 +54,18 @@ export class User extends Component {
       //Settings
       boolModifying: false,
       isAuth: false,
+
+      //Modal
+      show: false,
+      loading: true,
+      done: false,
     }
     
     this.switchModifying = this.switchModifying.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
   }
 
   componentDidMount() {
@@ -103,16 +110,31 @@ export class User extends Component {
     })
   }
 
+  handleClose() {
+    this.setState({
+      show: false
+    });
+    window.location.reload(false);
+  }
+  
+  handleShow() {
+    this.setState({
+      show: true
+    });
+  }
+
   switchModifying = () => {
     const boolModifying = !this.state.boolModifying;
     this.setState({boolModifying: boolModifying});
   }
 
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
   handleSubmit = (event) => {
     event.preventDefault();
-
     var tmp = event.target.querySelectorAll('input');
-
     if (this.state.boolModifying) {
       // Preparo la query da inviare al server
       var query = {};
@@ -150,21 +172,13 @@ export class User extends Component {
       for (var i in tmp) {
         if(tmp[i].value && tmp[i].placeholder) {
           if(tmp[i].value != '' && tmp[i].value != tmp[i].placeholder) {
-            if(tmp[i].name == 'userBirthday') {
-              // È stato modificato la data
-              query.birthday = {
-                year: tmp[i].value.split('-')[0],
-                month: tmp[i].value.split('-')[1],
-                day: tmp[i].value.split('-')[2]
-              }
-            } else if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
+            if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
               // È stato modificato l'indirizzo
               query.address = address
             } else if(tmp[i].name == 'userPaymentName' || tmp[i].name == 'userPaymentSurname' || tmp[i].name == 'userPaymentCVV') {
               // È stato modificato il nome o cognome del metodo di pagamento
-              query.payment = payment            
+              query.payment = payment
             } else {
-              console.log(tmp[i].name)
               query[tmp[i].name] = tmp[i].value;
             }           
           }
@@ -176,25 +190,38 @@ export class User extends Component {
         query.sex = this.state.newSex;
       }
       if(this.state.newCardType != this.state.userPayment.cardType || this.state.newExprMonth != this.state.userPayment.cardExpireMonth || this.state.newExprYear != this.state.userPayment.cardExpireYear) {
-        console.log('OK')
         query.payment = payment;
+      }
+      // Controllo della data
+      if(
+        this.state.newBirthday.day != this.state.userBirthday.day ||
+        this.state.newBirthday.month != this.state.userBirthday.month ||
+        this.state.newBirthday.year != this.state.userBirthday.year
+        ) {
+        query.birthday = this.state.newBirthday;
       }
 
       //Controllo della query
       console.log(query);
 
-      //apiCall.postUser(null, query).then(() => {
-      //    alert('success');
-      //  }).catch(() => {
-      //    alert('error');
-      //  });
+      this.handleShow();
+
+      apiCall.postUser(null, query).then(() => {
+        this.setState({
+          loading: false,
+          done: true
+        });
+        }).catch(() => {
+          this.setState({
+            loading: false,
+            done: false
+          });
+        });
     }
     this.switchModifying();
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
+
 
   render() {
     return (
@@ -325,6 +352,48 @@ export class User extends Component {
 
         </form>
       </Container>
+      <Modal
+      show={this.state.show}
+      onHide={this.handleClose}
+      backdrop="static"
+      keyboard={false}
+      centered>
+        <Modal.Body>
+          {this.state.loading ? (
+            <div
+            className='d-flex align-items-center'>
+              Salvataggio&nbsp;
+              <Spinner
+              variant="primary"
+              animation="border"
+              role="status">
+                <span
+                className="visually-hidden">
+                  Caricamento...
+                </span>
+              </Spinner>
+            </div>
+          ) : (
+            this.state.done ? (
+              <>
+                Prenotazione effettuata.
+              </>
+            ) : (
+              <>
+                Errore durante la prenotazione.
+              </>
+            )              
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+        <Button
+        variant="secondary"
+        onClick={this.handleClose}
+        disabled={!this.state.loading}>
+          Chiudi
+        </Button>
+      </Modal.Footer>
+      </Modal>
       </>
     );
   }
