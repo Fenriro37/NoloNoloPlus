@@ -37,7 +37,7 @@ export class Header extends React.Component {
                 height='45px'/>
             </Navbar.Brand>
             { this.props.type == 'user'
-              ? 'Pagina utente'
+              ? <h1>Pagina utente</h1>
               : <Form
                 className='element-to-hide-under-350'
                 style={{ width: '60%' }}
@@ -47,7 +47,7 @@ export class Header extends React.Component {
                 }}>
                 <FormControl
                   type='search'
-                  placeholder='Cerca... '
+                  placeholder={this.props.type == 'product' ? 'Cerca un prodotto' : 'Cerca una prenotazione'}
                   name='searchInput'
                   className='me-2'
                   aria-label='Cerca prodotti'/>
