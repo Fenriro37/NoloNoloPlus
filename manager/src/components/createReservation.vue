@@ -3,15 +3,15 @@
   <div class="w-50">
     <form name="myform" id="formId" @submit.prevent="createReservation"> 
 
-      <h1 class="mb-4"> Aggiungi prenotazione </h1>
+      <h1 class="mb-4" tabindex="0"> Aggiungi prenotazione </h1>
 
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" v-model="email" id="email" aria-label="Recipient's email" aria-describedby="basic-addon1" required>
+        <input type="email" class="form-control" v-model="email" id="email" aria-label="Email cliente, campo obbligatorio"  required>
         <label for="email"> Email cliente*</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" v-model="articleId" id="articleId" aria-label="Recipient's email" aria-describedby="basic-addon1" disabled >
+        <input type="text" tabindex="0" class="form-control" v-model="articleId" id="articleId" :aria-label="'Id articolo:'+articleId" readonly >
         <label for="articleId"> ID articolo*</label>
       </div>
   
@@ -20,12 +20,12 @@
           <label for="date" class="mr-3">Periodo Prenotazione* </label>
         </div>
         <div class="col-9">
-          <date-picker :input-attr="{required: 'true'}" id="date" v-model="time" @change="changeData" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
+          <date-picker :input-attr="{required: 'true'}" id="date" aria-label="Selezionare periodo prenotazione, campo obbligatorio" v-model="time" @change="changeData" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
         </div>
       </div>
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Recipient's fixedprice" aria-describedby="basic-addon6" required>
+				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Prezzo fisso, campo obbligatorio" required>
 				<label for="price"> Prezzo Fisso*</label>
 			</div>
 
@@ -35,9 +35,9 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" :checked="onSale"  @click="changeSale">
-						<label class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
-            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+						<input type="checkbox" aria-label="Sconto prezzo fisso, seleziona per abilitare" class="form-check-input" :checked="onSale"  @click="changeSale">
+						<label tabindex="0" class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
+            <label tabindex="0" class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
@@ -48,13 +48,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
+                <input class="form-check-input" aria-label="sconto percentuale" type="radio" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
+                <input class="form-check-input" aria-label="sconto fisso" type="radio" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -62,7 +62,7 @@
           <div class="row mb-3">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" aria-label="saleValue" aria-describedby="basic-addon6" required>
+            <input type="number" aria-label="valore sconto" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@
 
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="dailyPrice" v-on:keyup="newPrice" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<input type="number" class="form-control" min="1" step="1" v-model="dailyPrice" v-on:keyup="newPrice" aria-label="Prezzo giornaliero, campo obbligatorio" required>
 				<label for="price"> Prezzo Giornaliero*</label>
 			</div>
 
@@ -80,9 +80,9 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" :checked="overOnSale"  @click="changeDailySale">
-						<label class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
-            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+						<input type="checkbox" aria-label="sconto prezzo giornaliero, seleziona per abilitare" class="form-check-input" :checked="overOnSale"  @click="changeDailySale">
+						<label tabindex="0" class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
+            <label tabindex="0" class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
@@ -93,13 +93,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
+                <input class="form-check-input" aria-label="sconto giornaliero percentuale" type="radio" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio"  :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
+                <input class="form-check-input" aria-label="sconto giornaliero fisso" type="radio"  :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -107,39 +107,39 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" min="1" step="1" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" aria-label="saleValueOver" aria-describedby="basic-addon6" required>
+            <input type="number" aria-label="valore sconto giornaliero " class="form-control" min="1" step="1" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
-            <div class="col-3">Giorni per sconto:</div>
+            <div class="col-3">Giorni da superare per sconto:</div>
             <div class="col-9">
-              <input type="number" class="form-control" min="1" step="1" v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount" aria-label="daysDiscount" aria-describedby="basic-addon6" required>
+              <input type="number" aria-label="giorni da superare per ottenere sconto" class="form-control" min="1" step="1" v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount"  required>
           </div>
         </div>
       </template>
 
       <div class="form-floating mb-3">
-				<input type="number" class="form-control" :value="newTotal" aria-label="Recipient's price" aria-describedby="basic-addon6" readonly>
+				<input type="number" class="form-control" :value="newTotal" :aria-label="'Prezzo totale prenotazione'+ newTotal+'€'" readonly>
 				<label for="price"> Prezzo Totale</label>
 			</div>
 
       <div class="form-floating mb-3">
-        <input type="text"  v-model="notes" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" >
+        <input type="text"  v-model="notes" class="form-control" id="notes" aria-label="Descrizione prenotazione" >
         <label for="notes"> Descrizione</label>
       </div>
 
       <div class="form-floating mb-4">
-        <input type="text" v-model="privateNotes" class="form-control" id="privateNotes" aria-label="Recipient's privateNotes" aria-describedby="basic-addon6" >
+        <input type="text" v-model="privateNotes" class="form-control" id="privateNotes" aria-label="Note non visibili ai clienti" >
         <label for="privateNotes">  Note (non visibili ai clienti)</label>
       </div>
 
       <div class="row">
         <div class="col-6">
-          <button type="submit" class="btn btn-lg btn-success" id="save" :disabled="enter">Salva</button>
+          <button type="submit" aria-label="bottone crea prenotazione"  class="btn btn-lg btn-success" id="save" :disabled="enter || negativePrice">Salva</button>
         </div>
 
         <div class="col-6">
-          <button type="button" id="clear" class="btn btn-lg btn-danger delete" :disabled="enter" @click="cancel">Annulla</button>
+          <button type="button" aria-label="bottone annulla, pulisce i campi tranne i prezzi"  id="clear" class="btn btn-lg btn-danger delete" :disabled="enter" @click="cancel">Annulla</button>
         </div>
       </div> 
 
@@ -177,7 +177,7 @@
 
         notes:'',                //note 1 (dettagli sul prezzo o altro)                        
         privateNotes:'',               //note 2 (dettagli non visibili al cliente)
-
+        negativePrice: false,
         time: null,
         lang: {
           formatLocale: {
@@ -354,7 +354,7 @@
       },
 
       cancel(){
-        this.time = null;
+        console.log(this.time )// = null;
         this.email =  '';
         this.notes = '';
         this.privateNotes = '';
@@ -372,7 +372,7 @@
       },
 
       newPrice(){
-        if (this.time!= null){
+        if(this.time[0] != null){
           let day = this.time[0].getDate()
           let month = this.time[0].getMonth()+1
           let year = this.time[0].getFullYear()
@@ -404,23 +404,30 @@
             addendum2 = this.dailyPrice * days
           }
           console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
-          this.newTotal = parseInt(addendum1)+ parseInt(addendum2)
+          this.newTotal = parseFloat(addendum1)+ parseFloat(addendum2)
+          if(this.newTotal <= 0){
+            this.negativePrice = true
+          }
+          else  
+            this.negativePrice = false
           }
       },
 
       changeData(){
-        let start = new Date( this.time[0].getFullYear(), this.time[0].getMonth(), this.time[0].getDate())
-        let end = new Date( this.time[1].getFullYear(), this.time[1].getMonth(), this.time[1].getDate())
-        for(let i in this.article.bookings){
-          if( this.article.bookings[i].reservationId != this.reservationId){
-            let reservationEnd = new Date(this.article.bookings[i].endDate.year, this.article.bookings[i].endDate.month-1, this.article.bookings[i].endDate.day)
-            let reservationStart = new Date(this.article.bookings[i].startDate.year, this.article.bookings[i].startDate.month-1, this.article.bookings[i].startDate.day)
-            if(start <= reservationStart  && reservationEnd <= end)
-              this.time = null
-          }        
-        }
-        
-        this.newPrice()
+        if(this.time[0] != null){
+          let start = new Date( this.time[0].getFullYear(), this.time[0].getMonth(), this.time[0].getDate())
+          let end = new Date( this.time[1].getFullYear(), this.time[1].getMonth(), this.time[1].getDate())
+          for(let i in this.article.bookings){
+            if( this.article.bookings[i].reservationId != this.reservationId){
+              let reservationEnd = new Date(this.article.bookings[i].endDate.year, this.article.bookings[i].endDate.month-1, this.article.bookings[i].endDate.day)
+              let reservationStart = new Date(this.article.bookings[i].startDate.year, this.article.bookings[i].startDate.month-1, this.article.bookings[i].startDate.day)
+              if(start <= reservationStart  && reservationEnd <= end)
+                this.time = null
+            }        
+          }
+          
+          this.newPrice()
+        } 
       },
 
       dateDisabled(date) {         

@@ -23,8 +23,13 @@
           <label for="date" class="mr-3">Periodo Prenotazione </label>
         </div>
         <div class="col-9">
-          <date-picker :disabled="!boolModify || !available" :placeholder="bookingStart + ' ~ ' + bookingEnd" id="date" v-model="time" @change="changeData" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
-          <label v-if="!available" for="date" class="mr-3">Non disponibile in giorni diversi </label>
+          <template v-if="!boolModify || !available">
+            <input  type="text" class="form-control" :value="bookingStart + ' ~ ' + bookingEnd" id="date" aria-label="Recipient's fixedprice" aria-describedby="basic-addon6" readonly>
+            <label v-if="!available && boolModify" for="date" class="mr-3">Non disponibile in giorni diversi </label>
+          </template>
+          <template v-else>
+            <date-picker  id="date" v-model="time" :placeholder="bookingStart + ' ~ ' + bookingEnd" @change="changeData" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
+          </template>
         </div>
       </div>
 
@@ -139,7 +144,7 @@
 
       <div class="row mb-3 ml-3">
         <div class="col-6 form-check ">
-          <input class="form-check-input noPad" type="checkbox" :disabled="!boolModify && !boolDelete" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
+          <input class="form-check-input" type="checkbox" :disabled="!boolModify && !boolDelete" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
           <label v-if="rentalOccurred" class="form-check-label" for="flexCheckDefault">Il prodotto è stato ritirato</label>
           <label v-else class="form-check-label" for="flexCheckDefault">Il prodotto non è stato ritirato</label>
         </div>
@@ -152,7 +157,7 @@
 
 
     <b-button v-if="!boolModify && !boolDelete" type="button" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" :disabled="enter" @click="modify">Modifica</b-button>
-    <b-button v-if="boolModify || boolDelete" type="submit" class="btn btn-lg btn-success m-2"  :disabled="enter" >Salva</b-button>
+    <b-button v-if="boolModify || boolDelete" type="submit" class="btn btn-lg btn-success m-2"  :disabled="enter||negativePrice" >Salva</b-button>
     <b-button v-if="boolModify || boolDelete" type="button" class="btn btn-lg btn-danger m-2" :disabled="enter" @click="undoChange">Annulla</b-button>
     <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" @click="deleteReservation" :disabled="boolActive || enter" > Cancella prenotazione</button>
     </form>
@@ -210,7 +215,8 @@
 
         boolModify: false,
         boolDelete: false,
-        boolActive: false
+        boolActive: false,
+        negativePrice: false
 
       }
     },
@@ -517,7 +523,12 @@
           addendum2 = this.dailyPrice * days
         }
         console.log(days +'-'+ addendum1 +'-'+ addendum2)
-        this.newTotal = parseInt(addendum1)+ parseInt(addendum2)
+        this.newTotal = parseFloat(addendum1)+ parseFloat(addendum2)
+        if(this.newTotal <= 0){
+          this.negativePrice = true
+        }
+        else  
+          this.negativePrice = false
           
       },
 
@@ -541,9 +552,3 @@
   }
 
 </script>
-
-<style>
-.noPad{
-  padding: 0px;
-}
-</style>

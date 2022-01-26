@@ -12,7 +12,7 @@
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Clienti'">Clienti</button>
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Prenotazioni'">Prenotazioni</button>
 		</div>
-		<input id="searchText" type="text" v-model="text" class="form-control" placeholder="Cerca..." aria-label="Recipient's username" aria-describedby="button-addon2">
+		<input id="searchText" type="text" v-model="text" class="form-control" placeholder="Cerca..." aria-label="Barra di ricerca" >
 		<button class="btn btn-secondary" type="button" id="searchButton" v-on:click="search()">Cerca</button>
 	</div>
 
@@ -24,10 +24,10 @@
 
   <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
     <div class="bg-dark p-2">
-      <p> <a @click="logOut" href="http://localhost:8081/public/login.html">Logout</a></p>
-      <p><a @click="create" href="#"> Aggiungi articolo </a></p>
-      <p><a @click="analyticsClient" href="#">Analytics Clienti</a></p>
-      <p><a @click="analyticsAll" href=" #">Analytics Catalogo</a></p>
+      <p> <a @click="logOut" href="/public/login.html">Logout</a></p>
+      <p><a @click="create" href="javascript:void(null);"> Aggiungi articolo </a></p>
+      <p><a @click="analyticsClient" href="javascript:void(null);">Analytics Clienti</a></p>
+      <p><a @click="analyticsAll" href="javascript:void(null);">Analytics Catalogo</a></p>
     </div>
   </div>
 
@@ -77,11 +77,11 @@ export default {
       },
 
       analyticsClient(){
-        this.$router.push({ path: '/chartArticle', params: {id: ''} }).catch(()=>{})
+        this.$router.push({ name: 'clientChart', params: {id: ''} }).catch(()=>{})
       },
 
       analyticsAll(){
-        this.$router.push({ path: '/chartCatalog' }).catch(()=>{})
+        this.$router.push({ name: 'chartCatalog' }).catch(()=>{})
       }
       
     }

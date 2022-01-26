@@ -264,7 +264,13 @@ function calculateTotal(){
       addendum2 = $('#dailyPrice').val() * days
     }
     console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
-    $('#newTotal').val(parseInt(addendum1) + parseInt(addendum2))  
+    $('#newTotal').val(parseFloat(addendum1) + parseFloat(addendum2))  
+    if($('#newTotal').val() <= 0){
+      $('#save').prop('disabled', true);
+    }
+    else{
+      $('#save').prop('disabled', false);
+    } 
   }
 }
 

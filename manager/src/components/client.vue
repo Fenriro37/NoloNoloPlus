@@ -3,25 +3,25 @@
 <div class="container-fluid d-flex justify-content-center" id="main">
   <div class="w-50">
     <form name="myform" id="formId" @submit.prevent="saveData">
-      <h1 class="mb-3"> Account </h1>
+      <h1 class="mb-3" tabindex="0"> Account </h1>
 
       <div class="form-floating mb-3">
-        <input type="text" id="name" v-model="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1" :readonly="!boolModify" required>
+        <input type="text" id="name" v-model="name" class="form-control" :aria-label=" (boolModify) ? 'Nome' : 'Campo obbligatorio'" :readonly="!boolModify" required>
         <label for="name"> Nome </label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="surname"  v-model="surname" class="form-control" aria-label="surname" aria-describedby="basic-addon2" :readonly="!boolModify" required>
+        <input type="text" id="surname"  v-model="surname" class="form-control" aria-label="cognome: Campo obbligatorio" :readonly="!boolModify" required>
         <label for="surname"> Cognome</label>
       </div>  
 
       <div class="form-floating mb-3">
-        <input type="text" id="identifier"  :value="id" class="form-control" aria-label="identifier" aria-describedby="basic-addon3" readonly required>
+        <input type="text" id="identifier"  :value="id" class="form-control" aria-label="id Campo non modificabile" readonly required>
         <label for="identifier"> ID<span v-if="boolModify">(non modificabile)</span></label>
       </div>
 
       <div class="form-floating mb-3">
-        <select id="sex" class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="sex"  aria-label="Default select example" >
+        <select id="sex" tabindex="0" class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="sex"  aria-label="sesso: Campo obbligatorio" >
           <option value="male">M</option>
           <option value="female">F</option>
           <option value="other">Altro</option>
@@ -30,20 +30,20 @@
       </div>
         
       <div class="form-floating mb-3">
-        <input type="tel" id="phone"  v-model="phoneNumber" class="form-control" aria-label="phone" aria-describedby="basic-addon5" :readonly="!boolModify" required>
+        <input type="tel" id="phone"  v-model="phoneNumber" class="form-control" aria-label="numero telefono: Campo obbligatorio" :readonly="!boolModify" required>
         <label for="phone"> Numero di telefono</label>
       </div>
         
       <div class="form-floating mb-3">
-        <input type="email" id="mail"  v-model="email" class="form-control" aria-label="mail" aria-describedby="basic-addon6" readonly required>
+        <input type="email" id="mail"  v-model="email" class="form-control" aria-label="email: Campo non modificabile" readonly required>
         <label for="mail"> E-mail <span v-if="boolModify">(non modificabile)</label>
       </div>
 
       <hr>
 
       <div class="form-floating mb-3">
-        <b-form-datepicker id="birthday" v-model="birthday"  class="form-control" type="date" aria-label="birthday" aria-describedby="basic-addon7" :readonly="!boolModify" required></b-form-datepicker>
-        <label for="birthday"> Data di nascita</label>
+        <b-form-datepicker id="birthday" v-model="birthday"  class="form-control" type="date" aria-label="Data di nascita: Campo obbligatorio" :readonly="!boolModify" required></b-form-datepicker>
+        <label for="birthday" tabindex="0"> Data di nascita</label>
       </div>
 
       <hr>
@@ -79,8 +79,8 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="cardName"   v-model="payment.cardName"  class="form-control" aria-label="cardName" aria-describedby="basic-addon12" :readonly="!boolModify" required>
-        <label for="cardName"> Nome carta</label>
+        <input type="number" id="cardName" v-model="payment.cardName"  class="form-control" aria-label="cardName" aria-describedby="basic-addon12" :readonly="!boolModify" required>
+        <label for="cardName"> Numero carta</label>
       </div>
 
       <div class="form-floating mb-3">

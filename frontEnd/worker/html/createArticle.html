@@ -75,7 +75,7 @@
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" id="price" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
+				<input type="number" class="form-control" min="1" step="1" id="price" onkeyup="calculateDiscount()" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
 				<label for="price"> Prezzo fisso*</label>
 			</div>
 
@@ -132,7 +132,7 @@
 
 			<div class="row mb-5">
 				<div class="col-6">
-					<button type="submit" class="btn btn-lg btn-success"   >Salva</button>
+					<button type="submit" id="btnSave" class="btn btn-lg btn-success"   >Salva</button>
 				</div>
 
 				<div class="col-6">
