@@ -9,6 +9,8 @@ const { ObjectId } = require('mongodb');
 const myMongoAuth = require('./../database/mongoAuth.js');
 const myMongoUser = require('./../database/mongoUser.js');
 const config = require('./../config');
+const bcrypt = require('bcryptjs');
+const { query } = require('express');
 
 // GET /api/user
 // ----------------------------------------------------------------------------
@@ -205,6 +207,11 @@ router.post('/', async function(req, res) {
                 return res.status(400).json({
                     message: 'Parametro mancante.'
                 });
+            } else if(req.body.password != null) {
+                // Funzionario o manager che vuole cambiare la password
+                return res.status(401).json({
+                    message: 'Operazione non autorizzata.'
+                });                
             } else {
                 // Parametro specificato                
                 result = await myMongoUser.usersUpdateOne(paramId, req.body);
@@ -217,7 +224,13 @@ router.post('/', async function(req, res) {
                 });
             } 
             else {
-                result = await myMongoUser.usersUpdateOne(tokenId, req.body);
+                query = req.body;
+                if(req.body.password != null) {
+                    // Vuole cambiare la password
+                    const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
+                    query.password = hashedPassword;
+                }
+                result = await myMongoUser.usersUpdateOne(tokenId, query);
             }
         }
         if(result.status == 0) {
