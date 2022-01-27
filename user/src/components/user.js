@@ -394,8 +394,3 @@ export class User extends Component {
     );
   }
 }
-
-
-
-
-
