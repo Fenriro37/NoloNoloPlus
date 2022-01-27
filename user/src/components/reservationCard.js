@@ -3,8 +3,8 @@ import React from 'react';
 import { Accordion, Button } from 'react-bootstrap';
 import ApiCall from '../services/apiCall';
 import { datediff } from '../services/functions';
-import { Invoice } from './invoice';
 import { UpdateReservation } from './updateReservation';
+import { Invoice } from './invoice';
 
 export class ReservationCard extends React.Component {
   constructor(props) {
@@ -210,17 +210,8 @@ export class ReservationCard extends React.Component {
                   Prenotazione attiva
                 </Button>
               ) : (
-                <Button
-                className='w-100'
-                onClick={() => {
-                  // Get dati utente
-                  
-                  // Call invoice
-                  
-                }}
-                href='./invoice'>
-                  Richiedi fattura
-                </Button>  
+                <Invoice
+                reservation={this.state.reservation}/>
               )
             )}
           </Accordion.Body>

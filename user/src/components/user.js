@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import apiCall from '../services/apiCall'
-import {Header} from './header.js'
+import ApiCall from '../services/apiCall'
+import { Header } from './header.js'
 
-import {Container, Form, Button, Row, Col, Modal, Spinner} from 'react-bootstrap'
+import { Form, Button, Row, Col, Modal, Spinner} from 'react-bootstrap'
 
 export class User extends Component {
   constructor(props) {
@@ -183,7 +183,7 @@ export class User extends Component {
         query.birthday = this.state.newBirthday;
       }
       // Chiamata API
-      apiCall.postUser(null, query).then(() => {
+      ApiCall.postUser(null, query).then(() => {
         this.setState({
           loading: false,
           done: true
@@ -199,7 +199,7 @@ export class User extends Component {
   }
 
   componentDidMount() {
-    apiCall.getUser().then((result) => {
+    ApiCall.getUser().then((result) => {
       this.setState({
         // Initializazion of the user original value
         userId: result.data.data._id,

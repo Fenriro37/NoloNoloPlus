@@ -44,9 +44,9 @@ class ApiCall {
     }
 
     // Chiamate alle API sulle prenotazioni
-    // getReservation(id) {
-    //     return http.get('/api/reservation/?id=' + id)
-    // }
+    getReservation(id) {
+        return http.get('/api/reservation/?id=' + id)
+    }
 
     getAllReservation(filter, sort) {
         return http.get('/api/reservation/all' + '?filter=' + filter + '&&sort=' + sort);

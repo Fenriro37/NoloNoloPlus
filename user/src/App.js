@@ -13,10 +13,9 @@ function App() {
   return (
     <div className='App'>
       <Routes>
-        <Route path="/user/index.html" element={<Product/>} />
-        <Route path="/user/page" element={<User/>} />
-        <Route path="/user/reservation" element={<Reservation/>} />
-        <Route path="/user/invoice" element={<Invoice/>} />
+        <Route path="/user/index.html" element={<Product/>}/>
+        <Route path="/user/page" element={<User/>}/>
+        <Route path="/user/reservation" element={<Reservation/>}/>
       </Routes>
     </div>
   );
