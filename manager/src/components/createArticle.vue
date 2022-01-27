@@ -53,13 +53,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="Sconto percentuale" type="radio" :value="true" v-model="onSaleType"  @click="changeType" id="percentage" required>
+                <input class="form-check-input" aria-label="Sconto percentuale, seleziona uno dei due" type="radio" :value="true" v-model="onSaleType"  @click="changeType" id="percentage" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" tabindex="0" aria-label="Sconto fisso" type="radio"  :value="false" v-model="onSaleType" @click="changeType" id="flat" required>
+                <input class="form-check-input" tabindex="0" aria-label="Sconto fisso, seleziona uno dei due" type="radio"  :value="false" v-model="onSaleType" @click="changeType" id="flat" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -67,13 +67,13 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" aria-label="valore sconto necessario" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice" id="saleValue" required>
+            <input type="number" aria-label="valore sconto, campo obbligatorio" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice" id="saleValue" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
             <div class="col-3">Prezzo scontato:</div>
             <div class="col-9">
-              <input type="number" tabindex="0" :aria-label="'Prezzo fisso scontato, sola lettura'+newTotal" class="form-control"  v-model="newTotal" id="newValue" readonly>
+              <input type="number" tabindex="0" :aria-label="'Prezzo fisso scontato, sola lettura. Se negativo questo valore è negativo non si potrà aggiungere il prodotto al catalogo'+newTotal" class="form-control"  v-model="newTotal" id="newValue" readonly>
           </div>
         </div>
       </template>
@@ -102,13 +102,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" aria-label="Sconto percentuale" :value="true" v-model="overOnSaleType" id="percentageOver" required>
+                <input class="form-check-input" type="radio" aria-label="Sconto percentuale, seleziona uno dei due" :value="true" v-model="overOnSaleType" id="percentageOver" required>
                 <label class="form-check-label" for="percentageOver">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio"  aria-label="Sconto fisso" :value="false" v-model="overOnSaleType" id="flatOver" required>
+                <input class="form-check-input" type="radio"  aria-label="Sconto fisso, seleziona uno dei due" :value="false" v-model="overOnSaleType" id="flatOver" required>
                 <label class="form-check-label" for="flatOver">Fisso</label>
               </div>
             </div>
@@ -116,13 +116,13 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" min="1" step="1" v-model="overOnSaleValue" id="saleValueOVer" aria-label="valore sconto" required>
+            <input type="number" class="form-control" min="1" step="1" v-model="overOnSaleValue" id="saleValueOVer" aria-label="valore sconto, campo obbligatorio" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
             <div class="col-3">Giorni da superare per sconto:</div>
             <div class="col-9">
-              <input type="number" class="form-control" min="1" step="1"  v-model="overDays" id="daysDiscount" aria-label="giorni da superare per ottenere sconto" required>
+              <input type="number" class="form-control" min="1" step="1"  v-model="overDays" id="daysDiscount" aria-label="giorni da superare per ottenere sconto, campo obbligatorio" required>
           </div>
         </div>
       </template>
@@ -151,7 +151,7 @@
 
 			<div class="row mb-5">
 				<div class="col-6">
-					<button type="submit" aria-label="Bottone salva"  class="btn btn-lg btn-success" :disabled="enter || newTotal<0">Salva</button>
+					<button type="submit" aria-label="Bottone salva. Dopo la crezioe rimane su questa pagina e resetta i campi"  class="btn btn-lg btn-success" :disabled="enter || newTotal<0">Salva</button>
 				</div>
 
 				<div class="col-6">

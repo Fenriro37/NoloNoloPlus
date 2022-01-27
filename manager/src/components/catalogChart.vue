@@ -2,7 +2,7 @@
   <div class="container-fluid d-flex justify-content-center" id="main">
     <div class="w-50">
       <div class="input-group mb-3 mt-2">
-        <input type="emai" class="form-control" placeholder="Cerca un cliente" v-model="tag" id="newMail" aria-label="newMail" aria-describedby="basic-0">
+        <input type="text" class="form-control" placeholder="Cerca una categoria" v-model="tag" id="newTag" aria-label="newMail" >
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" placeholder="Cerca utenti" @click="createChart">Button</button>
       </div>
 
@@ -109,6 +109,12 @@ export default {
       }
       for(let i = 0; i < 12; i++)
         this.monthfrequence[i] = 0
+
+      if(this.tag!= ''){
+        Functions.getTags(this.tag).then ( (result) => {
+          console.log(result)
+        })
+      }
 
       Functions.getAllProduct( query)
       .then( (result) => {

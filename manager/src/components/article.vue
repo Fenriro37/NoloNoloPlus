@@ -4,34 +4,34 @@
       <div class="row mb-3 mt-3">
         <!-- Colonne immagine -->
         <div class="col-6 d-flex align-items-center" style="height: 15em;">
-          <img id="img" class="myImg" alt="immagine prodotto" v-bind:src="image">
+          <img id="img" tabindex="0" class="myImg" :alt="'immagine'+ title+''+brand" v-bind:src="image">
         </div>
 
         <div class="col-6">
           <div id="productidentifier">
-            <span> ID: {{ identifier }} </span>      
+            <span tabindex="0" :aria-label="'Identificativo:' + identifier"> ID: {{ identifier }} </span>      
           </div> 
           <!-- Titolo -->
           <div>
-            <h4>{{ title + ' ' + brand }}  </h4>
+            <h4 tabindex="0" :aria-label="'Articolo:' + title + brand">{{ title + ' ' + brand }}  </h4>
           </div>
           <!-- Stars -->
-          <div>
+          <div tabindex="0" :aria-label="quality + 'stelle su tre'">
             <span v-for="iter in parseInt(quality)" class="fa fa-star checked big-size" :key="iter"> </span>
-            <span v-for="mimmo in (3 - parseInt(quality))" class="fa fa-star big-size" :key="mimmo"> </span>
+            <span v-for="j in (3 - parseInt(quality))" class="fa fa-star big-size" :key="j"> </span>
           </div>
           <div class="mt-1 mb-1">
-            <span  class="">{{'Prezzo Fisso: ' + fixedPrice +'€' }} <span id="fixedPrice"></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso:'+ fixedPrice + '€'"  class="">{{'Prezzo Fisso: ' + fixedPrice +'€' }} <span id="fixedPrice"></span>
           </div>
             <!-- Prezzo -->
           <div class="mt-1 mb-1">
-            <span v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice }}€</span></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice }}€</span></span>
           </div>
           <div class="mt-1 mb-1">
-            <span  class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
+            <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
           </div>
           <div class="mt-1 mb-1">
-            <span v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}} <span id="fixedPrice"></span>
+            <span tabindex="0" :aria-label="'Noleggia oltre ' + overDays.days+ ' giorni per ottenere sconto giornaliero:'+dailyPrice+'€'" v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}} <span id="fixedPrice"></span>
           </div>
 
         </div>
@@ -39,17 +39,17 @@
       <!-- Bottoni -->
       <div class="row d-flex justify-content-between">
         <div class="col align-items-center">
-          <b-button id="rentProduct" class="btn btn-lg btn-warning m-1" :disabled="enter || !available" @click="rent">Affitta</b-button>
-          <b-button type="button" class="btn btn-lg m-1" variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" :disabled="enter" v-on:click="getModalData">Modifica</b-button>
-          <b-button type="button" class="btn btn-lg btn-danger m-1" :disabled="boolDelete || enter" v-on:click="deleteProduct">Elimina</b-button>
-          <b-button :disabled="bookings.length === 0 || enter" class="btn btn-lg btn-warning m-1" @click="stats"> Analytics </b-button>
+          <b-button id="rentProduct" aria-label="Bottone affitta. Porta alla pagina per la creazione di una prenotazione"  class="btn btn-lg btn-warning m-1" :disabled="enter || !available" @click="rent">Affitta</b-button>
+          <b-button type="button" aria-label="Bottone Modifica. Apre una finestra dove modificare i campi dell'articolo" class="btn btn-lg m-1" variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" :disabled="enter" v-on:click="getModalData">Modifica</b-button>
+          <b-button type="button" aria-label="Bottone elimina. Cancella l'articolo e porta sulla pagina del catalogo" class="btn btn-lg btn-danger m-1" :disabled="boolDelete || enter" v-on:click="deleteProduct">Elimina</b-button>
+          <b-button aria-label="Bottone analytics. Porta alla pagina per vedere le statistiche di questo prodotto" :disabled="bookings.length === 0 || enter" class="btn btn-lg btn-warning m-1" @click="stats"> Analytics </b-button>
         </div>
       </div>
 
       <div class="form-check form-switch ">
         <input class="form-check-input custom-switch " type="checkbox" id="flexSwitchCheckDefault" :disabled="enter" :checked="available" v-model="available" @click="changeInStock">
-        <label v-if="available" class="form-check-label" for="flexSwitchCheckDefault">Disattiva articolo</label>
-        <label v-else class="form-check-label" for="flexSwitchCheckDefault">Attiva articolo</label>
+        <label  v-if="available" ria-label="Bottone per cambiare la disponibilità articolo" class="form-check-label" for="flexSwitchCheckDefault">Modifica per disattivare articolo</label>
+        <label  v-else class="form-check-label" for="flexSwitchCheckDefault">Modifica per attivare articolo</label>
       </div>
 
       <div class="modal" id="myModal">
@@ -72,10 +72,10 @@
               </b-row>
               <b-row class="mb-3">
                 <b-col cols="6">
-                  <b-form-input  type="text" class="form-control" id="productname" v-model="titleModal" :placeholder="titleModal"></b-form-input>	
+                  <b-form-input  type="text" :aria-label="'Titolo, Campo obbligatorio'" class="form-control" id="productname" v-model="titleModal" ></b-form-input>	
                 </b-col>
                 <b-col cols="6">
-                  <b-form-input type="text" class="form-control" id="productModel" v-model="brandModal"></b-form-input>	
+                  <b-form-input type="text" :aria-label="'Brand, Campo obbligatorio'" class="form-control" id="productModel" v-model="brandModal"></b-form-input>	
                 </b-col>
               </b-row>
               <b-row>
@@ -94,7 +94,7 @@
                   <label for="imageLink" class="form-label">Immagine* (link)</label>
                 </b-col>
                 <b-col cols="8">
-                  <b-form-input type="text"  class="form-control" id="imageLink" v-model="imageModal"></b-form-input>	
+                  <b-form-input type="text"  :aria-label="'L` mmagine deve essere in forma di URL. Campo obbligatorio'+ imageModal" class="form-control" id="imageLink" v-model="imageModal"></b-form-input>	
                 </b-col>
               </b-row>
               <b-row>
@@ -102,7 +102,7 @@
                   <label for="productQuality" class="form-label">Qualità</label>
                 </b-col>
                 <b-col cols="6" class="mt-2 mb-3">
-                  <select class="form-select" v-model="qualityModal">
+                  <select class="form-select" :aria-label="'qualità:'" v-model="qualityModal">
                     <option :value="1">1 - Condizioni accettabili</option>
                     <option :value="2" selected>2 - Buone condizioni</option>
                     <option :value="3">3 - Come nuovo</option>
@@ -116,7 +116,7 @@
                 </b-col>
                 <b-col cols="6" class="mt-2 mb-2">
                   <div class="input-group">
-                    <b-form-input type="number" id="productPrice" class="form-control text-end" v-model="fixedModal" ></b-form-input>	
+                    <b-form-input type="number" id="productPrice" class="form-control text-end" aria-label="Prezzo fisso: campo obbligatorio" v-model="fixedModal" ></b-form-input>	
                     <span class="input-group-text justify-content-center">€</span>
                   </div>
                 </b-col>
@@ -125,12 +125,12 @@
                 <b-col cols="6">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="onSale" :checked="onSaleModal" @click="changeOnSale">
-                    <label class="form-check-label" for="onSale">Sconto</label>
+                    <label class="form-check-label" for="onSale">Sconto fisso</label>
                   </div>
                 </b-col>
                 <b-col cols="3">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="discount" id="discountPercentage" :value="true" :disabled="!onSaleModal" 
+                    <input class="form-check-input" type="radio" name="discount" aria-label="sconto percentuale. Seleziona uno dei due" id="discountPercentage" :value="true" :disabled="!onSaleModal" 
                       :checked="onSaleModal && onSaleTypeModal" @click="changeDiscountType">
                     <label class="form-check-label" for="discountPercentage">Percentuale</label>
                   </div>
@@ -138,7 +138,7 @@
                 <b-col cols="3">
                   <div class="form-check">
                     <input
-                      id="discountAmount" class="form-check-input" type="radio" name="discount" :value="false" :disabled="!onSaleModal" :checked="onSaleModal && onSaleTypeModal == false" @click="changeDiscountType" >
+                      id="discountAmount" class="form-check-input" type="radio" aria-label="sconto fisso. Seleziona uno dei due" name="discount" :value="false" :disabled="!onSaleModal" :checked="onSaleModal && onSaleTypeModal == false" @click="changeDiscountType" >
                     <label class="form-check-label" for="discountAmount">Fisso</label>													
                   </div>
                 </b-col>
@@ -150,7 +150,7 @@
                 <b-col cols="6">
                   <div class="input-group">
                     <span class="input-group-text justify-content-center">-</span>
-                    <input type="text" class="form-control text-end" min="1" step="1" v-model="onSaleValueModal" :disabled="!onSaleModal">
+                    <input type="text" class="form-control text-end" min="1" step="1" aria-label="valore sconto prezzo fisso. Campo obbligatorio" v-model="onSaleValueModal" :disabled="!onSaleModal">
                     <span v-if="onSaleTypeModal" id="pd" class="input-group-text justify-content-center">%</span>
                     <span v-else id="pd" class="input-group-text justify-content-center">€</span>
                   </div>
@@ -162,7 +162,7 @@
                 </b-col>
                 <b-col cols="6">
                   <div class="input-group">
-                    <input type="text" class="form-control text-end" disabled :placeholder="getDiscountedModal">
+                    <input type="text" class="form-control text-end" aria-label="Prezzo fisso scontato. Sola lettura. Se negativo non sarà possibile modificare il prodotto." readonly :placeholder="getDiscountedModal">
                     <span class="input-group-text justify-content-center">€</span>
                   </div>
                 </b-col>
@@ -174,7 +174,7 @@
                 </b-col>
                 <b-col cols="6" class="mt-2 mb-2">
                   <div class="input-group">
-                    <input type="number" id="dailyPrice" class="form-control text-end" v-model="dailyModal">
+                    <input type="number" id="dailyPrice" aria-label="Prezzo giornaliero. Campo obbligatorio" class="form-control text-end" v-model="dailyModal">
                     <span class="input-group-text justify-content-center">€</span>
                   </div>
                 </b-col>
@@ -188,14 +188,14 @@
                 </b-col>
                 <b-col cols="3">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="discountOver" id="overPercentage" :value="true" :disabled="!overSaleModal" :checked="overSaleModal && overSaleTypeModal == true"
+                    <input class="form-check-input" type="radio" name="discountOver" aria-label="sconto percentuale. Seleziona uno dei due"  id="overPercentage" :value="true" :disabled="!overSaleModal" :checked="overSaleModal && overSaleTypeModal == true"
                       @click="changeDiscountTypeOverDays">
                     <label class="form-check-label" for="discountPercentage">Percentuale</label>
                   </div>
                 </b-col>
                 <b-col cols="3">
                   <div class="form-check">
-                    <input id="overFlat" class="form-check-input" type="radio" name="discountOver" :value="false" :disabled="!overSaleModal" 
+                    <input id="overFlat" class="form-check-input" aria-label="sconto fisso. Seleziona uno dei due"  type="radio" name="discountOver" :value="false" :disabled="!overSaleModal" 
                       :checked="overSaleModal && overSaleTypeModal == false" @click="changeDiscountTypeOverDays" >
                     <label class="form-check-label" for="discountAmount">Fisso</label>													
                   </div>
@@ -209,7 +209,7 @@
                   <div class="input-group">
                     <span class="input-group-text justify-content-center">-</span>
                     <input
-                      type="text"
+                      type="text" aria-label="valore sconto giornaliero." 
                       class="form-control text-end"
                       min="1"
                       step="1"
@@ -226,7 +226,7 @@
                 </b-col>
                 <b-col cols="6">
                   <div class="input-group">
-                    <input type="number" class="form-control text-end" min="1" step="1" :disabled="!overSaleModal" v-model="overDaysModal">
+                    <input type="number" class="form-control text-end" aria-label="giorni da superare per ottenere sconto giornaliero."  min="1" step="1" :disabled="!overSaleModal" v-model="overDaysModal">
                   </div>
                 </b-col>
               </b-row>
@@ -238,7 +238,7 @@
               </b-row>
               <b-row class="mb-3">
                 <b-col>
-                  <textarea class="form-control w-80" id="productDescription" rows="3" v-model="descriptionModal"></textarea>
+                  <textarea class="form-control w-80" aria-label="Descrizione, campo obbligatorio"  id="productDescription" rows="3" v-model="descriptionModal"></textarea>
                 </b-col>
               </b-row>
               <b-row>
@@ -254,8 +254,8 @@
             
               <!-- Modal footer -->
               <div class="modal-footer d-flex justify-content-between">
-                <b-button type="submit" class="float-left" variant="primary" data-bs-dismiss="modal" @click="saveData">Salva</b-button>  
-                <b-button type="button" class="btn-danger float-right" data-bs-dismiss="modal">Chiudi</b-button>
+                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" data-bs-dismiss="modal" @click="saveData">Salva</b-button>  
+                <b-button type="button" aria-label="bottone annulla. Chiude la finestra di modifica senza salvare"  class="btn-danger float-right" data-bs-dismiss="modal">Chiudi</b-button>
               </div>
             </div>
           </div>
@@ -263,45 +263,45 @@
       </div>
       <!-- Etichette -->
       <div class="row">
-        <h3>Categorie</h3>
+        <h3 tabindex="0" aria-label="Categorie articolo">Categorie</h3>
         <div class="mb-2">
-          <span class="badge rounded-pill bg-primary" v-for="tag in tags" :key="tag">{{ tag }}</span>
+          <span tabindex="0" :aria-label="tag" class="badge rounded-pill bg-primary" v-for="tag in tags" :key="tag">{{ tag }}</span>
         </div>
       </div>
 
       <b-row>
         <h3>Descrizione</h3>
       </b-row>
-      <b-row class="mb-3 p-3 border border-secondary border-3 bg-white">
+      <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'descrizione' + description">
         {{ description }}
       </b-row>
       <b-row>
         <h3>Note</h3>
       </b-row>
-      <b-row class="mb-3 p-3 border border-secondary border-3 bg-white">
+      <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'note non visibili ai clienti' + note">
         {{ note }}
       </b-row>
       <template v-if="bookings.length !== 0">
         <!-- Da qui parte la tabella delle prenotazioni -->
-        <h3>Lista prenotazioni</h3>
+        <h3 tabindex="0">Tabella prenotazioni</h3>
         <div class="p-3">
           <b-row>
             <b-table hover :items="bookings" :fields="fields">
               <!-- item è la riga -->
               <template v-slot:cell(email)="{ item }">
-                <router-link :to="{ name: 'client',  params: { email: item.clientId}}">{{ item.clientId }}</router-link>
+                <router-link :aria-label="'email:'+ item.clientId" :to="{ name: 'client',  params: { email: item.clientId}}">{{ item.clientId }}</router-link>
               </template>
               <template v-slot:cell(totale)="{ item }">
-                <span>{{ item.total + '€'}}</span>
+                <span tabindex="0" :aria-label="'totale prenotazione: '+ item.total+'€'">{{ item.total + '€'}}</span>
               </template>
               <template v-slot:cell(prenotazione)="{ item }">
-                <router-link :to="{ name: 'reservation',  params: { id: item.reservationId}}">{{ item.reservationId }}</router-link>
+                <router-link :aria-label="'identificativo: prenotazione' + item.reservationId" :to="{ name: 'reservation',  params: { id: item.reservationId}}">{{ item.reservationId }}</router-link>
               </template>
               <template v-slot:cell(inizio)="{ item }">
-                <span>{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>
+                <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year ">{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>
               </template>
               <template v-slot:cell(fine)="{ item }">
-                <span>{{item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year}}</span>
+                <span tabindex="0" :aria-label="'fine prenotazione' + item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year">{{item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year}}</span>
               </template>
             </b-table>
           </b-row>
@@ -312,9 +312,7 @@
 </template>
 
 <script>
-  import "bootstrap/dist/css/bootstrap.min.css"
   import "bootstrap";
-  import $ from 'jquery'
   import Functions from '../functions/function'
 
   export default {
@@ -377,15 +375,12 @@
           },
           {
             key: 'totale',
-            sortable: true
           },
           {
             key: 'inizio',
-            sortable: true
           },
           {
             key: 'fine',
-            sortable: true
           },
         ],
       }
@@ -665,15 +660,7 @@
       },
     },
   }
-  //////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
-    $(document).ready(function(){
-      $("#myInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#myTable tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-      });
-    });
+
 </script>
 
 <style>

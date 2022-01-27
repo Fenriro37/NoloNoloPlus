@@ -48,13 +48,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto percentuale" type="radio" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
+                <input class="form-check-input" aria-label="sconto percentuale, seleziona uno dei due" type="radio" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto fisso" type="radio" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
+                <input class="form-check-input" aria-label="sconto fisso, seleziona uno dei due" type="radio" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -62,7 +62,7 @@
           <div class="row mb-3">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" aria-label="valore sconto" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
+            <input type="number" aria-label="valore sconto, campo obbligatorio" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
             </div>
           </div>
         </div>
@@ -93,13 +93,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto giornaliero percentuale" type="radio" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
+                <input class="form-check-input" aria-label="sconto giornaliero percentuale, seleziona uno dei due" type="radio" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto giornaliero fisso" type="radio"  :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
+                <input class="form-check-input" aria-label="sconto giornaliero fisso, seleziona uno dei due" type="radio"  :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -107,19 +107,19 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" aria-label="valore sconto giornaliero " class="form-control" min="1" step="1" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
+            <input type="number" aria-label="valore sconto giornaliero, campo obbligatorio " class="form-control" min="1" step="1" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
             <div class="col-3">Giorni da superare per sconto:</div>
             <div class="col-9">
-              <input type="number" aria-label="giorni da superare per ottenere sconto" class="form-control" min="1" step="1" v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount"  required>
+              <input type="number" aria-label="giorni da superare per ottenere sconto, campo obbligatorio" class="form-control" min="1" step="1" v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount"  required>
           </div>
         </div>
       </template>
 
       <div class="form-floating mb-3">
-				<input type="number" class="form-control" :value="newTotal" :aria-label="'Prezzo totale prenotazione'+ newTotal+'€'" readonly>
+				<input type="number" class="form-control" :value="newTotal" :aria-label="'Prezzo totale prenotazione'+ newTotal+'€. Se negativo o uguale a zero non si potrà creare la prenotazione'" readonly>
 				<label for="price"> Prezzo Totale</label>
 			</div>
 
@@ -135,7 +135,7 @@
 
       <div class="row">
         <div class="col-6">
-          <button type="submit" aria-label="bottone crea prenotazione"  class="btn btn-lg btn-success" id="save" :disabled="enter || negativePrice">Salva</button>
+          <button type="submit" aria-label="bottone crea prenotazione, dopo la creazione rimane su questa pagina pulendo i campi tranne i prezzi"  class="btn btn-lg btn-success" id="save" :disabled="enter || negativePrice">Salva</button>
         </div>
 
         <div class="col-6">
@@ -354,7 +354,7 @@
       },
 
       cancel(){
-        console.log(this.time )// = null;
+        this.time = null;
         this.email =  '';
         this.notes = '';
         this.privateNotes = '';

@@ -77,6 +77,13 @@ class Functions {
     deleteReservation(id){
         return http.delete("/api/reservation/?id=" + id)
     }
+    
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////API relative alle statistiche/////////////////////////////////////////
+
+    getTags(tag) {
+        return http.get("/api/stat/?tag=" + tag)
+    }
 
 }
 

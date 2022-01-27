@@ -6,22 +6,22 @@
       <h1 class="mb-3" tabindex="0"> Account </h1>
 
       <div class="form-floating mb-3">
-        <input type="text" id="name" v-model="name" class="form-control" :aria-label=" (boolModify) ? 'Nome' : 'Campo obbligatorio'" :readonly="!boolModify" required>
+        <input type="text" id="name" v-model="name" class="form-control" :aria-label="'Nome:' + 'Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="name"> Nome </label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="surname"  v-model="surname" class="form-control" aria-label="cognome: Campo obbligatorio" :readonly="!boolModify" required>
+        <input type="text" id="surname"  v-model="surname" class="form-control" :aria-label="'cognome:' + 'Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="surname"> Cognome</label>
       </div>  
 
       <div class="form-floating mb-3">
-        <input type="text" id="identifier"  :value="id" class="form-control" aria-label="id Campo non modificabile" readonly required>
+        <input type="text" id="identifier"  :value="id" class="form-control" :aria-label="'identificativo'+ 'Campo non modificabile'" :disabled="!boolModify" :readonly="boolModify" required>
         <label for="identifier"> ID<span v-if="boolModify">(non modificabile)</span></label>
       </div>
 
       <div class="form-floating mb-3">
-        <select id="sex" tabindex="0" class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="sex"  aria-label="sesso: Campo obbligatorio" >
+        <select id="sex" tabindex="0" class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="sex"  :aria-label="'sesso:'+ 'Campo obbligatorio'" >
           <option value="male">M</option>
           <option value="female">F</option>
           <option value="other">Altro</option>
@@ -30,61 +30,61 @@
       </div>
         
       <div class="form-floating mb-3">
-        <input type="tel" id="phone"  v-model="phoneNumber" class="form-control" aria-label="numero telefono: Campo obbligatorio" :readonly="!boolModify" required>
+        <input type="tel" id="phone"  v-model="phoneNumber" class="form-control" :aria-label="'numero telefono:'+ 'Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="phone"> Numero di telefono</label>
       </div>
         
       <div class="form-floating mb-3">
-        <input type="email" id="mail"  v-model="email" class="form-control" aria-label="email: Campo non modificabile" readonly required>
+        <input type="email" id="mail"  v-model="email" class="form-control" :aria-label="'email:'+  'Campo non modificabile'" :disabled="!boolModify" :readonly="boolModify" required>
         <label for="mail"> E-mail <span v-if="boolModify">(non modificabile)</label>
       </div>
 
       <hr>
 
       <div class="form-floating mb-3">
-        <b-form-datepicker id="birthday" v-model="birthday"  class="form-control" type="date" aria-label="Data di nascita: Campo obbligatorio" :readonly="!boolModify" required></b-form-datepicker>
-        <label for="birthday" tabindex="0"> Data di nascita</label>
+        <b-form-datepicker id="birthday" v-model="birthday"  class="form-control" type="date" aria-label="Data di nascita: Campo obbligatorio'" :disabled="!boolModify" required></b-form-datepicker>
+        <label for="birthday" > Data di nascita</label>
       </div>
 
       <hr>
 
       <div class="row mb-3">
-        <h3>Indirizzo</h3>
+        <h3 tabindex="0" :aria-label="(boolModify) ? 'Fine informazioni personali. Inizio informazioni sulla abitazione' : 'Informazioni sulla abitazione. Clicca modifica in fondo alla pagina per modificare'">Indirizzo</h3>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="street"  v-model="address.addressStreet" class="form-control" aria-label="street" aria-describedby="basic-addon8" :readonly="!boolModify" required>
+        <input type="text" id="street"  v-model="address.addressStreet" class="form-control" :aria-label="'Via:'+'. Campo obbligatorio'"  :disabled="!boolModify" required>
         <label for="street"> Via</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number"  id="num"  v-model="address.addressNumber" class="form-control" aria-label="city" aria-describedby="basic-addon10" step="1" min="1"  :readonly="!boolModify" required>
+        <input type="number"  id="num"  v-model="address.addressNumber" class="form-control" :aria-label="'numero:'+'. Campo obbligatorio'" step="1" min="1"  :disabled="!boolModify" required>
         <label for="num"> Numero</label>
       </div> 
 
       <div class="form-floating mb-3">
-        <input type="text" id="city"  v-model="address.addressCity" class="form-control" aria-label="city" aria-describedby="basic-addon10" :readonly="!boolModify" required>
+        <input type="text" id="city"  v-model="address.addressCity" class="form-control" :aria-label="'Città:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="city"> Città</label>
       </div>
 
       <hr>
 
       <div class="row mb-3">
-        <h3>Metodo di pagamento</h3>
+        <h3 tabindex="0" :aria-label=" (boolModify) ? 'Fine informazioni indirizzo, inizio informazioni metodo di pagamento' : 'inizio informazioni metodo di pagamento. Clicca modifica  in fondo alla pagina per modificare'">Metodo di pagamento</h3>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="cardType"  v-model="payment.cardType" class="form-control" aria-label="cardType" aria-describedby="basic-addon11" :readonly="!boolModify" required>
+        <input type="text" id="cardType"  v-model="payment.cardType" class="form-control" :aria-label="'Tipo di carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="cardType"> Tipo di carta</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" id="cardName" v-model="payment.cardName"  class="form-control" aria-label="cardName" aria-describedby="basic-addon12" :readonly="!boolModify" required>
+        <input type="number" id="cardName" v-model="payment.cardName"  class="form-control" :aria-label="'numero carta::'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="cardName"> Numero carta</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="owner"  v-model="payment.cardSurname" class="form-control" aria-label="owner" aria-describedby="basic-addon13" :readonly="!boolModify" required>
+        <input type="text" id="owner"  v-model="payment.cardSurname" class="form-control" :aria-label="'proprietario:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="owner"> Proprietario</label>
       </div>
 
@@ -93,27 +93,27 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number"  v-model="payment.cardExpireMonth"  min="1" max="12" step="1" id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" :readonly="!boolModify" required>
+        <input type="number"  v-model="payment.cardExpireMonth"  min="1" max="12" step="1" id="cardMonth" class="form-control" :aria-label="'Mese scadenza carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="cardMonth"> Mese</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number"  v-model="payment.cardExpireYear" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" :readonly="!boolModify" required>
+        <input type="number"  v-model="payment.cardExpireYear" min="2021" max="2030" step="1" id="cardYear" class="form-control" :aria-label="'Anno scadenza carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="cardYear"> Anno</label>
       </div>
 
       <div id="myButtons" class="row">
         <!-- Bottoni -->
         <div class="col">
-          <b-button v-if="!boolModify" type="button" class="btn btn-lg btn-secondary mb-2 mt-2" :disabled="enter" @click="modify">Modifica</b-button>
-          <b-button v-if="boolModify" type="submit" class="btn btn-lg btn-success m-2" :disabled="enter">Salva</b-button>
-          <b-button v-if="boolModify" type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="enter" @click="undoChange">Annulla</b-button>
+          <b-button v-if="!boolModify" type="button" aria-label="Bottone modifica. Premendo questo bottone scomparirà e appariranno i bottoni salva e annulla" class="btn btn-lg btn-secondary mb-2 mt-2" :disabled="enter" @click="modify">Modifica</b-button>
+          <b-button v-if="boolModify" type="submit" aria-label="Bottone salva. Salva le modifiche e rimette i campi disabilitati. Per ulteriori modifiche premi il bottone modifica" class="btn btn-lg btn-success m-2" :disabled="enter">Salva</b-button>
+          <b-button v-if="boolModify" type="button" aria-label="Bottone annulla. Ripristina le informazioni iniziali" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="enter" @click="undoChange">Annulla</b-button>
         </div>
         <div class="col">
-          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="bookings.length===0 || enter" @click="chart">Analytics</b-button>
+          <b-button type="button" aria-label="Bottone analytics. Porta alla pagina delle statisctiche di questo cliente" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="bookings.length===0 || enter" @click="chart">Analytics</b-button>
         </div>
         <div class="col">
-          <b-button type="button" class="btn btn-lg btn-danger mb-2 mt-2" :disabled="boolDelete || enter" @click="deleteUser">Elimina cliente</b-button>
+          <b-button type="button" aria-label="Bottone elimina cliente. Rimanda al elenco dei clienti " class="btn btn-lg btn-danger mb-2 mt-2" :disabled="boolDelete || enter" @click="deleteUser">Elimina cliente</b-button>
         </div>
       </div>
 
@@ -122,19 +122,25 @@
     <!-- Da qui parte la tabella delle prenotazioni -->
     <template v-if="bookings.length !== 0">
     <hr>
-    <h3>Lista prenotazioni</h3>
+    <h3 tabindex="0">Tabella prenotazioni</h3>
     <div class="p-3">
       <b-row>
         <b-table hover :items="bookings" :fields="fields">
           <!-- item è la riga -->
-          <template v-slot:cell(product)="{ item }">
-            <router-link :to="{ name: 'article',  params: { id: item.id}}">{{ item.title }}</router-link>
+          <template v-slot:cell(prodotto)="{ item }">
+            <router-link :aria-label="'Articolo: '+ item.title" :to="{ name: 'article',  params: { id: item.id}}">{{ item.title }}</router-link>
           </template>
-          <template v-slot:cell(price)="{ item }">
-            <span>{{ item.price + '€'}}</span>
+          <template v-slot:cell(prezzo)="{ item }">
+            <span tabindex="0" :aria-label="'totale prenotazione: '+ item.price+'€'">{{ item.price +'€'}}</span>
           </template>
-          <template v-slot:cell(reservation)="{ item }">
-            <router-link :to="{ name: 'reservation',  params: { id: item.reservation}}">{{ item.reservation }}</router-link>
+          <template v-slot:cell(prenotazione)="{ item }">
+            <router-link :aria-label="'identificativo prenotazione: '+ item.reservation" :to="{ name: 'reservation',  params: { id: item.reservation}}">{{ item.reservation }}</router-link>
+          </template>
+          <template  v-slot:cell(DataInizio)="{ item }">
+            <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate">{{ item.startDate }}</span>
+          </template>
+          <template v-slot:cell(DataFine)="{ item }">
+            <span tabindex="0" :aria-label="'fine prenotazione' + item.endDate">{{ item.endDate }}</span>
           </template>
         </b-table>
       </b-row>
@@ -177,23 +183,23 @@
         bookings: [],
         fields: [
          {
-            key: 'product',
+            key: 'prodotto',
             sortable: false
           },
           {
-            key: 'reservation',
+            key: 'prenotazione',
             sortable: false
           },
           {
-            key: 'price',
+            key: 'prezzo',
             sortable: true
           },
           {
-            key: 'startDate',
+            key: 'DataInizio',
             sortable: true
           },
           {
-            key: 'endDate',
+            key: 'DataFine',
             sortable: true
           },
         ],
@@ -212,6 +218,7 @@
       Functions.getUser(query).then((result) => {
         //console.log(result)
         this.user = result.data.data
+        console.log(this.user)
         this.undoChange()
       }, (error) => {
           alert('La pagina non esiste');
