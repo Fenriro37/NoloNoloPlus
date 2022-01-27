@@ -301,7 +301,7 @@ export class User extends Component {
             
             <Form.Group className="mb-2">
               <Form.Label>Email:</Form.Label>
-              <Form.Control type="email" name="userEmail" readOnly disabled placeholder={this.state.userEmail} aria-label="Email:"/>
+              <Form.Control type="email" name="userEmail" readOnly placeholder={this.state.userEmail} aria-label="Email:"/>
             </Form.Group>
             
             <h2 className="mt-3">Metodo di Pagamento</h2>
@@ -394,3 +394,8 @@ export class User extends Component {
     );
   }
 }
+
+
+
+
+
