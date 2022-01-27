@@ -54,7 +54,6 @@ export default {
       }
     },
     created(){
-      //Functions.loginAsWorker()
       Functions.checkCookie()  
     },
     methods: {

@@ -21,7 +21,7 @@
       </div>
 
       <div class="form-floating mb-3">
-        <select id="sex" tabindex="0" class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="sex"  :aria-label="'sesso:'+ 'Campo obbligatorio'" >
+        <select id="sex" class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="sex"  :aria-label="'sesso:'+ 'Campo obbligatorio'" >
           <option value="male">M</option>
           <option value="female">F</option>
           <option value="other">Altro</option>
@@ -74,8 +74,12 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="cardType"  v-model="payment.cardType" class="form-control" :aria-label="'Tipo di carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
-        <label for="cardType"> Tipo di carta</label>
+        <select id="cardType"  class="form-select zIndex mb-5" :disabled="!boolModify"  v-model="payment.cardType"   >
+          <option value="prepaid">Prepagata</option>
+          <option value="debit">Debito</option>
+          <option value="credit">Credito</option>
+        </select>
+        <label for="cardType"> Tipo di carta </label>
       </div>
 
       <div class="form-floating mb-3">
@@ -184,23 +188,18 @@
         fields: [
          {
             key: 'prodotto',
-            sortable: false
           },
           {
             key: 'prenotazione',
-            sortable: false
           },
           {
             key: 'prezzo',
-            sortable: true
           },
           {
             key: 'DataInizio',
-            sortable: true
           },
           {
             key: 'DataFine',
-            sortable: true
           },
         ],
         //Modalità Modifica
@@ -211,8 +210,6 @@
 
     created() {
       //console.log(this.$route.params)
-      //comporre il getUser con id o email '?id/email=' + value
-      //{'filter': 'han.chu@studio.unibo.it', 'sort': 'true'}
       let query
       query = this.$route.params.email 
       Functions.getUser(query).then((result) => {

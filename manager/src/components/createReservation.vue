@@ -350,6 +350,7 @@
           }) 
         }, (error) => {
           alert("La mail non esiste");
+          this.enter = false
         })
       },
 

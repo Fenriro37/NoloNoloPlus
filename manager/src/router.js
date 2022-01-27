@@ -12,6 +12,7 @@ import reservation from "./components/reservation.vue"
 import clientChart from "./components/clientChart.vue"
 import articleChart from "./components/articleChart.vue"
 import catalogChart from "./components/catalogChart.vue"
+import invoice from "./components/invoice.vue"
 
 
 
@@ -81,6 +82,11 @@ export default new Router({
       path: "/chartCatalog",
       name: "chartCatalog",
       component: catalogChart
+    },
+    {
+      path: "/invoice:id",
+      name: "invoice",
+      component: invoice
     },
   ]
 });

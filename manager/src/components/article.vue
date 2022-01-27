@@ -31,7 +31,7 @@
             <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
           </div>
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Noleggia oltre ' + overDays.days+ ' giorni per ottenere sconto giornaliero:'+dailyPrice+'€'" v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}} <span id="fixedPrice"></span>
+            <span tabindex="0" :aria-label="'Noleggia oltre ' + overDays.days+ ' giorni per ottenere sconto giornaliero'" v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}} <span id="fixedPrice"></span>
           </div>
 
         </div>
@@ -574,7 +574,7 @@
         if(this.noteModal != this.note)  query.note = this.noteModal 
          
         query.discount = {}
-        if(this.onSaleModal && query.discount.onSaleValue > 0 ){
+        if(this.onSaleModal && this.onSaleValueModal > 0 ){
           query.discount.onSale = true
           if(this.onSaleTypeModal) query.discount.onSaleType = true
           else query.discount.onSaleType = false
@@ -618,14 +618,14 @@
           this.tags = newTags  
           this.quality = this.qualityModal  
           this.dailyPrice = this.dailyModal  
-          this.fixedPric = this.fixedModal  
+          this.fixedPrice = this.fixedModal  
           this.discount.onSale = this.onSaleModal  
           this.discount.onSaleType = this.onSaleTypeModal  
           this.discount.onSaleValue = this.onSaleValueModal  
           this.overDays.day = this.overDaysModal  
-          this.overDays.onSal = this.overSaleModal  
-          this.overDays.onSaleTyp = this.overSaleTypeModal  
-          this.overDays.onSaleValu = this.overSaleValueModal  
+          this.overDays.onSale = this.overSaleModal  
+          this.overDays.onSaleType = this.overSaleTypeModal  
+          this.overDays.onSaleValue = this.overSaleValueModal  
           this.description = this.descriptionModal  
           this.note = this.noteModal  
           alert("Modifica riuscita")

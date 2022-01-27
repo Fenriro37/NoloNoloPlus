@@ -9,6 +9,7 @@
         <p tabindex="0" :aria-label="'Identificativo prenotazione' + reservationId">Id prenotazione: {{reservationId}} </p>
         <p><router-link :aria-label="'Prodotto'+reservation.productTitle + ' ' +reservation.productBrand" :to="{ name: 'article',  params: { id: reservation.productId} }">{{reservation.productTitle + ' ' +reservation.productBrand}}</router-link></p>
         <p><router-link :aria-label="'Email cliente'+reservation.clientEmail" :to="{name: 'client', params:{email: reservation.clientEmail}}" >{{reservation.clientEmail}}</router-link></p>
+        <p><router-link :aria-label="'Fattura'" :to="{name: 'invoice', params:{id: reservationId}}" >Fattura</router-link></p>
       </div>
     </div>
     <form name="myform" id="formId" @submit.prevent="saveData">
@@ -71,7 +72,7 @@
           <div class="row mb-3">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" aria-label=" valore sconto prezzo fisso. Campo obbligatorio" min="1" step="1" :readonly="!boolModify" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
+            <input type="number" class="form-control" aria-label=" valore sconto prezzo fisso. Campo obbligatorio" min="1" step="1" :disabled="!boolModify" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
             </div>
           </div>
         </div>
@@ -116,13 +117,13 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" aria-label=" valore sconto prezzo giornaliero. Campo obbligatorio" min="1" step="1" :readonly="!boolModify" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
+            <input type="number" class="form-control" aria-label=" valore sconto prezzo giornaliero. Campo obbligatorio" min="1" step="1" :disabled="!boolModify" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
             <div class="col-3">Giorni per sconto:</div>
             <div class="col-9">
-              <input type="number" class="form-control" aria-label=" giorni da superare per applivare sconto giornaliero. Campo obbligatorio" min="1" step="1" :readonly="!boolModify"  v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount"  required>
+              <input type="number" class="form-control" aria-label=" giorni da superare per applivare sconto giornaliero. Campo obbligatorio" min="1" step="1" :disabled="!boolModify"  v-model="overDaysCount" v-on:keyup="newPrice"  id="daysDiscount"  required>
           </div>
         </div>
       </template>
@@ -209,6 +210,7 @@
             months: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Augosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
             monthsShort: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
             weekdaysMin: ['Do','Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa', ],
+            separator: ' '
           },
           monthBeforeYear: false,
         },
