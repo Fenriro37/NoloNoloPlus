@@ -140,15 +140,20 @@ export class User extends Component {
       for (var i in tmp) {
         if(tmp[i].name == 'userAddressCity') {
           address.addressCity = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userAddressStreet') {
+        } 
+        else if(tmp[i].name == 'userAddressStreet') {
           address.addressStreet = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userAddressNumber') {
+        } 
+        else if(tmp[i].name == 'userAddressNumber') {
           address.addressNumber = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userPaymentName') {
+        } 
+        else if(tmp[i].name == 'userPaymentName') {
           payment.cardName = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userPaymentSurname') {
+        } 
+        else if(tmp[i].name == 'userPaymentSurname') {
           payment.cardSurname = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userPaymentCVV') {
+        } 
+        else if(tmp[i].name == 'userPaymentCVV') {
           payment.cardCVV = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
         }
       }
@@ -230,32 +235,31 @@ export class User extends Component {
     return (
       <>
       <Header type={"user"} isAuthenticated={this.state.isAuth} />
-      <div id="cont" className="mb-2 mt-2">
+      <div id="cont" className="mb-2 mt-2" aria-label="Pagina Utente">
         <form onSubmit={this.handleSubmit}>
-          <fieldset disabled={!this.state.boolModifying} >
-
-          <h2 className="mt-1">Dati personali</h2>
+          <fieldset disabled={!this.state.boolModifying}>
+          <h2 className="mt-1" aria-label="Dati personali">Dati personali</h2>
 
             <Form.Group className="mb-2">
               <Form.Label>Nome:</Form.Label>
-              <Form.Control type="text" name="userName" placeholder={this.state.userName} aria-label="Username" aria-describedby="basic-addon1"/>
+              <Form.Control type="text" name="userName" placeholder={this.state.userName} aria-label="Nome utente:"/>
             </Form.Group>   
 
             <Form.Group className="mb-2">
               <Form.Label>Cognome:</Form.Label>
-              <Form.Control type="text" name="userSurname" placeholder={this.state.userSurname} />
+              <Form.Control type="text" name="userSurname" placeholder={this.state.userSurname} aria-label="Cognome utente:"/>
             </Form.Group>    
 
             <Form.Group className="mb-2">
               <Form.Label>Password:</Form.Label>
-              <Form.Control type="password" name="userPassword" placeholder="password" />
+              <Form.Control type="password" name="userPassword" placeholder="password" aria-label="Password:"/>
             </Form.Group>
 
             <Form.Label>Genere:</Form.Label>
             <Form.Select className="mb-2" 
             value={this.state.newSex}
             onChange={(event) => {this.setState({newSex: event.target.value})} } 
-            aria-label="Form Select Sex">
+            aria-label="Genere:">
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
@@ -265,7 +269,8 @@ export class User extends Component {
               <Form.Label>Data di Nascita:</Form.Label>
               <Form.Control type="date" 
               value={this.state.newBirthday.year + "-" + this.state.newBirthday.month + "-" + this.state.newBirthday.day} 
-              name="userBirthday"
+              name="userBirthday" 
+              aria-label="Data di Nascita:"
               onChange={(event)=>{
                 var x = event.target.value.split('-');
                 this.setState({newBirthday: {year: x[0], month: x[1], day: x[2]}})
@@ -274,48 +279,48 @@ export class User extends Component {
             
             <Form.Group as={Col} className="mb-2">
               <Form.Label>Paese/Città di residenza:</Form.Label>
-              <Form.Control type="text" name="userAddressCity" placeholder={this.state.userAddress.city} />
+              <Form.Control type="text" name="userAddressCity" placeholder={this.state.userAddress.city} aria-label="Paese/Città di residenza:" />
             </Form.Group>
               
             <Row>
               <Form.Group as={Col} xs={8} className="mb-2">
                 <Form.Label>Via di Residenza:</Form.Label>
-                <Form.Control type="text" name="userAddressStreet" placeholder={this.state.userAddress.street} />
+                <Form.Control type="text" name="userAddressStreet" placeholder={this.state.userAddress.street} aria-label="Via di residenza:" />
               </Form.Group>
 
               <Form.Group as={Col} xs={4} className="mb-2 pl-0">
                 <Form.Label>Numero:</Form.Label>
-                <Form.Control type="text" name="userAddressNumber" placeholder={this.state.userAddress.number} />
+                <Form.Control type="text" name="userAddressNumber" placeholder={this.state.userAddress.number} aria-label="Numero di residenza:" />
               </Form.Group>
             </Row>
 
             <Form.Group className="mb-2">
               <Form.Label>Numero di Telefono:</Form.Label>
-              <Form.Control type="text" name="userPhoneNumber" placeholder={this.state.userPhoneNumber} />
+              <Form.Control type="text" name="userPhoneNumber" placeholder={this.state.userPhoneNumber} aria-label="Numero di telefono:" />
             </Form.Group>
             
             <Form.Group className="mb-2">
               <Form.Label>Email:</Form.Label>
-              <Form.Control type="email" name="userEmail" readOnly disabled placeholder={this.state.userEmail} />
+              <Form.Control type="email" name="userEmail" readOnly disabled placeholder={this.state.userEmail} aria-label="Email:"/>
             </Form.Group>
             
             <h2 className="mt-3">Metodo di Pagamento</h2>
 
             <Form.Group className="mt-1 mb-2">
               <Form.Label>Numero della Carta:</Form.Label>
-              <Form.Control type="number" name="userPaymentName" placeholder={this.state.userPayment.cardName} />
+              <Form.Control type="number" name="userPaymentName" placeholder={this.state.userPayment.cardName} aria-label="Numero di carta:" />
             </Form.Group>
             
             <Form.Group className="mt-1 mb-2">
               <Form.Label>Intestatario:</Form.Label>
-              <Form.Control type="text" name="userPaymentSurname" placeholder={this.state.userPayment.cardSurname} />
+              <Form.Control type="text" name="userPaymentSurname" placeholder={this.state.userPayment.cardSurname} aria-label="Intestatario della carta:" />
             </Form.Group>
             
             <Form.Label>Tipo di Carta:</Form.Label>
             <Form.Select className="mb-2" 
             value={this.state.newCardType}
             onChange={(event) => {this.setState({newCardType: event.target.value})} } 
-            aria-label="Form Select Card Type">
+            aria-label="Tipo di carta:">
               <option value="debit">Carta di debito</option>
               <option value="credit">Carta di credito</option>
               <option value="prepaid">Carta prepagata</option>
@@ -327,7 +332,7 @@ export class User extends Component {
                 <Form.Select className="mb-2" 
                 value={this.state.newExprMonth}
                 onChange={(event) => {this.setState({newExprMonth: event.target.value})} } 
-                aria-label="Select Card Expiration Month">
+                aria-label="Mese di scadenza della carta:">
                   {this.state.monthList.map( month => (
                     <option key={month.key} value={month.key}>{month.month}</option>
                   ))}
@@ -337,9 +342,9 @@ export class User extends Component {
                 <Form.Select className="mb-2" 
                 value={this.state.newExprYear}
                 onChange={(event) => {this.setState({newExprYear: event.target.value})} }
-                aria-label="Select Card Expiration Year">
+                aria-label="Anno di scadenza della carta">
                   {this.state.yearList.map( year => (
-                    <option key={year.key} value={parseInt(year.key) + 2021}>{year.year}</option>
+                    <option key={year.key} value={parseInt(year.key) + 2021} aria-label={year.key}>{year.year}</option>
                   ))}
                 </Form.Select>
               </Col>    
@@ -350,33 +355,28 @@ export class User extends Component {
               <Form.Control
               type="text"
               name="userPaymentCVV"
+              aria-label="CVV della carta"
               placeholder={this.state.userPayment.cardCVV} />
             </Form.Group>
-          </fieldset>
+            </fieldset>
           
-          <Button className="mt-2 mb-1 w-100" type="submit" value="submit" variant={this.state.boolModifying ? "success" : "primary"}>
+          <Button className="mt-2 mb-1 w-100" type="submit" value="submit" 
+          variant={this.state.boolModifying ? "success" : "primary"} 
+          aria-label={this.state.boolModifying ? "Bottone Salva" : "Bottone Modifica"}>
             {this.state.boolModifying ? "Salva" : "Modifica"}
           </Button>
 
         </form>
       </div>
-      <Modal
-      show={this.state.show}
-      onHide={this.handleClose}
-      backdrop="static"
-      keyboard={false}
-      centered>
+
+      <Modal show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} centered>
         <Modal.Body>
           {this.state.loading ? (
             <div
             className='d-flex align-items-center'>
               Salvataggio&nbsp;
-              <Spinner
-              variant="primary"
-              animation="border"
-              role="status">
-                <span
-                className="visually-hidden">
+              <Spinner variant="primary" animation="border" role="status">
+                <span className="visually-hidden">
                   Caricamento...
                 </span>
               </Spinner>
@@ -385,13 +385,10 @@ export class User extends Component {
           )}
         </Modal.Body>
         <Modal.Footer>
-        <Button
-        variant="secondary"
-        onClick={this.handleClose}
-        disabled={this.state.loading}>
-          Chiudi
-        </Button>
-      </Modal.Footer>
+          <Button variant="secondary" onClick={this.handleClose} disabled={this.state.loading}>
+            Chiudi
+          </Button>
+        </Modal.Footer>
       </Modal>
       </>
     );
