@@ -118,18 +118,19 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
   let date2 = dateRange[1]
   date1 = date1.split("/")
   date2 = date2.split("/")
-  date1 = date1[2] * 10000  + date1[1] * 100 + date1[0]
-  date2 = date2[2] * 10000  + date2[1] * 100 + date2[0]
+  let d1 = new Date(date1[2], date1[1] -1, date1[0])
+  let d2 = new Date(date2[2], date2[1] -1, date2[0])
+  console.log(d1)
+  console.log(d2)
   for(let i in data.bookings){
-    bookingStart = data.bookings[i].startDate.year * 10000 + data.bookings[i].startDate.month * 100 + data.bookings[i].startDate.day
-    bookingEnd = data.bookings[i].endDate.year * 10000 + data.bookings[i].endDate.month * 100 + data.bookings[i].endDate.day
-    if( date1 < bookingStart && bookingEnd < date2 )
+    bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day)
+    bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day)
+    if( d1 < bookingStart && bookingEnd < d2 )
+    console.log(bookingStart)
+    console.log(bookingEnd)
      block = true
   }
-  console.log('changed');
-  console.log(block)
   if(block){
-    $("#save").text("seleziona una data valida")
     $("#save").prop("disabled", true)
   }
   else{
@@ -151,13 +152,13 @@ function changeSale() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="percentage" required>' +
+								'<input class="form-check-input" type="radio" aria-label="Sconto percentuale, seleziona uno dei due" name="flexRadioDefault" id="percentage" required>' +
 								'<label class="form-check-label" for="percentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="flat" required>' +
+								'<input class="form-check-input" type="radio" aria-label="Sconto fisso, seleziona uno dei due" name="flexRadioDefault" id="flat" required>' +
 								'<label class="form-check-label" for="flat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -165,7 +166,7 @@ function changeSale() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="saleValue" onkeyup="calculateTotal()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step=".01" id="saleValue" onkeyup="calculateTotal()" aria-label="Valore sconto prezzo fisso. Campo obbligatorio" required>' +
 					'</div>' +
 				'</div>' +
 			'</div>'
@@ -190,13 +191,13 @@ function changeDailySale() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault1" id="dailyPercentage" required>' +
+								'<input class="form-check-input" type="radio" aria-label="Sconto percentuale, seleziona uno dei due" name="flexRadioDefault1" id="dailyPercentage" required>' +
 								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault1" id="dailyFlat" required>' +
+								'<input class="form-check-input" type="radio" aria-label="Sconto fisso, seleziona uno dei due" name="flexRadioDefault1" id="dailyFlat" required>' +
 								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -204,13 +205,13 @@ function changeDailySale() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="dailySaleValue" onkeyup="calculateTotal()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step=".01" id="dailySaleValue" onkeyup="calculateTotal()" aria-label="Valore sconto prezzo giornaliero. Campo obbligatorio"  required>' +
 					'</div>' +
 				'</div>' +
 				'<div class="row mt-2">'+
 					'<div class="col-3">Giorni per sconto:</div>' +
 					'<div class="col-9">' +
-						'<input type="number" class="form-control"  id="daysCount" onkeyup="calculateTotal()" aria-label="SalePrice" aria-describedby="basic-addon6" required>' +
+						'<input type="number" class="form-control" min="1" step="1"  id="daysCount" onkeyup="calculateTotal()" aria-label="Numero giorni da supera per ottenere sconto sul prezzo giornaliero. Campo obbligatorio" required>' +
 					'</div>'+
 				'</div>'+
 			'</div>'
@@ -237,11 +238,13 @@ function calculateTotal(){
     let date1 = dateRange[0]
     let date2 = dateRange[1]
     date1 = date1.split("/")
+    console.log(date1[1])
     date2 = date2.split("/")
 
-    let start = date1[2] * 10000 + date1[1] * 100 + date1[0]
-    let end = date2[2] * 10000 + date2[1] * 100 + date2[0]
-    let days = end - start + 1
+    let start = new Date(date1[2] , date1[1] -1, date1[0])
+    let end = new Date(date2[2], date2[1]-1, date2[0])
+    const diffTime = Math.abs(end - start);
+    let days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
     let addendum1, addendum2
 
 
@@ -263,10 +266,13 @@ function calculateTotal(){
     else{
       addendum2 = $('#dailyPrice').val() * days
     }
-    console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
-    $('#newTotal').val(parseFloat(addendum1) + parseFloat(addendum2))  
+
+    let total = parseFloat((parseFloat(addendum1) +parseFloat(addendum2)).toFixed(2))
+    $('#newTotal').val(total)  
     if($('#newTotal').val() <= 0){
       $('#save').prop('disabled', true);
+      let total = document.getElementById('newTotal');
+			total.ariaLabel = 'Nuovo totale scontato: Sola lettura Se negativo non sarà possibile aggiungere il prodotto al catalogo'
     }
     else{
       $('#save').prop('disabled', false);
@@ -295,6 +301,8 @@ $('#formId').submit(function (evt) {
 
 function save(){
     let dateRange = $("#dateRange").val()
+    console.log(typeof(dateRange))
+    console.log(dateRange)
     dateRange = dateRange.replace(/ /g, "")
     dateRange = dateRange.split("-")
     let date1 = dateRange[0]
@@ -326,7 +334,7 @@ function save(){
     else{
       sale = false 
       type = false
-      value = ""
+      value = 0
     }
 
     let dailySale, dailyType, dailyValue, dailyDays
@@ -339,8 +347,8 @@ function save(){
     else{
       dailySale = false 
       dailyType = false
-      dailyValue = ""
-      dailyDays = ""
+      dailyValue = 0
+      dailyDays = 0
     }
 
     $.ajax({
@@ -368,36 +376,36 @@ function save(){
             clientName: user.userName,
             clientSurname: user.userSurname,
             bookingDate: {
-              day: day,
-              month: month,
-              year: year  
+              day: parseInt(day),
+              month: parseInt(month),
+              year: parseInt(year)  
             },
             startDate: {
-              day: dayStart,
-              month: monthStart,
-              year: yearStart
+              day: parseInt(dayStart),
+              month: parseInt(monthStart),
+              year: parseInt(yearStart)
             },
             endDate: {
-              day: dayEnd,
-              month: monthEnd,
-              year: yearEnd 
+              day: parseInt(dayEnd),
+              month: parseInt(monthEnd),
+              year: parseInt(yearEnd) 
             }, 
             isTaken: false,
             isReturned: false,
-            fixedPrice:  $("#fixedPrice").val(),
+            fixedPrice: parseFloat($("#fixedPrice").val()),
             fixedDiscount: {
               onSale: sale,
               onSaleType: type,
-              onSaleValue: value
+              onSaleValue: parseFloat(value)
             },
-            variablePrice:  $("#dailyPrice").val(),
+            variablePrice:  parseFloat($("#dailyPrice").val()),
             variableDiscount: {
-              days: dailyDays,
+              days: parseInt(dailyDays),
               onSale: dailySale,
               onSaleType: dailyType ,
-              onSaleValue: dailyValue
+              onSaleValue: parseFloat(dailyValue)
             },
-            totalPrice: $("#newTotal").val(),
+            totalPrice: parseFloat($("#newTotal").val()),
             description:  $("#notes").val(),
             note: $("#privateNotes").val(),
           }),

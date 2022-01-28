@@ -276,7 +276,6 @@
         this.payment.cardSurname = this.user.payment.cardSurname
         this.payment.cardExpireMonth = this.user.payment.cardExpireMonth
         this.payment.cardExpireYear = this.user.payment.cardExpireYear
-        this.payment.cardCVV = this.user.payment.cardCVV
 
         this.boolModify = false;
       },
@@ -317,8 +316,8 @@
         if(this.user.payment.cardType != this.payment.cardType || this.user.payment.cardName != this.payment.cardName || this.user.payment.cardSurname != this.payment.cardSurname || this.user.payment.cardExpireMonth != this.payment.cardExpireMonth || this.user.payment.cardExpireYear != this.payment.cardExpireYear){
           query.payment = {}
           query.payment.cardType = this.payment.cardType
-          query.payment.cardName = this.payment.cardName
-          query.payment.cardSurname = this.payment.cardSurname     
+          query.payment.cardCode = this.payment.cardName
+          query.payment.cardOwner = this.payment.cardSurname     
           query.payment.cardExpireMonth = this.payment.cardExpireMonth
           query.payment.cardExpireYear = this.payment.cardExpireYear;
         }

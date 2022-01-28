@@ -54,7 +54,7 @@ export default {
       }
     },
     created(){
-      Functions.checkCookie()  
+      //Functions.checkCookie()  
     },
     methods: {
       search(){

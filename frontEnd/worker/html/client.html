@@ -52,22 +52,22 @@ function includeHTML() {
     <!--<form method="post" id="theFormID" name="theFormID" action=""></form>-->
   
       <div class="form-floating mb-3">
-        <input type="text" id="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1" readonly required>
+        <input type="text" id="name" class="form-control" aria-label="Nome. Campo obbligatorio" disabled required>
         <label for="name"> Nome*</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="surname" class="form-control" aria-label="surname" aria-describedby="basic-addon2" readonly required>
+        <input type="text" id="surname" class="form-control" aria-label="Cognome. Campo obbligatorio"  disabled required>
         <label for="surname"> Cognome*</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="identifier" class="form-control" aria-label="identifier" aria-describedby="basic-addon3" readonly required>
+        <input type="text" id="identifier" class="form-control" aria-label="identificativo. Non modificabile" disabled required>
         <label for="identifier"> ID(non modificabile)*</label>
       </div>
       
       <div class="form-floating mb-3">
-        <select id="sex" class="form-select" aria-label="Default select example" disabled required>
+        <select id="sex" class="form-select" aria-label="Sesso. Campo obbligatorio" disabled required>
           <option value="male">M</option>
           <option value="female">F</option>
           <option value="other">Altro</option>
@@ -76,19 +76,19 @@ function includeHTML() {
       </div>
         
       <div class="form-floating mb-3">
-        <input type="tel" id="phone" class="form-control" aria-label="phone" aria-describedby="basic-addon5" readonly required>
+        <input type="tel" id="phone" class="form-control" aria-label="Numero di telefono. Campo obbligatorio" disabled required>
         <label for="phone"> Numero di telefono*</label>
       </div>
         
       <div class="form-floating mb-3">
-        <input type="email" id="mail" class="form-control" aria-label="mail" aria-describedby="basic-addon6" readonly required>
+        <input type="email" id="mail" class="form-control" aria-label="Email. Sola lettura. Campo obbligatorio"  disabled required>
         <label for="mail"> E-mail*</label>
       </div>
 
       <hr>
 
       <div class="form-floating mb-3">
-        <input id="birthday" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" aria-label="birthday" aria-describedby="basic-addon7" readonly required>
+        <input id="birthday" class="form-control" type='date' min="1900-01-01" max="2003-01-01" aria-label="Data di nascita. Campo obbligatorio"  disabled required>
         <label for="birthday"> Data di nascita*</label>
       </div>
 
@@ -100,17 +100,17 @@ function includeHTML() {
       
 
       <div class="form-floating mb-3">
-        <input type="text" id="street" class="form-control" aria-label="street" aria-describedby="basic-addon8" readonly required>
+        <input type="text" id="street" class="form-control" aria-label="Via. Campo obbligatorio" disabled required>
         <label for="street"> Via*</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number"  id="num" class="form-control" aria-label="city" aria-describedby="basic-addon10" step="1" min="1" readonly required>
+        <input type="number"  id="num" class="form-control" aria-label="Numero abitazione. Campo obbligatorio" step="1" min="1" disabled required>
         <label for="num"> Numero*</label>
       </div> 
 
       <div class="form-floating mb-3">
-        <input type="text" id="city" class="form-control" aria-label="city" aria-describedby="basic-addon10" readonly required>
+        <input type="text" id="city" class="form-control" aria-label="Città. Campo obbligatorio" disabled required>
         <label for="city"> Città*</label>
       </div>
 
@@ -119,19 +119,23 @@ function includeHTML() {
       <div class="row mb-3">
         <h3>Metodo di pagamento</h3>
       </div>
-      
+
       <div class="form-floating mb-3">
-        <input type="text" id="cardType" class="form-control" aria-label="cardType" aria-describedby="basic-addon11" readonly required>
-        <label for="cardType"> Tipo di carta*</label>
+        <select id="cardType"  class="form-select zIndex mb-5" aria-label="Tipo di carta. Campo obbligatorio" disabled required >
+          <option value="prepaid">Prepagata</option>
+          <option value="debit">Debito</option>
+          <option value="credit">Credito</option>
+        </select>
+        <label for="cardType"> Tipo di carta </label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" id="cardName" class="form-control" aria-label="cardName" aria-describedby="basic-addon12" readonly required>
+        <input type="number" id="cardName" class="form-control" aria-label="Numero carta. Campo obbligatorio" disabled required>
         <label for="cardName"> Numero carta*</label>
       </div>
       
       <div class="form-floating mb-3">
-        <input type="text" id="owner" class="form-control" aria-label="owner" aria-describedby="basic-addon13" readonly required>
+        <input type="text" id="owner" class="form-control" aria-label="Proprietario. Campo obbligatorio" disabled required>
         <label for="owner"> Proprietario*</label>
       </div>
 
@@ -140,17 +144,17 @@ function includeHTML() {
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" min="1" max="12" step="1" id="cardMonth" class="form-control" aria-label="cardMonth" aria-describedby="basic-addon14" readonly required>
+        <input type="number" min="1" max="12" step="1" id="cardMonth" class="form-control" aria-label="Mese scadenza metodo di pagamento. Campo obbligatorio" disabled required>
         <label for="cardMonth"> Mese*</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="cardYear" aria-describedby="basic-addon15" readonly required>
+        <input type="number" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="Anno scadenza metodo di pagamento. Campo obbligatorio" disabled required>
         <label for="cardYear"> Anno*</label>
       </div>
       
       <div id="myButtons">
-        <button type="button" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
+        <button type="button" id="change" aria-label="Bottone modifica. Cliccandolo i campi saranno modificabili" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
       </div>
     </form> 
 
@@ -158,10 +162,10 @@ function includeHTML() {
     <!-- Da qui parte la tabella delle prenotazioni -->
     <div id="Table">
       <hr>
-      <h3>Lista prenotazioni</h3>
+      <h3 tabindex="0" aria-label="Tabella prenotazioni">Tabella prenotazioni</h3>
       <div class="p-3">
         <div class="row">
-          <input class="form-control" id="myInput" type="text" placeholder="Search..">
+          <input class="form-control" id="myInput" type="text" aria-label="Barra di ricerca. Filtra le prenotazioni in base ai dati inseriti" placeholder="Search..">
           <br>
           <table class="table table-striped table-bordered">
           <thead>
