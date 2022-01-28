@@ -483,25 +483,18 @@
       },
 
       newPrice(){
-        let day, month, year, day1, month1, year1, start, end
+        let date1,  date2
         if (this.time != null){
-          day = this.time[0].getDate()
-          month = this.time[0].getMonth()+1
-          year = this.time[0].getFullYear()
-          day1 = this.time[1].getDate()
-          month1 = this.time[1].getMonth()+1
-          year1 = this.time[1].getFullYear()
-          start = year * 10000 + month * 100 + day
-          end = year1 * 10000 + month1 * 100 + day1
+          date1 = new Date(this.time[0].getFullYear(), this.time[0].getMonth(), this.time[0].getDate());
+          date2 = new Date(this.time[1].getFullYear(), this.time[1].getMonth(), this.time[1].getDate());
           }
         else{
-          let d1 = new Date(this.reservation.startDate.year, this.reservation.startDate.month-1, this.reservation.startDate.day)
-          let d2 = new Date(this.reservation.endDate.year, this.reservation.endDate.month-1, this.reservation.endDate.day) 
-          start = parseInt(d1.getFullYear()) * 10000 + (parseInt(d1.getMonth()) + 1) * 100 +parseInt(d1.getDate()) 
-          end = parseInt(d2.getFullYear()) * 10000 + (parseInt(d2.getMonth()) + 1) * 100 +parseInt(d2.getDate()) 
+          date1 = new Date(this.reservation.startDate.year, this.reservation.startDate.month-1, this.reservation.startDate.day)
+          date2 = new Date(this.reservation.endDate.year, this.reservation.endDate.month-1, this.reservation.endDate.day) 
         }
+        let diffTime = date2 - date1;
+        let days  = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
 
-        let days = end - start + 1
         let addendum1, addendum2
 
 

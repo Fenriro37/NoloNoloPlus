@@ -21,13 +21,13 @@ $('#sale').change(function() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="percentage" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="percentage" aria-label="Sconto percentuale, seleziona uno dei due" required>' +
 								'<label class="form-check-label" for="percentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="flat" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" aria-label="Sconto fisso, seleziona uno dei due" id="flat" required>' +
 								'<label class="form-check-label" for="flat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -35,13 +35,13 @@ $('#sale').change(function() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="saleValue" onkeyup="calculateDiscount()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step="1" id="saleValue" onkeyup="calculateDiscount()" aria-label="Valore sconto prezzo fisso, campo obbligatorio" required>' +
 					'</div>' +
 				'</div>' +
 				'<div class="row mt-2">'+
 					'<div class="col-3">Prezzo scontato:</div>' +
 					'<div class="col-9">' +
-						'<input type="number" class="form-control"  id="newValue" aria-label="SalePrice" aria-describedby="basic-addon6" disabled>' +
+						'<input type="number" class="form-control"  id="newValue" aria-label="Nuovo prezzo fisso scontato. Sola lettura. Se negativo non sarà possibile aggiungere il prodotto al catalogo"  readonly>' +
 					'</div>'+
 				'</div>'+
 			'</div>'
@@ -64,13 +64,13 @@ $('#dailySale').change(function() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyPercentage" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyPercentage" aria-label="Sconto percentuale, seleziona uno dei due" required>' +
 								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyFlat" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyFlat" aria-label="Sconto fisso, seleziona uno dei due" required>' +
 								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -78,13 +78,13 @@ $('#dailySale').change(function() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="dailySaleValue" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step="1" id="dailySaleValue" aria-label="Valore sconto prezzo giornaliero, campo obbligatorio" required>' +
 					'</div>' +
 				'</div>' +
 				'<div class="row mt-2">'+
 					'<div class="col-3">Giorni per sconto:</div>' +
 					'<div class="col-9">' +
-						'<input type="number" class="form-control"  id="daysCount" aria-label="SalePrice" aria-describedby="basic-addon6" required>' +
+						'<input type="number" class="form-control"  id="daysCount" aria-label="Numero giorni da supera per ottenere sconto sul prezzo giornaliero"  required>' +
 					'</div>'+
 				'</div>'+
 			'</div>'
@@ -122,6 +122,8 @@ function calculateDiscount(){
 		}
 		else{
 			$('#btnSave').prop('disabled', false);
+			let total = document.getElementById('newValue');
+			total.ariaLabel = 'Nuovo prezzo scontato:' + $('#newValue').val() + '€  Sola lettura Se negativo non sarà possibile aggiungere il prodotto al catalogo'
 		} 
 	}
 }

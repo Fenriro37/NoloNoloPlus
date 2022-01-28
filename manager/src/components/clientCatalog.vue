@@ -1,6 +1,6 @@
 <template>
 
-<div class="container-fluid p-5">
+<div class="container-fluid p-2">
   <div  v-for="user in catalog" :key="user._id">
     <div class="d-flex justify-content-center align-items-center">
       <div class="card mb-1" style="height: 10em; width:60%; ">

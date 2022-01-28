@@ -213,10 +213,7 @@
         }
       )
     },
-    
-    /* beforeRouteLeave (){
-      this.$emit('clicked')
-    }, */
+
     methods: {
       changeSale(){
         if(this.onSale){
@@ -373,18 +370,12 @@
       },
 
       newPrice(){
-        if(this.time[0] != null){
-          let day = this.time[0].getDate()
-          let month = this.time[0].getMonth()+1
-          let year = this.time[0].getFullYear()
-          let day1 = this.time[1].getDate()
-          let month1 = this.time[1].getMonth()+1
-          let year1 = this.time[1].getFullYear()
-          let start = year * 10000 + month * 100 + day
-          let end = year1 * 10000 + month1 * 100 + day1
-          let days = end - start + 1
+        if(this.time != null){
+          let date1 = new Date(this.time[0].getFullYear(), this.time[0].getMonth(), this.time[0].getDate());
+          let date2 = new Date(this.time[1].getFullYear(), this.time[1].getMonth(), this.time[1].getDate());
+          let diffTime = date2 - date1;
+          let days  = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
           let addendum1, addendum2
-
 
           if(this.onSale){
             if(this.onSaleType)
@@ -404,7 +395,7 @@
           else{
             addendum2 = this.dailyPrice * days
           }
-          console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
+          console.log(days +'-'+ addendum1 +'-'+ addendum2)
           this.newTotal = parseFloat(addendum1)+ parseFloat(addendum2)
           if(this.newTotal <= 0){
             this.negativePrice = true
@@ -415,7 +406,7 @@
       },
 
       changeData(){
-        if(this.time[0] != null){
+        if(this.time != null){
           let start = new Date( this.time[0].getFullYear(), this.time[0].getMonth(), this.time[0].getDate())
           let end = new Date( this.time[1].getFullYear(), this.time[1].getMonth(), this.time[1].getDate())
           for(let i in this.article.bookings){

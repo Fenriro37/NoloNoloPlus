@@ -1,6 +1,6 @@
 <template>
 
-<div class="container-fluid p-5">
+<div class="container-fluid p-2">
   <div v-for="article in catalog" :key="article._id">
     <div class="d-flex justify-content-center align-items-center">
       <div class="card mb-1 " style="height: 10em; width:60%; ">
@@ -67,10 +67,10 @@ export default {
         }) 
       },
       discount: function (article) {
-        if(article.discount.onSaleType) //flat
-          return article.fixedPrice - article.discount.onSaleValue;
+        if(!article.discount.onSaleType) //flat
+          return (article.fixedPrice - article.discount.onSaleValue).toFixed(2);
         else  
-          return article.fixedPrice - article.fixedPrice * article.discount.onSaleValue / 100;
+          return (article.fixedPrice - article.fixedPrice * article.discount.onSaleValue / 100).toFixed(2);
       },
     },
   }
