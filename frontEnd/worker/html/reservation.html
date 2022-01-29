@@ -59,18 +59,18 @@
     <form name="myform" id="formId" onSubmit="">
 
       <div class="form-floating mb-3 mt-3">
-        <input id="bookingRequest" class="form-control" type="text" aria-label="bookingRequest" aria-describedby="basic-addon" readonly disabled>
+        <input id="bookingRequest" class="form-control" type="text" aria-label="Data richiesta di prenotazione. Campo non modificabile"  readonly disabled>
         <label for="bookingRequest"> Data richiesta prenotazione</label>
       </div>
 
 
       <div class="form-floating mb-3">
-        <input id="bookingRange" class="form-control" type="text" aria-label="bookingRange" aria-describedby="basic-addon2" readonly required>
+        <input id="bookingRange" class="form-control" type="text" aria-label="Periodo Prenotazione. Se il periodo non è valido non sarà possibile modificare la prenotazione. Se il prodotto non è disponibile non sarà possibile modificare la prenotazione" disabled readonly required>
         <label for="bookingRange"> Periodo prenotazione*</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" min="1" step="1" class="form-control" id="fixedPrice" onkeyup="calculateTotal()" aria-label="Recipient's price" aria-describedby="basic-addon4" readonly required>
+        <input type="number" min="1" step=".01" class="form-control" id="fixedPrice" onkeyup="calculateTotal()" aria-label="Prezzo Fisso. Campo obbligatorio" disabled required>
         <label for="price"> Prezzo fisso*</label>
       </div>
 
@@ -80,14 +80,14 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" id="sale" disabled>
+						<input type="checkbox" aria-label="Seleziona per applicare lo sconto sul prezzo fisso" class="form-check-input" id="sale" disabled>
 						<label class="form-check-label" for="sale">Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
 
       <div class="form-floating mb-3">
-        <input type="number" min="1" step="1" class="form-control" id="dailyPrice" onkeyup="calculateTotal()" aria-label="Recipient's price" aria-describedby="basic-addon4" readonly required>
+        <input type="number" min="1" step=".01" class="form-control" id="dailyPrice" onkeyup="calculateTotal()" aria-label="Prezzo giornaliero, campo obbligatorio" disabled required>
         <label for="price"> Prezzo giornaliero*</label>
       </div>
 
@@ -97,37 +97,37 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" id="dailySale" disabled>
+						<input type="checkbox" class="form-check-input" aria-label="Seleziona per applicare lo sconto sul prezzo giornaliero" id="dailySale" disabled>
 						<label class="form-check-label" for="dailySale">Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
 
       <div class="form-floating mb-3">
-				<input type="number" class="form-control" id="newTotal" aria-label="Recipient's price" aria-describedby="basic-addon6" readonly>
+				<input type="number" class="form-control" id="newTotal"aria-label="Prezzo Totale, sola lettura. Se il totale è negativo non sarà possibile creare la prenotazione" readonly>
 				<label for="price"> Prezzo Totale</label>
 			</div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="notes" class="form-control"  aria-label="notes" aria-describedby="basic-addon" readonly >
+        <input type="text" id="notes" class="form-control"  disabled >
         <label for="notes"> Descrizione</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="privateNotes" class="form-control"  aria-label="privateNotes" aria-describedby="basic-addon" readonly >
+        <input type="text" id="privateNotes" class="form-control" disabled >
         <label for="privateNotes"> Note(non visibili ai clienti)</label>
       </div>
 
       <div class="row mb-3">
         <div class="col-6">
-          <input class="form-check-input" type="checkbox" value="" id="rentalOccurred" disabled>
+          <input class="form-check-input" aria-label="Seleziona per indicare che il prodotto è stato ritirato" type="checkbox" value="" id="rentalOccurred" disabled>
           <label class="form-check-label" for="rentalOccurred">
             
           </label>
         </div>  
 
         <div class="col-6">
-          <input class="form-check-input" type="checkbox" value="" id="returned" disabled>
+          <input class="form-check-input" aria-label="Seleziona per indicare che il prodotto è stato restituito" type="checkbox" value="" id="returned" disabled>
           <label class="form-check-label" for="returned">
             
           </label>
@@ -135,7 +135,7 @@
       </div>
 
       <div id="myButtons">
-        <button type="button" id="edit" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
+        <button type="button" id="edit" aria-label="Bottone modifica. Abilita la modifica della pagina. Se la prenotazione è attiva sarà possibile modificare solo i campi riguardanti la consegna e la restituzione" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>
       </div>
     </form> 
     

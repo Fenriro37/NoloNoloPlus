@@ -58,12 +58,12 @@ window.onload = function getReservation() {
 
 function insertData(){
   $("#img").append(
-    ' <img class="img-thumbnail" alt="immagine prodotto" src='+ data.productImage+'>'
+    ' <img tabindex="0" class="img-thumbnail" alt="Immagine prodotto '+ data.productTitle + " " + data.productBrand +'" src='+ data.productImage+'>'
   )
   $("#info").prepend(
-    '<p>Id prenotazione: ' +data._id+ '</p>' +
-    '<p>Articolo: <a href="article.html?id=' +data.productId+ '">' +data.productTitle + " " + data.productBrand + '</a></p>' +
-    '<p>Email: <a href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' 
+    '<p tabindex="0" aria-label="Identificativo prenotazione: '+data._id+'">Id prenotazione: ' +data._id+ '</p>' +
+    '<p>Articolo: <a aria-label="Link al prodotto: '+data.productTitle + " " + data.productBrand+' " href="article.html?id=' +data.productId+ '">' +data.productTitle + " " + data.productBrand + '</a></p>' +
+    '<p>Email: <a aria-label="Link al cliente:  '+data.clientEmail+'" href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' 
   )
   fill()
 } 
@@ -98,7 +98,7 @@ function fill(){
       $('#dailyFlat').prop('checked', true);
   }
 
-  $("#bookingRequest").val( data.bookingDate.day +'/'+ data.bookingDate.month +'/'+ data.bookingDate.year);
+  $("#bookingRequest").val( data.bookingDate.day +'-'+ data.bookingDate.month +'-'+ data.bookingDate.year);
 
   $("#bookingRange").val( data.startDate.day +'/'+ data.startDate.month +'/'+ data.startDate.year + ' - ' + data.endDate.day +'/'+ data.endDate.month +'/'+ data.endDate.year);
 
@@ -132,9 +132,9 @@ function modify(){
 
   $("#myButtons").empty()
   $("#myButtons").append(
-    '<button id="save" class="btn btn-lg btn-success">Salva</button>'+
-    '<button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>' +
-    '<button type="button" id="delete" class="btn btn-lg btn-danger delete" onclick="remove()">Elimina prenotazione</button>'
+    '<button id="save" class="btn btn-lg btn-success" aria-label="Bottone salva. Aggiungerà questa prenotazione e pulirà i campi tranne l` identificativo e reimposterà i prezzi originali">Salva</button>'+
+    '<button type="button" id="reset" class="btn btn-lg btn-danger" aria-label="Bottone annulla, pulisce i campi, mantenendo l` identificativo e reimposterà i prezzi originali" >Annulla</button>' +
+    '<button type="button" id="delete" class="btn btn-lg btn-danger delete" onclick="remove()" aria-label="Bottone elimina. Cancella la prenotazione corrente e reindirizza al catalogo">Elimina prenotazione</button>'
   )
   if(data.isTaken){
     //$("#delete").prop("disabled", true)
@@ -214,19 +214,21 @@ $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
   let date2 = dateRange[1]
   date1 = date1.split("/")
   date2 = date2.split("/")
+  //modifico le variabili per salvare le date con i nuovi valori
   for(let i in date1){
     dateBeginnig[i] = date1[i]
   }
   for(let i in date2){
     dateFinish[i] = date2[i]
   }
-  date1 = date1[2] * 10000  + date1[1] * 100 + date1[0]
-  date2 = date2[2] * 10000  + date2[1] * 100 + date2[0]
+  let d1 = new Date(date1[2], date1[1] -1, date1[0])
+  let d2 = new Date(date2[2], date2[1] -1, date2[0])
   for(let i in article.bookings){
     if(data._id != article.bookings[i].reservationId){
-      bookingStart = article.bookings[i].startDate.year * 10000 + article.bookings[i].startDate.month * 100 + article.bookings[i].startDate.day
-      bookingEnd = article.bookings[i].endDate.year * 10000 + article.bookings[i].endDate.month * 100 + article.bookings[i].endDate.day
-      if( date1 < bookingStart && bookingEnd < date2 )
+      bookingStart = new Date(article.bookings[i].startDate.year, article.bookings[i].startDate.month-1, article.bookings[i].startDate.day)
+      bookingEnd = new Date(article.bookings[i].endDate.year, article.bookings[i].endDate.month-1, article.bookings[i].endDate.day)
+
+      if( d1 < bookingStart && bookingEnd < d2 )
        block = true
     }
   }
@@ -274,13 +276,13 @@ function changeSale() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="percentage" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" aria-label="Sconto percentuale, seleziona uno dei due" id="percentage" required>' +
 								'<label class="form-check-label" for="percentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="flat" required>' +
+								'<input class="form-check-input" type="radio" aria-label="Sconto fisso, seleziona uno dei due" name="flexRadioDefault" id="flat" required>' +
 								'<label class="form-check-label" for="flat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -288,7 +290,7 @@ function changeSale() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="saleValue" onkeyup="calculateTotal()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step=".01" id="saleValue" onkeyup="calculateTotal()" aria-label="Valore sconto prezzo fisso. Campo obbligatorio" required>' +
 					'</div>' +
 				'</div>' +
 			'</div>'
@@ -313,13 +315,13 @@ function changeDailySale() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault1" id="dailyPercentage" required>' +
+								'<input class="form-check-input" type="radio" aria-label="Sconto percentuale, seleziona uno dei due"  name="flexRadioDefault1" id="dailyPercentage" required>' +
 								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault1" id="dailyFlat" required>' +
+								'<input class="form-check-input" type="radio" aria-label="Sconto fisso, seleziona uno dei due" name="flexRadioDefault1" id="dailyFlat" required>' +
 								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -327,13 +329,13 @@ function changeDailySale() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="dailySaleValue" onkeyup="calculateTotal()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step=".01" id="dailySaleValue" onkeyup="calculateTotal()" aria-label="Valore sconto prezzo giornaliero. Campo obbligatorio" required>' +
 					'</div>' +
 				'</div>' +
 				'<div class="row mt-2">'+
 					'<div class="col-3">Giorni per sconto:</div>' +
 					'<div class="col-9">' +
-						'<input type="number" class="form-control"  id="daysCount" onkeyup="calculateTotal()" aria-label="SalePrice" aria-describedby="basic-addon6" required>' +
+						'<input type="number" min="1" step="1" class="form-control"  id="daysCount" onkeyup="calculateTotal()" aria-label="Numero giorni da supera per ottenere sconto sul prezzo giornaliero. Campo obbligatorio" required>' +
 					'</div>'+
 				'</div>'+
 			'</div>'
@@ -362,9 +364,11 @@ function calculateTotal(){
     date1 = date1.split("/")
     date2 = date2.split("/")
 
-    let start = date1[2] * 10000 + date1[1] * 100 + date1[0]
-    let end = date2[2] * 10000 + date2[1] * 100 + date2[0]
-    let days = end - start + 1
+    let start = new Date(date1[2] , date1[1] -1, date1[0])
+    let end = new Date(date2[2], date2[1]-1, date2[0])
+    const diffTime = Math.abs(end - start);
+    let days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+
     let addendum1, addendum2
 
 
@@ -387,7 +391,8 @@ function calculateTotal(){
       addendum2 = $('#dailyPrice').val() * days
     }
     console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
-    $('#newTotal').val(parseFloat(addendum1) + parseFloat(addendum2)) 
+    let total = parseFloat((parseFloat(addendum1) +parseFloat(addendum2)).toFixed(2))
+    $('#newTotal').val(total) 
     if($('#newTotal').val() <= 0){
       $('#save').prop('disabled', true);
     }
@@ -399,12 +404,12 @@ function calculateTotal(){
 
 function readOnly(){
   if(!boolModify){
-    $("form :input").each(function(){
-      $(this).prop("readonly", true); 
+    $("form :input").each(function(){ 
       $(this).prop("disabled", true);
     });
     //impedisce la disabilitazione del bottone modifica
     $("#edit").prop("disabled", false)
+
     $('label[for=bookingRange]').text('Periodo prenotazione*');
     
   }
@@ -419,16 +424,15 @@ function readOnly(){
     else {
       $("form :input").each(function(){
         $(this).prop("disabled", false);
-        $(this).prop("readonly", false);
       });
-      
+      console.log(article.available)
       $("#bookingRequest").prop("readonly", true);
-      $("#newTotal").prop("readonly", true);
-      
-      if(article.available == false){
+      $("#bookingRange").prop("disabled", false);
+      $("#bookingRange").prop("readonly", false);
+      if(!article.available){
         $("#bookingRange").prop("readonly", true);
         $('label[for=bookingRange]').text('Non disponibile in periodo diverso');
-      }
+      } 
     }
   }
 }
@@ -442,7 +446,7 @@ document.addEventListener('click',function(e){
 function reset(){
   $("#myButtons").empty()
   $("#myButtons").append(
-  '<button type="button" id="edit" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>'
+  '<button type="button" id="edit" class="btn btn-lg btn-secondary" onclick="modify()" aria-label="Bottone modifica. Abilita la modifica della pagina. Se la prenotazione è attiva sarà possibile modificare solo i campi riguardanti la consegna e la restituzione">Modifica</button>'
   )
   boolModify = false
   $("#saleInfo").remove()
@@ -468,13 +472,13 @@ function save(){
     reservations = article.bookings
     for(let i in reservations){
       if(data._id == reservations[i].reservationId){
-        reservations[i].startDate.day = dateBeginnig[0]
-        reservations[i].startDate.month = dateBeginnig[1]
-        reservations[i].startDate.year = dateBeginnig[2]
-        reservations[i].endDate.day = dateFinish[0]
-        reservations[i].endDate.month = dateFinish[1]
-        reservations[i].endDate.year = dateFinish[2]
-        reservations[i].total = $('#newTotal').val()
+        reservations[i].startDate.day = parseInt(dateBeginnig[0])
+        reservations[i].startDate.month = parseInt(dateBeginnig[1])
+        reservations[i].startDate.year = parseInt(dateBeginnig[2])
+        reservations[i].endDate.day = parseInt(dateFinish[0])
+        reservations[i].endDate.month = parseInt(dateFinish[1])
+        reservations[i].endDate.year = parseInt(dateFinish[2])
+        reservations[i].total = parseFloat($('#newTotal').val())
       }
     }
     $.ajax({
@@ -505,7 +509,7 @@ function save(){
   else{
     sale = false 
     type = false
-    value = ""
+    value = 0
   }
 
   let dailySale, dailyType, dailyValue, dailyDays
@@ -518,8 +522,8 @@ function save(){
   else{
     dailySale = false 
     dailyType = false
-    dailyValue = ""
-    dailyDays = ""
+    dailyValue = 0
+    dailyDays = 0
   }
 
   $.ajax({
@@ -529,31 +533,31 @@ function save(){
         "Content-Type": "application/json"
     },
     data: JSON.stringify({
-      fixedPrice: $("#fixedPrice").val(),
-      variablePrice: $("#dailyPrice").val(),
-      totalPrice: $("#newTotal").val(),
+      fixedPrice: parseFloat($("#fixedPrice").val()),
+      variablePrice: parseFloat($("#dailyPrice").val()),
+      totalPrice: parseFloat($("#newTotal").val()),
 
       fixedDiscount: {
         onSale: sale,
         onSaleType: type,
-        onSaleValue: value
+        onSaleValue: parseFloat(value)
       },
       variableDiscount: {
-        days: dailyDays,
+        days: parseInt(dailyDays),
         onSale: dailySale,
         onSaleType: dailyType,
-        onSaleValue: dailyValue
+        onSaleValue: parseFloat(dailyValue)
       },
       
       startDate:{
-        day: dateBeginnig[0],
-        month: dateBeginnig[1],
-        year: dateBeginnig[2],
+        day: parseInt(dateBeginnig[0]),
+        month: parseInt(dateBeginnig[1]),
+        year: parseInt(dateBeginnig[2]),
       },
       endDate:{
-        day: dateFinish[0],
-        month: dateFinish[1],
-        year: dateFinish[2],
+        day: parseInt(dateFinish[0]),
+        month: parseInt(dateFinish[1]),
+        year: parseInt(dateFinish[2]),
       },
       isTaken : $('#rentalOccurred').is(":checked") ? true : false,
       isReturned : $('#returned').is(":checked") ? true : false,
@@ -589,7 +593,7 @@ function save(){
       data.note = $("#privateNotes").val()
 
       boolModify = false
-      readOnly()
+      reset()
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {

@@ -26,16 +26,20 @@ window.onload = function getProduct() {
 
 function fill(){
 	$("#img").attr("src", data.image)
+	$("#img").attr("alt", 'Immagine '+data.title + ' ' + data.brand)
+	$("#productidentifier").attr("aria-label", 'Identificativo: '+data._id)
 	$("#productidentifier").text("ID: " + data._id)
 	$("#title").text(data.title + ' ' + data.brand)
+	$("#title").attr("aria-label", 'Articolo: : ' + data.title + ' ' + data.brand)
 
 	//etichette
 	$('#tags').empty();
 	for (let i in data.tags){
-		$("#tags").append('<span class="badge rounded-pill bg-primary" >'+data.tags[i]+'</span>')
+		$("#tags").append('<span class="badge rounded-pill bg-primary" tabindex="0" >'+data.tags[i]+'</span>')
 	}
 	//stelle
 	$('#stars').empty();
+	$("#stars").attr("aria-label", 'Qualità: '+data.quality + 'stelle su tre')
 	let j;
 	for ( j = 0; j < data.quality; j++){
 			$("#stars").append(
@@ -52,6 +56,8 @@ function fill(){
 	$("#fixedPrice").append(
 		'<span>Prezzo fisso: ' +data.fixedPrice+'€</span>'
 	)
+	$("#fixedPrice").attr("aria-label", 'Prezzo fisso: '+data.fixedPrice + ' €')
+
 	$("#fixedDiscount").empty()
 	if(data.discount.onSale){
 		let newPrice
@@ -64,16 +70,22 @@ function fill(){
 		$("#fixedDiscount").append(
 			'<span>Prezzo fisso scontato: ' +newPrice+ '€</span>'
 		)
+		$("#fixedDiscount").attr("aria-label", 'Prezzo fisso scontato: '+newPrice + ' €')			
+
+		document.getElementById("fixedDiscount").tabIndex = 0;
 	}
 	$("#dailyPrice").empty()
 	$("#dailyPrice").append(
 		'<span>Prezzo giornaliero: ' +data.price+'€/giorno</span>'
 	)
+	$("#dailyPrice").attr("aria-label", 'Prezzo giornaliero: '+data.price + ' €')
 	$("#dailyDiscount").empty()
 	if(data.overDays.days != ''){
 		$("#dailyDiscount").append(
 			'<span>Noleggia oltre ' +data.overDays.days+' giorni per ricevere sconto giornaliero</span>'
 		)
+		$("#dailyDiscount").attr("aria-label", 'Noleggia oltre: '+data.overDays.days +' giorni per ricevere sconto giornaliero')
+		document.getElementById("dailyDiscount").tabIndex = 0;
 	}
 
 
@@ -96,11 +108,11 @@ function fill(){
 		for (let i in data.bookings){
 			$("#myTable").append(
 				'<tr>'+
-				'<td><a href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
-				'<td><a href="client.html?email=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
-				'<td>'+data.bookings[i].total+'€</td>'+
-				'<td>'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
-				'<td>'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
+				'<td><a aria-label="Link alla prenotazione. Identificativo:'+data.bookings[i].reservationId +'" href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
+				'<td><a aria-label="Email cliente: '+data.bookings[i].clientId+' " href="client.html?email=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
+				'<td tabindex="0" aria-label="Prezzo totale: '+data.bookings[i].total +'€">'+data.bookings[i].total+'€</td>'+
+				'<td tabindex="0" aria-label="Data inizio prenotazione '+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'" >'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
+				'<td tabindex="0" aria-label="Data fine prenotazione '+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'">'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
 				'</tr>'
 			)
 		}
@@ -118,7 +130,12 @@ function fill(){
 
 	//descrizione e note
 	$("#description").text(data.description)
+	$("#description").attr("aria-label", 'Descrizione: '+data.description)
+	document.getElementById("description").tabIndex = 0;
+
 	$("#note").text(data.note)
+	$("#note").attr("aria-label", 'Note non visibili ai clienti: '+data.note)
+	document.getElementById("note").tabIndex = 0;
 	
 }
 

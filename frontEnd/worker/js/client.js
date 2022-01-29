@@ -46,9 +46,9 @@ window.onload = function getClient() {
         }
         else{
           let current = new Date();      
-          current = parseInt(current.getFullYear()) * 10000 + parseInt((current.getMonth()+1)) * 100 + parseInt(current.getDate())
+
           for(let i in bookings){
-            bookingEnd = parseInt(bookings[i].endDate.year) * 10000 + parseInt(bookings[i].endDate.month) * 100 + parseInt(bookings[i].endDate.day)
+            bookingEnd =  new Date(parseInt(bookings[i].endDate.year), parseInt(bookings[i].endDate.month) - 1, parseInt(bookings[i].endDate.day))
             if(current <= bookingEnd){
               deletable = false
             }
@@ -56,8 +56,8 @@ window.onload = function getClient() {
           for (let i in bookings){
             $("#myTable").append(
               '<tr>'+
-              '<td><a aria-label="Link alla prenotazione. Identificativo:'+bookings[i]._id+'" href="reservation.html?id=' +bookings[i]._id+'">'+bookings[i]._id+'</td>'+
-              '<td class="text-truncate"><a aria-label="Link al prodotto prenotato '+bookings[i].productTitle+' '+bookings[i].productBrand+'" href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
+              '<td width="20%"><a aria-label="Link alla prenotazione. Identificativo:'+bookings[i]._id+'" href="reservation.html?id=' +bookings[i]._id+'">Prenotazione</td>'+
+              '<td ><a aria-label="Link al prodotto prenotato '+bookings[i].productTitle+' '+bookings[i].productBrand+'" href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
               '<td tabindex="0" aria-label="Prezzo totale: '+bookings[i].totalPrice +'€" >'+bookings[i].totalPrice+'€</td>'+
               '<td tabindex="0" aria-label="Data inizio prenotazione '+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'" >'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
               '<td tabindex="0" aria-label="Data fine prenotazione '+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'" >'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
@@ -127,11 +127,6 @@ function modify(){
     '<button type="button" id="reset" aria-label="Bottone annulla. Cliccandolo i campi ritorneranno allo stato originale e non modificabili" class="btn btn-lg btn-danger" >Annulla</button>'+
     '<button type="button" id="delete" aria-label="Bottone elimina. Cliccandolo il cliente sarà cancellato e verrai reindirizzato al catalogo" class="btn btn-lg btn-danger delete">Elimina cliente</button>'
   )
-  if(!deletable){
-    $("#delete").prop("disabled", true)
-    $("#delete").text("Prenotazione attive")
-  }
-
   boolModify = true
   readOnly()
 
@@ -154,6 +149,10 @@ function readOnly(){
     $("#identifier").prop("readonly", true); 
     $("#mail").prop("readonly", true); 
     $("select").prop("disabled", false);
+    if(!deletable){
+      $("#delete").prop("disabled", true)
+      $("#delete").text("Prenotazione attive")
+    }
   }
 }
 
