@@ -1,6 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 //import App from "./App.vue"
+import articleCatalog from "./components/articleCatalog.vue";
+import clientCatalog from "./components/clientCatalog.vue";
+import reservationCatalog from "./components/reservationCatalog.vue";
 import createArticle from "./components/createArticle.vue";
 import createReservation from "./components/createReservation.vue";
 import article from "./components/article.vue";
@@ -9,6 +12,7 @@ import reservation from "./components/reservation.vue"
 import clientChart from "./components/clientChart.vue"
 import articleChart from "./components/articleChart.vue"
 import catalogChart from "./components/catalogChart.vue"
+import invoice from "./components/invoice.vue"
 
 
 
@@ -19,6 +23,26 @@ let url = "http://localhost:8081/manager/index.html";
 export default new Router({
   mode: "hash",
   routes: [
+    {
+      path: "/",
+      name: "home",
+      component: articleCatalog
+    },
+    {
+      path: "/articleCatalog:filter",
+      name: "articleCatalog",
+      component: articleCatalog
+    },
+    {
+      path: "/clientCatalog:filter",
+      name: "clientCatalog",
+      component: clientCatalog
+    },
+    {
+      path: "/reservationCatalog:filter",
+      name: "reservationCatalog",
+      component: reservationCatalog
+    },
     {
       path: "/createArticle",
       name: "createArticle",
@@ -58,6 +82,11 @@ export default new Router({
       path: "/chartCatalog",
       name: "chartCatalog",
       component: catalogChart
+    },
+    {
+      path: "/invoice:id",
+      name: "invoice",
+      component: invoice
     },
   ]
 });

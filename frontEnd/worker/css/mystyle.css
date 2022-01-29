@@ -43,10 +43,10 @@ background-color: rgb(156, 156, 156); */
 #myDDButton {
     background-color: hsl(0, 0%, 82%);
 }
-.big-size {
+/* .big-size {
     transform: scale(1.4);
     margin-right: 0.5em;
-}
+} */
 .badge {
     font-size: medium;
     margin-right: 0.125em;
@@ -58,12 +58,12 @@ background-color: rgb(156, 156, 156); */
 #onSalePrice {
     color: rgb(232, 38, 38);
 }
-.form-switch {
+/* .form-switch {
     margin-left: 7.2em;
 }
 .custom-switch {
     margin-right: 0.5em;
-}
+} */
 #rentProduct {
     color: black;
     background-color: rgb(254, 165, 45);

@@ -25,7 +25,7 @@
       for (i = 0; i < z.length; i++) {
         elmnt = z[i];
         /*search for elements with a certain atrribute:*/
-        file = elmnt.getAttribute("navbar");
+        file = elmnt.getAttribute("index");
         if (file) {
           /*make an HTTP request using the attribute value as the file name:*/
           xhttp = new XMLHttpRequest();
@@ -34,7 +34,7 @@
               if (this.status == 200) {elmnt.innerHTML = this.responseText;}
               if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
               /*remove the attribute, and call this function once more:*/
-              elmnt.removeAttribute("navbar");
+              elmnt.removeAttribute("index");
               includeHTML();
             }
           }      
@@ -47,7 +47,7 @@
   };
   </script>
 <body>
-<div navbar="navbar.html"></div>
+<div index="index.html"></div>
 <div class="container-fluid d-flex justify-content-center" id="main">
   <div class="w-50">
     <form name="myform" id="formId"> 
@@ -55,66 +55,76 @@
       <h1 class="mb-4"> Aggiungi prenotazione </h1>
 
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="email" aria-label="Recipient's email" aria-describedby="basic-addon1" required>
+        <input type="email" class="form-control" id="email" aria-label="Email. Campo obbligatorio" required>
         <label for="email"> Email cliente*</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="articleId" aria-label="Recipient's email" aria-describedby="basic-addon1" disabled required>
+        <input type="text" class="form-control" id="articleId" aria-label="Id articolo, sola lettura"  readonly required>
         <label for="articleId"> ID articolo*</label>
       </div>
     
       <div class="form-floating mb-3">
-        <input type="text" id="dateRange" class="form-control" onkeyup="check()" required>
+        <input type="text" id="dateRange" class="form-control" aria-label="Seleziona periodo noleggio. Campo obbligatorio. Se periodo non valido non sarà possibile" required>
         <label for="dateRange"> Periodo noleggio*</label>
       </div>
 
-      <div class="row">
-        <div class="col-3">
-          <p> Ritiro:</p>
-        </div>
-        <div class="col-9">
-          <div class=" form-check">
-              <input type="checkbox" class="form-check-input" id="rentalOccurred">
-              <label class="form-check-label" for="rentalOccurred">Il prodotto non è stato ritirato</label>
-          </div>
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-3">
-          <p> Restituzione:</p>
-        </div>
-        <div class="col-9">
-          <div class=" form-check">
-              <input type="checkbox" class="form-check-input" id="returned">
-              <label class="form-check-label" for="returned">Il prodotto non è stato restituito</label>
-          </div>
-        </div>
+      <div class="form-floating mb-3">
+        <input type="number" min="1" step=".01" class="form-control" id="fixedPrice" onkeyup="calculateTotal()" aria-label="Prezzo Fisso. Campo obbligatorio" required>
+        <label for="fixedPrice"> Prezzo fisso*</label>
       </div>
 
-      <div class="form-floating mb-3">
-        <input type="number" min="1" step="1" class="form-control" id="price" aria-label="Recipient's price" aria-describedby="basic-addon4" required>
-        <label for="price"> Prezzo*</label>
-      </div>
+      <div class="row mb-3" id="saleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo fisso:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" aria-label="Seleziona per applicare lo sconto sul prezzo fisso" class="form-check-input" id="sale">
+						<label class="form-check-label" for="sale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
 
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="notes" aria-label="Recipient's notes" aria-describedby="basic-addon5" >
+        <input type="number" min="1" step=".01" class="form-control" id="dailyPrice" onkeyup="calculateTotal()" aria-label="Prezzo giornaliero, campo obbligatorio" required>
+        <label for="dailyPrice"> Prezzo giornaliero*</label>
+      </div>
+
+      <div class="row mb-3" id="dayliSaleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" aria-label="Seleziona per applicare lo sconto sul prezzo giornaliero" id="dailySale">
+						<label class="form-check-label" for="dailySale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+      <div class="form-floating mb-3">
+				<input type="number" class="form-control" id="newTotal" aria-label="Prezzo Totale, sola lettura. Se il totale è negativo non sarà possibile creare la prenotazione" readonly>
+				<label for="newTotal"> Prezzo Totale</label>
+			</div>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="notes"  >
         <label for="notes"> Descrizione</label>
       </div>
 
       <div class="form-floating mb-4">
-        <input type="text" class="form-control" id="privateNotes" aria-label="Recipient's privateNotes" aria-describedby="basic-addon6" >
+        <input type="text" class="form-control" id="privateNotes" >
         <label for="privateNotes">  Note (non visibili ai clienti)</label>
       </div>
 
       <div class="row">
         <div class="col-6">
-          <button type="submit" class="btn btn-lg btn-success" id="save">Salva</button>
+          <button type="submit" aria-label="Bottone salva. Aggiungerà questa prenotazione e pulirà i campi tranne l'identificativo e reimposterà i prezzi originali" class="btn btn-lg btn-success" id="save">Salva</button>
         </div>
 
         <div class="col-6">
-          <button type="button" id="clear" class="btn btn-lg btn-danger delete" >Annulla</button>
+          <button type="button" id="clear" aria-label="Bottone annulla, pulisce i campi, mantenendo l'identificativo e reimposterà i prezzi originali" class="btn btn-lg btn-danger delete" >Annulla</button>
         </div>
       </div>  
     </form>  

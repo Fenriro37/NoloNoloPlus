@@ -20,7 +20,7 @@
 			for (i = 0; i < z.length; i++) {
 				elmnt = z[i];
 				/*search for elements with a certain atrribute:*/
-				file = elmnt.getAttribute("navbar");
+				file = elmnt.getAttribute("index");
 				if (file) {
 					/*make an HTTP request using the attribute value as the file name:*/
 					xhttp = new XMLHttpRequest();
@@ -29,7 +29,7 @@
 							if (this.status == 200) {elmnt.innerHTML = this.responseText;}
 							if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
 							/*remove the attribute, and call this function once more:*/
-							elmnt.removeAttribute("navbar");
+							elmnt.removeAttribute("index");
 							includeHTML();
 						}
 					}      
@@ -42,7 +42,7 @@
 	};
 	</script>
 <body>
-<div navbar="navbar.html"></div>
+<div index="index.html"></div>
 <div class="container-fluid d-flex justify-content-center" id="main">
 	<div class="w-50">
    
@@ -50,43 +50,60 @@
 			<h1 class="mb-4"> Aggiungi articolo </h1>
 
 			<div class="form-floating mb-3">
-				<input type="text" class="form-control" id="title" aria-label="Recipient's title" aria-describedby="basic-addon1" required>
+				<input type="text" class="form-control" id="title" aria-label="Titolo, campo obbligatorio" required>
 				<label for="title"> Titolo*</label>
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="text" class="form-control" id="brand" aria-label="Recipient's brand" aria-describedby="basic-addon2">
+				<input type="text" class="form-control" id="brand" aria-label="Brand" >
 				<label for="brand"> Brand </label>
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="url" class="form-control" id="image" aria-label="Recipient's image" aria-describedby="basic-addon3" required>
+				<input type="url" class="form-control" id="image" aria-label="Immagine, campo obbligatorio. Inserisci in forma di URL"  required>
 				<label for="image"> Immagine* (Inserisci URL)</label>
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="text" class="form-control" id="tags" aria-label="Recipient's tags" aria-describedby="basic-addon4"> 
+				<input type="text" class="form-control" id="tags"  > 
 				<label for="tags"> Etichette (separare con spazio o virgola)</label>
 			</div>
 		
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" max="3" step="1" id="quality" aria-label="Recipient's quality" aria-describedby="basic-addon5" required>
+				<input type="number" class="form-control" min="1" max="3" step="1" id="quality" aria-label="Qualità, campo obbligatori. Inserisci un valore compreso tra uno e tre" required>
 				<label for="quality"> Qualità*</label>
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" id="price" aria-label="Recipient's price" aria-describedby="basic-addon6" required>
-				<label for="price"> Prezzo*</label>
+				<input type="number" class="form-control" min="1" step=".01" id="price" onkeyup="calculateDiscount()" aria-label="Prezzo fisso, campo obbligatorio"  required>
+				<label for="price"> Prezzo fisso*</label>
 			</div>
 
 			<div class="row mb-3" id="saleRow">
 				<div class="col-3">
-					<label><b>Sconto:</b></label>
+					<label><b>Sconto prezzo fisso:</b></label>
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" id="sale">
+						<input type="checkbox" class="form-check-input" id="sale" aria-label="Seleziona per applicare lo sconto sul prezzo fisso">
 						<label class="form-check-label" for="sale">Il prodotto non è scontato</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input type="number" class="form-control" min="1" step=".01" id="dayliPrice" aria-label="Prezzo giornaliero, campo obbligatorio" required>
+				<label for="dayliPrice"> Prezzo giornaliero*</label>
+			</div>
+
+			<div class="row mb-3" id="dayliSaleRow">
+				<div class="col-3">
+					<label><b>Sconto prezzo giornaliero:</b></label>
+				</div>
+				<div class="col-9 ">
+					<div class=" form-check">
+						<input type="checkbox" class="form-check-input" id="dailySale" aria-label="Seleziona per applicare lo sconto sul prezzo giornaliero">
+						<label class="form-check-label" for="dailySale">Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
@@ -104,22 +121,22 @@
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="text" class="form-control" id="description" aria-label="Recipient's description" aria-describedby="basic-addon8" required>
+				<input type="text" class="form-control" id="description" aria-label="Descrizione, campo obbligatorio" required>
 				<label for="description"> Descrizione*</label>
 			</div>
 
 			<div class="form-floating mb-4">
-				<input type="text" class="form-control" id="note" aria-label="Recipient's note" aria-describedby="basic-addon9">
+				<input type="text" class="form-control" id="note" >
 				<label for="note"> Note (non visibili ai clienti)</label>
 			</div>
 
 			<div class="row mb-5">
 				<div class="col-6">
-					<button type="submit" class="btn btn-lg btn-success"   >Salva</button>
+					<button type="submit" id="btnSave" aria-label="Bottone salva. Premi per aggiungere il prodotto al catalogo. Tutti i campi verranno svuotati" class="btn btn-lg btn-success"   >Salva</button>
 				</div>
 
 				<div class="col-6">
-					<button type="reset" class="btn btn-lg btn-danger delete" >Annulla</button>
+					<button type="reset" aria-label="Bottone annulla. Premi per svuotare i campi" class="btn btn-lg btn-danger delete" >Annulla</button>
 				</div>
 			</div>
 		</form> 

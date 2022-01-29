@@ -11,7 +11,7 @@ $('#available').change(function() {
   } 
 })
 
-//listener per checkbox available
+//prezzo fisso
 $('#sale').change(function() {
 	if (this.checked) {
 		$('label[for=sale]').text("Il prodotto è scontato");
@@ -21,13 +21,13 @@ $('#sale').change(function() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="percentage" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="percentage" aria-label="Sconto percentuale, seleziona uno dei due" required>' +
 								'<label class="form-check-label" for="percentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="flat" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" aria-label="Sconto fisso, seleziona uno dei due" id="flat" required>' +
 								'<label class="form-check-label" for="flat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
@@ -35,13 +35,13 @@ $('#sale').change(function() {
 				'<div class="row">' +
 					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
 					'<div class="col-9">' +
-					'<input type="number" class="form-control" min="1" step="1" id="saleValue" onkeyup="calculateDiscount()" aria-label="saleValue" aria-describedby="basic-addon6" required>' +
+					'<input type="number" class="form-control" min="1" step=".01" id="saleValue" onkeyup="calculateDiscount()" aria-label="Valore sconto prezzo fisso, campo obbligatorio" required>' +
 					'</div>' +
 				'</div>' +
 				'<div class="row mt-2">'+
 					'<div class="col-3">Prezzo scontato:</div>' +
 					'<div class="col-9">' +
-						'<input type="number" class="form-control"  id="newValue" aria-label="SalePrice" aria-describedby="basic-addon6" disabled>' +
+						'<input type="number" class="form-control"  id="newValue" aria-label="Nuovo prezzo fisso scontato. Sola lettura. Se negativo non sarà possibile aggiungere il prodotto al catalogo"  readonly>' +
 					'</div>'+
 				'</div>'+
 			'</div>'
@@ -50,31 +50,81 @@ $('#sale').change(function() {
 	if (!this.checked) {
 		$('label[for=sale]').text("Il prodotto non è scontato");
 	  $("#saleInfo").remove()
+		$('#btnSave').prop('disabled', false);
+  } 
+})
+
+//prezzo giornaliero
+$('#dailySale').change(function() {
+	if (this.checked) {
+		$('label[for=dailySale]').text("Il prodotto è scontato");
+		$("#dayliSaleRow").append(
+			'<div id="dailySaleInfo" class="mt-2">' +
+				'<div class="row">' +
+						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyPercentage" aria-label="Sconto percentuale, seleziona uno dei due" required>' +
+								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
+							'</div>' +
+						'</div>' +
+						'<div class="col-3">' +
+							'<div class="form-check">' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyFlat" aria-label="Sconto fisso, seleziona uno dei due" required>' +
+								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
+							'</div>' +
+						'</div>' +
+				'</div>'+
+				'<div class="row">' +
+					'<div class="col-3"> <p> Valore sconto:</p>	</div>' +
+					'<div class="col-9">' +
+					'<input type="number" class="form-control" min="1" step=".01" id="dailySaleValue" aria-label="Valore sconto prezzo giornaliero, campo obbligatorio" required>' +
+					'</div>' +
+				'</div>' +
+				'<div class="row mt-2">'+
+					'<div class="col-3">Giorni per sconto:</div>' +
+					'<div class="col-9">' +
+						'<input type="number" class="form-control" min="1" step="1"  id="daysCount" aria-label="Numero giorni da supera per ottenere sconto sul prezzo giornaliero. Campo obbligatorio"  required>' +
+					'</div>'+
+				'</div>'+
+			'</div>'
+		);  	
+  }
+	if (!this.checked) {
+		$('label[for=dailySale]').text("Il prodotto non è scontato");
+	  $("#dailySaleInfo").remove()
   } 
 })
 
 $(document).on('click','#flat',function(){
-	$('#newValue').val($("#price").val() - $('#saleValue').val())
+	calculateDiscount()
 })
 
 $(document).on('click','#percentage',function(){
-	if (this.checked) {
-		let total = $("#price").val()
-		let sale = $('#saleValue').val()
-		let newTotal = total - total * sale / 100; 
-		$('#newValue').val(newTotal)
-	}
+	calculateDiscount()
 })
 
 function calculateDiscount(){
-	if($('#flat').is(":checked")){
-		$('#newValue').val($("#price").val() - $('#saleValue').val())
-	} 
-	if($('#percentage').is(":checked")){
-		let total = $("#price").val()
-		let sale = $('#saleValue').val()
-		let newTotal = total - total * sale / 100; 
-		$('#newValue').val(newTotal)
+	if($('#sale').is(":checked")){
+		if($('#flat').is(":checked")){
+			$('#newValue').val(parseFloat($("#price").val()) - parseFloat($('#saleValue').val()).toFixed(2))
+		} 
+		if($('#percentage').is(":checked")){
+			let total = parseFloat($("#price").val())
+			let sale = parseFloat($('#saleValue').val())
+			let newTotal = (total - total * sale / 100).toFixed(2); 
+			$('#newValue').val(newTotal)
+		}
+		console.log($('#newValue').val())
+		if(	$('#newValue').val() <= 0){
+			
+			$('#btnSave').prop('disabled', true);
+		}
+		else{
+			$('#btnSave').prop('disabled', false);
+			let total = document.getElementById('newValue');
+			total.ariaLabel = 'Nuovo prezzo scontato: Sola lettura Se negativo non sarà possibile aggiungere il prodotto al catalogo'
+		} 
 	}
 }
 
@@ -92,14 +142,27 @@ function save() {
 		}
 	}    
 	onSale = $("#sale").is(':checked') ? true : false
-			if(onSale){
-				onSaleType = $("#percentage").is(':checked') ? true  : false
-				onSaleValue = $('#saleValue').val()
-			}
-			else{
-				onSaleType = false,
-				onSaleValue = ""
-			}
+	if(onSale){
+		onSaleType = $("#percentage").is(':checked') ? true  : false
+		onSaleValue = $('#saleValue').val()
+	}
+	else{
+		onSaleType = false,
+		onSaleValue = 0
+	}
+
+	let dailySale = $("#dailySale").is(':checked') ? true : false
+	let dayliType, dayliValue, days
+	if(dailySale){
+		dayliType = $("#dailyPercentage").is(':checked') ? true  : false
+		dayliValue = $('#dailySaleValue').val()
+		days = $('#daysCount').val()
+	}
+	else{
+		dayliType = false
+		dayliValue = 0
+		days = 0
+	}
 	//ajax post
  	$.ajax({
 		url:"/api/product",
@@ -116,11 +179,18 @@ function save() {
 			discount: {
 				onSale: onSale,
 				onSaleType: onSaleType,
-				onSaleValue: onSaleValue
+				onSaleValue: parseFloat(onSaleValue)
 			},
 			available: $("#available").is(':checked') ? true : false,
-		
-			price:  $('#price').val(),
+
+			fixedPrice: parseFloat($('#price').val()),
+			overDays:{
+				days: parseInt(days),
+				onSale: dailySale,
+				onSaleType: dayliType,
+				onSaleValue: parseFloat(dayliValue)
+			},
+			price:  parseFloat($('#dayliPrice').val()),
 			quality:  $('#quality').val(),
 			description:  $('#description').val(),
 			note:  $('#note').val(),

@@ -12,7 +12,7 @@
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Clienti'">Clienti</button>
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Prenotazioni'">Prenotazioni</button>
 		</div>
-		<input id="searchText" type="text" v-model="text" class="form-control" placeholder="Cerca..." aria-label="Recipient's username" aria-describedby="button-addon2">
+		<input id="searchText" type="text" v-model="text" class="form-control" placeholder="Cerca..." aria-label="Barra di ricerca" >
 		<button class="btn btn-secondary" type="button" id="searchButton" v-on:click="search()">Cerca</button>
 	</div>
 
@@ -24,36 +24,14 @@
 
   <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
     <div class="bg-dark p-2">
-      <p> <a @click="logOut" href="http://localhost:8081/public/login.html">Logout</a></p>
-      <p><router-link @click.native="childEvent" :to="{ path: '/createArticle'}">Aggiungi articolo</router-link></p>
-      <p><router-link @click.native="childEvent" :to="{ path: '/chartClient'}">Analytics Clienti</router-link></p>
-      <p><router-link @click.native="childEvent" :to="{ path: '/chartCatalog'}">Analytics Catalogo</router-link></p>
+      <p> <a @click="logOut" href="/public/login.html">Logout</a></p>
+      <p><a @click="create" href="javascript:void(null);"> Aggiungi articolo </a></p>
+      <p><a @click="analyticsClient" href="javascript:void(null);">Analytics Clienti</a></p>
+      <p><a @click="analyticsAll" href="javascript:void(null);">Analytics Catalogo</a></p>
     </div>
   </div>
 
-  <div>
-    {{choice}}
-  </div>
-
-  <!-- Articoli -->
-  <template v-if="choice == 0">
-    <Article :filter="request" @clicked="childEvent" />
-  </template>
-
-  <!-- Clienti --> 
-  <template v-else-if="choice == 1">
-    <Client :filter="request" @clicked="childEvent"/>
-  </template>
-
-  <!-- Prenotazioni -->
-  <template v-else-if="choice == 2">
-    <Reservation :filter="request" @clicked="childEvent"/>
-  </template>
-
-  <!-- Tutti gli altri components -->
-  <template  v-else-if="choice == 3">
-    <router-view :key="$route.fullPath" @clicked="backToCatalog"></router-view>
-  </template>
+  <router-view :key="$route.fullPath" @clicked="backToCatalog"></router-view>
 
 </div>
 </template>
@@ -65,70 +43,44 @@
 import Functions from './functions/function'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap";
-import Article from './components/articleCatalog'
-import Client from './components/clientCatalog'
-import Reservation from './components/reservationCatalog';
 
 export default {
     data() {
       return {
         catalog: [],
         text: '',
-        request: '',
         selected: 'Articoli',
         choice: 0     
       }
     },
-    components: {
-      Article,
-      Client,
-      Reservation
-    },
     created(){
-      //Functions.loginAsWorker()
-      Functions.checkCookie()  
-
-      var currentLocation = window.location;
-      console.log(currentLocation.href)
-      let shortUrl = currentLocation.href.slice(0, 59);
-      let urlArticle = currentLocation.href.slice(0, 49);
-      let urlClient = currentLocation.href.slice(0, 48);
-      let urlReservation = currentLocation.href.slice(0, 53);
-      let urlClientChart = currentLocation.href.slice(0, 53);
-      let urlArticleChart = currentLocation.href.slice(0, 54);
-      let urlCatalogChart = currentLocation.href.slice(0, 54);
-      console.log(shortUrl)
-      if(currentLocation == 'http://localhost:8081/manager/index.html#/createArticle' ||
-        shortUrl == 'http://localhost:8081/manager/index.html#/createReservation' ||
-        urlArticle == 'http://localhost:8081/manager/index.html#/article' ||
-        urlClient == 'http://localhost:8081/manager/index.html#/client' ||
-        urlReservation == 'http://localhost:8081/manager/index.html#/reservation' ||
-        urlClientChart == 'http://localhost:8081/manager/index.html#/chartClient' ||
-        urlArticleChart == 'http://localhost:8081/manager/index.html#/chartArticle' ||
-        urlCatalogChart == 'http://localhost:8081/manager/index.html#/chartCatalog' ){
-        this.choice = 3
-      }
+      //Functions.checkCookie()  
     },
     methods: {
       search(){
         this.request = this.text
         if(this.selected == 'Articoli')
-          this.choice = 0;
+          this.$router.push({ name: 'articleCatalog' , params: { filter: this.text}}).catch(()=>{})
         else if(this.selected == 'Clienti')
-          this.choice = 1;
+          this.$router.push({ name: 'clientCatalog', params: { filter: this.text} }).catch(()=>{})
         else
-          this.choice = 2;
-      },
-
-      childEvent () {
-          this.choice = 3 // someValue
-      },
-      backToCatalog(){
-        this.choice = 0
+          this.$router.push({ name: 'reservationCatalog', params: { filter: this.text} }).catch(()=>{})
       },
 
       logOut(){
         this.$cookies.remove("jwt")
+      },
+
+      create(){
+        this.$router.push({ path: '/createArticle' }).catch(()=>{})
+      },
+
+      analyticsClient(){
+        this.$router.push({ name: 'clientChart', params: {id: ''} }).catch(()=>{})
+      },
+
+      analyticsAll(){
+        this.$router.push({ name: 'chartCatalog' }).catch(()=>{})
       }
       
     }
@@ -164,11 +116,7 @@ body {
     color: orange;
     border-color: rgb(0, 0, 0);
     border-width: 0.5em;
-}
-.big-size {
-    transform: scale(1.4);
-    margin-right: 0.5em;
-}
+}s
 
 .price {
     font-size: x-large;
