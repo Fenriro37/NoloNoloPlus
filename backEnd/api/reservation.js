@@ -13,8 +13,8 @@ const config = require('./../config');
 
 // GET /api/reservation
 // ----------------------------------------------------------------------------
-// [Cliente] Ritorna la prenotazione con id passato per parametro, se è del
-// cliente.
+// [Cliente] Ritorna la prenotazione con id passato per parametro se è del
+// cliente chiamante.
 // [Funzionario o Manager] Ritorna la prenotazione ricercata per id.
 // 
 // Header:
@@ -100,7 +100,7 @@ router.get('/', async function(req, res) {
 //   È l'errore.
 router.get('/all', async function(req, res) {
     console.log('GET /api/reservation/all');
-    // try {
+    try {
         const token = jwt.verify(req.cookies['jwt'], config.JSONWebTokenKey)
         const sender = await myMongoAuth.auth({ '_id': ObjectId(token.id) });
         if(sender.status == -1) {
@@ -108,7 +108,7 @@ router.get('/all', async function(req, res) {
                 message: 'Token non valido.'
             });
         } else if(sender.status >= 0) {
-            // È un cliente o funzionario/manager
+            // È un cliente, funzionario o manager
             if(req.query.filter != null && req.query.sort != null) {
                 const result = await myMongoReservation.reservationsFind(token, sender.status, req.query.filter ? req.query.filter : '', req.query.sort ? 1 : -1);
                 if(result.status == 0) {
@@ -136,12 +136,12 @@ router.get('/all', async function(req, res) {
                 message: 'Operazione non autorizzata.'
             });
         }
-    // } catch(error) {
-    //     return res.status(400).json({
-    //         message: 'Errore di GET /api/reservation/all',
-    //         error: error
-    //     })
-    // }
+    } catch(error) {
+        return res.status(400).json({
+            message: 'Errore di GET /api/reservation/all',
+            error: error
+        })
+    }
 });
 
 // POST /api/reservation

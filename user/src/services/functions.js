@@ -8,9 +8,9 @@ Date.prototype.addDays = function(days) {
 // Metodo che converte una data in un oggetto JSON
 export function convertDateToObject(date) {
     return {
-        day: date.getDate().toString(),
-        month: (date.getMonth() + 1).toString(),
-        year: date.getFullYear().toString()
+        day: date.getDate(),
+        month: date.getMonth() + 1,
+        year: date.getFullYear()
     }
 }
   

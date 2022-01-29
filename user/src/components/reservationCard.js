@@ -184,9 +184,22 @@ export class ReservationCard extends React.Component {
                   {parseFloat(this.state.reservation.totalPrice).toFixed(2)} €
                 </div>
               </div>
+              {
+              new Date > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month, this.state.reservation.endDate.day) ?
+              (
+                <div className='row'>
+                  <div className='col-8'>
+                    <b>Penale:</b>
+                  </div>
+                  <div className='col-4 text-end'>
+                    {parseFloat(this.state.reservation.totalPrice * 0.1).toFixed(2)} €
+                  </div>
+                </div>
+              ) : <></>
+              }
               <div className='row'>
                 <div className='col-12'>
-                <b>Dettagli:</b>
+                  <b>Dettagli:</b>
                 </div>
               </div>
               <div className='row'>

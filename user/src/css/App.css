@@ -143,3 +143,17 @@ html {
     transform: rotate(360deg);
   }
 }
+
+input.remove-spin-box::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.remove-spin-box::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number].remove-spin-box {
+  -moz-appearance: textfield;
+}

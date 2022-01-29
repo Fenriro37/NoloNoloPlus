@@ -61,6 +61,7 @@ export class Invoice extends React.Component {
     ) : (
       variablePrice * days
     )
+    var penale = (discountedFixedPrice + discountedVariablePrice) / 122 * 100;
 
     return (
       <>
@@ -109,24 +110,35 @@ export class Invoice extends React.Component {
                 <td>{discountedFixedPrice.toFixed(2)} €</td>
               </tr>
               <tr>
-              <td>{this.state.reservation.productTitle} {this.state.reservation.productBrand} (variabile)</td>
+                <td>{this.state.reservation.productTitle} {this.state.reservation.productBrand} (variabile)</td>
                 <td>{days}</td>
                 <td>{variablePrice.toFixed(2)} €</td>
                 <td>{this.state.reservation.variableDiscount.onSale && days > this.state.reservation.variableDiscount.days ? (this.state.reservation.variableDiscount.onSaleType ? ((parseFloat(this.state.reservation.variableDiscount.onSaleValue)).toFixed(2) + '%') : ((100 - discountedVariablePrice / days / variablePrice * 100).toFixed(2) + '%')) : '0%'}</td>
                 <td>22%</td>
                 <td>{discountedVariablePrice.toFixed(2)} €</td>
               </tr>
+              {
+                new Date > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month, this.state.reservation.endDate.day) ?
+                (
+                  <tr>
+                    <td colSpan={5}>Penale</td>
+                    <td>{penale.toFixed(2)} €</td>
+                  </tr>
+                ) : (
+                  <></>
+                )
+              }
               <tr>
                 <td colSpan={5}>Totale imponibile</td>
-                <td>{(discountedFixedPrice + discountedVariablePrice).toFixed(2)} €</td>
+                <td>{(discountedFixedPrice + discountedVariablePrice + penale).toFixed(2)} €</td>
               </tr>
               <tr>
                 <td colSpan={5}>IVA</td>
-                <td>{((discountedFixedPrice + discountedVariablePrice) * 0.22).toFixed(2)} €</td>
+                <td>{((discountedFixedPrice + discountedVariablePrice + penale) * 0.22).toFixed(2)} €</td>
               </tr>
               <tr>
                 <td colSpan={5}><b>Totale Fattura</b></td>
-                <td>{((discountedFixedPrice + discountedVariablePrice) * 1.22).toFixed(2)} €</td>
+                <td>{((discountedFixedPrice + discountedVariablePrice + penale) * 1.22).toFixed(2)} €</td>
               </tr>
               <tr>
                 <td>Dettagli:</td>

@@ -52,9 +52,9 @@ export class User extends Component {
         city: ''
       },
       userPayment: {
+        cardOwner: '',
         cardType: '',
-        cardName: '',
-        cardSurname: '',
+        cardCode: '',
         cardExpireYear: '',
         cardExpireMonth: '',
         cardCVV: ''
@@ -126,12 +126,12 @@ export class User extends Component {
         addressNumber: ''
       };
       var payment = {
-        cardName: '',
-        cardSurname: '',
+        cardOwner: '',
+        cardCode: 0,
         cardExpireYear: this.state.newExprYear,
         cardExpireMonth: this.state.newExprMonth,
         cardType: this.state.newCardType,
-        cardCVV: ''
+        cardCVV: 0
       };
       for (var i in tmp) {
         if(tmp[i].name == 'userAddressCity') {
@@ -140,12 +140,12 @@ export class User extends Component {
           address.addressStreet = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
         } else if(tmp[i].name == 'userAddressNumber') {
           address.addressNumber = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userPaymentName') {
-          payment.cardName = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userPaymentSurname') {
-          payment.cardSurname = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userPaymentOwner') {
+          payment.cardOwner = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userPaymentCardCode') {
+          payment.cardCode = tmp[i].value ? parseInt(tmp[i].value) : parseInt(tmp[i].placeholder);
         } else if(tmp[i].name == 'userPaymentCVV') {
-          payment.cardCVV = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+          payment.cardCVV = tmp[i].value ? parseInt(tmp[i].value) : parseInt(tmp[i].placeholder);
         }
       }
        // Controllo le modifiche degli Input
@@ -155,14 +155,16 @@ export class User extends Component {
             if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
               // È stato modificato l'indirizzo
               query.address = address;
-            } else if(tmp[i].name == 'userPaymentName' || tmp[i].name == 'userPaymentSurname' || tmp[i].name == 'userPaymentCVV') {
+            } else if(tmp[i].name == 'userPaymentCardCode' || tmp[i].name == 'userPaymentOwner' || tmp[i].name == 'userPaymentCVV') {
               // È stato modificato il nome o cognome del metodo di pagamento
               query.payment = payment;
+            } else if(tmp[i].name == 'userPhoneNumber') { 
+              query.phoneNumber = parseInt(tmp[i].value)
             } else {
               query[tmp[i].name] = tmp[i].value;
             }          
           }
-          if(tmp[i].name == 'userPassword' && tmp[i].value == 'Password'){
+          if(tmp[i].name == 'userPassword' && tmp[i].value == 'Password') {
             query.password = tmp[i].value;
           }
         }
@@ -218,8 +220,8 @@ export class User extends Component {
           city: result.data.data.address.addressCity
         },
         userPayment: {
-          cardName: result.data.data.payment.cardName,
-          cardSurname: result.data.data.payment.cardSurname,
+          cardOwner: result.data.data.payment.cardOwner,
+          cardCode: result.data.data.payment.cardCode,
           cardType: result.data.data.payment.cardType,
           cardExpireYear: result.data.data.payment.cardExpireYear,
           cardExpireMonth: result.data.data.payment.cardExpireMonth,
@@ -239,6 +241,8 @@ export class User extends Component {
         // Settings
         isAuth: true
       });
+    }).catch(() => {
+      window.location.replace('/public/login.html')
     });
   }
 
@@ -330,15 +334,15 @@ export class User extends Component {
               <Form.Label>Data di Nascita:</Form.Label>
               <Form.Control
               type='date' 
-              value={this.state.newBirthday.year + '-' + this.state.newBirthday.month + '-' + this.state.newBirthday.day} 
+              value={this.state.newBirthday.year + '-' + (this.state.newBirthday.month < 10 ? '0' + this.state.newBirthday.month : this.state.newBirthday.month) + '-' + (this.state.newBirthday.day < 10 ? ('0' + this.state.newBirthday.day) : this.state.newBirthday.month)} 
               name='userBirthday'
               onChange={(event) => {
                 var x = event.target.value.split('-');
                 this.setState({
                   newBirthday: {
-                    year: x[0], 
-                    month: x[1], 
-                    day: x[2]
+                    year: parseInt(x[0]),
+                    month: parseInt(x[1]), 
+                    day: parseInt(x[2])
                   }
                 });
               }}/>
@@ -372,8 +376,9 @@ export class User extends Component {
 
             <Form.Group className='mb-2'>
               <Form.Label>Numero di Telefono:</Form.Label>
-              <Form.Control 
-              type='text' 
+              <Form.Control
+              className='remove-spin-box'
+              type='number' 
               name='userPhoneNumber'
               placeholder={this.state.userPhoneNumber}/>
             </Form.Group> 
@@ -381,19 +386,20 @@ export class User extends Component {
             <h2 className='mt-4 mb-2'>Metodo di Pagamento</h2>
 
             <Form.Group className='mb-2'>
-              <Form.Label>Numero della Carta:</Form.Label>
-              <Form.Control 
-              type='number' 
-              name='userPaymentName' 
-              placeholder={this.state.userPayment.cardName}/>
-            </Form.Group>
-            
-            <Form.Group className='mb-2'>
               <Form.Label>Intestatario:</Form.Label>
               <Form.Control 
               type='text' 
-              name='userPaymentSurname' 
-              placeholder={this.state.userPayment.cardSurname}/>
+              name='userPaymentOwner' 
+              placeholder={this.state.userPayment.cardOwner}/>
+            </Form.Group>
+
+            <Form.Group className='mb-2'>
+              <Form.Label>Numero della Carta:</Form.Label>
+              <Form.Control 
+              type='number'
+              className='remove-spin-box'
+              name='userPaymentCardCode' 
+              placeholder={this.state.userPayment.cardCode}/>
             </Form.Group>
             
             <Form.Group className='mb-2'>
@@ -421,7 +427,7 @@ export class User extends Component {
                 value={this.state.newExprMonth}
                 onChange={(event) => {
                   this.setState({
-                    newExprMonth: event.target.value
+                    newExprMonth: parseInt(event.target.value)
                   });
                 }} 
                 aria-label='Select Card Expiration Month'>
@@ -436,12 +442,12 @@ export class User extends Component {
                 value={this.state.newExprYear}
                 onChange={(event) => {
                   this.setState({
-                    newExprYear: event.target.value
+                    newExprYear: parseInt(event.target.value)
                   });
                 }}
                 aria-label='Select Card Expiration Year'>
                   {this.state.yearList.map((year) => (
-                    <option key={year.key} value={parseInt(year.key) + 2021}>{year.year}</option>
+                    <option key={year.key} value={parseInt(year.key + 2021)}>{year.year}</option>
                   ))}
                 </Form.Select>
               </Col>    
@@ -450,7 +456,8 @@ export class User extends Component {
             <Form.Group className='mb-2'>
               <Form.Label>CVV:</Form.Label>
               <Form.Control
-              type='text'
+              type='number'
+              className='remove-spin-box'
               name='userPaymentCVV'
               placeholder={this.state.userPayment.cardCVV}/>
             </Form.Group>

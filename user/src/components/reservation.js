@@ -95,6 +95,7 @@ export class Reservation extends React.Component{
         this.setState({
           isAuthenticated: false
         });
+        window.location.replace('/public/login.html')
       });
     }
   }

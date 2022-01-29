@@ -58,12 +58,12 @@ export class MakeReservation extends React.Component {
         } else {
           variableTotalPrice = (datediff(this.state.value[0], this.state.value[1]) * this.state.variablePrice) - this.state.variableDiscount.onSaleValue;
         }
-        return (parseFloat(this.state.fixedPrice) + variableTotalPrice).toFixed(2);
+        return parseFloat(this.state.fixedPrice + variableTotalPrice);
       } else {
-        return (parseFloat(this.state.fixedPrice) + (datediff(this.state.value[0], this.state.value[1]) * this.state.variablePrice)).toFixed(2)
+        return parseFloat(this.state.fixedPrice + (datediff(this.state.value[0], this.state.value[1]) * this.state.variablePrice));
       }
     } else {
-      return '0.00'
+      return 0.0
     }
   }
 
@@ -71,7 +71,7 @@ export class MakeReservation extends React.Component {
     this.setState({
       show: false
     });
-    window.location.reload(false);
+    window.location.replace('/user/reservation')
   }
   
   handleShow() {
@@ -218,7 +218,7 @@ export class MakeReservation extends React.Component {
             Prezzo totale:
           </div>
           <div className='col-4 text-end'>
-            {this.checkDateRange(this.state.value) ? this.priceCalculator() : '0.00'} €
+            {this.checkDateRange(this.state.value) ? this.priceCalculator().toFixed(2) : '0.00'} €
           </div>
         </div>
         {this.state.isAuthenticated ? (
