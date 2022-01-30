@@ -138,7 +138,7 @@
             <span tabindex="0" :aria-label="'totale prenotazione: '+ item.price+'€'">{{ item.price +'€'}}</span>
           </template>
           <template v-slot:cell(prenotazione)="{ item }">
-            <router-link :aria-label="'identificativo prenotazione: '+ item.reservation" :to="{ name: 'reservation',  params: { id: item.reservation}}">{{ item.reservation }}</router-link>
+            <router-link :aria-label="'identificativo prenotazione: '+ item.reservation" :to="{ name: 'reservation',  params: { id: item.reservation}}">Id prenotazione</router-link>
           </template>
           <template  v-slot:cell(DataInizio)="{ item }">
             <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate">{{ item.startDate }}</span>

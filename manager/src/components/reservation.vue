@@ -21,7 +21,7 @@
 
       <div class="row mb-3">
         <div class="col-3">
-          <label for="date" class="mr-3">Periodo Prenotazione </label>
+          <label tabindex="0" aria-label="Etichetta periodo prenotazione, separare le due date con uno spazio. Le date devono essere nel formato GG trattino MM trattino YYYY. Campo obbligatorio" for="date" class="mr-3">Periodo Prenotazione </label>
         </div>
         <div class="col-9">
           <template v-if="!boolModify || !available">
@@ -29,7 +29,7 @@
             <label v-if="!available && boolModify" for="date" class="mr-3">Non disponibile in giorni diversi </label>
           </template>
           <template v-else>
-            <date-picker  id="date" v-model="time" aria-label="Periodo prenotazione"  :placeholder="bookingStart + ' ~ ' + bookingEnd" @change="changeData" range :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
+            <date-picker  id="date" v-model="time" :placeholder="bookingStart + ' ~ ' + bookingEnd" @change="changeData" range range-separator=" " :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
           </template>
         </div>
       </div>

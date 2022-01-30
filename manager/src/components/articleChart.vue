@@ -19,22 +19,22 @@
           <h4>Statistiche</h4>
 
           <div class="form-floating mb-3">
-            <input type="text" id="Reservation number" :value="price.length" class="form-control" aria-label="Reservation number" aria-describedby="basic-1" readonly>
+            <input type="text" id="Reservation number" :value="price.length" class="form-control" readonly>
             <label for="Reservation number"> Totale noleggi</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" id="Reservation total" :value="newTotal + '€'" class="form-control" aria-label="Reservation total" aria-describedby="basic-2" readonly>
+            <input type="text" id="Reservation total" :value="(newTotal).toFixed(2) + '€'" class="form-control" readonly>
             <label for="Reservation total"> Totale fatturato</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" id="Reservation averagePrice" :value="newTotal/price.length + '€'" class="form-control" aria-label="Reservation averagePrice" aria-describedby="basic-3" readonly>
+            <input type="text" id="Reservation averagePrice" :value="(newTotal/price.length).toFixed(2) + '€'" class="form-control" readonly>
             <label for="Reservation averagePrice"> Media costo prenotazione</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" id="Reservation averageDays" :value="totalDays/price.length + ' giorni'" class="form-control" aria-label="Reservation averageDays" aria-describedby="basic-4" readonly>
+            <input type="text" id="Reservation averageDays" :value="(totalDays/price.length).toFixed(2) + ' giorni'" class="form-control" readonly>
             <label for="Reservation averageDays"> Media durata noleggio</label>
           </div>
         </div>
@@ -74,7 +74,11 @@ export default {
         this.labels.push(item.clientId)
         this.price.push(item.total)
         this.newTotal += item.total 
-        let time = (item.endDate.year * 10000 + item.endDate.month * 100 + item.endDate.day) - (item.startDate.year * 10000 + item.startDate.month * 100 + item.startDate.day) + 1
+
+        let date1 = new Date(item.endDate.year, item.endDate.month-1, item.endDate.day)
+        let date2 = new Date(item.startDate.year, item.startDate.month-1, item.startDate.day) 
+        let diffTime = date1 - date2;
+        let time  = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
         this.totalDays += time
         this.days.push(time)
         this.monthfrequence[(item.startDate.month - 1)]++
@@ -88,13 +92,13 @@ export default {
               data: this.price,
               label: 'Prezzo Prenotazione',
               borderColor: 'rgba(50, 115, 220, 0.5)',
-              backgroundColor: 'rgba(50, 115, 220, 0.1)'
+              backgroundColor: 'rgb(50, 115, 220)'
             },
             {
               data: this.days,
               label: 'Giorni prenotazione',
               borderColor: 'rgba(255, 56, 96, 0.5)',
-              backgroundColor: 'rgba(255, 56, 96, 0.1)',
+              backgroundColor: 'rgb(255, 56, 96)',
             }
           ]
         },
@@ -120,7 +124,7 @@ export default {
               data: this.monthfrequence,
               label: 'Prenotazioni mensili',
               borderColor: 'rgba(255, 56, 96, 0.5)',
-              backgroundColor: 'rgba(255, 56, 96, 0.1)',
+              backgroundColor: 'rgb(255, 56, 96)',
             } 
           ]
         },

@@ -108,7 +108,7 @@ function fill(){
 		for (let i in data.bookings){
 			$("#myTable").append(
 				'<tr>'+
-				'<td><a aria-label="Link alla prenotazione. Identificativo:'+data.bookings[i].reservationId +'" href="reservation.html?id=' +data.bookings[i].reservationId+'">'+data.bookings[i].reservationId+'</td>'+
+				'<td><a aria-label="Link alla prenotazione. Identificativo:'+data.bookings[i].reservationId +'" href="reservation.html?id=' +data.bookings[i].reservationId+'">Id prenotazione</td>'+
 				'<td><a aria-label="Email cliente: '+data.bookings[i].clientId+' " href="client.html?email=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
 				'<td tabindex="0" aria-label="Prezzo totale: '+data.bookings[i].total +'€">'+data.bookings[i].total+'€</td>'+
 				'<td tabindex="0" aria-label="Data inizio prenotazione '+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'" >'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
