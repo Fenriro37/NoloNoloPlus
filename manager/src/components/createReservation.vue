@@ -25,7 +25,7 @@
       </div>
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Prezzo fisso, campo obbligatorio" required>
+				<input type="number" class="form-control" min="1" step=".01" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Prezzo fisso, campo obbligatorio" required>
 				<label for="price"> Prezzo Fisso*</label>
 			</div>
 
@@ -62,7 +62,7 @@
           <div class="row mb-3">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" aria-label="valore sconto, campo obbligatorio" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
+            <input type="number" aria-label="valore sconto, campo obbligatorio" class="form-control" min="1" step=".01" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@
 
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="dailyPrice" v-on:keyup="newPrice" aria-label="Prezzo giornaliero, campo obbligatorio" required>
+				<input type="number" class="form-control" min="1" step=".01" v-model="dailyPrice" v-on:keyup="newPrice" aria-label="Prezzo giornaliero, campo obbligatorio" required>
 				<label for="price"> Prezzo Giornaliero*</label>
 			</div>
 
@@ -107,7 +107,7 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" aria-label="valore sconto giornaliero, campo obbligatorio " class="form-control" min="1" step="1" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
+            <input type="number" aria-label="valore sconto giornaliero, campo obbligatorio " class="form-control" min="1" step=".01" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
@@ -219,7 +219,7 @@
         if(this.onSale){
           this.onSale = false
           this.onSaleType = false
-          this.onSaleValue = 1
+          this.onSaleValue = 0
         }
         else
           this.onSale = true
@@ -234,7 +234,8 @@
         if(this.overOnSale){
         this.overOnSale = false
         this.overOnSaleType = false
-        this.overOnSaleValue = 1
+        this.overOnSaleValue = 0
+        this.overDaysCount = 0
         }
         else
           this.overOnSale = true
@@ -266,50 +267,50 @@
         let year1 = this.time[1].getFullYear()
         const today = new Date();
         query.bookingDate = {}
-        query.bookingDate.day = today.getDate()
-        query.bookingDate.month = today.getMonth()+1
-        query.bookingDate.year = today.getFullYear()
+        query.bookingDate.day = parseInt(today.getDate())
+        query.bookingDate.month = parseInt(today.getMonth()+1)
+        query.bookingDate.year = parseInt(today.getFullYear())
         query.startDate = {}
-        query.startDate.day = day
-        query.startDate.month = month
-        query.startDate.year = year
+        query.startDate.day = parseInt(day)
+        query.startDate.month = parseInt(month)
+        query.startDate.year = parseInt(year)
         query.endDate = {}
-        query.endDate.day = day1
-        query.endDate.month = month1
-        query.endDate.year = year1
+        query.endDate.day = parseInt(day1)
+        query.endDate.month = parseInt(month1)
+        query.endDate.year = parseInt(year1)
         query.productTitle = this.article.title
         query.productBrand =  this.article.brand
         query.productImage = this.article.image
 
         ///////prezzzi
-        query.variablePrice = this.dailyPrice
-        query.fixedPrice = this.fixedPrice
-        query.totalPrice = this.newTotal
+        query.variablePrice = parseFloat(this.dailyPrice)
+        query.fixedPrice = parseFloat(this.fixedPrice)
+        query.totalPrice = parseFloat(this.newTotal)
 
         query.fixedDiscount = {}
         if(this.onSale){
           query.fixedDiscount.onSale = true
           query.fixedDiscount.onSaleType = this.onSaleType
-          query.fixedDiscount.onSaleValue = this.onSaleValue
+          query.fixedDiscount.onSaleValue = parseFloat(this.onSaleValue)
         }
         else{
           query.fixedDiscount.onSale = false
           query.fixedDiscount.onSaleType = false
-          query.fixedDiscount.onSaleValue = ''
+          query.fixedDiscount.onSaleValue = 0
         }
 
         query.variableDiscount = {}
         if(this.overOnSale){
           query.variableDiscount.onSale = true
           query.variableDiscount.onSaleType = this.overOnSaleType
-          query.variableDiscount.days = this.overDaysCount
-          query.variableDiscount.onSaleValue = this.overOnSaleValue
+          query.variableDiscount.days = parseInt(this.overDaysCount)
+          query.variableDiscount.onSaleValue = parseFloat(this.overOnSaleValue)
         }
         else{
-          query.variableDiscount.days = ''
+          query.variableDiscount.days = 0
           query.variableDiscount.onSale = false
           query.variableDiscount.onSaleType = false
-          query.variableDiscount.onSaleValue = ''
+          query.variableDiscount.onSaleValue = 0
         }
 
         Functions.getUser(this.email, 1)
@@ -327,14 +328,14 @@
             newBookings.clientId = this.email
             newBookings.reservationId =  result.data.data._id
             newBookings.startDate = {}
-            newBookings.startDate.day = day
-            newBookings.startDate.month = month
-            newBookings.startDate.year = year
+            newBookings.startDate.day = parseInt(day)
+            newBookings.startDate.month = parseInt(month)
+            newBookings.startDate.year = parseInt(year)
             newBookings.endDate = {}
-            newBookings.endDate.day = day1
-            newBookings.endDate.month = month1
-            newBookings.endDate.year = year1
-            newBookings.total = this.newTotal
+            newBookings.endDate.day = parseInt(day1)
+            newBookings.endDate.month = parseInt(month1)
+            newBookings.endDate.year = parseInt(year1)
+            newBookings.total = parseFloat(this.newTotal)
             let query = {}
             query.bookings = this.article.bookings
             query.bookings.push(newBookings)
@@ -396,7 +397,7 @@
             addendum2 = this.dailyPrice * days
           }
           console.log(days +'-'+ addendum1 +'-'+ addendum2)
-          this.newTotal = parseFloat(addendum1)+ parseFloat(addendum2)
+          this.newTotal = parseFloat((parseFloat(addendum1) +parseFloat(addendum2)).toFixed(2))
           if(this.newTotal <= 0){
             this.negativePrice = true
           }

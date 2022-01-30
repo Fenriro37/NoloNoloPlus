@@ -35,7 +35,7 @@
       </div>
 
       <div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" :disabled="!boolModify" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="prezzo fisso. Campo obbligatorio " required>
+				<input type="number" class="form-control" min="1" step=".01" :disabled="!boolModify" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="prezzo fisso. Campo obbligatorio " required>
 				<label for="price"> Prezzo Fisso*</label>
 			</div>
 
@@ -72,7 +72,7 @@
           <div class="row mb-3">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" aria-label=" valore sconto prezzo fisso. Campo obbligatorio" min="1" step="1" :disabled="!boolModify" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
+            <input type="number" class="form-control" aria-label=" valore sconto prezzo fisso. Campo obbligatorio" min="1" step=".01" :disabled="!boolModify" v-model="onSaleValue" v-on:keyup="newPrice"  id="saleValue" required>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
 
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" aria-label=" prezzo giornaliero. Campo obbligatorio" :disabled="!boolModify" v-model="dailyPrice" v-on:keyup="newPrice" required>
+				<input type="number" class="form-control" min="1" step=".01" aria-label=" prezzo giornaliero. Campo obbligatorio" :disabled="!boolModify" v-model="dailyPrice" v-on:keyup="newPrice" required>
 				<label for="price"> Prezzo Giornaliero*</label>
 			</div>
 
@@ -117,7 +117,7 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" aria-label=" valore sconto prezzo giornaliero. Campo obbligatorio" min="1" step="1" :disabled="!boolModify" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
+            <input type="number" class="form-control" aria-label=" valore sconto prezzo giornaliero. Campo obbligatorio" min="1" step=".01" :disabled="!boolModify" v-model="overOnSaleValue" v-on:keyup="newPrice" id="saleValueOVer" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
@@ -248,10 +248,6 @@
         }
       )
     },
-      
-    /*beforeRouteLeave (){
-      this.$emit('clicked')
-    },*/
 
     methods: {
 
@@ -294,23 +290,23 @@
 
         //controlliamo i prezzi
         if(this.dailyPrice != this.reservation.variablePrice)
-          query.variablePrice = this.dailyPrice;
+          query.variablePrice = parseFloat(this.dailyPrice);
         if(this.fixedPrice != this.reservation.fixedPrice)
-          query.fixedPrice = this.fixedPrice;
+          query.fixedPrice = parseFloat(this.fixedPrice);
 
         if( this.onSale != this.reservation.fixedDiscount.onSale || this.onSaleType != this.reservation.fixedDiscount.onSaleType || this.onSaleValue != this.reservation.fixedDiscount.onSaleValue){
           query.fixedDiscount = {}
           query.fixedDiscount.onSale = this.onSale
           query.fixedDiscount.onSaleType = this.onSaleType
-          query.fixedDiscount.onSaleValue = this.onSaleValue
+          query.fixedDiscount.onSaleValue = parseFloat(this.onSaleValue)
         }
 
         if( this.overDaysCount != this.reservation.variableDiscount.days || this.overOnSale != this.reservation.variableDiscount.onSale || this.overOnSaleType != this.reservation.variableDiscount.onSaleType || this.overOnSaleValue != this.reservation.variableDiscount.onSaleValue){
         query.variableDiscount = {}
         query.variableDiscount.onSale = this.overOnSale
         query.variableDiscount.onSaleType = this.overOnSaleType
-        query.variableDiscount.days = this.overDaysCount
-        query.variableDiscount.onSaleValue = this.overOnSaleValue
+        query.variableDiscount.days = parseInt(this.overDaysCount)
+        query.variableDiscount.onSaleValue = parseFloat(this.overOnSaleValue)
         }
 
         if(this.rentalOccurred != this.reservation.isTaken)
@@ -324,15 +320,15 @@
 
 
         if(this.time != null || this.newTotal != this.reservation.totalPrice ){
-          query.totalPrice = this.newTotal;
+          query.totalPrice = parseFloat(this.newTotal);
           //prendere i dati
           if(this.time!=null){
-            let day = this.time[0].getDate()
-            let month = this.time[0].getMonth()+1
-            let year = this.time[0].getFullYear()
-            let day1 = this.time[1].getDate()
-            let month1 = this.time[1].getMonth()+1
-            let year1 = this.time[1].getFullYear()
+            let day = parseInt(this.time[0].getDate())
+            let month = parseInt(this.time[0].getMonth()+1)
+            let year = parseInt(this.time[0].getFullYear())
+            let day1 = parseInt(this.time[1].getDate())
+            let month1 = parseInt(this.time[1].getMonth()+1)
+            let year1 = parseInt(this.time[1].getFullYear())
             //modificare reservation
             query.startDate = {}
             query.startDate.day = day
@@ -353,14 +349,14 @@
                 this.bookings[i].endDate.day = day1
                 this.bookings[i].endDate.month = month1
                 this.bookings[i].endDate.year = year1
-                this.bookings[i].total = this.newTotal;
+                this.bookings[i].total = parseFloat(this.newTotal);
               }
             }
           }
           else{
             for(let i in this.bookings){
               if(this.reservationId == this.bookings[i].reservationId){
-                this.bookings[i].total = this.newTotal;
+                this.bookings[i].total = parseFloat(this.newTotal);
               }
             }
           }
@@ -435,16 +431,18 @@
         else
           this.returned = false
       },
+
       changeSale(){
         if(this.onSale){
           this.onSale = false
           this.onSaleType = false
-          this.onSaleValue = ''
+          this.onSaleValue = 0
         }
         else
           this.onSale = true
         this.newPrice()
       },
+      
       changeOnSaleType(){
         this.onSaleType = !this.onSaleType
         this.newPrice()
@@ -454,8 +452,8 @@
         if(this.overOnSale){
         this.overOnSale = false
         this.overOnSaleType = false
-        this.overOnSaleValue = ''
-        this.overDaysCount = ''
+        this.overOnSaleValue = 0
+        this.overDaysCount = 0
         }
         else
           this.overOnSale = true
@@ -494,9 +492,7 @@
         }
         let diffTime = date2 - date1;
         let days  = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
-
         let addendum1, addendum2
-
 
         if(this.onSale){
           if(this.onSaleType)
@@ -508,7 +504,6 @@
           addendum1 = this.fixedPrice
         }
         if(this.overOnSale && days > this.overDaysCount ){
-          console.log("yeas")
           if(this.overOnSaleType)
             addendum2 = this.dailyPrice * days - this.dailyPrice * days * this.overOnSaleValue / 100
           else
@@ -518,7 +513,7 @@
           addendum2 = this.dailyPrice * days
         }
         console.log(days +'-'+ addendum1 +'-'+ addendum2)
-        this.newTotal = parseFloat(addendum1)+ parseFloat(addendum2)
+        this.newTotal = parseFloat((parseFloat(addendum1) +parseFloat(addendum2)).toFixed(2))
         if(this.newTotal <= 0){
           this.negativePrice = true
         }

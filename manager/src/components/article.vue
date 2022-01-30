@@ -40,7 +40,7 @@
       <div class="row d-flex justify-content-between">
         <div class="col align-items-center">
           <b-button id="rentProduct" aria-label="Bottone affitta. Porta alla pagina per la creazione di una prenotazione"  class="btn btn-lg btn-warning m-1" :disabled="enter || !available" @click="rent">Affitta</b-button>
-          <b-button type="button" aria-label="Bottone Modifica. Apre una finestra dove modificare i campi dell'articolo" class="btn btn-lg m-1" variant="primary" data-bs-toggle="modal" data-bs-target="#myModal" :disabled="enter" v-on:click="getModalData">Modifica</b-button>
+          <b-button type="button" aria-label="Bottone Modifica. Apre una finestra dove modificare i campi dell'articolo" class="btn btn-lg m-1" variant="primary" :disabled="enter" v-on:click="getModalData">Modifica</b-button>
           <b-button type="button" aria-label="Bottone elimina. Cancella l'articolo e porta sulla pagina del catalogo" class="btn btn-lg btn-danger m-1" :disabled="boolDelete || enter" v-on:click="deleteProduct">Elimina</b-button>
           <b-button aria-label="Bottone analytics. Porta alla pagina per vedere le statistiche di questo prodotto" :disabled="bookings.length === 0 || enter" class="btn btn-lg btn-warning m-1" @click="stats"> Analytics </b-button>
         </div>
@@ -52,16 +52,17 @@
         <label  v-else class="form-check-label" for="flexSwitchCheckDefault">Modifica per attivare articolo</label>
       </div>
 
-      <div class="modal" id="myModal">
+      <b-modal ref="myModal" hide-footer hide-header class="modal" id="myModal">
         <div class="modal-dialog">
           <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
               <h4 class="modal-title">Modifica prodotto</h4>
-              <button type="button" aria-label="Bottone chiudi finestra di modifica" class="btn-close" data-bs-dismiss="modal"></button>	
+              <button type="button" aria-label="Bottone chiudi finestra di modifica" @click="hideModal" class="btn-close"></button>	
             </div>
             <!-- Modal body -->
             <div class="modal-body">
+            <form name="myform" id="formId" @submit.prevent="saveData">
               <b-row>
                 <b-col cols="6">
                   <label for="productName" class="form-label">Nome*</label>
@@ -72,7 +73,7 @@
               </b-row>
               <b-row class="mb-3">
                 <b-col cols="6">
-                  <b-form-input  type="text" :aria-label="'Titolo, Campo obbligatorio'" class="form-control" id="productname" v-model="titleModal" ></b-form-input>	
+                  <b-form-input  type="text" :aria-label="'Titolo, Campo obbligatorio'" class="form-control" id="productname" v-model="titleModal" required></b-form-input>	
                 </b-col>
                 <b-col cols="6">
                   <b-form-input type="text" :aria-label="'Brand, Campo obbligatorio'" class="form-control" id="productModel" v-model="brandModal"></b-form-input>	
@@ -94,7 +95,7 @@
                   <label for="imageLink" class="form-label">Immagine* (link)</label>
                 </b-col>
                 <b-col cols="8">
-                  <b-form-input type="text"  :aria-label="'L` mmagine deve essere in forma di URL. Campo obbligatorio'+ imageModal" class="form-control" id="imageLink" v-model="imageModal"></b-form-input>	
+                  <b-form-input type="text"  :aria-label="'L` mmagine deve essere in forma di URL. Campo obbligatorio'+ imageModal" class="form-control" id="imageLink" v-model="imageModal" required></b-form-input>	
                 </b-col>
               </b-row>
               <b-row>
@@ -116,7 +117,7 @@
                 </b-col>
                 <b-col cols="6" class="mt-2 mb-2">
                   <div class="input-group">
-                    <b-form-input type="number" id="productPrice" class="form-control text-end" aria-label="Prezzo fisso: campo obbligatorio" v-model="fixedModal" ></b-form-input>	
+                    <b-form-input type="number" min="1" step=".01" id="productPrice" class="form-control text-end" aria-label="Prezzo fisso: campo obbligatorio" v-model="fixedModal" v-on:keyup="changeDiscountValue" required></b-form-input>	
                     <span class="input-group-text justify-content-center">€</span>
                   </div>
                 </b-col>
@@ -150,7 +151,7 @@
                 <b-col cols="6">
                   <div class="input-group">
                     <span class="input-group-text justify-content-center">-</span>
-                    <input type="text" class="form-control text-end" min="1" step="1" aria-label="valore sconto prezzo fisso. Campo obbligatorio" v-model="onSaleValueModal" :disabled="!onSaleModal">
+                    <input type="text" class="form-control text-end" min="1" step=".01" aria-label="valore sconto prezzo fisso. Campo obbligatorio" v-model="onSaleValueModal" v-on:keyup="changeDiscountValue" :disabled="!onSaleModal" required>
                     <span v-if="onSaleTypeModal" id="pd" class="input-group-text justify-content-center">%</span>
                     <span v-else id="pd" class="input-group-text justify-content-center">€</span>
                   </div>
@@ -162,7 +163,7 @@
                 </b-col>
                 <b-col cols="6">
                   <div class="input-group">
-                    <input type="text" class="form-control text-end" aria-label="Prezzo fisso scontato. Sola lettura. Se negativo non sarà possibile modificare il prodotto." readonly :placeholder="getDiscountedModal">
+                    <input type="text" class="form-control text-end" aria-label="Prezzo fisso scontato. Sola lettura. Se negativo non sarà possibile modificare il prodotto." :readonly="onSaleModal" :disabled="!onSaleModal" v-model="discountTotal">
                     <span class="input-group-text justify-content-center">€</span>
                   </div>
                 </b-col>
@@ -174,7 +175,7 @@
                 </b-col>
                 <b-col cols="6" class="mt-2 mb-2">
                   <div class="input-group">
-                    <input type="number" id="dailyPrice" aria-label="Prezzo giornaliero. Campo obbligatorio" class="form-control text-end" v-model="dailyModal">
+                    <input type="number" min="1" step=".01" id="dailyPrice" aria-label="Prezzo giornaliero. Campo obbligatorio" class="form-control text-end" v-model="dailyModal" required>
                     <span class="input-group-text justify-content-center">€</span>
                   </div>
                 </b-col>
@@ -212,9 +213,9 @@
                       type="text" aria-label="valore sconto giornaliero." 
                       class="form-control text-end"
                       min="1"
-                      step="1"
+                      step=".01"
                       v-model="overSaleValueModal"
-                      :disabled="!overSaleModal">
+                      :disabled="!overSaleModal" required>
                     <span v-if="overSaleTypeModal" id="pd" class="input-group-text justify-content-center">%</span>
                     <span v-else id="pd" class="input-group-text justify-content-center">€</span>
                   </div>
@@ -226,7 +227,7 @@
                 </b-col>
                 <b-col cols="6">
                   <div class="input-group">
-                    <input type="number" class="form-control text-end" aria-label="giorni da superare per ottenere sconto giornaliero."  min="1" step="1" :disabled="!overSaleModal" v-model="overDaysModal">
+                    <input type="number" class="form-control text-end" aria-label="giorni da superare per ottenere sconto giornaliero."  min="1" step="1" :disabled="!overSaleModal" v-model="overDaysModal" required>
                   </div>
                 </b-col>
               </b-row>
@@ -238,7 +239,7 @@
               </b-row>
               <b-row class="mb-3">
                 <b-col>
-                  <textarea class="form-control w-80" aria-label="Descrizione, campo obbligatorio"  id="productDescription" rows="3" v-model="descriptionModal"></textarea>
+                  <textarea class="form-control w-80" aria-label="Descrizione, campo obbligatorio"  id="productDescription" rows="3" v-model="descriptionModal" required></textarea>
                 </b-col>
               </b-row>
               <b-row>
@@ -254,13 +255,15 @@
             
               <!-- Modal footer -->
               <div class="modal-footer d-flex justify-content-between">
-                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" data-bs-dismiss="modal" @click="saveData">Salva</b-button>  
-                <b-button type="button" aria-label="bottone annulla. Chiude la finestra di modifica senza salvare"  class="btn-danger float-right" data-bs-dismiss="modal">Chiudi</b-button>
+                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled="onSaleModal && discountTotal <= 0" >Salva</b-button>  
+                <b-button type="button" aria-label="bottone annulla. Chiude la finestra di modifica senza salvare" @click="hideModal" class="btn-danger float-right">Chiudi</b-button>
               </div>
+              
+            </form>     
             </div>
           </div>
         </div>
-      </div>
+      </b-modal>
       <!-- Etichette -->
       <div class="row">
         <h3 tabindex="0" aria-label="Categorie articolo">Categorie</h3>
@@ -352,6 +355,7 @@
         onSaleModal: false,
         onSaleTypeModal: false,
         onSaleValueModal: 0,
+        discountTotal: '',
         overDaysModal: '',
         overSaleModal: false,
         overSaleTypeModal : false,
@@ -428,6 +432,12 @@
     },
 
     methods: {
+      showModal() {
+        this.$refs['myModal'].show()
+      },
+      hideModal() {
+        this.$refs['myModal'].hide()
+      },
 
       rent(){
          this.$router.push({ name: 'createReservation' , params: { id: this.identifier}})
@@ -438,6 +448,7 @@
       },
 
       getModalData(){
+        this.showModal()
         this.titleModal = this.title;
         this.brandModal = this.brand;
         this.imageModal = this.image;
@@ -469,20 +480,26 @@
       changeOnSale(){
         if(this.onSaleModal){
           this.onSaleModal = false
+          this.discountTotal = ''
+          this.onSaleValueModal = ''
         }
         else{
           this.onSaleModal = true
+          this.changeDiscountValue()
         }
       },
       changeDiscountType(){
         if(this.onSaleTypeModal){
           this.onSaleTypeModal = false
+          this.overSaleValueModal = ''
+          this.overDaysModal = ''
         }
         else{
           this.onSaleTypeModal = true
         }
-
+        this.changeDiscountValue()
       },
+
       changeOnSaleOverDays(){
         if(this.overSaleModal){
           this.overSaleModal = false
@@ -505,53 +522,21 @@
         this.enter = true
         let query = {}
         
-        if(this.titleModal != this.title && this.titleModal != '') 
+        if(this.titleModal != this.title) 
           query.title = this.titleModal
-        else if(this.titleModal == '') {
-          this.enter = false
-          return (alert('Il titolo non può essere vuoto'))
-        } 
  
-        if(this.imageModal != this.image && this.imageModal != ''){
+        if(this.imageModal != this.image)
           query.image = this.imageModal 
-          try {
-            this.imageModal  = new URL(this.imageModal );
-          } catch (_) {
-            this.enter = false
-            return (alert("Formato dell' immagine non corretto"))
-          }
-        }
-        else if(this.imageModal == '') {
-          this.enter = false
-          return (alert("L' immagine non può essere vuoto"))
-        } 
 
-        if(this.dailyModal != this.dailyPrice && this.dailyModal > 0) 
-          query.price = this.dailyModal
-        else if(this.dailyPrice <= 0 || this.dailyPrice == '') {
-          this.enter = false
-          return (alert('Prezzo giornaliero non corretto'))
-        } 
+        if(this.dailyModal != this.dailyPrice) 
+          query.price = parseFloat(this.dailyModal)
+
 
         if(this.fixedModal != this.fixedPrice && this.fixedModal > 0) 
-          query.fixedPrice = this.fixedModal
-        else if(this.fixedModal <= 0 || this.fixedModal == '') {
-          this.enter = false
-          return (alert('Prezzo fisso non corretto'))
-        } 
+          query.fixedPrice = parseFloat(this.fixedModal)
 
         if(this.descriptionModal != this.description && this.descriptionModal != '') 
           query.description = this.descriptionModal
-        else if(this.descriptionModal == '') {
-          this.enter = false
-          return (alert('La descrizione non può essere vuota'))
-        }  
-
-        let total = this.getDiscountedModal
-        if(total <= 0) {
-          this.enter = false
-          return(alert('Lo sconto non è valido'))
-        }
 
         let newTags = []
         if(this.tagsModal == '')
@@ -570,46 +555,39 @@
         }
 
         if(this.brand != this.brandModal) query.brand = this.brandModal
-        if(this.quality != this.qualityModal) query.quality = this.qualityModal 
+        if(this.quality != this.qualityModal) query.quality = parseInt(this.qualityModal) 
         if(this.noteModal != this.note)  query.note = this.noteModal 
          
         query.discount = {}
-        if(this.onSaleModal && this.onSaleValueModal > 0 ){
+        if(this.onSaleModal){
           query.discount.onSale = true
-          if(this.onSaleTypeModal) query.discount.onSaleType = true
-          else query.discount.onSaleType = false
-          query.discount.onSaleValue = this.onSaleValueModal
+          query.discount.onSaleType = this.onSaleTypeModal
+          query.discount.onSaleValue = parseFloat(this.onSaleValueModal)
         }
         else{
           query.discount.onSale = false
           query.discount.onSaleType = false
-          query.discount.onSaleValue = ''
-          this.onSaleModal = false
-          this.onSaleTypeModal = false
-          this.onSaleValueModal = ''
+          query.discount.onSaleValue = 0
         }
 
         query.overDays = {}
-        if(this.overSaleModal && this.overDaysModal > 0 && this.overSaleValueModal > 0){
+        if(this.overSaleModal ){
           query.overDays.onSale = true
-          if(this.overSaleTypeModal) query.overDays.onSaleType = true
-          else query.overDays.onSaleType = false
-          query.overDays.days = this.overDaysModal
-          query.overDays.onSaleValue = this.overSaleValueModal
+          query.overDays.onSaleType = this.overSaleTypeModal
+          query.overDays.days = parseInt(this.overDaysModal)
+          query.overDays.onSaleValue = parseFloat(this.overSaleValueModal)
         }
         else{
-          query.overDays.days = ''
+          query.overDays.days = 0
           query.overDays.onSale = false
           query.overDays.onSaleType = false
-          query.overDays.onSaleValue = ''
-          this.overSaleModal = false
-          this.overDaysModal = ''
-          this.overSaleValueModal = ''
-          this.overSaleTypeModal = false
+          query.overDays.onSaleValue = 0
         }
         this.enter = false
         console.log(query)
         
+
+        this.$refs['myModal'].hide()
         Functions.saveDataProduct(this.identifier, query)
         .then( () => {
           this.title = this.titleModal 
@@ -629,6 +607,7 @@
           this.description = this.descriptionModal  
           this.note = this.noteModal  
           alert("Modifica riuscita")
+
           this.enter = false
         })
       }, 
@@ -639,8 +618,14 @@
         .then( () =>{
             this.$router.push({ name: 'articleCatalog' , params: { filter: ''}})
         })
-      }         
-
+      },
+      changeDiscountValue() {
+        if(this.onSaleTypeModal) {
+          this.discountTotal = (this.fixedModal - this.fixedModal * this.onSaleValueModal / 100).toFixed(2);
+        } 
+        else {
+          this.discountTotal = (this.fixedModal - this.onSaleValueModal).toFixed(2);
+      }   
     },
     computed: {
 
@@ -651,12 +636,7 @@
           return (this.fixedPrice - this.discount.onSaleValue).toFixed(2);
         }
       },
-      getDiscountedModal() {
-        if(this.onSaleTypeModal) {
-          return (this.fixedModal - this.fixedModal * this.onSaleValueModal / 100).toFixed(2);
-        } else {
-          return (this.fixedModal - this.onSaleValueModal).toFixed(2);
-        }
+
       },
     },
   }

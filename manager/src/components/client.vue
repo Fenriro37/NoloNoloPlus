@@ -42,7 +42,7 @@
       <hr>
 
       <div class="form-floating mb-3">
-        <b-form-datepicker id="birthday" v-model="birthday"  class="form-control" type="date" aria-label="Data di nascita: Campo obbligatorio'" :disabled="!boolModify" required></b-form-datepicker>
+        <input id="birthday" v-model="birthday"  class="form-control" type="date" min="1900-01-01" max="2003-01-01" aria-label="Data di nascita: Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="birthday" > Data di nascita</label>
       </div>
 
@@ -58,7 +58,7 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number"  id="num"  v-model="address.addressNumber" class="form-control" :aria-label="'numero:'+'. Campo obbligatorio'" step="1" min="1"  :disabled="!boolModify" required>
+        <input type="text"  id="num"  v-model="address.addressNumber" class="form-control" :aria-label="'numero:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="num"> Numero</label>
       </div> 
 
@@ -83,12 +83,12 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" id="cardName" v-model="payment.cardName"  class="form-control" :aria-label="'numero carta::'+'. Campo obbligatorio'" :disabled="!boolModify" required>
-        <label for="cardName"> Numero carta</label>
+        <input type="number" id="cardCode" v-model="payment.cardCode"  class="form-control" :aria-label="'numero carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
+        <label for="cardCode"> Numero carta</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="owner"  v-model="payment.cardSurname" class="form-control" :aria-label="'proprietario:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
+        <input type="text" id="owner"  v-model="payment.cardOwner" class="form-control" :aria-label="'proprietario:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="owner"> Proprietario</label>
       </div>
 
@@ -178,8 +178,8 @@
         },
         payment: {
           cardType: '',
-          cardName: '',
-          cardSurname: '',
+          cardCode: '',
+          cardOwner: '',
           cardExpireMonth: '',
           cardExpireYear: '',
           cardCVV: ''
@@ -264,7 +264,15 @@
         this.id = this.user._id
         this.name = this.user.userName
         this.surname = this.user.userSurname
-        this.birthday = this.user.birthday.year + '-' +this.user.birthday.month + '-' +this.user.birthday.day
+
+        let month = this.user.birthday.month 
+        if (String(month).length < 2 && parseInt(this.user.birthday.month ) < 10)
+          month = '0' + String(month)
+        let day = this.user.birthday.day
+        if (String(day).length < 2 && parseInt(this.user.birthday.day) < 10)
+          day = '0' + String(day)
+        this.birthday = this.user.birthday.year + '-' + month + '-' + day
+
         this.sex = this.user.sex
         this.phoneNumber = this.user.phoneNumber
         this.email = this.user.email
@@ -272,8 +280,8 @@
         this.address.addressNumber = this.user.address.addressNumber
         this.address.addressCity = this.user.address.addressCity
         this.payment.cardType = this.user.payment.cardType
-        this.payment.cardName = this.user.payment.cardName
-        this.payment.cardSurname = this.user.payment.cardSurname
+        this.payment.cardCode = this.user.payment.cardCode
+        this.payment.cardOwner = this.user.payment.cardOwner
         this.payment.cardExpireMonth = this.user.payment.cardExpireMonth
         this.payment.cardExpireYear = this.user.payment.cardExpireYear
 
@@ -295,13 +303,13 @@
         let date = this.birthday.split('-')
         if(date[0] != this.user.birthday.year ||  date[1] != this.user.birthday.month || date[2] != this.user.birthday.day){
           query.birthday = {}
-          query.birthday.day = date[2]
-          query.birthday.month = date[1]
-          query.birthday.year = date[0]
+          query.birthday.day = parseInt( date[2])
+          query.birthday.month = parseInt(date[1])
+          query.birthday.year = parseInt(date[0])
         }
           
         if(this.user.phoneNumber != this.phoneNumber)
-          query.phoneNumber = this.phoneNumber;
+          query.phoneNumber = parseInt(this.phoneNumber);
           
         if(this.user.email != this.email)
           query.email = this.email;
@@ -309,17 +317,17 @@
         if(this.user.address.addressStreet != this.address.addressStreet || this.user.address.addressNumber != this.address.addressNumber || this.user.address.addressCity != this.address.addressCity){
           query.address = {}
           query.address.addressStreet =  this.address.addressStreet;
-          query.address.addressNumber = this.address.addressNumber
+          query.address.addressNumber = String(this.address.addressNumber)
           query.address.addressCity =  this.address.addressCity;
         }
 
-        if(this.user.payment.cardType != this.payment.cardType || this.user.payment.cardName != this.payment.cardName || this.user.payment.cardSurname != this.payment.cardSurname || this.user.payment.cardExpireMonth != this.payment.cardExpireMonth || this.user.payment.cardExpireYear != this.payment.cardExpireYear){
+        if(this.user.payment.cardType != this.payment.cardType || this.user.payment.cardCode != this.payment.cardCode || this.user.payment.cardOwner != this.payment.cardOwner || this.user.payment.cardExpireMonth != this.payment.cardExpireMonth || this.user.payment.cardExpireYear != this.payment.cardExpireYear){
           query.payment = {}
           query.payment.cardType = this.payment.cardType
-          query.payment.cardCode = this.payment.cardName
-          query.payment.cardOwner = this.payment.cardSurname     
-          query.payment.cardExpireMonth = this.payment.cardExpireMonth
-          query.payment.cardExpireYear = this.payment.cardExpireYear;
+          query.payment.cardCode = parseInt(this.payment.cardCode)
+          query.payment.cardOwner = this.payment.cardOwner     
+          query.payment.cardExpireMonth = parseInt(this.payment.cardExpireMonth)
+          query.payment.cardExpireYear = parseInt(this.payment.cardExpireYear);
         }
         console.log(query)
         Functions.saveDataClient(this.id, query)
@@ -337,8 +345,8 @@
             this.user.address.addressNumber = this.address.addressNumber 
             this.user.address.addressCity = this.address.addressCity 
             this.user.payment.cardType = this.payment.cardType 
-            this.user.payment.cardName = this.payment.cardName 
-            this.user.payment.cardSurname = this.payment.cardSurname 
+            this.user.payment.cardCode = this.payment.cardCode 
+            this.user.payment.cardOwner = this.payment.cardOwner 
             this.user.payment.cardExpireMonth = this.payment.cardExpireMonth 
             this.user.payment.cardExpireYear = this.payment.cardExpireYear 
 

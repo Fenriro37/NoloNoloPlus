@@ -38,7 +38,7 @@ window.onload = function login() {
 
 function logout(){
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
+    console.log('sparta')
     window.location = "http:/localhost:8081/public/login.html";
 }
 

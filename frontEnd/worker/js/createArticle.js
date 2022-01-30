@@ -191,7 +191,7 @@ function save() {
 				onSaleValue: parseFloat(dayliValue)
 			},
 			price:  parseFloat($('#dayliPrice').val()),
-			quality:  $('#quality').val(),
+			quality:  parseInt($('#quality').val()),
 			description:  $('#description').val(),
 			note:  $('#note').val(),
 			bookings: []

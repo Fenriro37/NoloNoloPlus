@@ -93,7 +93,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-6">
-                                <input type="text" class="form-control" id="productName" aria-label="Titolo. Campo obbligatorio">	
+                                <input type="text" class="form-control" id="productName" aria-label="Titolo. Campo obbligatorio" required>	
                                 </div>
                                 <div class="col-6">
                                 <input type="text" class="form-control" id="productModel" aria-label="Brand">	
@@ -112,10 +112,10 @@
                             <!-- da sistemare -->
                             <div class="row mb-3 d-flex align-items-center justify-content-between">
                                 <div class="col-4">
-                                <label for="imageLink" aria-label="Immagine: campo obbligatorio. Inserisci in forma di URL" class="form-label">Immagine (link)</label>
+                                <label for="imageLink"  class="form-label">Immagine (link)</label>
                                 </div>
                                 <div class="col-8">
-                                <input type="text" class="form-control" id="imageLink">
+                                <input type="text" class="form-control" aria-label="Immagine: campo obbligatorio. Inserisci in forma di URL" id="imageLink" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -137,7 +137,7 @@
                                 </div>
                                 <div class="col-6  mt-3 mb-3">
                                     <div class="input-group">
-                                        <input type="number" min="1" step=".01" aria-label="Prezzo fisso. Campo obbligatorio" id="productPrice" class="form-control text-end" required>
+                                        <input type="number" min="1" step=".01" aria-label="Prezzo fisso. Campo obbligatorio" id="productPrice" class="form-control text-end" onkeyup="calculateDiscount() "required>
                                         <span class="input-group-text justify-content-center">€</span>
                                     </div>
                                 </div>
@@ -146,19 +146,19 @@
                             <div class="row mb-2 d-flex align-items-center justify-content-between">
                                 <div class="col-6">
                                     <div class="form-check">
-                                        <input class="form-check-input" aria-label="Sconto prezzo fisso. Seleziona per aggiungere sconto" type="checkbox" id="onSale" >
+                                        <input class="form-check-input" aria-label="Sconto prezzo fisso. Seleziona per aggiungere sconto" type="checkbox" id="onSale" required>
                                         <label class="form-check-label" for="onSale">Sconto</label>
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" aria-label="Sconto percentuale, seleziona uno dei due" type="radio" name="discount" id="discountPercentage" disabled> 
+                                        <input class="form-check-input" aria-label="Sconto percentuale, seleziona uno dei due" type="radio" name="discount" id="discountPercentage" required disabled> 
                                         <label class="form-check-label" for="discountPercentage">Percentuale</label>
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-check">
-                                        <input id="discountAmount" aria-label="Sconto fisso, seleziona uno dei due" class="form-check-input" type="radio" name="discount" disabled>
+                                        <input id="discountAmount" aria-label="Sconto fisso, seleziona uno dei due" class="form-check-input" type="radio" name="discount" required disabled>
                                         <label class="form-check-label" for="discountAmount">Fisso</label>													
                                     </div>
                                 </div>
@@ -170,7 +170,7 @@
                                 <div class="col-6">
                                     <div class="input-group">
                                     <!-- <span class="input-group-text justify-content-center">-</span>-->
-                                        <input type="number" min="1" step=".01" aria-label="Valore sconto prezzo fisso, Campo obbligatorio"  class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()"  readonly>
+                                        <input type="number" min="1" step=".01" aria-label="Valore sconto prezzo fisso, Campo obbligatorio" class="form-control text-end" id="discountValue" onkeyup="calculateDiscount()" required disabled>
                                         <span id="pd" class="input-group-text justify-content-center"></span>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                                 </div>
                                 <div class="col-6  mt-3 mb-3">
                                     <div class="input-group">
-                                        <input type="number" min="1" step=".01" aria-label="Prezzo giornaliero. Campo obbligatorio" id="dailyPriceModal" class="form-control text-end">
+                                        <input type="number" min="1" step=".01" aria-label="Prezzo giornaliero. Campo obbligatorio" id="dailyPriceModal" class="form-control text-end" required>
                                         <span class="input-group-text justify-content-center">€</span>
                                     </div>
                                 </div>
@@ -209,13 +209,13 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" aria-label="Sconto percentuale, seleziona uno dei due" name="discount" id="dailyDiscountPercentage" disabled> 
+                                        <input class="form-check-input" type="radio" aria-label="Sconto percentuale, seleziona uno dei due" name="discount1" id="dailyDiscountPercentage" required disabled> 
                                         <label class="form-check-label" for="dailyDiscountPercentage">Percentuale</label>
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-check">
-                                        <input id="dailyDiscountAmount" class="form-check-input" aria-label="Sconto fisso, seleziona uno dei due" type="radio" name="discount" disabled>
+                                        <input id="dailyDiscountAmount" class="form-check-input" aria-label="Sconto fisso, seleziona uno dei due" type="radio" name="discount1" required disabled>
                                         <label class="form-check-label" for="dailyDiscountAmount">Fisso</label>													
                                     </div>
                                 </div>
@@ -227,7 +227,7 @@
                                 <div class="col-6">
                                     <div class="input-group">
                                     <!-- <span class="input-group-text justify-content-center">-</span>-->
-                                        <input type="number" min="1" step=".01" aria-label="Valore sconto prezzo giornaliero, Campo obbligatorio" class="form-control text-end" id="dailyDiscountValue"  readonly>
+                                        <input type="number" min="1" step=".01" aria-label="Valore sconto prezzo giornaliero, Campo obbligatorio" class="form-control text-end" id="dailyDiscountValue" required disabled>
                                         <span id="pd1" class="input-group-text justify-content-center"></span>
                                     </div>
                                 </div>
@@ -238,7 +238,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="input-group">
-                                        <input type="number" min="1" step="1"  aria-label="Numero giorni da supera per ottenere sconto sul prezzo giornaliero. Campo obbligatorio" class="form-control text-end" readonly id="daysDiscount">
+                                        <input type="number" min="1" step="1"  aria-label="Numero giorni da supera per ottenere sconto sul prezzo giornaliero. Campo obbligatorio" class="form-control text-end" required disabled id="daysDiscount">
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +251,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                <textarea class="form-control w-80" id="productDescription" rows="3"></textarea>
+                                <textarea class="form-control w-80" id="productDescription" rows="3" required></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -265,16 +265,11 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra per modificare il prodotto" class="btn btn-primary float-left" data-bs-dismiss="modal" >Salva</button>  
+                                <button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra per modificare il prodotto" id="modalSave" class="btn btn-primary float-left" >Salva</button>  
                                 <button type="button" aria-label="Bottone annulla. Chiude la finestra di modifica e ripristina i valori iniziali" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
                             </div>
                         </form>
                     </div>
-                    <!-- Modal footer -->
-                    <!--<div class="modal-footer d-flex justify-content-between">
-                        <button type="submit" class="btn btn-primary float-left" data-bs-dismiss="modal" onclick="save()">Salva</button>  
-                        <button type="button" class="btn btn-danger float-right" data-bs-dismiss="modal">Chiudi</button>
-                    </div>-->
                 </div>
                 </div>
 

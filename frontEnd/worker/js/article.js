@@ -234,10 +234,9 @@ function getModalData(){
 		$('#onSale').prop('checked', true);
 		$('#discountAmount').prop('disabled', false);
 		$('#discountPercentage').prop('disabled', false);
-		$('#discountValue').prop('readonly', false);
+		$('#discountValue').prop('disabled', false);
 
 		$("#discountValue").val(data.discount.onSaleValue);
-		$("#discountValue").attr("placeholder", data.discount.onSaleValue);
 		if(!data.discount.onSaleType){
 			$('#discountAmount').prop('checked', true);
 			$('#pd').text("€")
@@ -259,13 +258,11 @@ function getModalData(){
 		$('#dailySale').prop('checked', true);
 		$('#dailyDiscountAmount').prop('disabled', false);
 		$('#dailyDiscountPercentage').prop('disabled', false);
-		$('#dailyDiscountValue').prop('readonly', false);
-		$('#daysDiscount').prop('readonly', false);
+		$('#dailyDiscountValue').prop('disabled', false);
+		$('#daysDiscount').prop('disabled', false);
 
 		$("#dailyDiscountValue").val(data.overDays.onSaleValue);
 		$("#daysDiscount").val(data.overDays.days);
-		$("#dailyDiscountValue").attr("placeholder", data.overDays.onSaleValue);
-		$("#daysDiscount").attr("placeholder", data.overDays.days);
 		if(!data.overDays.onSaleType){
 			$('#dailyDiscountAmount').prop('checked', true);
 			$('#pd1').text("€")
@@ -294,74 +291,6 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-	let newTitle  
-	if($("#productName").val() != ""){
-		if($("#productName").val() != data.title)
-			newTitle = $("#productName").val()
-		else
-			newTitle = data.title
-	} 
-	else{
-		return(alert('Il titolo non può essere vuoto'))
-	}
-
-	let newImage = ($("#imageLink").val() == "") ? data.image : $("#imageLink").val()
-
-	if($("#imageLink").val() != ""){
-		if($("#imageLink").val() != data.image){
-			newImage = $("#imageLink").val()
-			try {
-				let tmpImage = new URL(newImage);
-			} catch (_) {
-
-				return (alert("Formato dell' immagine non corretto"))
-			}
-		}
-		else
-			newImage = data.image
-	} 
-	else{
-		return(alert("L' immagine non può essere vuoto"))
-	}
-
-	let newPrice  
-	if($("#productPrice").val() != "" && $("#productPrice").val() > 0){
-		if($("#productPrice").val() != data.fixedPrice)
-			newPrice = $("#productPrice").val()
-		else
-			newPrice = data.fixedPrice
-	} 
-	else{
-		return(alert('Prezzo fisso non corretto'))
-	}
-
-	let newDailyPrice  
-	if($("#dailyPriceModal").val() != "" && $("#dailyPriceModal").val() > 0){
-		if($("#dailyPriceModal").val() != data.price)
-			newDailyPrice = $("#dailyPriceModal").val()
-		else
-			newDailyPrice = data.price
-	} 
-	else{
-		return(alert('Prezzo giornaliero non corretto'))
-	}
-
-	let newDescription  
-	if($("#productDescription").val() != ""){
-		if($("#productDescription").val() != data.description)
-			newDescription = $("#productDescription").val()
-		else
-			newDescription = data.description
-	} 
-	else{
-		return(alert('La descrizione non può essere vuota'))
-	}
-
-	if($("#newPrice").val() < 0){
-		return(alert('Lo sconto non è valido'))
-	}
-	
-
 	let newTags = []
   if($("#productTags").val() != "") {
 		let newLabels = $("#productTags").val()
@@ -372,10 +301,9 @@ function save(){
 			newTags.pop()
 		}
 	}
+
 	let sale, type, value
-	if($("#onSale").is(':checked') == true && 
-	($("#discountAmount").is(':checked') == true || $("#discountPercentage").is(':checked') == true) &&
-	$("#discountValue").val() != "" && $("#discountValue").val() > 0){
+	if($("#onSale").is(':checked') == true){
 		sale = true 
 		type = ($("#discountAmount").is(':checked') == true) ? false : true
 		value = $("#discountValue").val() 
@@ -383,13 +311,11 @@ function save(){
 	else{
 		sale = false 
 		type = false
-		value = ""
+		value = 0
 	}
-	
+
 	let dailySale, dailyType, dailyValue, dailyDays
-	if($("#dailySale").is(':checked') == true && 
-	($("#dailyDiscountAmount").is(':checked') == true || $("#dailyDiscountPercentage").is(':checked') == true) &&
-	$("#dailyDiscountValue").val() != "" && $("#daysDiscount").val() != "" && $("#daysDiscount").val() > 0 && $("#dailyDiscountValue").val()>0){
+	if($("#dailySale").is(':checked') == true){
 		dailySale = true 
 		dailyType = ($("#dailyDiscountAmount").is(':checked') == true) ? false : true
 		dailyValue = $("#dailyDiscountValue").val() 
@@ -398,35 +324,36 @@ function save(){
 	else{
 		dailySale = false 
 		dailyType = false
-		dailyValue = ""
-		dailyDays = ""
+		dailyValue = 0
+		dailyDays = 0
 	}
 
-   /*$.ajax({
+
+   $.ajax({
     url:"/api/product?id=" + data._id,
     method: "POST",
     headers: {
         "Content-Type": "application/json"
     },
     data: JSON.stringify({
-			title: newTitle,
+			title: $("#productName").val(),
 			brand: $("#productModel").val(),
-			image: newImage,
+			image: $("#imageLink").val(),
 			tags: newTags,
-			price: newDailyPrice,
-			fixedPrice: newPrice,
+			price: parseFloat($("#dailyPriceModal").val()),
+			fixedPrice: parseFloat($("#productPrice").val()),
 			discount:{
 				onSale: sale, 
 				onSaleType: type, 
-				onSaleValue: value
+				onSaleValue: parseFloat(value)
 			},
 			overDays:{
-				days: dailyDays,
+				days: parseInt(dailyDays),
 				onSale: dailySale,
 				onSaleType: dailyType,
-				onSaleValue: dailyValue
+				onSaleValue: parseFloat(dailyValue)
 			},
-			description: newDescription,
+			description: $("#productDescription").val(),
 			note: $("#productNote").val(),
 			quality: $("#qualityModal").val(),
 
@@ -434,12 +361,12 @@ function save(){
     // Risposta del server in caso di successo
     success: (result) => {
         console.log(result)
-        data.title = newTitle
+        data.title = $("#productName").val()
 				data.brand = $("#productModel").val()
-				data.image = newImage
-				data.fixedPrice = newPrice
-				data.price = newDailyPrice
-				data.quality = $("#qualityModal").val()
+				data.image = $("#imageLink").val()
+				data.fixedPrice = $("#productPrice").val()
+				data.price = $("#dailyPriceModal").val()
+				data.quality = parseInt($("#qualityModal").val())
 
 				data.discount.onSale = sale
 				data.discount.onSaleType = type
@@ -460,17 +387,18 @@ function save(){
         }
 				data.tags = newTags
 
-				data.description = newDescription
+				data.description = $("#productDescription").val()
 				data.note = $("#productNote").val()
 				
 				fill()
+				$('#myModal').modal('hide')
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
         console.log("Error");
         alert("Errore. " + error.responseText);
     }
-	});*/
+	});
 }
 
 //listener per checkbox available
@@ -481,8 +409,8 @@ function changeSale() {
 		$('#discountAmount').prop('disabled', false);
 		$('#discountPercentage').prop('disabled', false);
 		$('#discountAmount').prop('checked', true);
-		$('#discountValue').prop('readonly', false);
-		$('#newPrice').val(data.price);
+		$('#discountValue').prop('disabled', false);
+		$('#newPrice').val(data.fixedPrice);
   }
 	if (!this.checked) {
 		$('#discountAmount').prop('checked', false);
@@ -490,7 +418,7 @@ function changeSale() {
 		$('#discountValue').val("");
 		$('#discountAmount').prop('disabled', true);
 		$('#discountPercentage').prop('disabled', true);
-		$('#discountValue').prop('readonly', true);
+		$('#discountValue').prop('disabled', true);
 		$('#newPrice').val("");
   } 
 }
@@ -502,8 +430,8 @@ function changeDailySale() {
 		$('#dailyDiscountAmount').prop('disabled', false);
 		$('#dailyDiscountPercentage').prop('disabled', false);
 		$('#dailyDiscountAmount').prop('checked', true);
-		$('#dailyDiscountValue').prop('readonly', false);
-		$('#daysDiscount').prop('readonly', false);
+		$('#dailyDiscountValue').prop('disabled', false);
+		$('#daysDiscount').prop('disabled', false);
   }
 	if (!this.checked) {
 		$('#dailyDiscountAmount').prop('checked', false);
@@ -512,8 +440,8 @@ function changeDailySale() {
 		$('#daysDiscount').val('');
 		$('#dailyDiscountAmount').prop('disabled', true);
 		$('#dailyDiscountPercentage').prop('disabled', true);
-		$('#dailyDiscountValue').prop('readonly', true);
-		$('#daysDiscount').prop('readonly', true);
+		$('#dailyDiscountValue').prop('disabled', true);
+		$('#daysDiscount').prop('disabled', true);
   } 
 }
 
@@ -522,7 +450,7 @@ $('#discountAmount').change(percentageSale)
 function percentageSale() {
 	if (this.checked) {
 		$('#pd').text("€")
-		$('#newPrice').val($("#productPrice").val() - $('#discountValue').val())
+		calculateDiscount()
 	}
 }
 
@@ -531,10 +459,7 @@ $('#discountPercentage').change(percentageFlat)
 function percentageFlat() {
 	if (this.checked) {
 		$('#pd').text("%")
-		let total = $("#productPrice").val()
-		let sale = $('#discountValue').val()
-		let newTotal = total - total * sale / 100; 
-		$('#newPrice').val(newTotal)
+		calculateDiscount()
 	}
 }
 
@@ -553,14 +478,22 @@ function percentageSaledaily() {
 }
 
 function calculateDiscount(){
-	if($('#discountAmount').is(":checked")){
-		$('#newPrice').val($("#productPrice").val() - $('#discountValue').val())
-	} 
-	if($('#discountPercentage').is(":checked")){
-		let total = $("#productPrice").val()
-		let sale = $('#discountValue').val()
-		let newTotal = total - total * sale / 100; 
-		$('#newPrice').val(newTotal)
+	if($('#discountValue').val() != '' && $("#productPrice").val() != ''){
+		if($('#discountAmount').is(":checked")){
+			$('#newPrice').val($("#productPrice").val() - $('#discountValue').val())
+		} 
+		if($('#discountPercentage').is(":checked")){
+			let total = $("#productPrice").val()
+			let sale = $('#discountValue').val()
+			let newTotal = total - total * sale / 100; 
+			$('#newPrice').val(newTotal.toFixed(2))
+		}
+	}
+	if($('#newPrice').val() <= 0){
+		$('#modalSave').prop('disabled', true);
+	}
+	else{
+		$('#modalSave').prop('disabled', false);
 	}
 }
 /////////////////////////////////

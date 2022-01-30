@@ -30,7 +30,7 @@
 			</div>
 
 			<div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Prezzo fisso, campo obbligatorio" required>
+				<input type="number" class="form-control" min="1" step=".01" v-model="fixedPrice" v-on:keyup="newPrice" aria-label="Prezzo fisso, campo obbligatorio" required>
 				<label for="fixedPrice"> Prezzo Fisso*</label>
 			</div>
 
@@ -67,7 +67,7 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" aria-label="valore sconto, campo obbligatorio" class="form-control" min="1" step="1" v-model="onSaleValue" v-on:keyup="newPrice" id="saleValue" required>
+            <input type="number" aria-label="valore sconto, campo obbligatorio" class="form-control" min="1" step=".01" v-model="onSaleValue" v-on:keyup="newPrice" id="saleValue" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
@@ -79,7 +79,7 @@
       </template>
 
       <div class="form-floating mb-3">
-				<input type="number" class="form-control" min="1" step="1" v-model="dailyPrice" aria-label="Prezzo giornaliero, campo obbligatorio" required>
+				<input type="number" class="form-control" min="1" step=".01" v-model="dailyPrice" aria-label="Prezzo giornaliero, campo obbligatorio" required>
 				<label for="price"> Prezzo Giornaliero*</label>
 			</div>
 
@@ -116,7 +116,7 @@
           <div class="row">
             <div class="col-3"> <p> Valore sconto:</p>	</div>
             <div class="col-9">
-            <input type="number" class="form-control" min="1" step="1" v-model="overOnSaleValue" id="saleValueOVer" aria-label="valore sconto, campo obbligatorio" required>
+            <input type="number" class="form-control" min="1" step=".01" v-model="overOnSaleValue" id="saleValueOVer" aria-label="valore sconto, campo obbligatorio" required>
             </div>
           </div>
           <div class="row mt-2 mb-2">
@@ -186,7 +186,7 @@ export default {
       
       onSale: false,
       onSaleType: false,
-      onSaleValue: 1,
+      onSaleValue: 0,
 
       newTotal: '',
 
@@ -202,7 +202,7 @@ export default {
       if(this.onSale){
         this.onSale = false
         this.onSaleType = false
-        this.onSaleValue = 1
+        this.onSaleValue = 0
       }
       else
         this.onSale = true
@@ -218,7 +218,8 @@ export default {
       if(this.overOnSale){
       this.overOnSale = false
       this.overOnSaleType = false
-      this.overOnSaleValue = 1
+      this.overOnSaleValue = 0
+      this.overDays = 0
       }
       else{
         this.overOnSale = true
@@ -229,11 +230,10 @@ export default {
       this.available = !this.available
     },
 
-    //fare qualcosa tipo onkeyup per price e discount e funzione per radio forse una sola da assegnare a tutti e 4
     newPrice(){
       if(this.onSale){  
         if(this.onSaleType){
-          this.newTotal = this.fixedPrice - this.fixedPrice *this.onSaleValue / 100
+          this.newTotal = (this.fixedPrice - this.fixedPrice *this.onSaleValue / 100).toFixed(2)
         }
         else {
           this.newTotal = this.fixedPrice - this.onSaleValue;
@@ -274,32 +274,32 @@ export default {
       query.discount.onSale = this.onSale;
       if(this.onSale){
         query.discount.onSaleType = this.onSaleType;
-        query.discount.onSaleValue = this.onSaleValue;
+        query.discount.onSaleValue = parseFloat(this.onSaleValue);
 
       }
       else{
         query.discount.onSaleType = false;
-        query.discount.onSaleValue = "";
+        query.discount.onSaleValue = 0
       }
       
       query.overDays = {}
       if(this.overOnSale){
         query.overDays.onSale  =  this.overOnSale
         query.overDays.onSaleType = this.overOnSaleType
-        query.overDays.onSaleValue  =  this.overOnSaleValue
-        query.overDays.days = this.overDays
+        query.overDays.onSaleValue  =  parseFloat(this.overOnSaleValue)
+        query.overDays.days = parseInt(this.overDays)
       }
       else{
         query.overDays.onSale  =  false
         query.overDays.onSaleType = false
-        query.overDays.onSaleValue  =  ''
-        query.overDays.days = ''
+        query.overDays.onSaleValue  =  0
+        query.overDays.days = 0
 
       }
 
-      query.price =  this.dailyPrice
-      query.fixedPrice = this.fixedPrice;
-      query.quality = this.quality;
+      query.price =  parseFloat(this.dailyPrice)
+      query.fixedPrice = parseFloat(this.fixedPrice);
+      query.quality = parseInt(this.quality);
       query.available = this.available;
       query.description = this.description;
       query.note = this.note

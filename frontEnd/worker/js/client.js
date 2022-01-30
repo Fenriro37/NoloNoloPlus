@@ -97,8 +97,6 @@ function fill(){
   let day = data.birthday.day
   if (String(day).length < 2 && parseInt(data.birthday.day) < 10)
     day = '0' + String(day)
-  console.log(month)
-  console.log(day)
   document.getElementById('birthday').value = data.birthday.year +'-'+ month +'-'+ day
 
   $("#street").attr("placeholder", data.address.addressStreet);
@@ -243,7 +241,7 @@ function save() {
       email: $("#mail").val(),
       address: {
         addressStreet: $("#street").val(),
-        addressNumber: parseInt($("#num").val()),
+        addressNumber: $("#num").val(),
         addressCity: $("#city").val(),
       },
       payment: {
