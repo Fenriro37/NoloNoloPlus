@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Accordion, Button } from 'react-bootstrap';
 import ApiCall from '../services/apiCall';
-import { datediff } from '../services/functions';
+import { convertDateToObject, datediff } from '../services/functions';
 import { UpdateReservation } from './updateReservation';
 import { Invoice } from './invoice';
 
@@ -33,11 +33,11 @@ export class ReservationCard extends React.Component {
 
   componentDidMount() {
     let status = ''
-    const today = new Date();
+    const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0);
     const endDate = new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day);
     if(this.state.reservation.isTaken == false && this.state.reservation.isReturned == false) {
       status = 'Prenotato';
-    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == false && today < endDate) {
+    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == false && today <= endDate) {
       status = 'Attivo';
     } else {
       status = 'Concluso';

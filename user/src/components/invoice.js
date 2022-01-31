@@ -45,7 +45,7 @@ export class Invoice extends React.Component {
       ? (
         fixedPrice * (100 - parseFloat(this.state.reservation.fixedDiscount.onSaleValue)) / 100
       ) : (
-        fixedPrice - parseFloat(this.state.reservation.fixedDiscount.onSaleValue)
+        fixedPrice - (parseFloat(this.state.reservation.fixedDiscount.onSaleValue) / 122 * 100)
       )
     ) : (
       fixedPrice
@@ -98,7 +98,7 @@ export class Invoice extends React.Component {
           <Table bordered responsive>
             <tbody>
               <tr>
-                <td colSpan={3}>{this.state.reservation.clientName} {this.state.reservation.clientSurname}<br/>{this.state.reservation.clientEmail}</td>
+                <td colSpan={3}>{this.state.reservation.clientName} {this.state.reservation.clientSurname} - {this.state.reservation.clientEmail}</td>
                 <td colSpan={3}>NoloNoloPlus</td>
               </tr>
               <tr>
