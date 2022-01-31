@@ -418,7 +418,7 @@
 
           let current = new Date(); 
           for(let i in this.bookings){
-            let endDate = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month-1, this.bookings[i].endDate.day)
+            let endDate = new Date(this.bookings[i].endDate.year, this.bookings[i].endDate.month-1, this.bookings[i].endDate.day, 23, 59, 59)
             if(endDate >= current){
               this.boolDelete = true
             } 

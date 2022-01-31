@@ -9,7 +9,7 @@
         <p tabindex="0" :aria-label="'Identificativo prenotazione' + reservationId">Id prenotazione: {{reservationId}} </p>
         <p><router-link :aria-label="'Prodotto'+reservation.productTitle + ' ' +reservation.productBrand" :to="{ name: 'article',  params: { id: reservation.productId} }">{{reservation.productTitle + ' ' +reservation.productBrand}}</router-link></p>
         <p><router-link :aria-label="'Email cliente'+reservation.clientEmail" :to="{name: 'client', params:{email: reservation.clientEmail}}" >{{reservation.clientEmail}}</router-link></p>
-        <p><router-link :aria-label="'Fattura'" :to="{name: 'invoice', params:{id: reservationId}}" >Fattura</router-link></p>
+        <p v-if="boolOld" ><router-link :aria-label="'Fattura'" :to="{name: 'invoice', params:{id: reservationId}}" >Fattura</router-link></p>
       </div>
     </div>
     <form name="myform" id="formId" @submit.prevent="saveData">
@@ -145,19 +145,19 @@
 
       <div class="row mb-3 ml-3">
         <div class="col-6 form-check ">
-          <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato/ non è stato ritirato" type="checkbox" :disabled="!boolModify && !boolDelete" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
+          <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato ritirato" type="checkbox" :disabled="!boolModify && !boolDelete || boolOld" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
           <label tabindex="0" v-if="rentalOccurred" class="form-check-label" for="flexCheckDefault">Il prodotto è stato ritirato</label>
           <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault">Il prodotto non è stato ritirato</label>
         </div>
         <div class="col-6 form-check">
-          <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato/ non è stato restituito" type="checkbox" :disabled="!boolModify && !boolDelete " :checked="returned" @click="changeReturned" id="flexCheckDefault2">
-          <label tabindex="0" v-if="returned" class="form-check-label" for="flexCheckDefault"> Il prodotto è stato restituito </label>
-          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault"> Il prodotto non è stato restituito </label>
+          <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato restituito in tempo" type="checkbox" :disabled="!boolModify && !boolDelete || boolOld " :checked="returned" @click="changeReturned" id="flexCheckDefault2">
+          <label tabindex="0" v-if="returned" class="form-check-label" for="flexCheckDefault"> Il prodotto è stato restituito in tempo </label>
+          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault"> Il prodotto non è stato restituito in tempo </label>
         </div>
       </div>
 
 
-    <b-button v-if="!boolModify && !boolDelete" type="button" aria-label="Bottone modifica. Permette di modificare i campi. Se la prenotazione è attiva o già conclusa non sarà possibile modificarne i dati. Se il prodotto non è disponibile non sarà possibile modificare il periodo di prenotazione" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" :disabled="enter" @click="modify">Modifica</b-button>
+    <b-button v-if="!boolModify && !boolDelete" type="button" aria-label="Bottone modifica. Permette di modificare i campi. Se la prenotazione è attiva o già conclusa non sarà possibile modificarne i dati. Se il prodotto non è disponibile non sarà possibile modificare il periodo di prenotazione" class="btn btn-lg btn-secondary mb-2 mt-2 mr-2" :disabled="boolOld||enter" @click="modify">Modifica</b-button>
     <b-button v-if="boolModify || boolDelete" type="submit"  aria-label="Bottone salva. Salva le modifiche e le applica alla pagina" class="btn btn-lg btn-success m-2"  :disabled="enter||negativePrice" >Salva</b-button>
     <b-button v-if="boolModify || boolDelete" type="button"  aria-label="Bottone annulla. Reimposta i campo al loro stato iniziale. Premere il tasto modificare per modificare nuovamente" class="btn btn-lg btn-danger m-2" :disabled="enter" @click="undoChange">Annulla</b-button>
     <button class="btn btn-lg btn-danger delete mb-2 mt-2 ml-2" aria-label="Bottone elimina. Elimina la prenotazione e porta alla lista delle prenotazioni" @click="deleteReservation" :disabled="boolActive || enter" > Cancella prenotazione</button>
@@ -218,6 +218,7 @@
         boolModify: false,
         boolDelete: false,
         boolActive: false,
+        boolOld: false,
         negativePrice: false
 
       }
@@ -232,10 +233,14 @@
         this.undoChange()
 
         let current = new Date(); 
-        let startDate = new Date(this.reservation.startDate.year, this.reservation.startDate.month-1, this.reservation.startDate.day)
-        if(startDate <= current)
-            this.boolActive = true
-
+        let startDate = new Date(this.reservation.startDate.year, this.reservation.startDate.month-1, this.reservation.startDate.day, 0, 0, 0)
+        let endDate = new Date(this.reservation.endDate.year, this.reservation.endDate.month-1, this.reservation.endDate.day, 23, 59, 59)
+        if(startDate <= current && current <= endDate)
+          this.boolActive = true
+        if(current > endDate){
+          this.boolActive = true
+          this.boolOld = true
+        }
         Functions.getProduct(this.reservation.productId).then((result)=> {
           this.bookings = result.data.data.obj.bookings
           console.log(this.bookings)
@@ -252,7 +257,7 @@
     methods: {
 
       modify(){
-        if(this.boolActive){
+        if(this.boolActive || this.boolOld){
           this.boolDelete = true
         }
         else

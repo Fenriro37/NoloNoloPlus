@@ -240,7 +240,7 @@
           row.reservation = result.data.obj[i]._id
           row.startDate =  result.data.obj[i].startDate.day +'-'+ result.data.obj[i].startDate.month +'-'+ result.data.obj[i].startDate.year
           row.endDate = result.data.obj[i].endDate.day +'-'+ result.data.obj[i].endDate.month +'-'+ result.data.obj[i].endDate.year
-          let endDate = new Date(result.data.obj[i].endDate.year, result.data.obj[i].endDate.month-1, result.data.obj[i].endDate.day)
+          let endDate = new Date(result.data.obj[i].endDate.year, result.data.obj[i].endDate.month-1, result.data.obj[i].endDate.day, 23, 59, 59)
           
           if(endDate >= current){
             this.boolDelete = true
