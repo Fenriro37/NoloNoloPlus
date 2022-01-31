@@ -29,7 +29,30 @@ window.onload = function getReservation() {
     $("#emittente").append("NonoNonoPlus")
     $("#idFattura").append(data._id)
     $("#dataCrazione").append(data.endDate.day + '/' + data.endDate.month + '/' + data.endDate.year)
-    $("#emittente").append(" ")
-    $("#emittente").append(" ")
-    fill()
+
+    $("#prezzoFisso").append((data.fixedPrice / 122 * 100).toFixed(2))
+    $("#calcoloFisso").append(data.fixedDiscount.onSale ? 
+      (data.fixedDiscount.onSaleType ? data.fixedDiscount.onSaleValue + "%" : data.fixedDiscount.onSaleValue + "€") : 0)
+    $("#imponibileFisso").append(data.fixedDiscount.onSaleType ? 
+      $("#prezzoFisso").val() * $("#calcoloFisso").val() : $("#prezzoFisso").val() - $("#calcoloFisso").val())
+
+    $("#nGiorni").append(calculateDays(data.startDate, data.endDate))
+    $("#prezzoVariabile").append((data.variablePrice / 122 * 100).toFixed(2))
+    $("#calcoloVariabile").append(data.variableDiscount.onSale && calculateDays(data.startDate, data.endDate) > data.variableDiscount.days ?
+      (data.variableDiscount.onSaleType ? data.variableDiscount.onSaleValue + "%" : data.fixedDiscount.onSaleValue + "€") : 0)
+    $("#imponibileVariabile").append($("#prezzoVariabile").val() * $("#calcoloVariabile").val())
   } 
+
+  function calculateDays(obj1, obj2){
+    //Create Dates
+    var date1 = new Date(obj1.year, obj1.month-1, obj1.day) 
+    var date2 = new Date(obj2.year, obj2.month-1, obj2.day)
+
+    // To calculate the time difference of two dates
+    var Difference_In_Time = date2.getTime() - date1.getTime()
+    
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24)
+
+    return Difference_In_Days+1
+  }
