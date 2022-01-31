@@ -118,11 +118,11 @@ function fill(){
   }
   if(data.isReturned){
     $('#returned').prop('checked', true);
-    $('label[for=returned]').text("Il prodotto è stato restituito");
+    $('label[for=returned]').text("Il prodotto è stato restituito in tempo");
   }
   else{
     $('#returned').prop('checked', false);
-    $('label[for=returned]').text("Il prodotto non è stato restituito");
+    $('label[for=returned]').text("Il prodotto non è stato restituito tempo");
   }
   readOnly()
 }
@@ -249,19 +249,19 @@ $('#rentalOccurred').change(function() {
   }
 	if (!this.checked) {
 		$('label[for=rentalOccurred]').text("Il prodotto non è stato ritirato");
-    $('label[for=returned]').text("Il prodotto non è stato restituito");
+    $('label[for=returned]').text("Il prodotto non è stato restituito in tempo");
     $('#returned').prop('checked', false);
   } 
 })
 
 $('#returned').change(function() {
 	if (this.checked) {
-	  $('label[for=returned]').text("Il prodotto è stato restituito");
+	  $('label[for=returned]').text("Il prodotto è stato restituito in tempo");
     $('label[for=rentalOccurred]').text("Il prodotto è stato ritirato");
     $('#rentalOccurred').prop('checked', true);
   }
 	if (!this.checked) {
-		$('label[for=returned]').text("Il prodotto non è stato restituito");
+		$('label[for=returned]').text("Il prodotto non è stato restituito in tempo");
   } 
 })
 
