@@ -53,7 +53,7 @@
     
     <div class="container-fluid d-flex justify-content-center" id="main">
     <div class="w-50">
-    <table class="table invoice">
+    <table class="table invoice p-2">
         <tbody>
             <tr>
                 <td id="ricevente">Ricevente: </td>
@@ -68,42 +68,49 @@
                     <table class="inner table"><tbody>
                         <tr>
                             <td class="noborder"><b>Descrizione </b></td>
-                            <td class="noborder"><b>Quantità </b></td>
+                            <td class="noborder"><b>Qnt </b></td>
                             <td class="noborder"><b>Prezzo </b></td>
                             <td class="noborder"><b>Sconto </b></td>
                             <td class="noborder"><b>IVA </b></td>
-                            <td class="noborder"><b>Imponibile </b></td>
+                            <td class="noborder text-end"><b>Imponibile </b></td>
                         </tr>
                         <tr>
-                            <td id="">Noleggio Titolo+Brand+ID</td>
+                            <td id="descrizioneFisso"></td>
                             <td id="">1</td>
                             <td id="prezzoFisso"></td>
-                            <td id="calcoloFisso"></td>
+                            <td id="scontoFisso"></td>
                             <td id="">22%</td>
-                            <td id="imponibileFisso"></td>
+                            <td id="imponibileFisso" class="text-end"></td>
                         </tr>
                         <tr class="inner">
-                            <td id="" class="noborder">Titolo+Brand+ID</td>
+                            <td id="descrizioneVariabile" class="noborder"></td>
                             <td id="nGiorni" class="noborder"></td>
                             <td id="prezzoVariabile" class="noborder"></td>
-                            <td id="calcoloVariabile" class="noborder"></td>
-                            <td id="imponibileVariabile" class="noborder">22%</td>
-                            <td id="" class="noborder">Imponibile</td>
+                            <td id="scontoVariabile" class="noborder"></td>
+                            <td id="" class="noborder">22%</td>
+                            <td id="imponibileVariabile" class="noborder text-end"></td>
                         </tr>
                     </tbody></table>
                 </td>
             </tr>
             <tr>
-                <td >Totale imponibile</td>
-                <td id="totaleImponibile" style="text-align: right">totPrice Scorporato</td>
+                <td>Totale imponibile</td>
+                <td id="totaleImponibile" style="text-align: right"></td>
             </tr>
             <tr>
-                <td >IVA</td>
-                <td id="totaleIVA" style="text-align: right">€ prezzo</td>
+                <td>IVA</td>
+                <td id="totaleIVA" style="text-align: right"></td>
+            </tr>
+            <tr>
+                <td>Penale</td>
+                <td id="penale" style="text-align: right"></td>
             </tr>
             <tr class="totale">
-                <td >Totale</td>
-                <td id="totale" style="text-align: right">€ prezzo</td>
+                <td>Totale</td>
+                <td id="totale" style="text-align: right"></td>
+            </tr>
+            <tr>
+                <td colspan={2} id="note"><span style="font-weight: 700">Note:</span> </td>
             </tr>
         </tbody>
     </table>
