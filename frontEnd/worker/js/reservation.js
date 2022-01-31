@@ -63,7 +63,8 @@ function insertData(){
   $("#info").prepend(
     '<p tabindex="0" aria-label="Identificativo prenotazione: '+data._id+'">Id prenotazione: ' +data._id+ '</p>' +
     '<p>Articolo: <a aria-label="Link al prodotto: '+data.productTitle + " " + data.productBrand+' " href="article.html?id=' +data.productId+ '">' +data.productTitle + " " + data.productBrand + '</a></p>' +
-    '<p>Email: <a aria-label="Link al cliente:  '+data.clientEmail+'" href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' 
+    '<p>Email: <a aria-label="Link al cliente:  '+data.clientEmail+'" href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' + 
+    '<p><a aria-label="Link alla Fattura" href="invoice.html?id='+data._id+'">Fattura</a>'
   )
   fill()
 } 
