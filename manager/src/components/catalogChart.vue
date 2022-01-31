@@ -2,7 +2,7 @@
   <div class="container-fluid d-flex justify-content-center" id="main">
     <div class="w-50">
       <div class="input-group mb-3 mt-2">
-        <input type="text" class="form-control" placeholder="Cerca una categoria" v-model="tag" id="newTag" aria-label="newMail" >
+        <input type="text" class="form-control" placeholder="Cerca una categoria" v-model="tag" @keyup.enter="createChart" id="newTag" aria-label="newMail" >
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" placeholder="Cerca utenti" @click="createChart">Button</button>
       </div>
 
@@ -236,6 +236,8 @@ export default {
             this.chart3 = new Chart(ctx2, this.qualityChart);
             this.boolChart = false
           }
+        },(error) => {
+          alert('Problema nel caricamento dei dati');
         })
       }
       //Statistiche intero catalogo
@@ -358,6 +360,8 @@ export default {
 
             this.boolChart = false
           }
+        },(error) => {
+          alert('Problema nel caricamento dei dati');
         })
       }
     }

@@ -12,7 +12,7 @@
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Clienti'">Clienti</button>
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Prenotazioni'">Prenotazioni</button>
 		</div>
-		<input id="searchText" type="text" v-model="text" class="form-control" placeholder="Cerca..." aria-label="Barra di ricerca" >
+		<input id="searchText" type="text" v-model="text" class="form-control" @keyup.enter="search" placeholder="Cerca..." aria-label="Barra di ricerca" >
 		<button class="btn btn-secondary" type="button" id="searchButton" v-on:click="search()">Cerca</button>
 	</div>
 

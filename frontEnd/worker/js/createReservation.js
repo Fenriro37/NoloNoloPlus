@@ -95,8 +95,8 @@ $(document).ready(function(){
     showDropdowns: true, 
     isInvalidDate: function(date){
       for (let i in data.bookings) {								
-          var from = new Date(data.bookings[i].startDate.month +'-'+data.bookings[i].startDate.day+'-'+data.bookings[i].startDate.year );
-          var to = new Date(data.bookings[i].endDate.month +'-'+data.bookings[i].endDate.day+'-'+data.bookings[i].endDate.year);
+          var from = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1,data.bookings[i].startDate.day );
+          var to = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1,data.bookings[i].endDate.day);
           var current = new Date(date);					
           if (current >= from && current <= to) return true;
       }
@@ -110,7 +110,6 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
 });
 
 $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
-  let block = false
   let dateRange = $(this).val()
   dateRange = dateRange.replace(/ /g, "")
   dateRange = dateRange.split("-")
@@ -120,22 +119,12 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
   date2 = date2.split("/")
   let d1 = new Date(date1[2], date1[1] -1, date1[0])
   let d2 = new Date(date2[2], date2[1] -1, date2[0])
-  console.log(d1)
-  console.log(d2)
   for(let i in data.bookings){
     bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day)
     bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day)
-    if( d1 < bookingStart && bookingEnd < d2 )
-    console.log(bookingStart)
-    console.log(bookingEnd)
-     block = true
-  }
-  if(block){
-    $("#save").prop("disabled", true)
-  }
-  else{
-    $("#save").text("Salva")
-    $("#save").prop("disabled", false)
+    if( d1 < bookingStart && bookingEnd < d2){
+      $("#dateRange").val('')
+    }
   }
   calculateTotal()
 });
@@ -301,8 +290,10 @@ $('#formId').submit(function (evt) {
 
 function save(){
     let dateRange = $("#dateRange").val()
-    console.log(typeof(dateRange))
-    console.log(dateRange)
+    if(!checkRangeDatePicker(dateRange)){
+      return(alert('Data non valida'))
+    }
+    console.log('valido')
     dateRange = dateRange.replace(/ /g, "")
     dateRange = dateRange.split("-")
     let date1 = dateRange[0]
@@ -351,7 +342,7 @@ function save(){
       dailyDays = 0
     }
 
-    $.ajax({
+    /*$.ajax({
       url:"/api/user?email=" + $("#email").val(),
       method: "GET",
       headers: {
@@ -462,14 +453,81 @@ function save(){
           console.log("Error");
           alert("La mail non esiste");
       }
-    });
+    });*/
 }
 
-/////////////////////////////////
-////////////////////////////////////
-//////////////////////////////////
+
 document.addEventListener('click',function(e){
   if(e.target && e.target.id== 'searchButton'){
     $("#main").empty()
   }
 });
+/////////////////////////////////
+////////////////////////////////////
+//////////////////////////////////
+
+daysInMonth = [
+  0, // Per comodità
+  31,
+  28,
+  31,
+  30,
+  31,
+  30,
+  31,
+  31,
+  30,
+  31,
+  30,
+  31
+]
+
+// Controlla se una stringa è un intero positivo
+function isPositiveInteger(n) { return n >>> 0 === parseFloat(n) }
+
+// Controlla se una stringa ha uno (o più) spazi bianchi
+function hasWhiteSpace(x) { return x.indexOf(' ') >= 0 }
+
+// Controlla se la stringa passata è una data
+// La stringa dev'essere del seguente formato: GG/MM/AAAA
+// Se ci sono più date (massimo 2) le due date devono essere separate da un trattino -
+// La funzione ritorna true se va bene, altrimenti false
+function checkRangeDatePicker(datesAsString) {
+  try {
+      const datesArray = datesAsString.split(' - ');
+      var dateValue
+      var index
+      if(datesArray.length > 2) {
+          return false
+      }
+      for(index in datesArray) {
+          dateValue = datesArray[index].split('/')
+          // Controllo della lunghezza degli elementi
+          if(dateValue.length != 3) {
+              return false
+          }
+          // Controllo che gli elemnti non abbiamo spazi bianchi
+          if(hasWhiteSpace(dateValue[0]) || hasWhiteSpace(dateValue[1]) || hasWhiteSpace(dateValue[2])) {
+              return false
+          }
+          // Controllo del tipo degli elementi
+          if(!isPositiveInteger(dateValue[0]) || !isPositiveInteger(dateValue[1]) || !isPositiveInteger(dateValue[2])) {
+              return false
+          }
+          // Controllo dei valori minimi degli elementi
+          if(dateValue[1] > 12 || dateValue[0] < 1) {
+              return false
+          }
+          // Controllo dei valori massimi degli elementi
+          if(dateValue[2] % 4 == 0) {
+              daysInMonth[2] = 29
+          }
+          if(dateValue[0] > daysInMonth[dateValue[1]]) {
+              return false
+          }    
+      }
+      return true
+  } catch {
+      return false
+  }
+}

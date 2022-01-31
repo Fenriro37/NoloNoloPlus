@@ -48,7 +48,7 @@ window.onload = function getClient() {
           let current = new Date();      
 
           for(let i in bookings){
-            bookingEnd =  new Date(parseInt(bookings[i].endDate.year), parseInt(bookings[i].endDate.month) - 1, parseInt(bookings[i].endDate.day))
+            bookingEnd =  new Date(parseInt(bookings[i].endDate.year), parseInt(bookings[i].endDate.month) - 1, parseInt(bookings[i].endDate.day),23,59, 59)
             if(current <= bookingEnd){
               deletable = false
             }

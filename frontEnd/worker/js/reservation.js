@@ -182,7 +182,6 @@ function modify(){
         ],
         "firstDay": 1
       },
-      minDate:  data.bookingDate.day +'/'+ data.bookingDate.month +'/'+ data.bookingDate.year,
       autoUpdateInput: false,
       showDropdowns: true, 
       isInvalidDate: function(date){
@@ -207,7 +206,6 @@ $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
 });
 
 $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
-  let block = false
   let dateRange = $(this).val()
   dateRange = dateRange.replace(/ /g, "")
   dateRange = dateRange.split("-")
@@ -222,24 +220,16 @@ $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
   for(let i in date2){
     dateFinish[i] = date2[i]
   }
+
   let d1 = new Date(date1[2], date1[1] -1, date1[0])
   let d2 = new Date(date2[2], date2[1] -1, date2[0])
   for(let i in article.bookings){
     if(data._id != article.bookings[i].reservationId){
       bookingStart = new Date(article.bookings[i].startDate.year, article.bookings[i].startDate.month-1, article.bookings[i].startDate.day)
       bookingEnd = new Date(article.bookings[i].endDate.year, article.bookings[i].endDate.month-1, article.bookings[i].endDate.day)
-
       if( d1 < bookingStart && bookingEnd < d2 )
-       block = true
+        $("#bookingRange").val('')
     }
-  }
-  if(block){
-    $("#save").text("seleziona una data valida")
-    $("#save").prop("disabled", true)
-  }
-  else{
-    $("#save").text("Salva")
-    $("#save").prop("disabled", false)
   }
   calculateTotal()
 });
@@ -463,9 +453,9 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
-  console.log(dateBeginnig[0] + dateBeginnig[1] + dateBeginnig[2])
-  console.log(dateFinish[0] + dateFinish[1] + dateFinish[2])
-
+  if(!checkRangeDatePicker($("#bookingRange").val())){
+    return(alert('Data non valida'))
+  }
   if(data.startDate.day != dateBeginnig[0] || data.startDate.month != dateBeginnig[1] || data.startDate.year != dateBeginnig[2] ||
     data.endDate.day != dateFinish[0] || data.endDate.month != dateFinish[1] || data.endDate.year != dateFinish[2] || $('#newTotal').val() != data.totalPrice){
 
@@ -482,7 +472,7 @@ function save(){
         reservations[i].total = parseFloat($('#newTotal').val())
       }
     }
-    $.ajax({
+    /*$.ajax({
       url:"/api/product?id=" + data.productId,
       method: "POST",
       headers: {
@@ -498,7 +488,7 @@ function save(){
         console.log("Error");
         alert("Errore. " + error.responseText);
       }
-    }); 
+    }); */
   }
 
   let sale, type, value
@@ -527,7 +517,7 @@ function save(){
     dailyDays = 0
   }
 
-  $.ajax({
+  /*$.ajax({
     url:"/api/reservation?id=" + data._id,
     method: "POST",
     headers: {
@@ -601,7 +591,8 @@ function save(){
         console.log("Error");
         alert("Errore. " + error.responseText);
     }
-  }); 
+  }); */
+  console.log('valido')
    
 }
 
@@ -659,3 +650,69 @@ document.addEventListener('click',function(e){
     $("#main").empty()
   }
 });
+
+daysInMonth = [
+  0, // Per comodità
+  31,
+  28,
+  31,
+  30,
+  31,
+  30,
+  31,
+  31,
+  30,
+  31,
+  30,
+  31
+]
+
+// Controlla se una stringa è un intero positivo
+function isPositiveInteger(n) { return n >>> 0 === parseFloat(n) }
+
+// Controlla se una stringa ha uno (o più) spazi bianchi
+function hasWhiteSpace(x) { return x.indexOf(' ') >= 0 }
+
+// Controlla se la stringa passata è una data
+// La stringa dev'essere del seguente formato: GG/MM/AAAA
+// Se ci sono più date (massimo 2) le due date devono essere separate da un trattino -
+// La funzione ritorna true se va bene, altrimenti false
+function checkRangeDatePicker(datesAsString) {
+  try {
+      const datesArray = datesAsString.split(' - ');
+      var dateValue
+      var index
+      if(datesArray.length > 2) {
+          return false
+      }
+      for(index in datesArray) {
+          dateValue = datesArray[index].split('/')
+          // Controllo della lunghezza degli elementi
+          if(dateValue.length != 3) {
+              return false
+          }
+          // Controllo che gli elemnti non abbiamo spazi bianchi
+          if(hasWhiteSpace(dateValue[0]) || hasWhiteSpace(dateValue[1]) || hasWhiteSpace(dateValue[2])) {
+              return false
+          }
+          // Controllo del tipo degli elementi
+          if(!isPositiveInteger(dateValue[0]) || !isPositiveInteger(dateValue[1]) || !isPositiveInteger(dateValue[2])) {
+              return false
+          }
+          // Controllo dei valori minimi degli elementi
+          if(dateValue[1] > 12 || dateValue[0] < 1) {
+              return false
+          }
+          // Controllo dei valori massimi degli elementi
+          if(dateValue[2] % 4 == 0) {
+              daysInMonth[2] = 29
+          }
+          if(dateValue[0] > daysInMonth[dateValue[1]]) {
+              return false
+          }    
+      }
+      return true
+  } catch {
+      return false
+  }
+}

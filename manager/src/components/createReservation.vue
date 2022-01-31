@@ -16,11 +16,11 @@
       </div>
   
       <div class="row mb-3">
-        <div class="col-3">
+        <div class="col-5">
           <label tabindex="0" aria-label="Etichetta periodo prenotazione, separare le due date con uno spazio. Le date devono essere nel formato GG trattino MM trattino YYYY. Campo obbligatorio" for="date" class="mr-3">Periodo Prenotazione* </label>
         </div>
-        <div class="col-9">
-          <date-picker :input-attr="{required: 'true'}" id="date"  v-model="time" @change="changeData" range range-separator=" " :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
+        <div class="col-7">
+          <date-picker :input-attr="{required: 'true'}" id="date" placeholder="GG-MM-YYYY GG-MM-YYYY"  v-model="time" @change="changeData" range range-separator=" " :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker>
         </div>
       </div>
 
@@ -344,10 +344,16 @@
               this.cancel();
               this.enter = false
               alert("Creazione riuscita")       
-            })   
+            },(error) => {
+              alert('Problema nella creazione della prenotazione');
+              this.$router.push({ name: 'home' , params: { filter: ''}})
+            })  
+          },(error) => {
+            alert('Problema nella creazione della prenotazione');
+            this.$router.push({ name: 'home' , params: { filter: ''}})
           }) 
         }, (error) => {
-          alert("La mail non esiste");
+          alert("Errore, la mail non esiste");
           this.enter = false
         })
       },

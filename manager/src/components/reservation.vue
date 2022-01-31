@@ -20,16 +20,16 @@
       </div>
 
       <div class="row mb-3">
-        <div class="col-3">
+        <div class="col-5">
           <label tabindex="0" aria-label="Etichetta periodo prenotazione, separare le due date con uno spazio. Le date devono essere nel formato GG trattino MM trattino YYYY. Campo obbligatorio" for="date" class="mr-3">Periodo Prenotazione </label>
         </div>
-        <div class="col-9">
+        <div class="col-7">
           <template v-if="!boolModify || !available">
-            <input  type="text" class="form-control" :value="bookingStart + ' ~ ' + bookingEnd" id="date" aria-label="Periodo Prenotazione. Sola lettura"  readonly>
-            <label v-if="!available && boolModify" for="date" class="mr-3">Non disponibile in giorni diversi </label>
+            <input  type="text" class="form-control" :value="bookingStart + ' ' + bookingEnd" id="date" aria-label="Periodo Prenotazione. Sola lettura"  readonly>
+            <label tabindex="0" aria-label="Impossibile cambiare data prenotazione perchè non disponibile in giorni diversi" v-if="!available && boolModify" for="date" class="mr-3">Non disponibile in giorni diversi </label>
           </template>
           <template v-else>
-            <date-picker  id="date" v-model="time" :placeholder="bookingStart + ' ~ ' + bookingEnd" @change="changeData" range range-separator=" " :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
+            <date-picker  id="date" v-model="time" :placeholder="bookingStart + ' ' + bookingEnd" @change="changeData" range range-separator=" " :lang="lang" :disabled-date="dateDisabled" format="DD-MM-YYYY" required></date-picker> 
           </template>
         </div>
       </div>
@@ -235,6 +235,7 @@
         let current = new Date(); 
         let startDate = new Date(this.reservation.startDate.year, this.reservation.startDate.month-1, this.reservation.startDate.day, 0, 0, 0)
         let endDate = new Date(this.reservation.endDate.year, this.reservation.endDate.month-1, this.reservation.endDate.day, 23, 59, 59)
+        
         if(startDate <= current && current <= endDate)
           this.boolActive = true
         if(current > endDate){
@@ -245,11 +246,15 @@
           this.bookings = result.data.data.obj.bookings
           console.log(this.bookings)
           this.available = result.data.data.obj.available
-        })
+        },(error) => {
+          alert('Problema nel caricamento dei dati');
+          this.$router.push({ name: 'home' , params: { filter: ''}})
+        }
+      )
         
       },(error) => {
           alert('La pagina non esiste');
-          this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
+          this.$router.push({ name: 'home' , params: { filter: ''}})
         }
       )
     },
@@ -277,9 +282,27 @@
         this.overOnSaleValue = this.reservation.variableDiscount.onSaleValue
 
         this.bookingRequest = this.reservation.bookingDate.day + '-' + this.reservation.bookingDate.month + '-' + this.reservation.bookingDate.year
-        this.bookingStart = this.reservation.startDate.day + '-' + this.reservation.startDate.month + '-' + this.reservation.startDate.year
-        this.bookingEnd = this.reservation.endDate.day + '-' + this.reservation.endDate.month + '-' + this.reservation.endDate.year 
         
+        let dayStary, monthStart, dayEnd, monthEnd
+        monthStart = this.reservation.startDate.month
+        if (String(monthStart).length < 2 && parseInt(monthStart) < 10)
+          monthStart = '0' + String(monthStart)
+        dayStary = this.reservation.startDate.day
+        if (String(dayStary).length < 2 && parseInt(dayStary) < 10)
+          dayStary = '0' + String(dayStary)
+
+        monthEnd = this.reservation.endDate.month
+        if (String(monthEnd).length < 2 && parseInt(monthEnd) < 10)
+          monthEnd = '0' + String(monthEnd)
+
+        dayEnd = this.reservation.endDate.day
+        if (String(dayEnd).length < 2 && parseInt(dayEnd) < 10)
+          dayEnd = '0' + String(dayEnd)
+
+        this.bookingStart = String(dayStary) + '-' + String(monthStart) + '-' + String(this.reservation.startDate.year)
+        this.bookingEnd = String(dayEnd) + '-' + String(monthEnd) + '-' + String(this.reservation.endDate.year) 
+        console.log(this.bookingStart + ' ' + this.bookingEnd)
+
         this.rentalOccurred = this.reservation.isTaken 
         this.returned = this.reservation.isReturned 
         this.notes = this.reservation.description 
@@ -370,6 +393,9 @@
           query1.bookings = this.bookings
           Functions.saveDataProduct(this.reservation.productId, query1)
           .then( () => {
+          },(error) => {
+            alert("Problema nell'invio dei dati");
+            this.$router.push({ name: 'home' , params: { filter: ''}})
           })          
         }
             
@@ -398,7 +424,10 @@
         this.boolModify = false 
         this.boolDelete = false
         this.enter = false
-        })     
+        },(error) => {
+          alert("Problema nell'invio dei dati");
+          this.$router.push({ name: 'home' , params: { filter: ''}})
+        })  
       },
 
       deleteReservation(){
@@ -416,8 +445,14 @@
           .then( () =>{
           Functions.deleteReservation(this.reservationId).then( () =>{
              this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
+          },(error) => {
+            alert("Problema nella cancellazione dei dati");
+            this.$router.push({ name: 'home' , params: { filter: ''}})
           })
-        })
+        },(error) => {
+            alert("Problema nella modifica dei dati");
+            this.$router.push({ name: 'home' , params: { filter: ''}})
+          })
       },
 
       changeRentalOccured(){
@@ -510,7 +545,7 @@
         }
         if(this.overOnSale && days > this.overDaysCount ){
           if(this.overOnSaleType)
-            addendum2 = this.dailyPrice * days - this.dailyPrice * days * this.overOnSaleValue / 100
+            addendum2 = (this.dailyPrice * days) - (this.dailyPrice * days * this.overOnSaleValue / 100)
           else
             addendum2 = this.dailyPrice * days - this.overOnSaleValue
         }

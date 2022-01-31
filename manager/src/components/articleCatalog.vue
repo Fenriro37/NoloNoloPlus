@@ -59,11 +59,13 @@ export default {
         filter:filter,
         sort: false
         }
-        console.log(query)
         Functions.getAllProduct(query)
         .then( (result) => {
           console.log(result)
           this.catalog = result.data.data
+        }, (error) => {
+          alert('Problema nel caricamento dei dati');
+          this.$router.push({ name: 'home' , params: { filter: ''}})
         }) 
       },
       discount: function (article) {

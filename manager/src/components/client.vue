@@ -249,7 +249,10 @@
           console.log(row)
           this.bookings.push(row)
         } 
-      })            
+      },(error) => {
+            alert("Problema nel caricamento dei dati");
+            this.$router.push({ name: 'home' , params: { filter: ''}})
+          })           
     },
     
 
@@ -352,14 +355,20 @@
 
             this.boolModify = false
             this.enter = false
-        }) 
+        },(error) => {
+            alert("Problema nell'invio dei dati");
+            this.$router.push({ name: 'home' , params: { filter: ''}})
+          })
       },
 
       deleteUser(){        
         this.enter = true
         Functions.deleteUser(this.id).then( () =>{
           this.$router.push({ name: 'clientCatalog' , params: { filter: ''}})
-        })                   
+        },(error) => {
+          alert("Problema nella cancellazione dei dati");
+          this.$router.push({ name: 'home' , params: { filter: ''}})
+        })                  
       },
       chart(){
         this.$router.push({ name: 'clientChart', params: { email: this.email} })

@@ -2,7 +2,7 @@
   <div class="container-fluid d-flex justify-content-center" id="main">
     <div class="w-50">
       <div class="input-group mb-3 mt-2">
-        <input type="email" class="form-control" placeholder="Cerca un cliente" v-model="user" id="newMail" aria-label="newMail" aria-describedby="basic-0">
+        <input type="email" class="form-control" placeholder="Cerca un cliente" v-model="user" @keyup.enter="createChart" id="newMail" aria-label="newMail" aria-describedby="basic-0">
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" placeholder="Cerca utenti" @click="createChart">Button</button>
       </div>
 
@@ -196,7 +196,9 @@ export default {
           this.chart2 = new Chart(ctx1, this.monthChart);
           this.boolChart = false
         }
-      })
+      },(error) => {
+          alert('Problema nel caricamento dei dati');
+        })
     }
     
   }
