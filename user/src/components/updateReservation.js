@@ -64,12 +64,12 @@ export class UpdateReservation extends React.Component {
         } else {
           variableTotalPrice = (days * parseFloat(this.state.reservation.variablePrice)) - parseFloat(this.state.variableDiscount.onSaleValue);
         }
-        return (fixedPrice + variableTotalPrice).toFixed(2);
+        return fixedPrice + variableTotalPrice;
       } else {
-        return (fixedPrice + (days * parseFloat(this.state.reservation.variablePrice))).toFixed(2);
+        return fixedPrice + (days * parseFloat(this.state.reservation.variablePrice));
       }
     } else {
-      return '0.00';
+      return 0.0;
     }
   }
 
@@ -262,7 +262,7 @@ export class UpdateReservation extends React.Component {
                 inputFormat='dd/MM/yyyy'/>
               </LocalizationProvider>
             </Box>
-            <div className='row'>
+            <div className='row' tabIndex='0'>
               <div className='col-8'>
                 Prezzo fisso:
               </div>
@@ -270,7 +270,7 @@ export class UpdateReservation extends React.Component {
                 {(finalFixedPrice).toFixed(2)} €
               </div>
             </div>
-            <div className='row'>
+            <div className='row' tabIndex='0'>
               <div className='col-8'>
                 Prezzo giornaliero:
               </div>
@@ -278,16 +278,18 @@ export class UpdateReservation extends React.Component {
                 {parseFloat(this.state.reservation.variablePrice).toFixed(2)} €
               </div>
             </div>
-            <div className='row'>
-              <div className='col-12' style={{textAlign: 'justify'}}>
-                Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
-                {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
-                {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
-                sul costo giornaliero se superi {this.state.variableDiscount.days} {parseInt(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno '} 
-                di noleggio.
+            {this.state.variableDiscount.onSale ? (
+              <div className='row' tabIndex='0'>
+                <div className='col-12' style={{textAlign: 'justify'}}>
+                  Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
+                  {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
+                  {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
+                  sul costo giornaliero se superi {this.state.variableDiscount.days} {parseInt(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno '} 
+                  di noleggio.
+                </div>
               </div>
-            </div>
-            <div className='row'>
+            ) : <></>}
+            <div className='row' tabIndex='0'>
               <div className='col-8'>
                 Giorni di noleggio:
               </div>
@@ -295,12 +297,12 @@ export class UpdateReservation extends React.Component {
                 {(this.state.value[0] && this.state.value[1]) ? datediff(this.state.value[0], this.state.value[1]) : 0 }
               </div>
             </div>
-            <div className='row mb-2'>
+            <div className='row mb-2' tabIndex='0'>
               <div className='col-8'>
                 Prezzo totale:
               </div>
               <div className='col-4 text-end'>
-                {this.priceCalculator()} €
+                {this.priceCalculator().toFixed(2)} €
               </div>
             </div>
           </Modal.Body>

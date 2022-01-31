@@ -32,7 +32,7 @@ const config = require('./../config');
 //   È l'errore.
 router.get('/', async function(req, res) {
     console.log('GET /api/stat/');
-    // try {
+    try {
         const token = jwt.verify(req.cookies['jwt'], config.JSONWebTokenKey)
         const tokenId = token.id;
         const sender = await myMongoAuth.auth({ '_id': ObjectId(tokenId) });
@@ -101,12 +101,12 @@ router.get('/', async function(req, res) {
                 });
             }
         }
-    // } catch(error) {
-    //     return res.status(400).json({
-    //         message: 'Errore di GET /api/stat/',
-    //         error: error
-    //     });
-    // }
+    } catch(error) {
+        return res.status(400).json({
+            message: 'Errore di GET /api/stat/',
+            error: error
+        });
+    }
 });
 
 module.exports = router;

@@ -11,6 +11,7 @@
         <!-- jQuery CDN file -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+        <link rel="stylesheet" href="/public/css/sign-up.css">
         <script src="/public/js/sign-up.js"></script>
     </head>
     <body class="bg-transparent">
@@ -60,7 +61,7 @@
                         <label for="phoneNumber">Cellulare:</label>
                     </div>
                     <div class="col-8">
-                        <input id="phoneNumber" class="form-control" type="tel">
+                        <input id="phoneNumber" class="form-control remove-spin-box" type="number">
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
@@ -122,7 +123,7 @@
                         <label for="paymentCardOwnerName">Numero:</label>
                     </div>
                     <div class="col-8">
-                        <input id="paymentCardOwnerName" class="form-control" type="number">
+                        <input id="paymentCardOwnerName" class="form-control remove-spin-box" type="number">
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
@@ -171,7 +172,7 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <input id="paymentCardCVV" class="form-control" type="text">
+                        <input id="paymentCardCVV" class="form-control remove-spin-box" type="number">
                     </div>
                 </div>
 

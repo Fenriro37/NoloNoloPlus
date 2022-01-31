@@ -43,13 +43,13 @@ export class ProductCard extends React.Component {
               <div
               className='col-6 h-100 d-flex align-items-center'>
                 <img
+                alt={'Immagine del prodotto ' + this.state.product.title}
                 className='img-fluid img-responsive mx-auto d-block'
                 style={{
                   maxHeight: '100%',
                   maxWidth: '100%'
                 }}
-                src={this.state.product.image}
-                alt='Immagine'/>
+                src={this.state.product.image}/>
               </div>
               <div
               className='col-6 d-flex align-items-center'>
@@ -64,7 +64,8 @@ export class ProductCard extends React.Component {
           <Accordion.Body>
             <Tags tags={this.state.product.tags}/>
             <div
-            style={{ textAlign: 'justify' }}>
+            style={{ textAlign: 'justify' }}
+            tabIndex='0'>
               <b>Descrizione:</b>
               <br/>
               {this.state.product.description}
@@ -77,7 +78,7 @@ export class ProductCard extends React.Component {
             originalVariablePrice={parseFloat(this.state.product.price).toFixed(2)}
             variableDiscount={this.state.product.overDays}/>
             <hr/>
-            <div className='mb-2'><b>Prenotazione:</b></div>
+            <div className='mb-2' tabIndex='0'><b>Prenotazione{this.state.product.available ? ':' : ' (non disponibile):'}</b></div>
             {this.state.product.available ? (
               <MakeReservation
                 bookings={this.state.product.bookings}

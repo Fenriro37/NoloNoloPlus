@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import ApiCall from '../services/apiCall'
 import { Header } from './header.js'
 
-import { Form, Button, Row, Col, Modal, Spinner} from 'react-bootstrap'
+import { Form, Button, Row, Col, Modal, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 export class User extends Component {
   constructor(props) {
@@ -52,9 +52,9 @@ export class User extends Component {
         city: ''
       },
       userPayment: {
+        cardOwner: '',
         cardType: '',
-        cardName: '',
-        cardSurname: '',
+        cardCode: '',
         cardExpireYear: '',
         cardExpireMonth: '',
         cardCVV: ''
@@ -126,12 +126,12 @@ export class User extends Component {
         addressNumber: ''
       };
       var payment = {
-        cardName: '',
-        cardSurname: '',
+        cardOwner: '',
+        cardCode: 0,
         cardExpireYear: this.state.newExprYear,
         cardExpireMonth: this.state.newExprMonth,
         cardType: this.state.newCardType,
-        cardCVV: ''
+        cardCVV: 0
       };
       for (var i in tmp) {
         if(tmp[i].name == 'userAddressCity') {
@@ -140,12 +140,12 @@ export class User extends Component {
           address.addressStreet = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
         } else if(tmp[i].name == 'userAddressNumber') {
           address.addressNumber = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userPaymentName') {
-          payment.cardName = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userPaymentSurname') {
-          payment.cardSurname = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userPaymentOwner') {
+          payment.cardOwner = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+        } else if(tmp[i].name == 'userPaymentCardCode') {
+          payment.cardCode = tmp[i].value ? parseInt(tmp[i].value) : parseInt(tmp[i].placeholder);
         } else if(tmp[i].name == 'userPaymentCVV') {
-          payment.cardCVV = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
+          payment.cardCVV = tmp[i].value ? parseInt(tmp[i].value) : parseInt(tmp[i].placeholder);
         }
       }
        // Controllo le modifiche degli Input
@@ -155,14 +155,16 @@ export class User extends Component {
             if(tmp[i].name == 'userAddressCity' || tmp[i].name == 'userAddressStreet' || tmp[i].name == 'userAddressNumber') {
               // È stato modificato l'indirizzo
               query.address = address;
-            } else if(tmp[i].name == 'userPaymentName' || tmp[i].name == 'userPaymentSurname' || tmp[i].name == 'userPaymentCVV') {
+            } else if(tmp[i].name == 'userPaymentCardCode' || tmp[i].name == 'userPaymentOwner' || tmp[i].name == 'userPaymentCVV') {
               // È stato modificato il nome o cognome del metodo di pagamento
               query.payment = payment;
+            } else if(tmp[i].name == 'userPhoneNumber') { 
+              query.phoneNumber = parseInt(tmp[i].value)
             } else {
               query[tmp[i].name] = tmp[i].value;
             }          
           }
-          if(tmp[i].name == 'userPassword' && tmp[i].value == 'Password'){
+          if(tmp[i].name == 'userPassword' && tmp[i].value == 'Password') {
             query.password = tmp[i].value;
           }
         }
@@ -218,8 +220,8 @@ export class User extends Component {
           city: result.data.data.address.addressCity
         },
         userPayment: {
-          cardName: result.data.data.payment.cardName,
-          cardSurname: result.data.data.payment.cardSurname,
+          cardOwner: result.data.data.payment.cardOwner,
+          cardCode: result.data.data.payment.cardCode,
           cardType: result.data.data.payment.cardType,
           cardExpireYear: result.data.data.payment.cardExpireYear,
           cardExpireMonth: result.data.data.payment.cardExpireMonth,
@@ -239,6 +241,8 @@ export class User extends Component {
         // Settings
         isAuth: true
       });
+    }).catch(() => {
+      window.location.replace('/public/login.html')
     });
   }
 
@@ -264,7 +268,8 @@ export class User extends Component {
 
       <div
       id='cont'
-      className='mt-2 mb-2'>
+      className='mt-2 mb-2'
+      aria-label='Pagina Utente'>
         <form
         className='m-0 p-0'
         onSubmit={this.handleSubmit}>
@@ -278,8 +283,7 @@ export class User extends Component {
               type='text'
               name='userName'
               placeholder={this.state.userName} 
-              aria-label='Username' 
-              aria-describedby='basic-addon1'/>
+              aria-label='Nome utente:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
@@ -287,18 +291,22 @@ export class User extends Component {
               <Form.Control 
               type='text' 
               name='userSurname' 
-              placeholder={this.state.userSurname}/>
+              placeholder={this.state.userSurname}
+              aria-label='Cognome utente:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
-              <Form.Label>Email:</Form.Label>
-              <Form.Control 
-              type='email' 
-              name='userEmail' 
-              readOnly 
-              disabled 
-              placeholder={this.state.userEmail}
-              />
+              <Form.Label
+              tabindex={this.state.boolModifying ? '0' : '-1'}>
+                Email (non modificabile):
+              </Form.Label>
+                <Form.Control 
+                type='email' 
+                name='userEmail' 
+                readOnly
+                disabled 
+                placeholder={this.state.userEmail}
+                aria-label='Email:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
@@ -306,7 +314,8 @@ export class User extends Component {
               <Form.Control
               type='password' 
               name='userPassword' 
-              placeholder='password'/>
+              placeholder='password'
+              aria-label='Password:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
@@ -319,7 +328,7 @@ export class User extends Component {
                   newSex: event.target.value
                 });
               }} 
-              aria-label='Form Select Sex'>
+              aria-label='Genere:'>
                 <option value='male'>Uomo</option>
                 <option value='female'>Donna</option>
                 <option value='other'>Altro</option>
@@ -330,15 +339,16 @@ export class User extends Component {
               <Form.Label>Data di Nascita:</Form.Label>
               <Form.Control
               type='date' 
-              value={this.state.newBirthday.year + '-' + this.state.newBirthday.month + '-' + this.state.newBirthday.day} 
+              value={this.state.newBirthday.year + '-' + (this.state.newBirthday.month < 10 ? '0' + this.state.newBirthday.month : this.state.newBirthday.month) + '-' + (this.state.newBirthday.day < 10 ? ('0' + this.state.newBirthday.day) : this.state.newBirthday.month)} 
               name='userBirthday'
+              aria-label='Data di nascita:'
               onChange={(event) => {
                 var x = event.target.value.split('-');
                 this.setState({
                   newBirthday: {
-                    year: x[0], 
-                    month: x[1], 
-                    day: x[2]
+                    year: parseInt(x[0]),
+                    month: parseInt(x[1]), 
+                    day: parseInt(x[2])
                   }
                 });
               }}/>
@@ -349,7 +359,8 @@ export class User extends Component {
               <Form.Control
               type='text'
               name='userAddressCity' 
-              placeholder={this.state.userAddress.city}/>
+              placeholder={this.state.userAddress.city}
+              aria-label='Città:'/>
             </Form.Group>
               
             <Row>
@@ -358,7 +369,8 @@ export class User extends Component {
                 <Form.Control 
                 type='text' 
                 name='userAddressStreet' 
-                placeholder={this.state.userAddress.street}/>
+                placeholder={this.state.userAddress.street}
+                aria-label='Via'/>
               </Form.Group>
 
               <Form.Group as={Col} xs={4} className='mb-2'>
@@ -366,34 +378,40 @@ export class User extends Component {
                 <Form.Control 
                 type='text' 
                 name='userAddressNumber' 
-                placeholder={this.state.userAddress.number}/>
+                placeholder={this.state.userAddress.number}
+                aria-label='Numero civico: '/>
               </Form.Group>
             </Row>
 
             <Form.Group className='mb-2'>
               <Form.Label>Numero di Telefono:</Form.Label>
-              <Form.Control 
-              type='text' 
+              <Form.Control
+              className='remove-spin-box'
+              type='number' 
               name='userPhoneNumber'
-              placeholder={this.state.userPhoneNumber}/>
+              placeholder={this.state.userPhoneNumber}
+              aria-label='Numero di cellulare:'/>
             </Form.Group> 
           
             <h2 className='mt-4 mb-2'>Metodo di Pagamento</h2>
 
             <Form.Group className='mb-2'>
-              <Form.Label>Numero della Carta:</Form.Label>
-              <Form.Control 
-              type='number' 
-              name='userPaymentName' 
-              placeholder={this.state.userPayment.cardName}/>
-            </Form.Group>
-            
-            <Form.Group className='mb-2'>
               <Form.Label>Intestatario:</Form.Label>
               <Form.Control 
               type='text' 
-              name='userPaymentSurname' 
-              placeholder={this.state.userPayment.cardSurname}/>
+              name='userPaymentOwner' 
+              placeholder={this.state.userPayment.cardOwner}
+              aria-label='Intestatario della carta:'/>
+            </Form.Group>
+
+            <Form.Group className='mb-2'>
+              <Form.Label>Numero della Carta:</Form.Label>
+              <Form.Control 
+              type='number'
+              className='remove-spin-box'
+              name='userPaymentCardCode' 
+              placeholder={this.state.userPayment.cardCode}
+              aria-label='Numero della carta:'/>
             </Form.Group>
             
             <Form.Group className='mb-2'>
@@ -401,6 +419,7 @@ export class User extends Component {
               <Form.Select 
               className='mb-2' 
               value={this.state.newCardType}
+              aria-label='Tipologia di carta:'
               onChange={(event) => {
                 this.setState({
                   newCardType: event.target.value
@@ -419,12 +438,12 @@ export class User extends Component {
                 <Form.Select 
                 className='mb-2' 
                 value={this.state.newExprMonth}
+                aria-label='Mese di scadenza della carta:'
                 onChange={(event) => {
                   this.setState({
-                    newExprMonth: event.target.value
+                    newExprMonth: parseInt(event.target.value)
                   });
-                }} 
-                aria-label='Select Card Expiration Month'>
+                }}>
                   {this.state.monthList.map((month) => (
                     <option key={month.key} value={month.key}>{month.month}</option>
                   ))}
@@ -434,14 +453,14 @@ export class User extends Component {
                 <Form.Select
                 className='mb-2' 
                 value={this.state.newExprYear}
+                aria-label='Anno di scadenza della carta:'
                 onChange={(event) => {
                   this.setState({
-                    newExprYear: event.target.value
+                    newExprYear: parseInt(event.target.value)
                   });
-                }}
-                aria-label='Select Card Expiration Year'>
+                }}>
                   {this.state.yearList.map((year) => (
-                    <option key={year.key} value={parseInt(year.key) + 2021}>{year.year}</option>
+                    <option key={year.key} value={parseInt(year.key + 2021)}>{year.year}</option>
                   ))}
                 </Form.Select>
               </Col>    
@@ -450,9 +469,11 @@ export class User extends Component {
             <Form.Group className='mb-2'>
               <Form.Label>CVV:</Form.Label>
               <Form.Control
-              type='text'
+              type='number'
+              className='remove-spin-box'
               name='userPaymentCVV'
-              placeholder={this.state.userPayment.cardCVV}/>
+              placeholder={this.state.userPayment.cardCVV}
+              aria-label='CVV della carta:'/>
             </Form.Group>
           </fieldset>
           <Button 

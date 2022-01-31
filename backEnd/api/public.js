@@ -82,10 +82,10 @@ router.post('/sign-up', async function(req, res) {
 // 
 // Header: vuoto
 // Body:
-// - email
-//   É l'email
-// - plainTextPassword
-//   È la password in chiara
+// - È un oggetto JSON di tipo JSON { attributo: valore } e rappresentano le
+//   credenziali dell'utente. Gli attributi sono:
+//   - email (email)
+//   - plainTextPassword (password non cifrata)
 //
 // Valori di ritorno: { message, data, error }
 // - message

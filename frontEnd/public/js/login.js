@@ -33,22 +33,22 @@ window.addEventListener("load", () => {
                 success: (result) => {
                     document.cookie = 'jwt=' + result.data.token;
                     switch(result.data.userType) {
-                        case 1:
+                        case 0:
                             window.location.href = '/user/index.html';
                             break;
-                        case 2:
+                        case 1:
                             window.location.href = '/worker/index.html';
                             break;
-                        case 3:
+                        case 2:
                             window.location.href = '/manager/index.html';
                             break;
                         default:
-                            alert('Password corretta ma utente sconosciuto.')
+                            alert('Utente sconosciuto.')
                     }
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {
-                    alert("Errore. " + error.responseText.message);
+                    alert("Errore. " + error.responseJSON.message);
                 }
             });
         }

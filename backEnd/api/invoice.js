@@ -12,11 +12,10 @@ const config = require('./../config');
 
 // GET /api/invoice/
 // ----------------------------------------------------------------------------
-// [Cliente] Ritorna i dati della fattura correlata alla prenotazione con id
-// passata per parametro, se il cliente chiamante è colui che ha effettuato la
-// prenotazione.
+// [Cliente] Se il chiamante è il cliente della fattura, ritorna i dati della
+// fattura correlata alla prenotazione con id passato per parametro.
 // [Funzionario, Manager] Ritorna i dati della fattura correlata alla
-// prenotazione con id passata per parametro.
+// prenotazione con id passato per parametro.
 // 
 // Header:
 // - Cookies jwt

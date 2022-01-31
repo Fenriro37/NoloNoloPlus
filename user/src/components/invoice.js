@@ -61,6 +61,19 @@ export class Invoice extends React.Component {
     ) : (
       variablePrice * days
     )
+    var penale =
+      (
+        new Date() > new Date(
+                      this.state.reservation.endDate.year, 
+                      this.state.reservation.endDate.month - 1, 
+                      this.state.reservation.endDate.day)
+        && this.state.reservation.isReturned == false
+        && this.state.reservation.isTaken == true
+      ) ? (
+        this.state.reservation.totalPrice / 100 * 10
+      ) : (
+        0
+      );
 
     return (
       <>
@@ -93,40 +106,51 @@ export class Invoice extends React.Component {
                 <td colSpan={3}>Data: {this.state.reservation.endDate.day}/{this.state.reservation.endDate.month}/{this.state.reservation.endDate.year}</td>
               </tr>
               <tr>
-                <th>Descrizione</th>
-                <th>QNT</th>
-                <th>Prezzo</th>
-                <th>Sconto</th>
-                <th>IVA</th>
-                <th>Imponibile</th>
+                <th className='text-center'>Descrizione</th>
+                <th className='text-center'>QNT</th>
+                <th className='text-center'>Prezzo</th>
+                <th className='text-center'>Sconto</th>
+                <th className='text-center'>IVA</th>
+                <th className='text-center'>Imponibile</th>
               </tr>
               <tr>
                 <td>{this.state.reservation.productTitle} {this.state.reservation.productBrand} (fisso)</td>
-                <td>1</td>
-                <td>{fixedPrice.toFixed(2)} €</td>
-                <td>{this.state.reservation.fixedDiscount.onSale ? (this.state.reservation.fixedDiscount.onSaleType ? ((parseFloat(this.state.reservation.fixedDiscount.onSaleValue)).toFixed(2) + '%') : ((100 - discountedFixedPrice / fixedPrice * 100).toFixed(2) + '%')) : '0%'}</td>
-                <td>22%</td>
-                <td>{discountedFixedPrice.toFixed(2)} €</td>
+                <td className='text-end'>1</td>
+                <td className='text-end'>{fixedPrice.toFixed(2)} €</td>
+                <td className='text-end'>{this.state.reservation.fixedDiscount.onSale ? (this.state.reservation.fixedDiscount.onSaleType ? ((parseFloat(this.state.reservation.fixedDiscount.onSaleValue)).toFixed(2) + '%') : ((100 - discountedFixedPrice / fixedPrice * 100).toFixed(2) + '%')) : '0%'}</td>
+                <td className='text-end'>22%</td>
+                <td className='text-end'>{discountedFixedPrice.toFixed(2)} €</td>
               </tr>
               <tr>
-              <td>{this.state.reservation.productTitle} {this.state.reservation.productBrand} (variabile)</td>
-                <td>{days}</td>
-                <td>{variablePrice.toFixed(2)} €</td>
-                <td>{this.state.reservation.variableDiscount.onSale && days > this.state.reservation.variableDiscount.days ? (this.state.reservation.variableDiscount.onSaleType ? ((parseFloat(this.state.reservation.variableDiscount.onSaleValue)).toFixed(2) + '%') : ((100 - discountedVariablePrice / days / variablePrice * 100).toFixed(2) + '%')) : '0%'}</td>
-                <td>22%</td>
-                <td>{discountedVariablePrice.toFixed(2)} €</td>
+                <td>{this.state.reservation.productTitle} {this.state.reservation.productBrand} (variabile)</td>
+                <td className='text-end'>{days}</td>
+                <td className='text-end'>{variablePrice.toFixed(2)} €</td>
+                <td className='text-end'>{this.state.reservation.variableDiscount.onSale && days > this.state.reservation.variableDiscount.days ? (this.state.reservation.variableDiscount.onSaleType ? ((parseFloat(this.state.reservation.variableDiscount.onSaleValue)).toFixed(2) + '%') : ((100 - discountedVariablePrice / days / variablePrice * 100).toFixed(2) + '%')) : '0%'}</td>
+                <td className='text-end'>22%</td>
+                <td className='text-end'>{discountedVariablePrice.toFixed(2)} €</td>
               </tr>
               <tr>
                 <td colSpan={5}>Totale imponibile</td>
-                <td>{(discountedFixedPrice + discountedVariablePrice).toFixed(2)} €</td>
+                <td className='text-end'>{(discountedFixedPrice + discountedVariablePrice + penale).toFixed(2)} €</td>
               </tr>
               <tr>
                 <td colSpan={5}>IVA</td>
-                <td>{((discountedFixedPrice + discountedVariablePrice) * 0.22).toFixed(2)} €</td>
+                <td className='text-end'>{((discountedFixedPrice + discountedVariablePrice + penale) * 0.22).toFixed(2)} €</td>
               </tr>
+              {
+                new Date() > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day) && this.state.reservation.isReturned == false && this.state.reservation.isTaken == true ?
+                (
+                  <tr>
+                    <td colSpan={5}>Penale</td>
+                    <td className='text-end'>{penale.toFixed(2)} €</td>
+                  </tr>
+                ) : (
+                  <></>
+                )
+              }
               <tr>
                 <td colSpan={5}><b>Totale Fattura</b></td>
-                <td>{((discountedFixedPrice + discountedVariablePrice) * 1.22).toFixed(2)} €</td>
+                <td className='text-end'>{((discountedFixedPrice + discountedVariablePrice) * 1.22 + penale).toFixed(2)} €</td>
               </tr>
               <tr>
                 <td>Dettagli:</td>

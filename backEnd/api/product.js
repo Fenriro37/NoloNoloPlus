@@ -116,9 +116,11 @@ router.get('/all', async function(req, res) {
 
 // POST /api/product
 // ----------------------------------------------------------------------------
-// [Cliente, Funzionario, Manager] Se il parametro non è specificato, crea un nuovo
-// oggetto con i dati di req.body (devono essere completi), altrimenti aggiorna
-// i dati dell'oggetto id.
+// [Cliente] aggiorna i dati (della prenotazione) del prodotto con id passato
+// per parametro.
+// [Funzionario, Manager] aggiorna i dati del prodotto con id passato per
+// parametro. Se il parametro non è specificato, crea un nuovo prodotto con i
+// dati del body.
 // 
 // Header:
 // - Cookies jwt
@@ -149,8 +151,19 @@ router.post('/', async function(req, res) {
             return res.status(401).json({
                 message: 'Token non valido.'
             });
+        } else if(sender.status == 0) {
+            // È un cliente
+            if(productId == null) {
+                // Parametro non specificato
+                return res.status(401).json({
+                    message: 'Operazione non autorizzata.'
+                });
+            } else {
+                // Parametro specificato
+                result = await myMongoProduct.productsUpdateOne(productId, req.body);
+            }
         } else {
-            // È un cliente, funzionario o manager
+            // È un funzionario o manager
             if(productId == null) {
                 // Parametro non specificato
                 result = await myMongoProduct.productsInsertOne(req.body);
@@ -158,19 +171,19 @@ router.post('/', async function(req, res) {
                 // Parametro specificato
                 result = await myMongoProduct.productsUpdateOne(productId, req.body);
             }
-            if(result.status == 0) {
-                // OK
-                return res.status(200).json({
-                    message: result.message,
-                    data: result.obj
-                });
-            } else {
-                // Errore del database
-                return res.status(400).json({
-                    message: result.message,
-                    error: result.obj
-                });
-            }
+        }
+        if(result.status == 0) {
+            // OK
+            return res.status(200).json({
+                message: result.message,
+                data: result.obj
+            });
+        } else {
+            // Errore del database
+            return res.status(400).json({
+                message: result.message,
+                error: result.obj
+            });
         }
     } catch(error) {
         return res.status(400).json({

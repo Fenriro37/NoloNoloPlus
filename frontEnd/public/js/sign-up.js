@@ -1,5 +1,5 @@
 window.addEventListener("load", () => {
-    alert("Questo è un progetto universitario, inscerisci dei dati fittizi");
+    alert("Questo è un progetto universitario, inserisci dei dati fittizi");
     // Seleziona il bottone per inviare il form
     $("#signUpButton").click((event) => event.preventDefault());
     $("#signUpButton").click(async () => {
@@ -50,8 +50,8 @@ window.addEventListener("load", () => {
                     },
                     paymentMethod: {
                         cardType: data[14],
-                        cardName: data[9],
-                        cardSurname: data[10],
+                        cardCode: data[9],
+                        cardOwner: data[10],
                         cardExpireMonth: data[15],
                         cardExpireYear: data[16],
                         cardCCV: data[11]
@@ -64,8 +64,7 @@ window.addEventListener("load", () => {
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {
-                    console.log("Error");
-                    alert("Errore. " + error.responseText);
+                    alert("Errore. " + error.responseJSON.message);
                 }
             });
         }

@@ -4,7 +4,6 @@
 
 // Moduli
 const router = require('express').Router();
-const authMiddleware = require('./../route/auth.js');
 const invoiceApi = require('./invoice.js');
 const productApi = require('./product.js');
 const publicApi = require('./public.js');

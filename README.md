@@ -1,4 +1,4 @@
-Progetto TecWeb 2020/2021
+# Progetto TecWeb 2020/2021
 
 CamelNotation
 
@@ -120,6 +120,128 @@ API di Mongo per il server:
     - sulle categorie
     - sui noleggi
 ```
+
+## DataBase
+### User
+```js
+_id: ObjectId
+userName: string
+userSurname: string
+birthday: {
+    year: int
+    month: int
+    day: int
+}
+sex: ('male', 'female', 'other')
+phoneNumber: int
+address: {
+    addressStreet: string
+    addressNumber: string
+    addressCity: string
+}
+payment: {
+    cardType: ('credit', 'debit', 'other')
+    cardOwner: string
+    cardCode: int
+    cardExpireMonth: int
+    cardExpireYear: int
+    cardCVV: int
+}
+```
+### Worker
+```js
+_id: ObjectId
+userName: string
+userSurname: string
+email: string
+password: string
+```
+### Manager
+```js
+_id: ObjectId
+userName: string
+userSurname: string
+email: string
+password: string
+```
+### Product
+```js
+_id: ObjectId
+title: string
+brand: string
+image: string
+description: string
+note: string
+tags: [string]
+quality: bool
+avaible: bool
+fixedPirce: double
+discount: {
+    onSale: bool
+    onSaleType: bool
+    onSaleValue: double
+}
+price: double // giornaliero
+overDays: {
+    onSale: bool
+    onSaleType: bool
+    onSaleValue: double
+    days: int
+}
+bookings: [reservation]
+```
+### Reservation
+```js
+_id: ObjectId
+clientEmail: string
+clientName: string
+clientSurname: string
+productId: string
+productTitle: string
+productBrand: string
+productImage: string
+
+isTaken: bool
+isReturned: bool
+description: string
+note: string
+
+bookingDate: {
+    year: int
+    month: int
+    day: int
+}
+startDate: {
+    year: int
+    month: int
+    day: int
+}
+endDate: {
+    year: int
+    month: int
+    day: int
+}
+
+variablePrice: double
+fixedPrice: double
+totalPrice: double
+
+fixedDiscount: {
+    onSale: bool
+    onSaleType: bool
+    onSaleValue: double
+}
+variableDiscount: {
+    onSale: bool
+    onSaleType: bool
+    onSaleValue: double
+    days: int
+}
+```
+
+- 0 Utente autenticato
+- 1 funzionario
+- 2 manager
 
 **NB:** `sort` è un JSON del tipo: `{ attribututeToSort: value }` dove `value` vale:
 - `1` se è crescente

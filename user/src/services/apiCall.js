@@ -1,12 +1,8 @@
 import http from './http'
 
 class ApiCall {
-    
-    test() {
-        return http.get('/test');
-    }
 
-    // Chiamate alle API generiche
+    // Login
     login(email, password) {
         const body = {
             'email': email,
@@ -15,7 +11,7 @@ class ApiCall {
         return http.post('/api/public/login', body);
     }
 
-    // Chiamate alle API sul cliente autenticato
+    // API client
     getUser(id) {
         const query = id ? '?id=' + id : '';
         return http.get('/api/user/' + query)
@@ -30,26 +26,26 @@ class ApiCall {
         
     }
 
-    // Chiamate alle API sui prodotti
+    // API product
     getProduct(id) {
         return http.get('/api/product/?id=' + id)
     }
 
     getAllProduct(filter, sort) {
-        return http.get('/api/product/all' + '?filter=' + filter + '&&sort=' + sort)
+        return http.get('/api/product/all' + '?filter=' + filter + '&sort=' + sort)
     }
 
     postProduct(id, bookings) {
         return http.post('/api/product/?id=' + id, bookings);
     }
 
-    // Chiamate alle API sulle prenotazioni
+    // API reservation
     getReservation(id) {
         return http.get('/api/reservation/?id=' + id)
     }
 
     getAllReservation(filter, sort) {
-        return http.get('/api/reservation/all' + '?filter=' + filter + '&&sort=' + sort);
+        return http.get('/api/reservation/all' + '?filter=' + filter + '&sort=' + sort);
     }
 
     postReservation(id, data) {

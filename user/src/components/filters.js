@@ -17,7 +17,7 @@ export class Filters extends React.Component {
       this.state = {
         filter1: ['Disponibilità', 'Tutte', 'Prenotate', 'Attive', 'Concluse'],
         choise1: 1,
-        filter2: ['Ordina per', 'Data crescente', 'Data descrescente'],
+        filter2: ['Ordina per', 'Data crescente', 'Data decrescente'],
         choise2: 1
       }
       // props.sort(true);
