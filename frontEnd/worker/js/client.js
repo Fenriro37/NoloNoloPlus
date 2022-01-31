@@ -41,25 +41,29 @@ window.onload = function getClient() {
       success: (result) => {
         bookings = result.obj
         console.log(bookings)
-        let current = new Date();      
-        current = parseInt(current.getFullYear()) * 10000 + parseInt((current.getMonth()+1)) * 100 + parseInt(current.getDate())
-        console.log(current)
-        for(let i in bookings){
-          bookingEnd = parseInt(bookings[i].endDate.year) * 10000 + parseInt(bookings[i].endDate.month) * 100 + parseInt(bookings[i].endDate.day)
-          console.log(bookingEnd)
-          if(current <= bookingEnd){
-            deletable = false
-          }
+        if(bookings.length === 0){
+          $("#Table").empty()
         }
-        for (let i in bookings){
-          $("#myTable").append(
-            '<tr>'+
-            '<td><a href="reservation.html?id=' +bookings[i]._id+'">'+bookings[i]._id+'</td>'+
-            '<td class="text-truncate"><a href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
-            '<td>'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
-            '<td>'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
-            '</tr>'
-          )
+        else{
+          let current = new Date();      
+
+          for(let i in bookings){
+            bookingEnd =  new Date(parseInt(bookings[i].endDate.year), parseInt(bookings[i].endDate.month) - 1, parseInt(bookings[i].endDate.day))
+            if(current <= bookingEnd){
+              deletable = false
+            }
+          }
+          for (let i in bookings){
+            $("#myTable").append(
+              '<tr>'+
+              '<td width="20%"><a aria-label="Link alla prenotazione. Identificativo:'+bookings[i]._id+'" href="reservation.html?id=' +bookings[i]._id+'"> Id prenotazione</td>'+
+              '<td ><a aria-label="Link al prodotto prenotato '+bookings[i].productTitle+' '+bookings[i].productBrand+'" href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
+              '<td tabindex="0" aria-label="Prezzo totale: '+bookings[i].totalPrice +'€" >'+bookings[i].totalPrice+'€</td>'+
+              '<td tabindex="0" aria-label="Data inizio prenotazione '+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'" >'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
+              '<td tabindex="0" aria-label="Data fine prenotazione '+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'" >'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
+              '</tr>'
+            )
+          }
         }
       },
       // Risposta del server in caso di insuccesso
@@ -85,8 +89,16 @@ function fill(){
   $("#phone").val(data.phoneNumber);
   $("#mail").attr("placeholder", data.email);
   $("#mail").val(data.email);
-  $("#birthday").attr("placeholder", data.birthday.day +'-'+ data.birthday.month +'-'+ data.birthday.year);
-  $("#birthday").val(data.birthday.day +'-'+ data.birthday.month +'-'+ data.birthday.year);
+
+  $("#birthday").val(new Date(data.birthday.year, data.birthday.month, data.birthday.day));
+  let month = data.birthday.month
+  if (String(month).length < 2 && parseInt(data.birthday.month) < 10)
+    month = '0' + String(month)
+  let day = data.birthday.day
+  if (String(day).length < 2 && parseInt(data.birthday.day) < 10)
+    day = '0' + String(day)
+  document.getElementById('birthday').value = data.birthday.year +'-'+ month +'-'+ day
+
   $("#street").attr("placeholder", data.address.addressStreet);
   $("#street").val(data.address.addressStreet);
   $("#num").attr("placeholder", data.address.addressNumber);
@@ -95,10 +107,10 @@ function fill(){
   $("#city").val(data.address.addressCity);
   $("#cardType").attr("placeholder", data.payment.cardType);
   $("#cardType").val(data.payment.cardType);
-  $("#cardName").attr("placeholder", data.payment.cardName);
-  $("#cardName").val(data.payment.cardName);
-  $("#owner").attr("placeholder", data.payment.cardSurname);
-  $("#owner").val(data.payment.cardSurname);
+  $("#cardName").attr("placeholder", data.payment.cardCode);
+  $("#cardName").val(data.payment.cardCode);
+  $("#owner").attr("placeholder", data.payment.cardOwner);
+  $("#owner").val(data.payment.cardOwner);
   $("#cardMonth").attr("placeholder", data.payment.cardExpireMonth); 
   $("#cardMonth").val(data.payment.cardExpireMonth);
   $("#cardYear").attr("placeholder", data.payment.cardExpireYear);
@@ -109,15 +121,10 @@ function modify(){
   console.log("modify")
   $("#myButtons").empty()
   $("#myButtons").append(
-    '<button class="btn btn-lg btn-success">Salva</button>'+
-    '<button type="button" id="reset" class="btn btn-lg btn-danger" >Annulla</button>'+
-    '<button type="button" id="delete" class="btn btn-lg btn-danger delete">Elimina cliente</button>'
+    '<button class="btn btn-lg btn-success" aria-label="Bottone salva. Cliccandolo i campi saranno salvati e resi non modificabili" >Salva</button>'+
+    '<button type="button" id="reset" aria-label="Bottone annulla. Cliccandolo i campi ritorneranno allo stato originale e non modificabili" class="btn btn-lg btn-danger" >Annulla</button>'+
+    '<button type="button" id="delete" aria-label="Bottone elimina. Cliccandolo il cliente sarà cancellato e verrai reindirizzato al catalogo" class="btn btn-lg btn-danger delete">Elimina cliente</button>'
   )
-  if(!deletable){
-    $("#delete").prop("disabled", true)
-    $("#delete").text("Prenotazione attive")
-  }
-
   boolModify = true
   readOnly()
 
@@ -127,19 +134,25 @@ function readOnly(){
   console.log("readOnly")
   if(!boolModify){
     $("form :input").each(function(){
-      $(this).prop("readonly", true); 
+      $(this).prop("disabled", true); 
     });
     $("select").prop("disabled", true);
+    $("#change").prop("disabled", false);
+
   }
   else{ 
     $("form :input").each(function(){
-      $(this).prop("readonly", false); 
+      $(this).prop("disabled", false); 
     });
     $("#identifier").prop("readonly", true); 
+    $("#mail").prop("readonly", true); 
     $("select").prop("disabled", false);
+    if(!deletable){
+      $("#delete").prop("disabled", true)
+      $("#delete").text("Prenotazione attive")
+    }
   }
 }
-
 
 document.addEventListener('click',function(e){
   if(e.target && e.target.id== 'reset'){
@@ -151,7 +164,7 @@ function reset(){
   console.log('reset')
   $("#myButtons").empty()
   $("#myButtons").append(
-  '<button type="button" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>'
+  '<button type="button" id="change" class="btn btn-lg btn-secondary" onclick="modify()">Modifica</button>'
   )
   boolModify = false
   fill()
@@ -193,18 +206,22 @@ function save() {
   let date = $("#birthday").val()
   date = date.split('-')
   let day, month, year
-  //se non hai modificato la data la tiene nel formato dd/mm/yyyy
+
   if(data.birthday.day == date[0] && data.birthday.month == date[1] && data.birthday.year == date[2]){
     day = data.birthday.day
     month = data.birthday.month
     year = data.birthday.year
   }
-  //se la modifichi è nel formato yyyy/mm/dd
   else{
     day = date[2]
     month = date[1]
     year = date[0]
   }
+  let tmpYear = parseInt(year)
+  console.log(tmpYear)
+  if(tmpYear > 2003 && tmpYear < 1900)
+    return(alert('Data non valida'))
+
   $.ajax({
     url:"/api/user?id=" + data._id,
     method: "POST",
@@ -215,12 +232,12 @@ function save() {
       userName: $("#name").val(),
       userSurname: $("#surname").val(),
       birthday: {
-        year: year,
-        month: month,
-        day: day
+        year: parseInt(year),
+        month: parseInt(month),
+        day: parseInt(day)
       },
       sex: $("#sex").val(),
-      phoneNumber: $("#phone").val(),
+      phoneNumber: parseInt($("#phone").val()),
       email: $("#mail").val(),
       address: {
         addressStreet: $("#street").val(),
@@ -229,10 +246,10 @@ function save() {
       },
       payment: {
         cardType: $("#cardType").val(), 
-        cardName: $("#cardName").val(),
-        cardSurname: $("#owner").val(),
-        cardExpireMonth: $("#cardMonth").val(), 
-        cardExpireYear: $("#cardYear").val(),
+        cardCode: parseInt($("#cardName").val()),
+        cardOwner: $("#owner").val(),
+        cardExpireMonth: parseInt($("#cardMonth").val()), 
+        cardExpireYear: parseInt( $("#cardYear").val()),
       }
     }),
     // Risposta del server in caso di successo
@@ -250,8 +267,8 @@ function save() {
         data.address.addressNumber = $("#num").val()
         data.address.addressCity = $("#city").val()
         data.payment.cardType = $("#cardType").val()
-        data.payment.cardName = $("#cardName").val()
-        data.payment.cardSurname = $("#owner").val()
+        data.payment.cardCode = $("#cardName").val()
+        data.payment.cardOwner = $("#owner").val()
         data.payment.cardExpireMonth = $("#cardMonth").val()
         data.payment.cardExpireYear = $("#cardYear").val()
         alert("modifica riuscita")

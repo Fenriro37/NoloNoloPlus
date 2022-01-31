@@ -4,17 +4,6 @@ import config from '../config.js'
 
 class Functions {
 
-    loginAsWorker() {
-        let result = http.post(
-            "/api/public/login",
-            {
-                email: "han.chu@manager.com",
-                plainTextPassword: "1234567890"
-            }
-        );
-        console.log("AUTH");
-        return result;
-    }
     checkCookie(){
         console.log("Cookie");  
         http.get("/api/public/auth").then( (result) => {
@@ -87,6 +76,13 @@ class Functions {
 
     deleteReservation(id){
         return http.delete("/api/reservation/?id=" + id)
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////API relative alle statistiche/////////////////////////////////////////
+
+    getTags(tag) {
+        return http.get("/api/stat/?tag=" + tag)
     }
 
 }
