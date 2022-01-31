@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import ApiCall from '../services/apiCall'
 import { Header } from './header.js'
 
-import { Form, Button, Row, Col, Modal, Spinner} from 'react-bootstrap'
+import { Form, Button, Row, Col, Modal, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 export class User extends Component {
   constructor(props) {
@@ -268,7 +268,8 @@ export class User extends Component {
 
       <div
       id='cont'
-      className='mt-2 mb-2'>
+      className='mt-2 mb-2'
+      aria-label='Pagina Utente'>
         <form
         className='m-0 p-0'
         onSubmit={this.handleSubmit}>
@@ -282,8 +283,7 @@ export class User extends Component {
               type='text'
               name='userName'
               placeholder={this.state.userName} 
-              aria-label='Username' 
-              aria-describedby='basic-addon1'/>
+              aria-label='Nome utente:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
@@ -291,18 +291,22 @@ export class User extends Component {
               <Form.Control 
               type='text' 
               name='userSurname' 
-              placeholder={this.state.userSurname}/>
+              placeholder={this.state.userSurname}
+              aria-label='Cognome utente:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
-              <Form.Label>Email:</Form.Label>
-              <Form.Control 
-              type='email' 
-              name='userEmail' 
-              readOnly 
-              disabled 
-              placeholder={this.state.userEmail}
-              />
+              <Form.Label
+              tabindex={this.state.boolModifying ? '0' : '-1'}>
+                Email (non modificabile):
+              </Form.Label>
+                <Form.Control 
+                type='email' 
+                name='userEmail' 
+                readOnly
+                disabled 
+                placeholder={this.state.userEmail}
+                aria-label='Email:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
@@ -310,7 +314,8 @@ export class User extends Component {
               <Form.Control
               type='password' 
               name='userPassword' 
-              placeholder='password'/>
+              placeholder='password'
+              aria-label='Password:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
@@ -323,7 +328,7 @@ export class User extends Component {
                   newSex: event.target.value
                 });
               }} 
-              aria-label='Form Select Sex'>
+              aria-label='Genere:'>
                 <option value='male'>Uomo</option>
                 <option value='female'>Donna</option>
                 <option value='other'>Altro</option>
@@ -336,6 +341,7 @@ export class User extends Component {
               type='date' 
               value={this.state.newBirthday.year + '-' + (this.state.newBirthday.month < 10 ? '0' + this.state.newBirthday.month : this.state.newBirthday.month) + '-' + (this.state.newBirthday.day < 10 ? ('0' + this.state.newBirthday.day) : this.state.newBirthday.month)} 
               name='userBirthday'
+              aria-label='Data di nascita:'
               onChange={(event) => {
                 var x = event.target.value.split('-');
                 this.setState({
@@ -353,7 +359,8 @@ export class User extends Component {
               <Form.Control
               type='text'
               name='userAddressCity' 
-              placeholder={this.state.userAddress.city}/>
+              placeholder={this.state.userAddress.city}
+              aria-label='Città:'/>
             </Form.Group>
               
             <Row>
@@ -362,7 +369,8 @@ export class User extends Component {
                 <Form.Control 
                 type='text' 
                 name='userAddressStreet' 
-                placeholder={this.state.userAddress.street}/>
+                placeholder={this.state.userAddress.street}
+                aria-label='Via'/>
               </Form.Group>
 
               <Form.Group as={Col} xs={4} className='mb-2'>
@@ -370,7 +378,8 @@ export class User extends Component {
                 <Form.Control 
                 type='text' 
                 name='userAddressNumber' 
-                placeholder={this.state.userAddress.number}/>
+                placeholder={this.state.userAddress.number}
+                aria-label='Numero civico: '/>
               </Form.Group>
             </Row>
 
@@ -380,7 +389,8 @@ export class User extends Component {
               className='remove-spin-box'
               type='number' 
               name='userPhoneNumber'
-              placeholder={this.state.userPhoneNumber}/>
+              placeholder={this.state.userPhoneNumber}
+              aria-label='Numero di cellulare:'/>
             </Form.Group> 
           
             <h2 className='mt-4 mb-2'>Metodo di Pagamento</h2>
@@ -390,7 +400,8 @@ export class User extends Component {
               <Form.Control 
               type='text' 
               name='userPaymentOwner' 
-              placeholder={this.state.userPayment.cardOwner}/>
+              placeholder={this.state.userPayment.cardOwner}
+              aria-label='Intestatario della carta:'/>
             </Form.Group>
 
             <Form.Group className='mb-2'>
@@ -399,7 +410,8 @@ export class User extends Component {
               type='number'
               className='remove-spin-box'
               name='userPaymentCardCode' 
-              placeholder={this.state.userPayment.cardCode}/>
+              placeholder={this.state.userPayment.cardCode}
+              aria-label='Numero della carta:'/>
             </Form.Group>
             
             <Form.Group className='mb-2'>
@@ -407,6 +419,7 @@ export class User extends Component {
               <Form.Select 
               className='mb-2' 
               value={this.state.newCardType}
+              aria-label='Tipologia di carta:'
               onChange={(event) => {
                 this.setState({
                   newCardType: event.target.value
@@ -425,12 +438,12 @@ export class User extends Component {
                 <Form.Select 
                 className='mb-2' 
                 value={this.state.newExprMonth}
+                aria-label='Mese di scadenza della carta:'
                 onChange={(event) => {
                   this.setState({
                     newExprMonth: parseInt(event.target.value)
                   });
-                }} 
-                aria-label='Select Card Expiration Month'>
+                }}>
                   {this.state.monthList.map((month) => (
                     <option key={month.key} value={month.key}>{month.month}</option>
                   ))}
@@ -440,12 +453,12 @@ export class User extends Component {
                 <Form.Select
                 className='mb-2' 
                 value={this.state.newExprYear}
+                aria-label='Anno di scadenza della carta:'
                 onChange={(event) => {
                   this.setState({
                     newExprYear: parseInt(event.target.value)
                   });
-                }}
-                aria-label='Select Card Expiration Year'>
+                }}>
                   {this.state.yearList.map((year) => (
                     <option key={year.key} value={parseInt(year.key + 2021)}>{year.year}</option>
                   ))}
@@ -459,7 +472,8 @@ export class User extends Component {
               type='number'
               className='remove-spin-box'
               name='userPaymentCVV'
-              placeholder={this.state.userPayment.cardCVV}/>
+              placeholder={this.state.userPayment.cardCVV}
+              aria-label='CVV della carta:'/>
             </Form.Group>
           </fieldset>
           <Button 

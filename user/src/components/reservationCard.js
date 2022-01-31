@@ -33,11 +33,13 @@ export class ReservationCard extends React.Component {
 
   componentDidMount() {
     let status = ''
+    const today = new Date();
+    const endDate = new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day);
     if(this.state.reservation.isTaken == false && this.state.reservation.isReturned == false) {
       status = 'Prenotato';
-    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == false) {
+    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == false && today < endDate) {
       status = 'Attivo';
-    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == true) {
+    } else {
       status = 'Concluso';
     }
     this.setState({
@@ -94,7 +96,7 @@ export class ReservationCard extends React.Component {
                   maxWidth: '100%'
                 }}
                 src={this.state.reservation.productImage}
-                alt='Immagine'/>
+                alt={'Immagine del prodotto ' + this.state.reservation.productTitle}/>
               </div>
               <div
               className='col-6 d-flex align-items-center'>
@@ -114,7 +116,7 @@ export class ReservationCard extends React.Component {
           </Accordion.Header>
           <Accordion.Body>
             {/* Dati principali prenotazione */}
-            <div>
+            <div tabIndex='0'>
               Identificativo della prenotazione:
               <br/>
               <b>{this.state.reservation._id}</b>
@@ -122,7 +124,7 @@ export class ReservationCard extends React.Component {
             <hr/>
             {/* Dati secondari prenotazione */}
             <div>
-              <div className='row d-flex justify-content-between'>
+              <div className='row d-flex justify-content-between' tabIndex='0'>
                 <div className='col-8'>
                   <b>Data prenotazione:</b>
                 </div>
@@ -132,7 +134,7 @@ export class ReservationCard extends React.Component {
                   {this.state.reservation.bookingDate.year}
                 </div>
               </div>
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-8'>
                   <b>Status:</b>
                 </div>
@@ -140,7 +142,7 @@ export class ReservationCard extends React.Component {
                   <b>{this.state.status}</b>
                 </div>
               </div>
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-8'>
                 <b>Data di inizio noleggio:</b>
                 </div>
@@ -150,7 +152,7 @@ export class ReservationCard extends React.Component {
                   {this.state.reservation.startDate.year}
                 </div>
               </div>
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-8'>
                 <b>Data di fine noleggio:</b>
                 </div>
@@ -160,7 +162,7 @@ export class ReservationCard extends React.Component {
                   {this.state.reservation.endDate.year}  
                 </div>
               </div>
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-8'>
                 <b>Prezzo fisso:</b>
                 </div>
@@ -168,7 +170,7 @@ export class ReservationCard extends React.Component {
                   {parseFloat(finalFixedPrice).toFixed(2)} €
                 </div>
               </div>
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-8'>
                 <b>Prezzo variabile:</b>
                 </div>
@@ -176,7 +178,7 @@ export class ReservationCard extends React.Component {
                   {parseFloat(finalVariablePrice).toFixed(2)} €
                 </div>
               </div>
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-8'>
                 <b>Prezzo totale:</b>
                 </div>
@@ -185,9 +187,9 @@ export class ReservationCard extends React.Component {
                 </div>
               </div>
               {
-              new Date > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month, this.state.reservation.endDate.day) ?
+              new Date() > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day) && this.state.reservation.isReturned == false && this.state.reservation.isTaken == true ?
               (
-                <div className='row'>
+                <div className='row' tabIndex='0'>
                   <div className='col-8'>
                     <b>Penale:</b>
                   </div>
@@ -197,12 +199,12 @@ export class ReservationCard extends React.Component {
                 </div>
               ) : <></>
               }
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-12'>
                   <b>Dettagli:</b>
                 </div>
               </div>
-              <div className='row'>
+              <div className='row' tabIndex='0'>
                 <div className='col-12'>
                   {this.state.reservation.description}
                 </div>

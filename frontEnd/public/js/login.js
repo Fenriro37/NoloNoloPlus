@@ -48,7 +48,7 @@ window.addEventListener("load", () => {
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {
-                    alert("Errore. " + error.responseText.message);
+                    alert("Errore. " + error.responseJSON.message);
                 }
             });
         }

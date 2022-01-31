@@ -20,7 +20,7 @@ export class Tags extends React.Component {
       );
     });
     return (
-      <div>
+      <div tabIndex='0'>
         <b>Categoria:</b>
         <div
         className='d-flex justify-content-center flex-wrap'>

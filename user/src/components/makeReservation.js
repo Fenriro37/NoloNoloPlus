@@ -204,7 +204,7 @@ export class MakeReservation extends React.Component {
             inputFormat='dd/MM/yyyy'/>
           </LocalizationProvider>
         </Box>
-        <div className='row'>
+        <div className='row' tabIndex='0'>
           <div className='col-8'>
             Giorni di noleggio:
           </div>
@@ -213,7 +213,7 @@ export class MakeReservation extends React.Component {
             {this.checkDateRange(this.state.value) ? datediff(this.state.value[0], this.state.value[1]) : 0 }
           </div>
         </div>
-        <div className='row mb-2'>
+        <div className='row mb-2' tabIndex='0'>
           <div className='col-8'>
             Prezzo totale:
           </div>
@@ -224,7 +224,7 @@ export class MakeReservation extends React.Component {
         {this.state.isAuthenticated ? (
         <Button
           disabled={!this.checkDateRange(this.state.value)}
-          className='mt-3 w-100'
+          className='mt-11 w-100'
           onClick={(event) => {
             event.preventDefault();
             this.makeReservation();
@@ -233,7 +233,7 @@ export class MakeReservation extends React.Component {
         </Button>
         ) : (
         <Button 
-          className='mt-2 w-100'
+          className='mt-1 w-100'
           href='/public/login.html'
         >
           Accedi per prenotare

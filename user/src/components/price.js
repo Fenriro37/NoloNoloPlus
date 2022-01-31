@@ -16,22 +16,22 @@ export class Price extends React.Component {
       return (
         <>
           <div>
-            <span style={{ textDecorationLine: 'line-through'}}>
+            <span style={{ textDecorationLine: 'line-through'}} tabIndex='0'>
               <b>Prezzo fisso: </b> {this.state.originalFixedPrice} €
             </span>
             <br/>
-            <span style={{ color: 'red' }}>
+            <span style={{ color: 'red' }} tabIndex='0'>
               <b>Prezzo fisso scontato: </b> {this.state.discountedFixedPrice} €
             </span>
           </div>
           <div>
-            <span>
+            <span tabIndex='0'>
               <b>Prezzo giornaliero: </b> {this.state.originalVariablePrice} €
             </span>
             <br/>
             {
               this.state.variableDiscount.onSale
-              ? <span style={{ color: 'red' }}>
+              ? <span style={{ color: 'red' }} tabIndex='0'>
                   Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
                   {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
                   {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
@@ -46,13 +46,17 @@ export class Price extends React.Component {
     } else {
       return (
         <div>
-          <b>Prezzo fisso: </b> {parseFloat(this.state.originalFixedPrice).toFixed(2)} €
+          <span tabIndex='0'>
+            <b>Prezzo fisso: </b> {parseFloat(this.state.originalFixedPrice).toFixed(2)} €
+          </span>
           <br/>
-          <b>Prezzo giornaliero: </b> {parseFloat(this.state.originalVariablePrice).toFixed(2)} €
+          <span tabIndex='0'>
+            <b>Prezzo giornaliero: </b> {parseFloat(this.state.originalVariablePrice).toFixed(2)} €
+          </span>
           <br/>
             {
               this.state.variableDiscount.onSale
-              ? <span style={{ color: 'red' }}>
+              ? <span style={{ color: 'red' }} tabIndex='0'>
                   Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
                   {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
                   {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
