@@ -1,4 +1,6 @@
 let reservations = []
+site202131Url = "http://localhost:8081"
+//site202131Url: "http://site202131.tw.cs.unibo.it",
 
 window.onload = function login() {
   console.log("Cookie");  
@@ -12,13 +14,13 @@ window.onload = function login() {
       success: (result) => {
         console.log(result)
         if(result.obj !== 1){
-            window.location = "../public/login.html";
+            window.location = site202131Url + "/public/login.html";
         }
         getAllArticle("")
       },
       // Risposta del server in caso di insuccesso
       error: (error) => {
-        window.location = "../public/login.html"
+        window.location = site202131Url + "/public/login.html";
       }
   });
 }
@@ -38,8 +40,7 @@ window.onload = function login() {
 
 function logout(){
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    console.log('sparta')
-    window.location = "http:/localhost:8081/public/login.html";
+    window.location = site202131Url + "/public/login.html";
 }
 
  function search(){
@@ -148,8 +149,8 @@ function logout(){
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
-            console.log("Error");
-            alert("Errore. " + error.responseText);
+            console.log("Errore nel caricamento dei dati");
+            alert("Errore nel caricamento dei dati");
         }
     });
 }
@@ -193,8 +194,8 @@ function logout(){
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
-            console.log("Error");
-            alert("Errore. " + error.responseText);
+            console.log("Errore nel caricamento dei dati");
+            alert("Errore nel caricamento dei dati");
         }
     });
 }
@@ -232,8 +233,8 @@ function logout(){
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
-            console.log("Error");
-            alert("Errore. " + error.responseText);
+            console.log("Errore nel caricamento dei dati");
+            alert("Errore nel caricamento dei dati");
         }
     });   
 }

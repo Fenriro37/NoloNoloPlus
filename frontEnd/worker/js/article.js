@@ -19,7 +19,7 @@ window.onload = function getProduct() {
         error: (error) => {
             console.log("Error");
             alert("Pagina non disponibile o inesistente");
-						window.location = "http://localhost:8081/worker/navbar.html?";
+						window.location = site202131Url + "/worker/navbar.html?";
         }
     });
 }
@@ -90,15 +90,14 @@ function fill(){
 
 
 	let current = new Date();      
-	current = parseInt(current.getFullYear()) * 10000 + parseInt((current.getMonth()+1)) * 100 + parseInt(current.getDate())
 
 	if(data.bookings.length === 0){
 		$("#Table").empty()
 	}
 	else{
 		for(let i in data.bookings){
-			bookingStart = parseInt(data.bookings[i].startDate.year) * 10000 + parseInt(data.bookings[i].startDate.month) * 100 + parseInt(data.bookings[i].startDate.day)
-			if(current <= bookingStart){
+			let bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month -1, data.bookings[i].endDate.day, 23, 59, 59)
+			if(current <= bookingEnd){
 				$('#delete').prop('disabled', true);
 				//<button type="button" id="delete" class="btn btn-lg btn-danger" onclick="remove()">Elimina</button>
 				//data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover"
@@ -177,7 +176,7 @@ $('#flexSwitchCheckDefault').change(function() {
     // Risposta del server in caso di insuccesso
     error: (error) => {
         console.log("Error");
-        alert("Errore. " + error.responseText);
+        alert("Errore nella modifica dei dati");
     }
 	});
 })
@@ -192,12 +191,13 @@ function remove(){
 		},
 		// Risposta del server in caso di successo
 		success: () => {
-			window.location = "http://localhost:8081/worker/navbar.html?";
+			alert("operazione riuscita")
+			window.location = site202131Url + "/worker/navbar.html?";
 		},
 		// Risposta del server in caso di insuccesso
 		error: (error) => {
 			console.log("Error");
-			alert("Errore. " + error.responseText);
+			alert("Errore nella cancellazione dei dati");
 		}
 	}); 
 }
@@ -391,12 +391,13 @@ function save(){
 				data.note = $("#productNote").val()
 				
 				fill()
+				alert("operazione riuscita")
 				$('#myModal').modal('hide')
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
         console.log("Error");
-        alert("Errore. " + error.responseText);
+        alert("Errore nella modifica dei dati");
     }
 	});
 }

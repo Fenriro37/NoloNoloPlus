@@ -23,7 +23,7 @@ window.onload = function getClient() {
       error: (error) => {
         console.log("Error");
         alert("Pagina non disponibile o inesistente");
-        window.location = "http://localhost:8081/worker/navbar.html?";
+        window.location = site202131Url + "/worker/navbar.html?";
       }
   });
   //aggiungere getAllReservation di questo user
@@ -70,7 +70,7 @@ window.onload = function getClient() {
       error: (error) => {
         console.log("Error");
         alert("Pagina non disponibile o inesistente");
-        window.location = "http://localhost:8081/worker/navbar.html?";
+        window.location = site202131Url + "/worker/navbar.html?";
       }
   });
 }
@@ -187,12 +187,13 @@ function remove(){
     },
     // Risposta del server in caso di successo
     success: () => {
+      alert('Operazione riuscita')
       window.location = "http://localhost:8081/worker/navbar.html?";
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
       console.log("Error");
-      alert("Errore. " + error.responseText);
+      alert("Errore nella cancellazione");
     }
   });
 }
@@ -277,8 +278,8 @@ function save() {
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
-        console.log("Error");
-        alert("Errore. " + error.responseText);
+        console.log("Errore nella modifica dei dati");
+        alert("Errore nella modifica dei dati");
     }
 	});
 }

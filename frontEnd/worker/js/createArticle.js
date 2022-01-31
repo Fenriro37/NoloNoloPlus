@@ -163,7 +163,7 @@ function save() {
 		dayliValue = 0
 		days = 0
 	}
-	//ajax post
+
  	$.ajax({
 		url:"/api/product",
 		method: "POST",
@@ -198,6 +198,7 @@ function save() {
 		}),
 		// Risposta del server in caso di successo
 		success: (result) => {
+				alert("Articolo aggiunto al catalogo")
 				console.log(result)
 
 				//window.location.href = "http://localhost:8081/user/index.html";
@@ -205,7 +206,7 @@ function save() {
 		// Risposta del server in caso di insuccesso
 		error: (error) => {
 				console.log("Error");
-				alert("Errore. " + error.responseText);
+				alert("Errore nell' invio dei dati ");
 		}
 	}); 
 }

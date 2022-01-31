@@ -19,7 +19,7 @@ window.onload = function getReservation() {
         error: (error) => {
           console.log("Error");
           alert("Pagina non disponibile o inesistente");
-          window.location = "http://localhost:8081/worker/navbar.html?";
+          window.location = site202131Url + "/worker/navbar.html?";
         }
     });
   }

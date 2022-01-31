@@ -50,7 +50,7 @@ window.onload = function getProduct() {
         error: (error) => {
             console.log("Error");
             alert("Pagina non disponibile o inesistente");
-						window.location = "http://localhost:8081/worker/navbar.html?";
+						window.location = site202131Url +"/worker/navbar.html?";
         }
     });
 }
@@ -106,7 +106,7 @@ $(document).ready(function(){
 })
 
 $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
-  $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+  $(this).val(picker.startDate.format('DD-MM-YYYY') + ' ' + picker.endDate.format('DD-MM-YYYY'));
 });
 
 $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
@@ -342,7 +342,7 @@ function save(){
       dailyDays = 0
     }
 
-    /*$.ajax({
+    $.ajax({
       url:"/api/user?email=" + $("#email").val(),
       method: "GET",
       headers: {
@@ -431,20 +431,21 @@ function save(){
             }),
             // Risposta del server in caso di successo
             success: (result) => {
+              alert("Prenotazione creata")
               location.reload(true);
             },
             // Risposta del server in caso di insuccesso
             error: (error) => {
-                console.log("Error");
-                alert("Errore. " + error.responseText);
+                console.log("Errore nell'invio dei dati");
+                alert("Errore nell'invio dei dati");
             }
             }); 
               
           },
           // Risposta del server in caso di insuccesso
           error: (error) => {
-              console.log("Error");
-              alert("Errore. " + error.responseText);
+              console.log("Errore nell'invio dei dati");
+              alert("Errore nell'invio dei dati ");
           }
           }); 
       },
@@ -453,7 +454,7 @@ function save(){
           console.log("Error");
           alert("La mail non esiste");
       }
-    });*/
+    });
 }
 
 

@@ -38,12 +38,12 @@ window.onload = function getReservation() {
           // Risposta del server in caso di successo
           success: (result) => {
             article = result.data.obj
-            console.log(article)  
+            //console.log(article)  
           },
           // Risposta del server in caso di insuccesso
           error: (error) => {
-            console.log("Error");
-            alert("Errore. " + error.responseText);
+            alert("Pagina non disponibile o inesistente");
+            window.location = site202131Url + "/worker/navbar.html?";
           }
         }); 
       },
@@ -51,7 +51,7 @@ window.onload = function getReservation() {
       error: (error) => {
         console.log("Error");
         alert("Pagina non disponibile o inesistente");
-        window.location = "http://localhost:8081/worker/navbar.html?";
+        window.location = site202131Url + "/worker/navbar.html?";
       }
   });
 }
@@ -63,8 +63,8 @@ function insertData(){
   $("#info").prepend(
     '<p tabindex="0" aria-label="Identificativo prenotazione: '+data._id+'">Id prenotazione: ' +data._id+ '</p>' +
     '<p>Articolo: <a aria-label="Link al prodotto: '+data.productTitle + " " + data.productBrand+' " href="article.html?id=' +data.productId+ '">' +data.productTitle + " " + data.productBrand + '</a></p>' +
-    '<p>Email: <a aria-label="Link al cliente:  '+data.clientEmail+'" href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' + 
-    '<p><a aria-label="Link alla Fattura" href="invoice.html?id='+data._id+'">Fattura</a>'
+    '<p>Email: <a aria-label="Link al cliente:  '+data.clientEmail+'" href="client.html?mail=' +data.clientEmail+ '">' +data.clientEmail+ '</a></p>' 
+
   )
   fill()
 } 
@@ -202,7 +202,7 @@ function modify(){
 }
 
 $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
-  $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+  $(this).val(picker.startDate.format('DD-MM-YYYY') + ' ' + picker.endDate.format('DD-MM-YYYY'));
 });
 
 $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
@@ -394,6 +394,10 @@ function calculateTotal(){
 }
 
 function readOnly(){
+  console.log('read-only')
+  var today = new Date();
+  var start = new Date(dateBeginnig[2], dateBeginnig[1] -1, dateBeginnig[0], 0, 0 ,0)
+  var end = new Date(dateFinish[2], dateFinish[1] -1, dateFinish[0], 23, 59, 59)
   if(!boolModify){
     $("form :input").each(function(){ 
       $(this).prop("disabled", true);
@@ -403,16 +407,25 @@ function readOnly(){
 
     $('label[for=bookingRange]').text('Periodo prenotazione*');
     
+    if(today > end){
+      console.log('old')
+      $("#delete").prop("disabled", true)
+      $("#edit").prop("disabled", true)
+      $("#info").append(
+      '<p><a aria-label="Link alla Fattura" href="invoice.html?id='+data._id+'">Fattura</a>'
+      )
+    }
   }
   else{ 
-    var today = new Date();
-    var start = new Date(dateBeginnig[2], dateBeginnig[1] -1, dateBeginnig[0])
-    if(today > start){
+
+    if(today >= start && today <= end){
+      console.log('active')
       $("#delete").prop("disabled", true)
       $("#rentalOccurred").prop("disabled", false);
       $("#returned").prop("disabled", false);
     }
     else {
+      console.log('new')
       $("form :input").each(function(){
         $(this).prop("disabled", false);
       });
@@ -472,7 +485,7 @@ function save(){
         reservations[i].total = parseFloat($('#newTotal').val())
       }
     }
-    /*$.ajax({
+    $.ajax({
       url:"/api/product?id=" + data.productId,
       method: "POST",
       headers: {
@@ -482,13 +495,12 @@ function save(){
         bookings : reservations     
       }),
       success: () => {
-        console.log("prenotazione modificata")
       },
       error: (error) => {
         console.log("Error");
-        alert("Errore. " + error.responseText);
+        alert("Errore nella modifica dei dati");
       }
-    }); */
+    });
   }
 
   let sale, type, value
@@ -517,7 +529,7 @@ function save(){
     dailyDays = 0
   }
 
-  /*$.ajax({
+  $.ajax({
     url:"/api/reservation?id=" + data._id,
     method: "POST",
     headers: {
@@ -584,14 +596,15 @@ function save(){
       data.note = $("#privateNotes").val()
 
       boolModify = false
+      alert("prenotazione modificata")
       reset()
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
         console.log("Error");
-        alert("Errore. " + error.responseText);
+        alert("Errore nella modifica dei dati");
     }
-  }); */
+  }); 
   console.log('valido')
    
 }
@@ -626,18 +639,19 @@ function remove(){
         },
         // Risposta del server in caso di successo
         success: () => {
-          window.location = "http://localhost:8081/worker/navbar.html?";
+          alert("Operazione riuscita")
+          window.location = site202131Url + "/worker/navbar.html?";
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {
           console.log("Error");
-          alert("Errore. " + error.responseText);
+          alert("Errore nella cancellazione dei dati");
         }
       });
     },
     error: (error) => {
       console.log("Error");
-      alert("Errore. " + error.responseText);
+      alert("Errore nella cancellazione dei dati");
     }
   });  
 }
