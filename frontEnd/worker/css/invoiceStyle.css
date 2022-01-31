@@ -1,0 +1,16 @@
+.invoice {
+    margin: 40px auto;
+    text-align: left;
+    width: 50%;
+}
+.invoice td {
+    padding: 5px 0;
+}
+.invoice .totale td {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    font-weight: 700;
+}
+.inner {
+    margin-bottom: 0px;
+}

@@ -114,7 +114,9 @@ export class User extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
     var tmp = event.target.querySelectorAll('input');
+
     if (this.state.boolModifying) {
       this.handleShow();
       // Preparo la query da inviare al server
@@ -136,9 +138,11 @@ export class User extends Component {
       for (var i in tmp) {
         if(tmp[i].name == 'userAddressCity') {
           address.addressCity = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userAddressStreet') {
+        } 
+        else if(tmp[i].name == 'userAddressStreet') {
           address.addressStreet = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } else if(tmp[i].name == 'userAddressNumber') {
+        } 
+        else if(tmp[i].name == 'userAddressNumber') {
           address.addressNumber = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
         } else if(tmp[i].name == 'userPaymentOwner') {
           payment.cardOwner = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
