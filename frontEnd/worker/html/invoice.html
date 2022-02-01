@@ -53,64 +53,65 @@
     
     <div class="container-fluid d-flex justify-content-center" id="main">
     <div class="w-50">
-    <table class="table invoice p-2">
-        <tbody>
-            <tr>
-                <td id="ricevente">Ricevente: </td>
-                <td id="emittente">Emittente: </td>
+      <table class="table invoice p-2" role="table" tabindex="0" aria-label="Tabella Fattura">
+        <tbody role="rowgroup">
+            <tr role="row">
+                <td id="ricevente" role="cell" tabindex="0">Ricevente: </td>
+                <td id="emittente" role="cell" tabindex="0">Emittente: </td>
             </tr>
-            <tr>
-                <td id="idFattura">ID Fattura: </td>
-                <td id="dataCrazione">Data: </td>
+            <tr role="row">
+                <td id="idFattura" role="cell" tabindex="0">ID Fattura: </td>
+                <td id="dataCrazione" role="cell" tabindex="0">Data: </td>
             </tr>
-            <tr>
-                <td colspan="2" class="inner" style="border-top: none">
+            <tr role="row">
+                <td colspan="2" class="inner">
                     <table class="inner table"><tbody>
-                        <tr>
-                            <td class="noborder"><b>Descrizione </b></td>
-                            <td class="noborder"><b>Qnt </b></td>
-                            <td class="noborder"><b>Prezzo </b></td>
-                            <td class="noborder"><b>Sconto </b></td>
-                            <td class="noborder"><b>IVA </b></td>
-                            <td class="noborder text-end"><b>Imponibile </b></td>
+                        <tr role="row">
+                            <td class="noborder" role="columnheader" tabindex="0"><b>Descrizione </b></td>
+                            <td class="noborder" role="columnheader" tabindex="0"><b>Qnt </b></td>
+                            <td class="noborder" role="columnheader" tabindex="0"><b>Prezzo </b></td>
+                            <td class="noborder" role="columnheader" tabindex="0"><b>Sconto </b></td>
+                            <td class="noborder" role="columnheader" tabindex="0"><b>IVA </b></td>
+                            <td class="noborder text-end" role="columnheader" tabindex="0"><b>Imponibile </b></td>
                         </tr>
-                        <tr>
-                            <td id="descrizioneFisso"></td>
-                            <td id="">1</td>
-                            <td id="prezzoFisso"></td>
-                            <td id="scontoFisso"></td>
-                            <td id="">22%</td>
-                            <td id="imponibileFisso" class="text-end"></td>
+                        <tr role="row">
+                            <td id="descrizioneFisso" role="cell" tabindex="0"></td>
+                            <td id="" role="cell" tabindex="0">1</td>
+                            <td id="prezzoFisso" role="cell" tabindex="0"></td>
+                            <td id="scontoFisso" role="cell" tabindex="0"></td>
+                            <td id="" role="cell" tabindex="0">22%</td>
+                            <td id="imponibileFisso" class="text-end" role="cell" tabindex="0"></td>
                         </tr>
-                        <tr class="inner">
-                            <td id="descrizioneVariabile" class="noborder"></td>
-                            <td id="nGiorni" class="noborder"></td>
-                            <td id="prezzoVariabile" class="noborder"></td>
-                            <td id="scontoVariabile" class="noborder"></td>
-                            <td id="" class="noborder">22%</td>
-                            <td id="imponibileVariabile" class="noborder text-end"></td>
+                        <tr class="inner" role="row">
+                            <td id="descrizioneVariabile" class="noborder" role="cell" tabindex="0"></td>
+                            <td id="nGiorni" class="noborder" role="cell" tabindex="0"></td>
+                            <td id="prezzoVariabile" class="noborder" role="cell" tabindex="0"></td>
+                            <td id="scontoVariabile" class="noborder" role="cell" tabindex="0"></td>
+                            <td id="" class="noborder" role="cell" tabindex="0">22%</td>
+                            <td id="imponibileVariabile" class="noborder text-end" role="cell" tabindex="0"></td>
                         </tr>
                     </tbody></table>
                 </td>
             </tr>
-            <tr>
-                <td>Totale imponibile</td>
-                <td id="totaleImponibile" style="text-align: right"></td>
+            <tr role="row">
+                <td role="rowheader" tabindex="0">Totale imponibile</td>
+                <td id="totaleImponibile" style="text-align: right" role="cell" tabindex="0"></td>
             </tr>
-            <tr>
-                <td>IVA</td>
-                <td id="totaleIVA" style="text-align: right"></td>
+            <tr role="row">
+                <td role="rowheader" tabindex="0">IVA</td>
+                <td id="totaleIVA" style="text-align: right" role="cell" tabindex="0"></td>
             </tr>
-            <tr>
-                <td>Penale</td>
-                <td id="penale" style="text-align: right"></td>
+            <tr role="row">
+                <td role="rowheader" tabindex="0">Penale</td>
+                <td id="penale" style="text-align: right" role="cell" tabindex="0"></td>
             </tr>
-            <tr class="totale">
-                <td>Totale</td>
-                <td id="totale" style="text-align: right"></td>
+            <tr class="totale" role="row">
+                <td role="rowheader" tabindex="0">Totale</td>
+                <td id="totale" style="text-align: right" role="cell" tabindex="0"></td>
             </tr>
-            <tr>
-                <td colspan={2} id="note"><span style="font-weight: 700">Note:</span> </td>
+            <tr role="row">
+                <td colspan={2} id="note" role="row" tabindex="0"><span style="font-weight: 700">Note:</span> </td>
+                <td></td>
             </tr>
         </tbody>
     </table>
