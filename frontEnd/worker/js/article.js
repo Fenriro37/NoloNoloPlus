@@ -1,28 +1,66 @@
 let data = {}
-window.onload = function getProduct() {
-    var url = window.location.href;
-    var id = url.substring(url.lastIndexOf('=') + 1);
-    let customUrl = "/api/product/?id=" + id
-    $.ajax({
-        url: customUrl,
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        // Risposta del server in caso di successo
-        success: (result) => {
+let deletable = true
+
+function activateButtons(){
+	if(($("#flexSwitchCheckDefault").is(':checked') == true))
+		$('#rentProduct').prop('disabled', false);
+	$('#flexSwitchCheckDefault').prop('disabled', false);
+	$('#btnModify').prop('disabled', false);
+	if(deletable)
+		$('#delete').prop('disabled', false);
+}
+function deactivateButtons(){
+	$('#rentProduct').prop('disabled', true);
+	$('#flexSwitchCheckDefault').prop('disabled', true);
+	$('#btnModify').prop('disabled', true);
+	$('#delete').prop('disabled', true);
+}
+
+window.onload = window.onload = function login() {
+  console.log("Cookie");  
+  $.ajax({
+		url: "/api/public/auth",
+		method: "GET",
+		headers: {
+				"Content-Type": "application/json"
+		},
+		// Risposta del server in caso di successo
+		success: (result) => {
+			console.log(result)
+			if(result.obj !== 1){
+					window.location = site202131Url + "/public/login.html";
+			}
+			var url = window.location.href;
+			var id = url.substring(url.lastIndexOf('=') + 1);
+			let customUrl = "/api/product/?id=" + id
+			$.ajax({
+				url: customUrl,
+				method: "GET",
+				headers: {
+						"Content-Type": "application/json"
+				},
+				// Risposta del server in caso di successo
+				success: (result) => {
 					data = result.data.obj
 					console.log(data)
 					fill()
-        },
-        // Risposta del server in caso di insuccesso
-        error: (error) => {
-            console.log("Error");
-            alert("Pagina non disponibile o inesistente");
+				},
+				// Risposta del server in caso di insuccesso
+				error: (error) => {
+						console.log("Error");
+						alert("Pagina non disponibile o inesistente");
 						window.location = site202131Url + "/worker/navbar.html?";
-        }
-    });
+				}
+			});
+		},
+		// Risposta del server in caso di insuccesso
+		error: (error) => {
+			window.location = site202131Url + "/public/login.html";
+		}
+  });
 }
+
+
 
 function fill(){
 	$("#img").attr("src", data.image)
@@ -99,6 +137,7 @@ function fill(){
 			let bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month -1, data.bookings[i].endDate.day, 23, 59, 59)
 			if(current <= bookingEnd){
 				$('#delete').prop('disabled', true);
+				deletable = false
 				//<button type="button" id="delete" class="btn btn-lg btn-danger" onclick="remove()">Elimina</button>
 				//data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover"
 			}
@@ -160,6 +199,7 @@ $('#flexSwitchCheckDefault').change(function() {
 		$("#rentProduct").prop("disabled", false);
 		$('label[for=flexSwitchCheckDefault]').text("Il prodotto è disponibile");
   } 
+	deactivateButtons()
 	$.ajax({
     url:"/api/product?id=" + data._id,
     method: "POST",
@@ -171,18 +211,20 @@ $('#flexSwitchCheckDefault').change(function() {
     }),
     // Risposta del server in caso di successo
     success: () => {
+			activateButtons()
 			alert("modifica avvenuta")
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
         console.log("Error");
         alert("Errore nella modifica dei dati");
+				activateButtons()
     }
 	});
 })
 
 function remove(){
-
+	deactivateButtons()
 	$.ajax({
 		url: "/api/product?id=" + data._id,
 		method: "DELETE",
@@ -197,6 +239,7 @@ function remove(){
 		// Risposta del server in caso di insuccesso
 		error: (error) => {
 			console.log("Error");
+			activateButtons()
 			alert("Errore nella cancellazione dei dati");
 		}
 	}); 
@@ -291,6 +334,8 @@ $('#formId').submit(function (evt) {
 });
 
 function save(){
+	$('#modalSave').prop('disabled', true);
+	$('#modalClose').prop('disabled', true);
 	let newTags = []
   if($("#productTags").val() != "") {
 		let newLabels = $("#productTags").val()
@@ -391,6 +436,8 @@ function save(){
 				data.note = $("#productNote").val()
 				
 				fill()
+				$('#modalSave').prop('disabled', false);
+				$('#modalClose').prop('disabled', false);
 				alert("operazione riuscita")
 				$('#myModal').modal('hide')
     },
@@ -398,6 +445,8 @@ function save(){
     error: (error) => {
         console.log("Error");
         alert("Errore nella modifica dei dati");
+				$('#modalSave').prop('disabled', false);
+				$('#modalClose').prop('disabled', false);
     }
 	});
 }
@@ -497,8 +546,8 @@ function calculateDiscount(){
 		$('#modalSave').prop('disabled', false);
 	}
 }
-/////////////////////////////////
-////////////////////////////////////
+
+
 //////////////////////////////////
 document.addEventListener('click',function(e){
   if(e.target && e.target.id== 'searchButton'){

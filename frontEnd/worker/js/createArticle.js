@@ -1,5 +1,25 @@
 //serve solo per sovrascrivere la funzione login di navbar.js
-window.onload = function hello(){}
+window.onload = function login() {
+  console.log("Cookie");  
+  $.ajax({
+		url: "/api/public/auth",
+		method: "GET",
+		headers: {
+				"Content-Type": "application/json"
+		},
+		// Risposta del server in caso di successo
+		success: (result) => {
+			console.log(result)
+			if(result.obj !== 1){
+					window.location = site202131Url + "/public/login.html";
+			}
+		},
+		// Risposta del server in caso di insuccesso
+		error: (error) => {
+			window.location = site202131Url + "/public/login.html";
+		}
+  });
+}
 
 //listener per checkbox available
 $('#available').change(function() {
@@ -134,6 +154,10 @@ $('form').on('reset', function(e){
 });
 
 function save() {
+	
+	$('#btnSave').prop('disabled', true);
+	$('#btnDelete').prop('disabled', true);
+
 	let newTags = $('#tags').val().replace(/,/g, ' ');
 	newTags = [...new Set(newTags.split(" "))];
 	for (let i = 0; i < newTags.length;i++){
@@ -199,6 +223,8 @@ function save() {
 		// Risposta del server in caso di successo
 		success: (result) => {
 				alert("Articolo aggiunto al catalogo")
+				$('#btnSave').prop('disabled', false);
+				$('#btnDelete').prop('disabled', false);
 				console.log(result)
 
 				//window.location.href = "http://localhost:8081/user/index.html";
@@ -207,6 +233,8 @@ function save() {
 		error: (error) => {
 				console.log("Error");
 				alert("Errore nell' invio dei dati ");
+				$('#btnSave').prop('disabled', false);
+				$('#btnDelete').prop('disabled', false);
 		}
 	}); 
 }

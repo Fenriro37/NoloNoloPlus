@@ -1,9 +1,22 @@
 let data = {};
 
-window.onload = function getReservation() {
-    var url = window.location.href;
-    var id = url.substring(url.lastIndexOf('=') + 1);
-    $.ajax({
+window.onload = function login() {
+  console.log("Cookie");  
+  $.ajax({
+    url: "/api/public/auth",
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    // Risposta del server in caso di successo
+    success: (result) => {
+      console.log(result)
+      if(result.obj !== 1){
+          window.location = site202131Url + "/public/login.html";
+      }
+      var url = window.location.href;
+      var id = url.substring(url.lastIndexOf('=') + 1);
+      $.ajax({
         url: "/api/reservation?id=" + id,
         method: "GET",
         headers: {
@@ -21,8 +34,15 @@ window.onload = function getReservation() {
           alert("Pagina non disponibile o inesistente");
           window.location = site202131Url + "/worker/navbar.html?";
         }
-    });
-  }
+      });
+    },
+    // Risposta del server in caso di insuccesso
+    error: (error) => {
+      window.location = site202131Url + "/public/login.html";
+    }
+  });
+}
+  
 
   function calculateDays(obj1, obj2){
     //Create Dates

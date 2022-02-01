@@ -314,7 +314,6 @@ export default {
           alert("Creazione riuscita")
         },(error) => {
           alert('Problema nel caricamento dei dati');
-          this.$router.push({ name: 'home' , params: { filter: ''}})
         }) 
       },
 

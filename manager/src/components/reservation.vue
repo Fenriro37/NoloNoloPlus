@@ -395,7 +395,6 @@
           .then( () => {
           },(error) => {
             alert("Problema nell'invio dei dati");
-            this.$router.push({ name: 'home' , params: { filter: ''}})
           })          
         }
             
@@ -426,7 +425,6 @@
         this.enter = false
         },(error) => {
           alert("Problema nell'invio dei dati");
-          this.$router.push({ name: 'home' , params: { filter: ''}})
         })  
       },
 
@@ -447,11 +445,9 @@
              this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
           },(error) => {
             alert("Problema nella cancellazione dei dati");
-            this.$router.push({ name: 'home' , params: { filter: ''}})
           })
         },(error) => {
             alert("Problema nella modifica dei dati");
-            this.$router.push({ name: 'home' , params: { filter: ''}})
           })
       },
 

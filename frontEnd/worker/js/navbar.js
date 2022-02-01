@@ -40,7 +40,7 @@ window.onload = function login() {
 
 function logout(){
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location = site202131Url + "/public/login.html";
+    window.location.href = site202131Url + "/public/login.html";
 }
 
  function search(){

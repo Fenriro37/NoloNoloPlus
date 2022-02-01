@@ -1,61 +1,61 @@
 <template>
-  <table class="table invoice p-2">
-    <tbody>
-        <tr>
-            <td>{{'Ricevente: '+ reservation.clientName +' '+ reservation.clientSurname + '-' + reservation.clientEmail }}</td>
-            <td>Emittente: NoloNoloPlus</td>
+  <table class="table invoice p-2" role="table" tabindex="0" aria-label="Tabella Fattura">
+    <tbody role="rowgroup">
+        <tr role="row">
+            <td role="cell" tabindex="0">{{'Ricevente: '+ reservation.clientName +' '+ reservation.clientSurname + '-' + reservation.clientEmail }}</td>
+            <td role="cell" tabindex="0">Emittente: NoloNoloPlus</td>
         </tr>
-        <tr>
-            <td>Fattura: {{reservation._id}}</td>
-            <td>Data: {{date}}</td>
+        <tr role="row">
+            <td role="cell" tabindex="0">Fattura: {{reservation._id}}</td>
+            <td role="cell" tabindex="0">Data: {{date}}</td>
         </tr>
-        <tr>
+        <tr role="row">
             <td colspan="2" class="inner" style="border-top: none">
                 <table class="table inner"><tbody>
-                    <tr>
-                        <td class="noborder"><b>Descrizione</b></td>
-                        <td class="noborder"><b>Qnt</b></td>
-                        <td class="noborder"><b>Prezzo</b></td>
-                        <td class="noborder"><b>Sconto</b></td>
-                        <td class="noborder"><b>IVA</b></td>
-                        <td class="noborder text-end"><b>Imponibile</b></td>
+                    <tr role="row">
+                        <td class="noborder" role="columnheader" tabindex="0"><b>Descrizione</b></td>
+                        <td class="noborder" role="columnheader" tabindex="0"><b>Qnt</b></td>
+                        <td class="noborder" role="columnheader" tabindex="0"><b>Prezzo</b></td>
+                        <td class="noborder" role="columnheader" tabindex="0"><b>Sconto</b></td>
+                        <td class="noborder" role="columnheader" tabindex="0"><b>IVA</b></td>
+                        <td class="noborder text-end" role="columnheader" tabindex="0"><b>Imponibile</b></td>
                     </tr>
-                    <tr>
-                        <td>{{reservation.productTitle + ' ' + reservation.productBrand + ' (fisso)'}}</td>
-                        <td>1</td>
-                        <td>{{(this.prezzoFissoSenzaIva).toFixed(2) + " €"}}</td>
-                        <td>{{(this.scontoFisso).toFixed(2) + "%"}}</td>
-                        <td>22%</td>
-                        <td class="text-end">{{(this.imponibileFisso).toFixed(2) + " €"}}</td>
+                    <tr role="row">
+                        <td role="cell" tabindex="0">{{reservation.productTitle + ' ' + reservation.productBrand + ' (fisso)'}}</td>
+                        <td role="cell" tabindex="0">1</td>
+                        <td role="cell" tabindex="0">{{(this.prezzoFissoSenzaIva).toFixed(2) + " €"}}</td>
+                        <td role="cell" tabindex="0">{{(this.scontoFisso).toFixed(2) + "%"}}</td>
+                        <td role="cell" tabindex="0">22%</td>
+                        <td role="cell" tabindex="0" class="text-end">{{(this.imponibileFisso).toFixed(2) + " €"}}</td>
                     </tr>
-                    <tr class="inner">
-                        <td class="noborder">{{reservation.productTitle + ' ' + reservation.productBrand + ' (variabile)'}}</td>
-                        <td class="noborder">{{this.days}}</td>
-                        <td class="noborder">{{(this.prezzoVariabileSenzaIva).toFixed(2) + " €"}}</td>
-                        <td class="noborder">{{(this.scontoVariabile).toFixed(2) + "%"}}</td>
-                        <td class="noborder">22%</td>
-                        <td class="noborder text-end">{{(this.imponibileVariabile).toFixed(2) + " €"}}</td>
+                    <tr class="inner" role="row">
+                        <td role="cell" tabindex="0" class="noborder">{{reservation.productTitle + ' ' + reservation.productBrand + ' (variabile)'}}</td>
+                        <td role="cell" tabindex="0" class="noborder">{{this.days}}</td>
+                        <td role="cell" tabindex="0" class="noborder">{{(this.prezzoVariabileSenzaIva).toFixed(2) + " €"}}</td>
+                        <td role="cell" tabindex="0" class="noborder">{{(this.scontoVariabile).toFixed(2) + "%"}}</td>
+                        <td role="cell" tabindex="0" class="noborder">22%</td>
+                        <td role="cell" tabindex="0" class="noborder text-end">{{(this.imponibileVariabile).toFixed(2) + " €"}}</td>
                 </tbody></table>
             </td>
         </tr>
-        <tr>
-            <td >Totale imponibile</td>
-            <td style="text-align: right">{{(this.totale).toFixed(2) + " €"}}</td>
+        <tr role="row">
+            <td role="rowheader" tabindex="0">Totale imponibile</td>
+            <td style="text-align: right" role="cell" tabindex="0">{{(this.totale).toFixed(2) + " €"}}</td>
         </tr>
-        <tr>
-            <td >IVA</td>
-            <td style="text-align: right">{{(this.totale * 0.22).toFixed(2) + " €"}}</td>
+        <tr role="row">
+            <td role="rowheader" tabindex="0">IVA</td>
+            <td style="text-align: right" role="cell" tabindex="0">{{(this.totale * 0.22).toFixed(2) + " €"}}</td>
         </tr>
-        <tr>
-            <td>Penale</td>
-            <td style="text-align: right">{{(this.penale).toFixed(2) + " €"}}</td>
+        <tr role="row">
+            <td role="rowheader" tabindex="0">Penale</td>
+            <td style="text-align: right" role="cell" tabindex="0">{{(this.penale).toFixed(2) + " €"}}</td>
         </tr>
-        <tr class="totale">
-            <td >Totale</td>
-            <td style="text-align: right"> {{(this.totale + this.totale * 0.22 + this.penale).toFixed(2) + " €"}}</td>
+        <tr class="totale" role="row">
+            <td role="rowheader" tabindex="0">Totale</td>
+            <td style="text-align: right" role="cell" tabindex="0"> {{(this.totale + this.totale * 0.22 + this.penale).toFixed(2) + " €"}}</td>
         </tr>
-        <tr>
-            <td colspan={2}><span style="font-weight: 700">Note:</span> {{reservation.description}} </td>
+        <tr role="row">
+            <td colspan={2}><span style="font-weight: 700" role="row" tabindex="0">Note:</span> {{reservation.description}} </td>
         </tr>
     </tbody> 
   </table>

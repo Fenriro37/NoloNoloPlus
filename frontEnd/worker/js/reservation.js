@@ -1,60 +1,80 @@
 let data = {}
 let article = {}
 let boolModify
-
+let deletable = true
 //serve per inizializzare il datepickerRange. Se viene inizializzato più volte smette di funzionare
 let firstTime = 0
 
 let dateBeginnig = []
 let dateFinish = []
 
-window.onload = function getReservation() {
-  var url = window.location.href;
-  var id = url.substring(url.lastIndexOf('=') + 1);
+window.onload = window.onload = function login() {
+  console.log("Cookie");  
   $.ajax({
-      url: "/api/reservation?id=" + id,
-      method: "GET",
-      headers: {
-          "Content-Type": "application/json"
-      },
-      // Risposta del server in caso di successo
-      success: (result) => {
-        data = result.data.obj
-        console.log(data)
-        dateBeginnig[0] = data.startDate.day
-        dateBeginnig[1] = data.startDate.month
-        dateBeginnig[2] = data.startDate.year
-        dateFinish[0] = data.endDate.day
-        dateFinish[1] = data.endDate.month
-        dateFinish[2] = data.endDate.year
-        insertData()  
-        //Get product
-        $.ajax({
-          url: "/api/product?id=" + data.productId,
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          // Risposta del server in caso di successo
-          success: (result) => {
-            article = result.data.obj
-            //console.log(article)  
-          },
-          // Risposta del server in caso di insuccesso
-          error: (error) => {
-            alert("Pagina non disponibile o inesistente");
-            window.location = site202131Url + "/worker/navbar.html?";
-          }
-        }); 
-      },
+    url: "/api/public/auth",
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    // Risposta del server in caso di successo
+    success: (result) => {
+      console.log(result)
+      if(result.obj !== 1){
+          window.location = site202131Url + "/public/login.html";
+      }
+      var url = window.location.href;
+      var id = url.substring(url.lastIndexOf('=') + 1);
+      $.ajax({
+        url: "/api/reservation?id=" + id,
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        // Risposta del server in caso di successo
+        success: (result) => {
+          data = result.data.obj
+          console.log(data)
+          dateBeginnig[0] = data.startDate.day
+          dateBeginnig[1] = data.startDate.month
+          dateBeginnig[2] = data.startDate.year
+          dateFinish[0] = data.endDate.day
+          dateFinish[1] = data.endDate.month
+          dateFinish[2] = data.endDate.year
+          insertData()  
+          //Get product
+          $.ajax({
+            url: "/api/product?id=" + data.productId,
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            // Risposta del server in caso di successo
+            success: (result) => {
+              article = result.data.obj
+              //console.log(article)  
+            },
+            // Risposta del server in caso di insuccesso
+            error: (error) => {
+              alert("Pagina non disponibile o inesistente");
+              window.location = site202131Url + "/worker/navbar.html?";
+            }
+          }); 
+        },
+        // Risposta del server in caso di insuccesso
+        error: (error) => {
+          console.log("Error");
+          alert("Pagina non disponibile o inesistente");
+          window.location = site202131Url + "/worker/navbar.html?";
+        }
+      });
+    },
       // Risposta del server in caso di insuccesso
       error: (error) => {
-        console.log("Error");
-        alert("Pagina non disponibile o inesistente");
-        window.location = site202131Url + "/worker/navbar.html?";
+        window.location = site202131Url + "/public/login.html";
       }
   });
 }
+  
 
 function insertData(){
   $("#img").append(
@@ -101,7 +121,7 @@ function fill(){
 
   $("#bookingRequest").val( data.bookingDate.day +'-'+ data.bookingDate.month +'-'+ data.bookingDate.year);
 
-  $("#bookingRange").val( data.startDate.day +'/'+ data.startDate.month +'/'+ data.startDate.year + ' - ' + data.endDate.day +'/'+ data.endDate.month +'/'+ data.endDate.year);
+  $("#bookingRange").val( data.startDate.day +'-'+ data.startDate.month +'-'+ data.startDate.year + ' ' + data.endDate.day +'-'+ data.endDate.month +'-'+ data.endDate.year);
 
   $("#notes").attr("placeholder", data.description);
   $("#notes").val(data.description);
@@ -137,13 +157,6 @@ function modify(){
     '<button type="button" id="reset" class="btn btn-lg btn-danger" aria-label="Bottone annulla, pulisce i campi, mantenendo l` identificativo e reimposterà i prezzi originali" >Annulla</button>' +
     '<button type="button" id="delete" class="btn btn-lg btn-danger delete" onclick="remove()" aria-label="Bottone elimina. Cancella la prenotazione corrente e reindirizza al catalogo">Elimina prenotazione</button>'
   )
-  if(data.isTaken){
-    //$("#delete").prop("disabled", true)
-    $("#delete").text("Prenotazione non eliminabile")
-  }
-  //////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////
   if(firstTime === 0){
     firstTime = 1
@@ -201,18 +214,30 @@ function modify(){
   readOnly()
 }
 
+function deactivateButtons(){
+  $('#save').prop('disabled', true);
+  $('#reset').prop('disabled', true);
+  $('#delete').prop('disabled', true);
+}
+function activateButtons(){
+  $('#save').prop('disabled', false);
+  $('#reset').prop('disabled', false);
+  if(deletable)
+    $('#delete').prop('disabled', false);
+}
+
 $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
   $(this).val(picker.startDate.format('DD-MM-YYYY') + ' ' + picker.endDate.format('DD-MM-YYYY'));
 });
 
 $('#bookingRange').on('apply.daterangepicker', function(ev, picker) {
   let dateRange = $(this).val()
-  dateRange = dateRange.replace(/ /g, "")
-  dateRange = dateRange.split("-")
+  //dateRange = dateRange.replace(/ /g, "")
+  dateRange = dateRange.split(" ")
   let date1 = dateRange[0]
   let date2 = dateRange[1]
-  date1 = date1.split("/")
-  date2 = date2.split("/")
+  date1 = date1.split("-")
+  date2 = date2.split("-")
   //modifico le variabili per salvare le date con i nuovi valori
   for(let i in date1){
     dateBeginnig[i] = date1[i]
@@ -348,12 +373,12 @@ document.addEventListener('click',function(e){
 function calculateTotal(){
   if ($('#bookingRange').val()!= ''){
     let dateRange = $("#bookingRange").val()
-    dateRange = dateRange.replace(/ /g, "")
-    dateRange = dateRange.split("-")
+    //dateRange = dateRange.replace(/ /g, "")
+    dateRange = dateRange.split(" ")
     let date1 = dateRange[0]
     let date2 = dateRange[1]
-    date1 = date1.split("/")
-    date2 = date2.split("/")
+    date1 = date1.split("-")
+    date2 = date2.split("-")
 
     let start = new Date(date1[2] , date1[1] -1, date1[0])
     let end = new Date(date2[2], date2[1]-1, date2[0])
@@ -405,11 +430,12 @@ function readOnly(){
     //impedisce la disabilitazione del bottone modifica
     $("#edit").prop("disabled", false)
 
-    $('label[for=bookingRange]').text('Periodo prenotazione*');
+    $('label[for=bookingRange]').text('Periodo prenotazione* (GG-MM-YYYY GG-MM-YYYY)');
     
     if(today > end){
       console.log('old')
       $("#delete").prop("disabled", true)
+      deletable = false
       $("#edit").prop("disabled", true)
       $("#info").append(
       '<p><a aria-label="Link alla Fattura" href="invoice.html?id='+data._id+'">Fattura</a>'
@@ -421,6 +447,7 @@ function readOnly(){
     if(today >= start && today <= end){
       console.log('active')
       $("#delete").prop("disabled", true)
+      deletable = false
       $("#rentalOccurred").prop("disabled", false);
       $("#returned").prop("disabled", false);
     }
@@ -469,6 +496,7 @@ function save(){
   if(!checkRangeDatePicker($("#bookingRange").val())){
     return(alert('Data non valida'))
   }
+  deactivateButtons()
   if(data.startDate.day != dateBeginnig[0] || data.startDate.month != dateBeginnig[1] || data.startDate.year != dateBeginnig[2] ||
     data.endDate.day != dateFinish[0] || data.endDate.month != dateFinish[1] || data.endDate.year != dateFinish[2] || $('#newTotal').val() != data.totalPrice){
 
@@ -499,6 +527,7 @@ function save(){
       error: (error) => {
         console.log("Error");
         alert("Errore nella modifica dei dati");
+        activateButtons()
       }
     });
   }
@@ -597,12 +626,14 @@ function save(){
 
       boolModify = false
       alert("prenotazione modificata")
+      activateButtons()
       reset()
     },
     // Risposta del server in caso di insuccesso
     error: (error) => {
         console.log("Error");
         alert("Errore nella modifica dei dati");
+        activateButtons()
     }
   }); 
   console.log('valido')
@@ -612,6 +643,7 @@ function save(){
 
 
 function remove(){
+  deactivateButtons()
   let reservations = []
   reservations = article.bookings
   for (let i in reservations){
@@ -646,12 +678,14 @@ function remove(){
         error: (error) => {
           console.log("Error");
           alert("Errore nella cancellazione dei dati");
+          activateButtons()
         }
       });
     },
     error: (error) => {
       console.log("Error");
       alert("Errore nella cancellazione dei dati");
+      activateButtons()
     }
   });  
 }

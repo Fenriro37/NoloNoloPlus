@@ -357,7 +357,6 @@
             this.enter = false
         },(error) => {
             alert("Problema nell'invio dei dati");
-            this.$router.push({ name: 'home' , params: { filter: ''}})
           })
       },
 
@@ -366,8 +365,7 @@
         Functions.deleteUser(this.id).then( () =>{
           this.$router.push({ name: 'clientCatalog' , params: { filter: ''}})
         },(error) => {
-          alert("Problema nella cancellazione dei dati");
-          this.$router.push({ name: 'home' , params: { filter: ''}})
+          alert("Problema nella cancellazione dei dati")
         })                  
       },
       chart(){

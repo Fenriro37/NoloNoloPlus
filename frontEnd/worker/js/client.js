@@ -2,78 +2,97 @@ let data = {}
 let bookings = []
 let boolModify = false
 let deletable = true
-window.onload = function getClient() {
-  
-  var url = window.location.href;
-  var email = url.substring(url.lastIndexOf('=') + 1);
-  let customUrl = "/api/user?email=" + email
+window.onload = function login() {
+  console.log("Cookie");  
   $.ajax({
-      url: customUrl,
-      method: "GET",
-      headers: {
-          "Content-Type": "application/json"
-      },
-      // Risposta del server in caso di successo
-      success: (result) => {
-        data = result.data
-        console.log(data)
-        fill()   
-      },
-      // Risposta del server in caso di insuccesso
-      error: (error) => {
-        console.log("Error");
-        alert("Pagina non disponibile o inesistente");
-        window.location = site202131Url + "/worker/navbar.html?";
+    url: "/api/public/auth",
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    // Risposta del server in caso di successo
+    success: (result) => {
+      console.log(result)
+      if(result.obj !== 1){
+          window.location = site202131Url + "/public/login.html";
       }
-  });
-  //aggiungere getAllReservation di questo user
-  let query = {
-    filter: email,
-    sort: false
-  }
-  $.ajax({
-      url: "/api/reservation/all?filter=" + query.filter + "&sort=" + query.sort,
-      method: "GET",
-      headers: {
-          "Content-Type": "application/json"
-      },
-      // Risposta del server in caso di successo
-      success: (result) => {
-        bookings = result.obj
-        console.log(bookings)
-        if(bookings.length === 0){
-          $("#Table").empty()
+      var url = window.location.href;
+      var email = url.substring(url.lastIndexOf('=') + 1);
+      let customUrl = "/api/user?email=" + email
+      $.ajax({
+        url: customUrl,
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        // Risposta del server in caso di successo
+        success: (result) => {
+          data = result.data
+          console.log(data)
+          fill()   
+        },
+        // Risposta del server in caso di insuccesso
+        error: (error) => {
+          console.log("Error");
+          alert("Pagina non disponibile o inesistente");
+          window.location = site202131Url + "/worker/navbar.html?";
         }
-        else{
-          let current = new Date();      
+      });
+      //aggiungere getAllReservation di questo user
+      let query = {
+        filter: email,
+        sort: false
+      }
+      $.ajax({
+        url: "/api/reservation/all?filter=" + query.filter + "&sort=" + query.sort,
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        // Risposta del server in caso di successo
+        success: (result) => {
+          bookings = result.obj
+          console.log(bookings)
+          if(bookings.length === 0){
+            $("#Table").empty()
+          }
+          else{
+            let current = new Date();      
 
-          for(let i in bookings){
-            bookingEnd =  new Date(parseInt(bookings[i].endDate.year), parseInt(bookings[i].endDate.month) - 1, parseInt(bookings[i].endDate.day),23,59, 59)
-            if(current <= bookingEnd){
-              deletable = false
+            for(let i in bookings){
+              bookingEnd =  new Date(parseInt(bookings[i].endDate.year), parseInt(bookings[i].endDate.month) - 1, parseInt(bookings[i].endDate.day),23,59, 59)
+              if(current <= bookingEnd){
+                deletable = false
+              }
+            }
+            for (let i in bookings){
+              $("#myTable").append(
+                '<tr>'+
+                '<td width="20%"><a aria-label="Link alla prenotazione. Identificativo:'+bookings[i]._id+'" href="reservation.html?id=' +bookings[i]._id+'"> Id prenotazione</td>'+
+                '<td ><a aria-label="Link al prodotto prenotato '+bookings[i].productTitle+' '+bookings[i].productBrand+'" href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
+                '<td tabindex="0" aria-label="Prezzo totale: '+bookings[i].totalPrice +'€" >'+bookings[i].totalPrice+'€</td>'+
+                '<td tabindex="0" aria-label="Data inizio prenotazione '+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'" >'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
+                '<td tabindex="0" aria-label="Data fine prenotazione '+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'" >'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
+                '</tr>'
+              )
             }
           }
-          for (let i in bookings){
-            $("#myTable").append(
-              '<tr>'+
-              '<td width="20%"><a aria-label="Link alla prenotazione. Identificativo:'+bookings[i]._id+'" href="reservation.html?id=' +bookings[i]._id+'"> Id prenotazione</td>'+
-              '<td ><a aria-label="Link al prodotto prenotato '+bookings[i].productTitle+' '+bookings[i].productBrand+'" href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
-              '<td tabindex="0" aria-label="Prezzo totale: '+bookings[i].totalPrice +'€" >'+bookings[i].totalPrice+'€</td>'+
-              '<td tabindex="0" aria-label="Data inizio prenotazione '+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'" >'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
-              '<td tabindex="0" aria-label="Data fine prenotazione '+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'" >'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
-              '</tr>'
-            )
-          }
+        },
+        // Risposta del server in caso di insuccesso
+        error: (error) => {
+          console.log("Error");
+          alert("Pagina non disponibile o inesistente");
+          window.location = site202131Url + "/worker/navbar.html?";
         }
-      },
-      // Risposta del server in caso di insuccesso
-      error: (error) => {
-        console.log("Error");
-        alert("Pagina non disponibile o inesistente");
-        window.location = site202131Url + "/worker/navbar.html?";
-      }
+      });
+    },
+    // Risposta del server in caso di insuccesso
+    error: (error) => {
+      window.location = site202131Url + "/public/login.html";
+    }
   });
 }
+  
 
 function fill(){
   $("#name").attr("placeholder", data.userName);
@@ -121,7 +140,7 @@ function modify(){
   console.log("modify")
   $("#myButtons").empty()
   $("#myButtons").append(
-    '<button class="btn btn-lg btn-success" aria-label="Bottone salva. Cliccandolo i campi saranno salvati e resi non modificabili" >Salva</button>'+
+    '<button id="btnSave" class="btn btn-lg btn-success" aria-label="Bottone salva. Cliccandolo i campi saranno salvati e resi non modificabili" >Salva</button>'+
     '<button type="button" id="reset" aria-label="Bottone annulla. Cliccandolo i campi ritorneranno allo stato originale e non modificabili" class="btn btn-lg btn-danger" >Annulla</button>'+
     '<button type="button" id="delete" aria-label="Bottone elimina. Cliccandolo il cliente sarà cancellato e verrai reindirizzato al catalogo" class="btn btn-lg btn-danger delete">Elimina cliente</button>'
   )
@@ -179,6 +198,9 @@ document.addEventListener('click',function(e){
 
 function remove(){
   console.log('removeUser')
+  $('#btnSave').prop('disabled', true);
+	$('#reset').prop('disabled', true);
+	$('#delete').prop('disabled', true);
   $.ajax({
     url: "/api/user?id=" + data._id,
     method: "DELETE",
@@ -194,6 +216,10 @@ function remove(){
     error: (error) => {
       console.log("Error");
       alert("Errore nella cancellazione");
+      $('#btnSave').prop('disabled', false);
+      $('#reset').prop('disabled', false);
+      if(deletable)
+        $('#delete').prop('disabled', false);
     }
   });
 }
@@ -204,6 +230,10 @@ $('#formId').submit(function (evt) {
 });
 
 function save() {
+  $('#btnSave').prop('disabled', true);
+	$('#reset').prop('disabled', true);
+	$('#delete').prop('disabled', true);
+
   let date = $("#birthday").val()
   date = date.split('-')
   let day, month, year
@@ -280,6 +310,10 @@ function save() {
     error: (error) => {
         console.log("Errore nella modifica dei dati");
         alert("Errore nella modifica dei dati");
+        $('#btnSave').prop('disabled', false);
+        $('#reset').prop('disabled', false);
+        if(deletable)
+          $('#delete').prop('disabled', false);
     }
 	});
 }

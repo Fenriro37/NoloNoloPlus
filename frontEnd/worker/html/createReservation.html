@@ -66,7 +66,7 @@
     
       <div class="form-floating mb-3">
         <input type="text" id="dateRange" class="form-control" aria-label="Seleziona periodo noleggio. Campo obbligatorio.  Separare le due date con uno spazio. Le date devono essere nel formato GG trattino MM trattino YYYY. Se periodo non valido non sarà possibile creare la prenotazione" required>
-        <label for="dateRange"> Periodo noleggio (DD-MM-YYYY DD-MM-YYYY)*</label>
+        <label for="dateRange"> Periodo noleggio* (DD-MM-YYYY DD-MM-YYYY)</label>
       </div>
 
       <div class="form-floating mb-3">
@@ -118,9 +118,15 @@
         <label for="privateNotes">  Note (non visibili ai clienti)</label>
       </div>
 
+      
+      <div class="mb-3">
+        <input class="form-check-input" aria-label="Seleziona per indicare che il prodotto è stato restituito in tempo. Modificabile solo per prenotazione nel passato" type="checkbox" value="" id="returned" disabled>
+        <label class="form-check-label" for="returned">Il prodotto è stato restituito in tempo (modificabile solo per prenotazione nel passato)</label>
+      </div>  
+
       <div class="row">
         <div class="col-6">
-          <button type="submit" aria-label="Bottone salva. Aggiungerà questa prenotazione e pulirà i campi tranne l'identificativo e reimposterà i prezzi originali" class="btn btn-lg btn-success" id="save">Salva</button>
+          <button type="submit" id="save" aria-label="Bottone salva. Aggiungerà questa prenotazione e pulirà i campi tranne l'identificativo e reimposterà i prezzi originali" class="btn btn-lg btn-success">Salva</button>
         </div>
 
         <div class="col-6">

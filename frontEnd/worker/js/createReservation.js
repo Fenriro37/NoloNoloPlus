@@ -3,57 +3,77 @@ var currentDate = new Date()
 var day = currentDate.getDate()
 var month = currentDate.getMonth() + 1
 var year = currentDate.getFullYear()
+let isTaken = false
 
-window.onload = function getProduct() {
-  
-    var url = window.location.href;
-    var id = url.substring(url.lastIndexOf('=') + 1);
-    $.ajax({
-        url: "/api/product/?id=" + id,
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        // Risposta del server in caso di successo
-        success: (result) => {
-					data = result.data.obj
-					console.log(data)
-          $("#articleId").val(id + " " + data.title + " " + data.brand) 
-          $("#fixedPrice").val(data.fixedPrice) 
-          $("#dailyPrice").val(data.price)      
-          if(data.discount.onSale){
-            $('#sale').prop('checked', true);
-            changeSale()
-            $("#saleValue").val(data.discount.onSaleValue);
-            $("#saleValue").attr("placeholder", data.discount.onSaleValue);
-            if(data.discount.onSaleType)
-              $('#percentage').prop('checked', true);
-            
-            else 
-              $('#flat').prop('checked', true);
-          }
-          if(data.overDays.onSale){
-            $('#dailySale').prop('checked', true);
-            changeDailySale()
-            $("#dailySaleValue").val(data.overDays.onSaleValue);
-            $("#dailySaleValue").attr("placeholder", data.overDays.onSaleValue);
-            $("#daysCount").val(data.overDays.days);
-            $("#daysCount").attr("placeholder", data.overDays.days);
-            if(data.overDays.onSaleType)
-              $('#dailyPercentage').prop('checked', true);
-            
-            else 
-              $('#dailyFlat').prop('checked', true);
-          }
-        },
-        // Risposta del server in caso di insuccesso
-        error: (error) => {
-            console.log("Error");
-            alert("Pagina non disponibile o inesistente");
-						window.location = site202131Url +"/worker/navbar.html?";
+window.onload = function login() {
+  console.log("Cookie");  
+  $.ajax({
+      url: "/api/public/auth",
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      // Risposta del server in caso di successo
+      success: (result) => {
+        console.log(result)
+        if(result.obj !== 1){
+            window.location = site202131Url + "/public/login.html";
         }
-    });
+        var url = window.location.href;
+        var id = url.substring(url.lastIndexOf('=') + 1);
+        $.ajax({
+          url: "/api/product/?id=" + id,
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          // Risposta del server in caso di successo
+          success: (result) => {
+            data = result.data.obj
+            console.log(data)
+            $("#articleId").val(id + " " + data.title + " " + data.brand) 
+            $("#fixedPrice").val(data.fixedPrice) 
+            $("#dailyPrice").val(data.price)      
+            if(data.discount.onSale){
+              $('#sale').prop('checked', true);
+              changeSale()
+              $("#saleValue").val(data.discount.onSaleValue);
+              $("#saleValue").attr("placeholder", data.discount.onSaleValue);
+              if(data.discount.onSaleType)
+                $('#percentage').prop('checked', true);
+              
+              else 
+                $('#flat').prop('checked', true);
+            }
+            if(data.overDays.onSale){
+              $('#dailySale').prop('checked', true);
+              changeDailySale()
+              $("#dailySaleValue").val(data.overDays.onSaleValue);
+              $("#dailySaleValue").attr("placeholder", data.overDays.onSaleValue);
+              $("#daysCount").val(data.overDays.days);
+              $("#daysCount").attr("placeholder", data.overDays.days);
+              if(data.overDays.onSaleType)
+                $('#dailyPercentage').prop('checked', true);
+              
+              else 
+                $('#dailyFlat').prop('checked', true);
+            }
+          },
+          // Risposta del server in caso di insuccesso
+          error: (error) => {
+              console.log("Error");
+              alert("Pagina non disponibile o inesistente");
+              window.location = site202131Url +"/worker/navbar.html?";
+          }
+        });  
+      },
+      // Risposta del server in caso di insuccesso
+      error: (error) => {
+        window.location = site202131Url + "/public/login.html";
+      }
+  });
 }
+  
 
 $(document).ready(function(){
   $( "#dateRange" ).daterangepicker({    
@@ -111,21 +131,41 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
 
 $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
   let dateRange = $(this).val()
-  dateRange = dateRange.replace(/ /g, "")
-  dateRange = dateRange.split("-")
+  //dateRange = dateRange.replace(/ /g, "")
+  dateRange = dateRange.split(" ")
   let date1 = dateRange[0]
   let date2 = dateRange[1]
-  date1 = date1.split("/")
-  date2 = date2.split("/")
-  let d1 = new Date(date1[2], date1[1] -1, date1[0])
-  let d2 = new Date(date2[2], date2[1] -1, date2[0])
+  date1 = date1.split("-")
+  date2 = date2.split("-")
+  let d1 = new Date(date1[2], date1[1] -1, date1[0], 0, 0, 0)
+  let d2 = new Date(date2[2], date2[1] -1, date2[0], 23, 59, 59)
+  console.log
   for(let i in data.bookings){
     bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day)
     bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day)
     if( d1 < bookingStart && bookingEnd < d2){
       $("#dateRange").val('')
+      $('#returned').prop('disabled', true);
+      isTaken = false
     }
   }
+  let current = new Date()
+
+  //se prenotazione completamente nel passato isTaken è vero
+  //altrimenti posso modificare da manager
+  console.log(current)
+  console.log(d2)
+  console.log(current > d2)
+  console.log($("#dateRange").val() != '')
+  if(current > d2 && $("#dateRange").val() != ''){
+    $('#returned').prop('disabled', false);
+    isTaken = true
+  }
+  else{
+    $('#returned').prop('disabled', true);
+    isTaken = false
+  }
+
   calculateTotal()
 });
 
@@ -222,13 +262,13 @@ document.addEventListener('click',function(e){
 function calculateTotal(){
   if ($('#dateRange').val()!= ''){
     let dateRange = $("#dateRange").val()
-    dateRange = dateRange.replace(/ /g, "")
-    dateRange = dateRange.split("-")
+    //dateRange = dateRange.replace(/ /g, "")
+    dateRange = dateRange.split(" ")
     let date1 = dateRange[0]
     let date2 = dateRange[1]
-    date1 = date1.split("/")
+    date1 = date1.split("-")
     console.log(date1[1])
-    date2 = date2.split("/")
+    date2 = date2.split("-")
 
     let start = new Date(date1[2] , date1[1] -1, date1[0])
     let end = new Date(date2[2], date2[1]-1, date2[0])
@@ -293,7 +333,10 @@ function save(){
     if(!checkRangeDatePicker(dateRange)){
       return(alert('Data non valida'))
     }
-    console.log('valido')
+
+    $('#save').prop('disabled', true);
+    $('#clear').prop('disabled', true);
+
     dateRange = dateRange.replace(/ /g, "")
     dateRange = dateRange.split("-")
     let date1 = dateRange[0]
@@ -307,10 +350,11 @@ function save(){
     let dayEnd = date2[0]
     let monthEnd = date2[1]
     let yearEnd = date2[2] 
-    let today = year*10000+month*100+day
-    let start = parseInt(yearStart)*10000+parseInt(monthStart)*100+parseInt(dayStart)
 
-    if(today > start){
+
+    let start = new Date(yearStart,monthStart-1, dayStart)
+
+    if(currentDate >= start){
       day = dayStart
       month = monthStart 
       year = yearStart
@@ -341,6 +385,8 @@ function save(){
       dailyValue = 0
       dailyDays = 0
     }
+
+    let isReturned = ($('#returned').is(":checked") == true) ? true : false
 
     $.ajax({
       url:"/api/user?email=" + $("#email").val(),
@@ -381,8 +427,8 @@ function save(){
               month: parseInt(monthEnd),
               year: parseInt(yearEnd) 
             }, 
-            isTaken: false,
-            isReturned: false,
+            isTaken: isTaken,
+            isReturned: isReturned,
             fixedPrice: parseFloat($("#fixedPrice").val()),
             fixedDiscount: {
               onSale: sale,
@@ -438,6 +484,8 @@ function save(){
             error: (error) => {
                 console.log("Errore nell'invio dei dati");
                 alert("Errore nell'invio dei dati");
+                $('#save').prop('disabled', false);
+                $('#clear').prop('disabled', false);
             }
             }); 
               
@@ -446,13 +494,17 @@ function save(){
           error: (error) => {
               console.log("Errore nell'invio dei dati");
               alert("Errore nell'invio dei dati ");
-          }
+              $('#save').prop('disabled', false);
+              $('#clear').prop('disabled', false);
+            }
           }); 
       },
       // Risposta del server in caso di insuccesso
       error: (error) => {
           console.log("Error");
           alert("La mail non esiste");
+          $('#save').prop('disabled', false);
+          $('#clear').prop('disabled', false);
       }
     });
 }

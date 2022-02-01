@@ -346,11 +346,9 @@
               alert("Creazione riuscita")       
             },(error) => {
               alert('Problema nella creazione della prenotazione');
-              this.$router.push({ name: 'home' , params: { filter: ''}})
             })  
           },(error) => {
             alert('Problema nella creazione della prenotazione');
-            this.$router.push({ name: 'home' , params: { filter: ''}})
           }) 
         }, (error) => {
           alert("Errore, la mail non esiste");
