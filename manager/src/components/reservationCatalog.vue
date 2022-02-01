@@ -52,7 +52,8 @@ export default {
           for(let i in this.catalog){
             this.reservations.push(this.catalog[i])
           }
-        },(error) => {
+        })
+        .catch( (error) => {
           alert('Problema nel caricamento dei dati');
           this.$router.push({ name: 'home' , params: { filter: ''}})
         }) 

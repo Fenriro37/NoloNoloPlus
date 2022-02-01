@@ -312,7 +312,8 @@ export default {
           this.cancel();
            this.enter = false
           alert("Creazione riuscita")
-        },(error) => {
+        })
+        .catch( (error) => {
           alert('Problema nel caricamento dei dati');
         }) 
       },

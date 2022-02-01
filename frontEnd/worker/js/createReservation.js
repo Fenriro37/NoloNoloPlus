@@ -6,7 +6,7 @@ var year = currentDate.getFullYear()
 let isTaken = false
 
 window.onload = function login() {
-  console.log("Cookie");  
+  //console.log("Cookie");  
   $.ajax({
       url: "/api/public/auth",
       method: "GET",
@@ -15,7 +15,7 @@ window.onload = function login() {
       },
       // Risposta del server in caso di successo
       success: (result) => {
-        console.log(result)
+        //console.log(result)
         if(result.obj !== 1){
             window.location = site202131Url + "/public/login.html";
         }
@@ -30,8 +30,8 @@ window.onload = function login() {
           // Risposta del server in caso di successo
           success: (result) => {
             data = result.data.obj
-            console.log(data)
-            $("#articleId").val(id + " " + data.title + " " + data.brand) 
+            //console.log(data)
+            $("#articleId").val(id) 
             $("#fixedPrice").val(data.fixedPrice) 
             $("#dailyPrice").val(data.price)      
             if(data.discount.onSale){
@@ -61,7 +61,7 @@ window.onload = function login() {
           },
           // Risposta del server in caso di insuccesso
           error: (error) => {
-              console.log("Error");
+              //console.log("Error");
               alert("Pagina non disponibile o inesistente");
               window.location = site202131Url +"/worker/navbar.html?";
           }
@@ -78,8 +78,8 @@ window.onload = function login() {
 $(document).ready(function(){
   $( "#dateRange" ).daterangepicker({    
     "locale": {
-      "format": "DD/MM/YYYY",
-      "separator": " - ",
+      "format": "DD-MM-YYYY",
+      "separator": " ",
       "applyLabel": "Seleziona",
       "cancelLabel": "Chiudi",
       "fromLabel": "From",
@@ -139,7 +139,7 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
   date2 = date2.split("-")
   let d1 = new Date(date1[2], date1[1] -1, date1[0], 0, 0, 0)
   let d2 = new Date(date2[2], date2[1] -1, date2[0], 23, 59, 59)
-  console.log
+
   for(let i in data.bookings){
     bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day)
     bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day)
@@ -153,10 +153,6 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
 
   //se prenotazione completamente nel passato isTaken è vero
   //altrimenti posso modificare da manager
-  console.log(current)
-  console.log(d2)
-  console.log(current > d2)
-  console.log($("#dateRange").val() != '')
   if(current > d2 && $("#dateRange").val() != ''){
     $('#returned').prop('disabled', false);
     isTaken = true
@@ -168,6 +164,40 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
 
   calculateTotal()
 });
+
+$('#dateRange').focusout(() => {
+  console.log($('#dateRange').val())
+  if(checkRangeDatePicker($('#dateRange').val())){
+    // Check range
+    let dateRange = $('#dateRange').val()
+    dateRange = dateRange.split(" ")
+    let date1 = dateRange[0]
+    let date2 = dateRange[1]
+    date1 = date1.split("-")
+    date2 = date2.split("-")
+    let d1 = new Date(date1[2], date1[1] -1, date1[0], 0, 0, 0)
+    let d2 = new Date(date2[2], date2[1] -1, date2[0], 23, 59, 59)
+
+    for(let i in data.bookings){
+      bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day, 0, 0, 0)
+      bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day, 23, 59, 59)
+      if(d1 < bookingStart && bookingEnd < d2 || (bookingStart <= d1 && d1 <= bookingEnd) || (bookingStart <= d2 && d2 <= bookingEnd)){
+        $("#dateRange").val('')
+      }
+    }
+    if(checkDateIsPast($('#dateRange').val()) === true) {
+      // Enable check
+      $('#returned').prop('disabled', false)
+    } else {
+      // Disable check
+      $('#returned').prop('disabled', true)
+    }
+  }
+  else{
+    $("#dateRange").val('')
+  }
+
+})
 
 //prezzo fisso
 $('#sale').change(changeSale)
@@ -267,7 +297,7 @@ function calculateTotal(){
     let date1 = dateRange[0]
     let date2 = dateRange[1]
     date1 = date1.split("-")
-    console.log(date1[1])
+    //console.log(date1[1])
     date2 = date2.split("-")
 
     let start = new Date(date1[2] , date1[1] -1, date1[0])
@@ -324,26 +354,22 @@ function reset(){
 
 $('#formId').submit(function (evt) {
   evt.preventDefault();
-  console.log("preventDefault")
+  //console.log("preventDefault")
   save()
 });
 
 function save(){
     let dateRange = $("#dateRange").val()
-    if(!checkRangeDatePicker(dateRange)){
-      return(alert('Data non valida'))
-    }
 
     $('#save').prop('disabled', true);
     $('#clear').prop('disabled', true);
 
-    dateRange = dateRange.replace(/ /g, "")
-    dateRange = dateRange.split("-")
+    //dateRange = dateRange.replace(/ /g, "")
+    dateRange = dateRange.split(" ")
     let date1 = dateRange[0]
     let date2 = dateRange[1]
-    date1 = date1.split("/")
-    date2 = date2.split("/")
-    console.log(date1)
+    date1 = date1.split("-")
+    date2 = date2.split("-")
     let dayStart = date1[0]
     let monthStart = date1[1]
     let yearStart = date1[2]
@@ -396,7 +422,7 @@ function save(){
       },
       // Risposta del server in caso di successo
       success: (result) => {
-          console.log(result)
+          //(result)
           let user = result.data
           $.ajax({
           url:"/api/reservation",
@@ -448,7 +474,7 @@ function save(){
           }),
           // Risposta del server in caso di successo
           success: (result) => {
-            console.log(result)
+            //console.log(result)
             //aggiornamento article
             let reservations = []
             reservations = data.bookings
@@ -456,15 +482,15 @@ function save(){
             newBooking.productId = data._id
             newBooking.clientId = user.email
             newBooking.reservationId = result.data._id
-            newBooking.total  = $("#newTotal").val()
+            newBooking.total  = (parseFloat$("#newTotal").val())
             newBooking.startDate = {}
-            newBooking.startDate.day = dayStart
-            newBooking.startDate.month = monthStart
-            newBooking.startDate.year = yearStart
+            newBooking.startDate.day = parseInt(dayStart)
+            newBooking.startDate.month = parseInt(monthStart)
+            newBooking.startDate.year = parseInt(yearStart)
             newBooking.endDate = {}
-            newBooking.endDate.day = dayEnd
-            newBooking.endDate.month = monthEnd
-            newBooking.endDate.year = yearEnd
+            newBooking.endDate.day = parseInt(dayEnd)
+            newBooking.endDate.month = parseInt(monthEnd)
+            newBooking.endDate.year = parseInt(yearEnd)
             reservations.push(newBooking)
             $.ajax({
             url:"/api/product/?id=" + data._id,
@@ -478,7 +504,7 @@ function save(){
             // Risposta del server in caso di successo
             success: (result) => {
               alert("Prenotazione creata")
-              location.reload(true);
+              location.reload(false);
             },
             // Risposta del server in caso di insuccesso
             error: (error) => {
@@ -542,45 +568,64 @@ function isPositiveInteger(n) { return n >>> 0 === parseFloat(n) }
 function hasWhiteSpace(x) { return x.indexOf(' ') >= 0 }
 
 // Controlla se la stringa passata è una data
-// La stringa dev'essere del seguente formato: GG/MM/AAAA
-// Se ci sono più date (massimo 2) le due date devono essere separate da un trattino -
+// La stringa dev'essere del seguente formato: GG-MM-YYYY
+// Se ci sono più date (massimo 2) le due date devono essere separate da uno spazio vuoto
 // La funzione ritorna true se va bene, altrimenti false
 function checkRangeDatePicker(datesAsString) {
   try {
-      const datesArray = datesAsString.split(' - ');
-      var dateValue
-      var index
-      if(datesArray.length > 2) {
-          return false
-      }
-      for(index in datesArray) {
-          dateValue = datesArray[index].split('/')
-          // Controllo della lunghezza degli elementi
-          if(dateValue.length != 3) {
-              return false
-          }
-          // Controllo che gli elemnti non abbiamo spazi bianchi
-          if(hasWhiteSpace(dateValue[0]) || hasWhiteSpace(dateValue[1]) || hasWhiteSpace(dateValue[2])) {
-              return false
-          }
-          // Controllo del tipo degli elementi
-          if(!isPositiveInteger(dateValue[0]) || !isPositiveInteger(dateValue[1]) || !isPositiveInteger(dateValue[2])) {
-              return false
-          }
-          // Controllo dei valori minimi degli elementi
-          if(dateValue[1] > 12 || dateValue[0] < 1) {
-              return false
-          }
-          // Controllo dei valori massimi degli elementi
-          if(dateValue[2] % 4 == 0) {
-              daysInMonth[2] = 29
-          }
-          if(dateValue[0] > daysInMonth[dateValue[1]]) {
-              return false
-          }    
-      }
-      return true
-  } catch {
+    const datesArray = datesAsString.split(' ');
+    var dateValue
+    var index
+    if(datesArray.length > 2) {
       return false
+    }
+    for(index in datesArray) {
+      dateValue = datesArray[index].split('-')
+      // Controllo della lunghezza degli elementi
+      if(dateValue.length != 3) {
+        return false
+      }
+      // Controllo che gli elementi non abbiamo spazi bianchi
+      if(hasWhiteSpace(dateValue[0]) || hasWhiteSpace(dateValue[1]) || hasWhiteSpace(dateValue[2])) {
+        return false
+      }
+      // Controllo del tipo degli elementi
+      if(!isPositiveInteger(dateValue[0]) || !isPositiveInteger(dateValue[1]) || !isPositiveInteger(dateValue[2])) {
+        return false
+      }
+      // Controllo dei valori minimi degli elementi
+      if(dateValue[1] > 12 || dateValue[0] < 1) {
+        return false
+      }
+      // Controllo dei valori massimi degli elementi
+      if(dateValue[2] % 4 == 0) {
+        daysInMonth[2] = 29
+      }
+      if(dateValue[0] > daysInMonth[dateValue[1]]) {
+        return false
+      }
+      // Controllo del formato dei giorni e mesi
+      if(dateValue[0].length != 2 && dateValue[1].length != 2 && dateValue[2].length != 4) {
+        return false
+      }
+    }
+    return true
+  } catch {
+    return false
+  }
+}
+
+// Get date-pick-range by ID (using jQuery)
+function checkDateIsPast(value) {
+  if(checkRangeDatePicker(value) === true) {
+    const startDateAsString = value.split(' ')[0];
+    const startDateAsArray = startDateAsString.split('-');
+    const startDate = new Date(startDateAsArray[2], startDateAsArray[1] - 1, startDateAsArray[0]);
+    const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    if(startDate < today) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

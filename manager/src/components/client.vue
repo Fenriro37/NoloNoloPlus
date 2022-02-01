@@ -217,7 +217,8 @@
         this.user = result.data.data
         console.log(this.user)
         this.undoChange()
-      }, (error) => {
+      })
+      .catch( (error) => {
           alert('La pagina non esiste');
           this.$router.push({ name: 'clientCatalog' , params: { filter: ''}})
         }
@@ -249,7 +250,8 @@
           console.log(row)
           this.bookings.push(row)
         } 
-      },(error) => {
+      })
+      .catch( (error) => {
             alert("Problema nel caricamento dei dati");
             this.$router.push({ name: 'home' , params: { filter: ''}})
           })           
@@ -355,7 +357,8 @@
 
             this.boolModify = false
             this.enter = false
-        },(error) => {
+        })
+        .catch( (error) => {
             alert("Problema nell'invio dei dati");
           })
       },
@@ -364,7 +367,8 @@
         this.enter = true
         Functions.deleteUser(this.id).then( () =>{
           this.$router.push({ name: 'clientCatalog' , params: { filter: ''}})
-        },(error) => {
+        })
+        .catch( (error) => {
           alert("Problema nella cancellazione dei dati")
         })                  
       },

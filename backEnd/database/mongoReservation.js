@@ -43,6 +43,12 @@ exports.reservationsFind = async function(token, status, filter, sortBy) {
         await mongo.connect();
         const reservations = mongo.db(config.databaseName).collection(config.databaseReservationCollectionName);
         const re = new RegExp(`${filter}`, 'gi');
+        var myId;
+        try {
+            myId = new ObjectId(filter);
+        } catch {
+
+        }
         let result;
         if(status == 0) {
             result = await reservations.find({
@@ -50,6 +56,7 @@ exports.reservationsFind = async function(token, status, filter, sortBy) {
                     { clientEmail: token.email },
                     {
                         $or: [
+                            { _id: myId },
                             { productId: re },
                             { productTitle: re },
                             { productBrand: re }
@@ -59,6 +66,7 @@ exports.reservationsFind = async function(token, status, filter, sortBy) {
         } else {
             result = await reservations.find({
                 $or: [
+                    { _id: myId },
                     { clientName: re },
                     { clientSurname: re },
                     { clientEmail: re },

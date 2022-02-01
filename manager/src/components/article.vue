@@ -475,7 +475,8 @@
         .then( () => {
           alert("Modifica disponibilità riuscita") 
           this.enter = false
-        },(error) => {
+        })
+        .catch( () => {
           alert("Problema nell' invio dei dati");
           this.enter = false
         })
@@ -612,7 +613,8 @@
           alert("Modifica riuscita")
 
           this.enter = false
-        },(error) => {
+        })
+        .catch( (error) => {
           alert("Problema nella modifica dei dati");
           this.enter = false
         })
@@ -623,7 +625,8 @@
         Functions.deleteProduct(this.identifier)
         .then( () =>{
             this.$router.push({ name: 'articleCatalog' , params: { filter: ''}})
-        },(error) => {
+        })
+        .catch( (error) => {
           alert("Problema nell' eliminazione dell'articolo");
           this.enter = false
         })

@@ -121,7 +121,11 @@ function fill(){
 
   $("#bookingRequest").val( data.bookingDate.day +'-'+ data.bookingDate.month +'-'+ data.bookingDate.year);
 
-  $("#bookingRange").val( data.startDate.day +'-'+ data.startDate.month +'-'+ data.startDate.year + ' ' + data.endDate.day +'-'+ data.endDate.month +'-'+ data.endDate.year);
+  $("#bookingRange").val(
+    (data.startDate.day < 10 ? '0' + data.startDate.day : data.startDate.day) + '-' +
+    (data.startDate.month < 10 ? '0' + data.startDate.month : data.startDate.month) + '-' + data.startDate.year + ' ' + 
+    (data.endDate.day < 10 ? '0' + data.endDate.day : data.endDate.day) + '-' + 
+    (data.endDate.month < 10 ? '0' + data.endDate.month : data.endDate.month)+'-'+ data.endDate.year);
 
   $("#notes").attr("placeholder", data.description);
   $("#notes").val(data.description);
@@ -160,41 +164,42 @@ function modify(){
   //////////////////////////////////////////////////////////////
   if(firstTime === 0){
     firstTime = 1
-    $( "#bookingRange" ).daterangepicker({    
-      "locale": {
-        "format": "DD/MM/YYYY",
-        "separator": " - ",
-        "applyLabel": "Seleziona",
-        "cancelLabel": "Chiudi",
-        "fromLabel": "From",
-        "toLabel": "To",
-        "customRangeLabel": "Custom",
-        "weekLabel": "W",
-        "daysOfWeek": [
-          "Do",
-          "Lu",
-          "Ma",
-          "Me",
-          "Gi",
-          "Ve",
-          "Sa",
-        ],
-        "monthNames": [
-          "Gennaio",
-          "Febbraio",
-          "Marzo",
-          "Aprile",
-          "Maggio",
-          "Giugno",
-          "Luglio",
-          "Agosto",
-          "Settembre",
-          "Ottobre",
-          "Novembre",
-          "Dicembre"
-        ],
-        "firstDay": 1
-      },
+    $( "#bookingRange" ).daterangepicker({
+        "locale": {
+          "format": "DD-MM-YYYY",
+          "separator": " ",
+          "applyLabel": "Seleziona",
+          "cancelLabel": "Chiudi",
+          "fromLabel": "From",
+          "toLabel": "To",
+          "customRangeLabel": "Custom",
+          "weekLabel": "W",
+          "daysOfWeek": [
+            "Do",
+            "Lu",
+            "Ma",
+            "Me",
+            "Gi",
+            "Ve",
+            "Sa",
+          ],
+          "monthNames": [
+            "Gennaio",
+            "Febbraio",
+            "Marzo",
+            "Aprile",
+            "Maggio",
+            "Giugno",
+            "Luglio",
+            "Agosto",
+            "Settembre",
+            "Ottobre",
+            "Novembre",
+            "Dicembre"
+          ],
+          "firstDay": 1
+        },
+      minDate: new Date(),
       autoUpdateInput: false,
       showDropdowns: true, 
       isInvalidDate: function(date){
@@ -722,45 +727,95 @@ function isPositiveInteger(n) { return n >>> 0 === parseFloat(n) }
 function hasWhiteSpace(x) { return x.indexOf(' ') >= 0 }
 
 // Controlla se la stringa passata è una data
-// La stringa dev'essere del seguente formato: GG/MM/AAAA
-// Se ci sono più date (massimo 2) le due date devono essere separate da un trattino -
+// La stringa dev'essere del seguente formato: GG-MM-YYYY
+// Se ci sono più date (massimo 2) le due date devono essere separate da uno spazio vuoto
 // La funzione ritorna true se va bene, altrimenti false
 function checkRangeDatePicker(datesAsString) {
   try {
-      const datesArray = datesAsString.split(' - ');
-      var dateValue
-      var index
-      if(datesArray.length > 2) {
-          return false
-      }
-      for(index in datesArray) {
-          dateValue = datesArray[index].split('/')
-          // Controllo della lunghezza degli elementi
-          if(dateValue.length != 3) {
-              return false
-          }
-          // Controllo che gli elemnti non abbiamo spazi bianchi
-          if(hasWhiteSpace(dateValue[0]) || hasWhiteSpace(dateValue[1]) || hasWhiteSpace(dateValue[2])) {
-              return false
-          }
-          // Controllo del tipo degli elementi
-          if(!isPositiveInteger(dateValue[0]) || !isPositiveInteger(dateValue[1]) || !isPositiveInteger(dateValue[2])) {
-              return false
-          }
-          // Controllo dei valori minimi degli elementi
-          if(dateValue[1] > 12 || dateValue[0] < 1) {
-              return false
-          }
-          // Controllo dei valori massimi degli elementi
-          if(dateValue[2] % 4 == 0) {
-              daysInMonth[2] = 29
-          }
-          if(dateValue[0] > daysInMonth[dateValue[1]]) {
-              return false
-          }    
-      }
-      return true
-  } catch {
+    const datesArray = datesAsString.split(' ');
+    var dateValue
+    var index
+    if(datesArray.length > 2) {
       return false
+    }
+    for(index in datesArray) {
+      dateValue = datesArray[index].split('-')
+      // Controllo della lunghezza degli elementi
+      if(dateValue.length != 3) {
+        return false
+      }
+      // Controllo che gli elementi non abbiamo spazi bianchi
+      if(hasWhiteSpace(dateValue[0]) || hasWhiteSpace(dateValue[1]) || hasWhiteSpace(dateValue[2])) {
+        return false
+      }
+      // Controllo del tipo degli elementi
+      if(!isPositiveInteger(dateValue[0]) || !isPositiveInteger(dateValue[1]) || !isPositiveInteger(dateValue[2])) {
+        return false
+      }
+      // Controllo dei valori minimi degli elementi
+      if(dateValue[1] > 12 || dateValue[0] < 1) {
+        return false
+      }
+      // Controllo dei valori massimi degli elementi
+      if(dateValue[2] % 4 == 0) {
+        daysInMonth[2] = 29
+      }
+      if(dateValue[0] > daysInMonth[dateValue[1]]) {
+        return false
+      }
+      // Controllo del formato dei giorni e mesi
+      if(dateValue[0].length != 2 || dateValue[1].length != 2 || dateValue[2].length != 4) {
+        return false
+      }
+    }
+    return true
+  } catch {
+    return false
   }
 }
+
+// Get date-pick-range by ID (using jQuery)
+function checkDateIsPast(value) {
+  if(checkRangeDatePicker(value) === true) {
+    const startDateAsString = value.split(' ')[0];
+    const startDateAsArray = startDateAsString.split('-');
+    const startDate = new Date(startDateAsArray[2], startDateAsArray[1] - 1, startDateAsArray[0]);
+    const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    if(startDate < today) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+$('#bookingRange').focusout(() => {
+  console.log($('#bookingRange').val())
+  if(checkRangeDatePicker($('#bookingRange').val())){
+    // Check range
+    let dateRange = $('#bookingRange').val()
+    dateRange = dateRange.split(" ")
+    let date1 = dateRange[0]
+    let date2 = dateRange[1]
+    date1 = date1.split("-")
+    date2 = date2.split("-")
+    let d1 = new Date(date1[2], date1[1] -1, date1[0], 0, 0, 0)
+    let d2 = new Date(date2[2], date2[1] -1, date2[0], 23, 59, 59)
+
+    for(let i in data.bookings){
+      bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day, 0, 0, 0)
+      bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day, 23, 59, 59)
+      if(d1 < bookingStart && bookingEnd < d2 || (bookingStart <= d1 && d1 <= bookingEnd) || (bookingStart <= d2 && d2 <= bookingEnd)){
+        $("#bookingRange").val('')
+      }
+    }
+    if(checkDateIsPast($('#bookingRange').val()) === true) {
+      // Can't edit with past date
+      $("#bookingRange").val('')
+    } 
+  }
+  else{
+    $("#bookingRange").val('')
+  }
+
+})

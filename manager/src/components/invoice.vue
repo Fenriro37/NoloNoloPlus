@@ -128,7 +128,8 @@ export default {
        this.penale = (this.imponibileFisso + this.imponibileVariabile) * 1.22 * 0.1
      }
     
-    },(error) => {
+    })
+    .catch( (error) => {
         alert('La pagina non esiste');
         this.$router.push({ name: 'home' , params: { filter: ''}})
       }

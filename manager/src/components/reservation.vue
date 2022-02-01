@@ -246,13 +246,15 @@
           this.bookings = result.data.data.obj.bookings
           console.log(this.bookings)
           this.available = result.data.data.obj.available
-        },(error) => {
+        })
+        .catch( (error) => {
           alert('Problema nel caricamento dei dati');
           this.$router.push({ name: 'home' , params: { filter: ''}})
         }
       )
         
-      },(error) => {
+      })
+      .catch( (error) => {
           alert('La pagina non esiste');
           this.$router.push({ name: 'home' , params: { filter: ''}})
         }
@@ -393,7 +395,8 @@
           query1.bookings = this.bookings
           Functions.saveDataProduct(this.reservation.productId, query1)
           .then( () => {
-          },(error) => {
+          })
+          .catch( (error) => {
             alert("Problema nell'invio dei dati");
           })          
         }
@@ -423,7 +426,8 @@
         this.boolModify = false 
         this.boolDelete = false
         this.enter = false
-        },(error) => {
+        })
+        .catch( (error) => {
           alert("Problema nell'invio dei dati");
         })  
       },
@@ -443,10 +447,12 @@
           .then( () =>{
           Functions.deleteReservation(this.reservationId).then( () =>{
              this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
-          },(error) => {
+          })
+          .catch( (error) => {
             alert("Problema nella cancellazione dei dati");
           })
-        },(error) => {
+        })
+        .catch( (error) => {
             alert("Problema nella modifica dei dati");
           })
       },

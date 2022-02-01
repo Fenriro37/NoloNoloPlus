@@ -143,8 +143,8 @@ export default {
       new Chart(ctx1, this.monthChart);
 
       
-    }, 
-    (error) => {
+    }) 
+    .catch( (error) => {
         alert('La pagina non esiste');
         this.$router.push({ name: 'home'})
     })

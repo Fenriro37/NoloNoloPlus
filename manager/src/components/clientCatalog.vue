@@ -40,7 +40,8 @@ export default {
         .then( (result) => {
         console.log(result)
         this.catalog = result.data.data
-      },(error) => {
+      })
+      .catch( (error) => {
           alert('Problema nel caricamento dei dati');
           this.$router.push({ name: 'home' , params: { filter: ''}})
       }) 

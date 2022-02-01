@@ -207,7 +207,8 @@
         this.overOnSaleType = this.article.overDays.onSaleType
         this.overOnSaleValue = this.article.overDays.onSaleValue
 
-      }, (error) => {
+      })
+      .catch( (error) => {
           alert('La pagina non esiste');
            this.$router.push({ name: 'home'})
         }
@@ -344,13 +345,16 @@
               this.cancel();
               this.enter = false
               alert("Creazione riuscita")       
-            },(error) => {
+            })
+            .catch( (error) => {
               alert('Problema nella creazione della prenotazione');
             })  
-          },(error) => {
+          })
+          .catch( (error) => {
             alert('Problema nella creazione della prenotazione');
           }) 
-        }, (error) => {
+        })
+        .catch( (error) => {
           alert("Errore, la mail non esiste");
           this.enter = false
         })

@@ -1,10 +1,12 @@
 <template>
   <div class="container-fluid d-flex justify-content-center" id="main">
     <div class="w-50">
-      <div class="input-group mb-3 mt-2">
-        <input type="email" class="form-control" placeholder="Cerca un cliente" v-model="user" @keyup.enter="createChart" id="newMail" aria-label="newMail" aria-describedby="basic-0">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2" placeholder="Cerca utenti" @click="createChart">Button</button>
-      </div>
+      <form name="myform" id="formId" @submit.prevent="createChart">
+        <div class="input-group mb-3 mt-2">
+          <input type="email" class="form-control" placeholder="Cerca un cliente" v-model="user" required> 
+          <button class="btn btn-outline-secondary" type="submit" >Cerca</button>
+        </div>
+      </form>
 
       <template v-if="newTotal === 0 && boolChart">
         <textarea class="form-control" id="TextareaError" rows="3" disabled >Il cliente non esiste o non ha effettuato prenotazioni</textarea>
@@ -196,7 +198,8 @@ export default {
           this.chart2 = new Chart(ctx1, this.monthChart);
           this.boolChart = false
         }
-      },(error) => {
+      })
+      .catch( (error) => {
           alert('Problema nel caricamento dei dati');
         })
     }

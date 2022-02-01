@@ -236,7 +236,8 @@ export default {
             this.chart3 = new Chart(ctx2, this.qualityChart);
             this.boolChart = false
           }
-        },(error) => {
+        })
+        .catch( (error) => {
           alert('Problema nel caricamento dei dati');
         })
       }
@@ -360,7 +361,8 @@ export default {
 
             this.boolChart = false
           }
-        },(error) => {
+        })
+        .catch( (error) => {
           alert('Problema nel caricamento dei dati');
         })
       }

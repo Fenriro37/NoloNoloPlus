@@ -168,8 +168,8 @@ router.get('/all', async function(req, res) {
 // ----------------------------------------------------------------------------
 // [Cliente] Aggiorna i dati del cliente identificato tramite JTW. Non deve
 // avere il parametro id.
-// [Funzionario o Manager] Aggiorna i dati del cliente se gli id del parametro
-// e body sono uguali.
+// [Funzionario o Manager] Aggiorna i dati del cliente con id passato come 
+//  parametro
 // 
 // Header:
 // - Cookies jwt
