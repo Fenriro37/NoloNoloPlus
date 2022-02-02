@@ -10,7 +10,7 @@
 
   <div  v-for="reservation in reservations" :key="reservation._id">
     <div class="d-flex justify-content-center align-items-center">
-      <div class="card mb-1 " style="height: 10em; width:60%; ">
+      <div class="card mb-1 " style="height: 10em; width:90%; ">
         <div class="card-body h-100">
           <div class="row h-100">
             <div class="col-5 align-items-center h-100"> <img class="myImg " tabindex="0" :alt="'immagine' + reservation.productTitle + ' ' + reservation.productBrand "  v-bind:src="reservation.productImage"></div>

@@ -73,7 +73,7 @@ export class Reservation extends React.Component{
     console.log('sortReservations(' + isIncreasing + ')');
     let reservations = this.state.reservations;
     reservations.sort((a, b) => {
-      return new Date(a.bookingDate.year, a.bookingDate.month, a.bookingDate.day,) - new Date(b.bookingDate.year, b.bookingDate.month, b.bookingDate.day);
+      return new Date(a.bookingDate.year, a.bookingDate.month - 1, a.bookingDate.day,) - new Date(b.bookingDate.year, b.bookingDate.month - 1, b.bookingDate.day);
     });
     if(isIncreasing == false) {
       reservations.reverse();

@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid d-flex justify-content-center" id="main">
-    <div class="w-50">
+    <div class="w-100">
       <div class="row mb-3 mt-3">
         <!-- Colonne immagine -->
         <div class="col-6 d-flex align-items-center" style="height: 15em;">
@@ -298,7 +298,7 @@
                 <span tabindex="0" :aria-label="'totale prenotazione: '+ item.total+'€'">{{ item.total + '€'}}</span>
               </template>
               <template v-slot:cell(prenotazione)="{ item }">
-                <router-link :aria-label="'identificativo: prenotazione' + item.reservationId" :to="{ name: 'reservation',  params: { id: item.reservationId}}"> Id prenotazione</router-link>
+                <router-link :aria-label="'identificativo: prenotazione' + item.reservationId" :to="{ name: 'reservation',  params: { id: item.reservationId}}"> Prenotazione</router-link>
               </template>
               <template v-slot:cell(inizio)="{ item }">
                 <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year ">{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>

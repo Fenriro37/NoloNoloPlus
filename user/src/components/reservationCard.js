@@ -33,7 +33,7 @@ export class ReservationCard extends React.Component {
 
   componentDidMount() {
     let status = ''
-    const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0);
+    const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
     const endDate = new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day);
     if(this.state.reservation.isTaken == false && this.state.reservation.isReturned == false) {
       status = 'Prenotato';
@@ -66,8 +66,8 @@ export class ReservationCard extends React.Component {
     }
 
     const days = datediff(
-      new Date(this.state.reservation.startDate.year, this.state.reservation.startDate.month, this.state.reservation.startDate.day),
-      new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month, this.state.reservation.endDate.day));
+      new Date(this.state.reservation.startDate.year, this.state.reservation.startDate.month - 1, this.state.reservation.startDate.day),
+      new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day));
     if(this.state.reservation.variableDiscount.onSale == true && days > parseInt(this.state.reservation.variableDiscount.days)) {
       if(this.state.reservation.variableDiscount.onSaleType == true) {
         finalVariablePrice = days * parseFloat(this.state.reservation.variablePrice) * (100 - parseFloat(this.state.reservation.variableDiscount.onSaleValue)) / 100;
@@ -75,6 +75,8 @@ export class ReservationCard extends React.Component {
         finalVariablePrice = days * parseFloat(this.state.reservation.variablePrice) - parseFloat(this.state.reservation.variableDiscount.onSaleValue);
       }
     } else {
+      console.log(days);
+      console.log(this.state.reservation.variablePrice);
       finalVariablePrice = days * parseFloat(this.state.reservation.variablePrice);
     }
 
@@ -187,7 +189,7 @@ export class ReservationCard extends React.Component {
                 </div>
               </div>
               {
-              new Date() > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day) && this.state.reservation.isReturned == false && this.state.reservation.isTaken == true ?
+              new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day) && this.state.reservation.isReturned == false && this.state.reservation.isTaken == true ?
               (
                 <div className='row' tabIndex='0'>
                   <div className='col-8'>
@@ -206,10 +208,14 @@ export class ReservationCard extends React.Component {
               </div>
               <div className='row' tabIndex='0'>
                 <div className='col-12'>
-                  {this.state.reservation.description} <br/>
+                  {this.state.reservation.description}
+                </div>
+              </div>
+              <div className='row' tabIndex='0'>
+                <div className='col-12'>
                   {
-                    this.state.reservation.onSale ? (
-                      'Sconto ' + (this.state.variableDiscount.onSaleType ? 'del ' : 'di ') + parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2) + (this.state.variableDiscount.onSaleType ? '% ' : '€ ') + 'sul costo giornaliero se superi' + this.state.variableDiscount.days + (parseInt(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno ') + 'di noleggio.'
+                    this.state.reservation.variableDiscount.onSale ? (
+                      'Sconto ' + (this.state.reservation.variableDiscount.onSaleType ? 'del ' : 'di ') + parseFloat(this.state.reservation.variableDiscount.onSaleValue).toFixed(2) + (this.state.reservation.variableDiscount.onSaleType ? '% ' : '€ ') + 'sul costo giornaliero se superi ' + this.state.reservation.variableDiscount.days + (parseInt(this.state.reservation.variableDiscount.days) > 1 ? ' giorni ' : ' giorno ') + 'di noleggio.'
                     ) : ''
                   }
                 </div>

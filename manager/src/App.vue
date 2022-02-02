@@ -146,6 +146,30 @@ body {
     margin-left: 40px;
 } 
 
+@media (min-width: 500px) {
+    .container-fluid {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (min-width: 768px) {
+    .container-fluid {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (min-width: 992px) {
+    .container-fluid {
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
 </style>
 
 

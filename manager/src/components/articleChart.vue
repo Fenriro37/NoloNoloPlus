@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid d-flex justify-content-center" id="main">
-    <div class="w-50">
+    <div class="w-100">
 
       <template v-if="newTotal === 0">
         <textarea class="form-control" id="TextareaError" rows="3" disabled >L'articolo non è mai stato prenotato</textarea>
@@ -24,17 +24,17 @@
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" id="Reservation total" :value="(newTotal).toFixed(2) + '€'" class="form-control" readonly>
+            <input type="text" id="Reservation total" :value="(parseFloat(newTotal)).toFixed(2) + '€'" class="form-control" readonly>
             <label for="Reservation total"> Totale fatturato</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" id="Reservation averagePrice" :value="(newTotal/price.length).toFixed(2) + '€'" class="form-control" readonly>
+            <input type="text" id="Reservation averagePrice" :value="(parseFloat(newTotal/price.length)).toFixed(2) + '€'" class="form-control" readonly>
             <label for="Reservation averagePrice"> Media costo prenotazione</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" id="Reservation averageDays" :value="(totalDays/price.length).toFixed(2) + ' giorni'" class="form-control" readonly>
+            <input type="text" id="Reservation averageDays" :value="(parseFloat(totalDays/price.length)).toFixed(2) + ' giorni'" class="form-control" readonly>
             <label for="Reservation averageDays"> Media durata noleggio</label>
           </div>
         </div>

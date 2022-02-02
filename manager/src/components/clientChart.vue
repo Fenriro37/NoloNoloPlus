@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid d-flex justify-content-center" id="main">
-    <div class="w-50">
+    <div class="w-100">
       <form name="myform" id="formId" @submit.prevent="createChart">
         <div class="input-group mb-3 mt-2">
           <input type="email" class="form-control" placeholder="Cerca un cliente" v-model="user" required> 

@@ -1,6 +1,6 @@
 let reservations = []
-site202131Url = "http://localhost:8081"
-//site202131Url: "http://site202131.tw.cs.unibo.it",
+//site202131Url = "http://localhost:8081"
+site202131Url = "http://site202131.tw.cs.unibo.it",
 
 window.onload = function login() {
   console.log("Cookie");  
@@ -78,7 +78,7 @@ function logout(){
             for (let i in articles){
                 $( "#catalog" ).append(
                     '<div class="d-flex justify-content-center align-items-center">' +
-                        '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+                        '<div class="card mb-1 mt-1" style="height: 10em; width:90%; ">' +
                             '<div class="card-body h-100">' +
                                 '<div class="row h-100">' +
                                     '<div class="col-5 d-flex align-items-center h-100"> <img class="myImg " tabindex="0" alt="Immagine: ' +articles[i].title + " " + articles[i].brand +'" src='+ articles[i].image +'></div>' +
@@ -102,7 +102,7 @@ function logout(){
                 //prezzo
                 if(articles[i].discount.onSale){
                     let newPrice
-                    if(articles[i].discount.onSaleType){
+                    if(!articles[i].discount.onSaleType){
                         newPrice = articles[i].fixedPrice - articles[i].discount.onSaleValue;
                     }
                     else{
@@ -150,7 +150,7 @@ function logout(){
         // Risposta del server in caso di insuccesso
         error: (error) => {
             console.log("Errore nel caricamento dei dati");
-            alert("Errore nel caricamento dei dati");
+            //alert("Errore nel caricamento dei dati");
         }
     });
 }
@@ -176,7 +176,7 @@ function logout(){
             clients.forEach(user => {
                 $("#catalog").append(
                     '<div class="d-flex justify-content-center align-items-center">' +
-                        '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+                        '<div class="card mb-1 mt-1" style="height: 10em; width:90%; ">' +
                             '<div class="card-body h-100">' +
                                 '<div class="row h-100">' +
                                     '<div class="col-4 align-items-center h-100"> <img class="myImg" tabindex="0" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Immagine utente generico"></div>' +
@@ -243,7 +243,7 @@ function logout(){
     for(let i in data) {
         $("#catalog").append(
         '<div id="'+i+'" class="d-flex justify-content-center align-items-center">' +
-            '<div class="card mb-1 mt-1" style="height: 10em; width:60%; ">' +
+            '<div class="card mb-1 mt-1" style="height: 10em; width:90%; ">' +
                 '<div class="card-body h-100">' +
                     '<div class="row h-100">' +
                         '<div class="col-5 align-items-center h-100"> <img tabindex="0" class="myImg " alt="immagine '+data[i].productTitle + " " + data[i].productBrand+'" src='+ data[i].productImage +'></div>' +

@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid d-flex justify-content-center">
-	<div class="w-50">
+	<div class="w-100">
 		<form name="myform" @submit.prevent="createArticle"> 
 			<h1 class="mb-4"> Aggiungi articolo </h1>
 

@@ -181,6 +181,7 @@ export class MakeReservation extends React.Component {
           <LocalizationProvider
           dateAdapter={AdapterDateFns}>
             <MobileDateRangePicker
+            disabled={!this.state.isAuthenticated}
             disablePast
             shouldDisableDate={this.disabledDays}
             startText='Data di inizio'

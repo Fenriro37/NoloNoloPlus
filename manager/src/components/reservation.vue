@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid d-flex justify-content-center" id="main">
-  <div class="w-50">
+  <div class="w-100">
     <div class="row mt-3">
       <div class="col-6" id="img">
         <b-img v-bind:src="reservation.productImage" tabindex="0" :alt="'Immagine' + reservation.productTitle + ' ' +reservation.productBrand " class="img-thumbnail"></b-img>

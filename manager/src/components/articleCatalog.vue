@@ -3,7 +3,7 @@
 <div class="container-fluid p-2">
   <div v-for="article in catalog" :key="article._id">
     <div class="d-flex justify-content-center align-items-center">
-      <div class="card mb-1 " style="height: 10em; width:60%; ">
+      <div class="card mb-1 " style="height: 10em; width:90%; ">
         <div class="card-body h-100">
           <div class="row h-100">
             <div class="col-5 d-flex align-items-center h-100"> <img class="myImg" tabindex="0" :alt="'immagine '+ article.title + ' ' + article.brand" v-bind:src="article.image"></div>

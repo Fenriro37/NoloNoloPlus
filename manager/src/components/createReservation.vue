@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid d-flex justify-content-center" id="main">
-  <div class="w-50">
+  <div class="w-100">
     <form name="myform" id="formId" @submit.prevent="createReservation"> 
 
       <h1 class="mb-4" tabindex="0"> Aggiungi prenotazione </h1>

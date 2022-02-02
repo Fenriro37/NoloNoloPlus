@@ -30,11 +30,11 @@ export class Invoice extends React.Component {
     const days = datediff(
       new Date(
         this.state.reservation.startDate.year,
-        this.state.reservation.startDate.month,
+        this.state.reservation.startDate.month - 1,
         this.state.reservation.startDate.day),
       new Date(
         this.state.reservation.endDate.year,
-        this.state.reservation.endDate.month,
+        this.state.reservation.endDate.month - 1,
         this.state.reservation.endDate.day)
     );
     const fixedPrice = (parseFloat(this.state.reservation.fixedPrice) / 122 * 100);
@@ -63,10 +63,17 @@ export class Invoice extends React.Component {
     )
     var penale =
       (
-        new Date() > new Date(
-                      this.state.reservation.endDate.year, 
-                      this.state.reservation.endDate.month - 1, 
-                      this.state.reservation.endDate.day)
+        new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate()
+        )
+        >
+        new Date(
+          this.state.reservation.endDate.year, 
+          this.state.reservation.endDate.month - 1, 
+          this.state.reservation.endDate.day
+        )
         && this.state.reservation.isReturned == false
         && this.state.reservation.isTaken == true
       ) ? (
@@ -131,14 +138,14 @@ export class Invoice extends React.Component {
               </tr>
               <tr>
                 <td colSpan={5}>Totale imponibile</td>
-                <td className='text-end'>{(discountedFixedPrice + discountedVariablePrice + penale).toFixed(2)} €</td>
+                <td className='text-end'>{(discountedFixedPrice + discountedVariablePrice).toFixed(2)} €</td>
               </tr>
               <tr>
                 <td colSpan={5}>IVA</td>
                 <td className='text-end'>{((discountedFixedPrice + discountedVariablePrice + penale) * 0.22).toFixed(2)} €</td>
               </tr>
               {
-                new Date() > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day) && this.state.reservation.isReturned == false && this.state.reservation.isTaken == true ?
+                new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) > new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day) && this.state.reservation.isReturned == false && this.state.reservation.isTaken == true ?
                 (
                   <tr>
                     <td colSpan={5}>Penale</td>

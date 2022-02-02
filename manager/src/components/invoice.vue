@@ -1,4 +1,6 @@
 <template>
+<div class="container-fluid d-flex justify-content-center" id="main">
+  <div class="w-100">
   <table class="table invoice p-2" role="table" tabindex="0" aria-label="Tabella Fattura">
     <tbody role="rowgroup">
         <tr role="row">
@@ -59,6 +61,8 @@
         </tr>
     </tbody> 
   </table>
+  </div>
+  </div>
 </template>
 <script>
 import "bootstrap";

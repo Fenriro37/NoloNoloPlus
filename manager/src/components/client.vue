@@ -1,7 +1,7 @@
 <template>
 
 <div class="container-fluid d-flex justify-content-center" id="main">
-  <div class="w-50">
+  <div class="w-100">
     <form name="myform" id="formId" @submit.prevent="saveData">
       <h1 class="mb-3" tabindex="0"> Account </h1>
 
@@ -138,7 +138,7 @@
             <span tabindex="0" :aria-label="'totale prenotazione: '+ item.price+'€'">{{ item.price +'€'}}</span>
           </template>
           <template v-slot:cell(prenotazione)="{ item }">
-            <router-link :aria-label="'identificativo prenotazione: '+ item.reservation" :to="{ name: 'reservation',  params: { id: item.reservation}}">Id prenotazione</router-link>
+            <router-link :aria-label="'identificativo prenotazione: '+ item.reservation" :to="{ name: 'reservation',  params: { id: item.reservation}}">Prenotazione</router-link>
           </template>
           <template  v-slot:cell(DataInizio)="{ item }">
             <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate">{{ item.startDate }}</span>
