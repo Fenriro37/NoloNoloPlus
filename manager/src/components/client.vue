@@ -161,7 +161,7 @@
   export default {
     data() {
       return {
-        enter: false,
+        enter: true,
         user: {},
         id: '',
         name: '',
@@ -217,6 +217,7 @@
         this.user = result.data.data
         console.log(this.user)
         this.undoChange()
+        this.enter = false
       })
       .catch( (error) => {
           alert('La pagina non esiste');

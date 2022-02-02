@@ -278,11 +278,11 @@
         </div>
         <div class="row d-flex justify-content-between">
             <div class="col align-items-center">
-                <button type="button" aria-label="Bottone affitta. Porta alla pagina per creare una prenotazione impostando i prezzi attuali" class="btn btn-lg" id="rentProduct">Affitta</button>
-                <button type="button" aria-label="Bottone modifica. Apre una finestra da cui sarà possibile modificare il prodotto" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" id="btnModify" onclick="getModalData()">Modifica</button>
-                <button type="button" aria-label="Bottone elimina. Cancella il prodotto e riporta alla pagina del catalogo" id="delete" class="btn btn-lg btn-danger" onclick="remove()">Elimina</button>
+                <button type="button" aria-label="Bottone affitta. Porta alla pagina per creare una prenotazione impostando i prezzi attuali" class="btn btn-lg" id="rentProduct" disabled>Affitta</button>
+                <button type="button" aria-label="Bottone modifica. Apre una finestra da cui sarà possibile modificare il prodotto" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" id="btnModify" onclick="getModalData()" disabled>Modifica</button>
+                <button type="button" aria-label="Bottone elimina. Cancella il prodotto e riporta alla pagina del catalogo" id="delete" class="btn btn-lg btn-danger" onclick="remove()" disabled>Elimina</button>
                 <div class="form-check form-switch big-size">
-                    <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" >
+                    <input class="form-check-input custom-switch" type="checkbox" id="flexSwitchCheckDefault" disabled>
                     <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                 </div>
             </div>

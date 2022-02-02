@@ -25,7 +25,7 @@
           </div>
             <!-- Prezzo -->
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice }}€</span></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice()+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice() }}€</span></span>
           </div>
           <div class="mt-1 mb-1">
             <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
@@ -255,7 +255,7 @@
             
               <!-- Modal footer -->
               <div class="modal-footer d-flex justify-content-between">
-                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled="onSaleModal && discountTotal <= 0" >Salva</b-button>  
+                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled=" discountTotal <= 0" >Salva</b-button>  
                 <b-button type="button" aria-label="bottone annulla. Chiude la finestra di modifica senza salvare" @click="hideModal" class="btn-danger float-right">Chiudi</b-button>
               </div>
               
@@ -321,7 +321,7 @@
   export default {
     data() {
       return {
-        enter: false,
+        enter: true,
         identifier: '',
         title: '',
         brand: '',
@@ -423,7 +423,7 @@
               this.boolDelete = true
             } 
           }
-
+          this.enter = false
         }, (error) => {
           alert('La pagina non esiste');
            this.$router.push({ name: 'home'})
@@ -459,6 +459,9 @@
         this.onSaleModal = this.discount.onSale;
         this.onSaleTypeModal = this.discount.onSaleType;
         this.onSaleValueModal = this.discount.onSaleValue;
+        if(this.onSaleModal){
+          this.discountTotal = this.getDiscountedPrice()
+        }
         this.overDaysModal = this.overDays.days
         this.overSaleModal = this.overDays.onSale
         this.overSaleTypeModal = this.overDays.onSaleType
@@ -536,7 +539,7 @@
           query.price = parseFloat(this.dailyModal)
 
 
-        if(this.fixedModal != this.fixedPrice && this.fixedModal > 0) 
+        if(this.fixedModal != this.fixedPrice) 
           query.fixedPrice = parseFloat(this.fixedModal)
 
         if(this.descriptionModal != this.description && this.descriptionModal != '') 
@@ -631,26 +634,26 @@
           this.enter = false
         })
       },
+
       changeDiscountValue() {
         if(this.onSaleTypeModal) {
           this.discountTotal = (this.fixedModal - this.fixedModal * this.onSaleValueModal / 100).toFixed(2);
         } 
         else {
           this.discountTotal = (this.fixedModal - this.onSaleValueModal).toFixed(2);
-      }   
-    },
-    computed: {
+        }
+      },
 
       getDiscountedPrice() {
+        console.log(this.fixedPrice)
         if(this.discount.onSaleType) {
           return (this.fixedPrice - this.fixedPrice * this.discount.onSaleValue / 100).toFixed(2);
         } else {
           return (this.fixedPrice - this.discount.onSaleValue).toFixed(2);
         }
-      },
 
-      },
-    },
+      }
+    }
   }
 
 </script>

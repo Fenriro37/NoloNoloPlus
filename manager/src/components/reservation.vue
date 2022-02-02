@@ -176,7 +176,7 @@
     components: { DatePicker },
     data() {
       return {
-        enter: false,
+        enter: true,
         reservation: {},
         bookings: [],
         available:'',
@@ -246,6 +246,7 @@
           this.bookings = result.data.data.obj.bookings
           console.log(this.bookings)
           this.available = result.data.data.obj.available
+          this.enter = false
         })
         .catch( (error) => {
           alert('Problema nel caricamento dei dati');

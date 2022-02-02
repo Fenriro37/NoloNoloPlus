@@ -41,6 +41,7 @@ window.onload = window.onload = function login() {
           dateFinish[1] = data.endDate.month
           dateFinish[2] = data.endDate.year
           insertData()  
+          $("#edit").attr("disabled", false);
           //Get product
           $.ajax({
             url: "/api/product?id=" + data.productId,
