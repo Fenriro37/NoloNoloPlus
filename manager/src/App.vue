@@ -5,7 +5,7 @@
       <img src='https://cdn.discordapp.com/attachments/888778821262790686/926860373775249469/nolonoloplus.png' class="moveright" alt='logo NoloNoloPlus' height='40px'/>
     </a>
 
-    <div class="input-group ">
+    <div class="input-group">
 		<button class="btn btn-secondary dropdown-toggle" id="dropNavBar" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{selected}}</button>
 		<div class="dropdown-menu dropdown-menu-right">
 			<button class="dropdown-item" type="button" v-on:click="selected = 'Articoli'">Articoli</button>
@@ -24,7 +24,7 @@
 
   <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
     <div class="bg-dark p-2">
-      <p> <a @click="logOut" href="/public/login.html">Logout</a></p>
+      <p><a @click="logOut" href="/public/login.html">Logout</a></p>
       <p><a @click="create" href="javascript:void(null);"> Aggiungi articolo </a></p>
       <p><a @click="analyticsClient" href="javascript:void(null);">Analytics Clienti</a></p>
       <p><a @click="analyticsAll" href="javascript:void(null);">Analytics Catalogo</a></p>
@@ -99,6 +99,8 @@ body {
     height: 100%;
 }
 .container-fluid {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
     margin-left: auto;
     margin-right: auto;
     background-color: transparent;
@@ -145,6 +147,12 @@ body {
 .moveright{
     margin-left: 40px;
 } 
+
+.navbar-toggler{
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
 
 @media (min-width: 500px) {
     .container-fluid {

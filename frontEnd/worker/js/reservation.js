@@ -78,7 +78,7 @@ window.onload = window.onload = function login() {
 
 function insertData(){
   $("#img").append(
-    ' <img tabindex="0" class="img-thumbnail" alt="Immagine prodotto '+ data.productTitle + " " + data.productBrand +'" src='+ data.productImage+'>'
+    ' <img tabindex="0" class="myImg" alt="Immagine prodotto '+ data.productTitle + " " + data.productBrand +'" src='+ data.productImage+'>'
   )
   $("#info").prepend(
     '<p tabindex="0" aria-label="Identificativo prenotazione: '+data._id+'">Id prenotazione: ' +data._id+ '</p>' +

@@ -146,7 +146,7 @@
                             <div class="row mb-2 d-flex align-items-center justify-content-between">
                                 <div class="col-6">
                                     <div class="form-check">
-                                        <input class="form-check-input" aria-label="Sconto prezzo fisso. Seleziona per aggiungere sconto" type="checkbox" id="onSale" required>
+                                        <input class="form-check-input" aria-label="Sconto prezzo fisso. Seleziona per aggiungere sconto" type="checkbox" id="onSale">
                                         <label class="form-check-label" for="onSale">Sconto</label>
                                     </div>
                                 </div>
@@ -203,7 +203,7 @@
                             <div class="row mb-2 d-flex align-items-center justify-content-between">
                                 <div class="col-6">
                                     <div class="form-check">
-                                        <input class="form-check-input" aria-label="Sconto prezzo giornaliero. Seleziona per aggiungere sconto" type="checkbox" id="dailySale" >
+                                        <input class="form-check-input" aria-label="Sconto prezzo giornaliero. Seleziona per aggiungere sconto" type="checkbox" id="dailySale">
                                         <label class="form-check-label" for="dailySale">Sconto</label>
                                     </div>
                                 </div>
@@ -288,38 +288,41 @@
             </div>
         </div>
         <!-- Etichette -->
-        <div class="row">
+        <div class="row mt-3">
             <h3 tabindex="0" aria-label="Categorie">Categorie</h3>
             <!-- Etichette -->
-            <div class="mb-2" id="tags">
+            <div id="tags">
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mt-3">
             <h3>Descrizione</h3>
         </div>
-        <div class="row mb-3 p-3 border border-secondary border-3 bg-white" id="description">
+        <div class="row p-3 border border-secondary border-3 bg-white rounded-2" id="description">
              
         </div>
-        <div class="row">
+        <div class="row mt-3">
             <h3>Note</h3>
         </div>
-        <div class="row mb-3 p-3 border border-secondary border-3 bg-white" id="note">
+        <div class="row p-3 border border-secondary border-3 bg-white rounded-2" id="note">
               
         </div>
-        <div class="row" id="Table">
-            <!-- Da qui parte la tabella delle prenotazioni -->
+        <div class="row mt-3">
             <h3 tabindex="0">Tabella prenotazioni</h3>
-            <input class="form-control" id="myInput" type="text" aria-label="Barra di ricerca per filtrare le prenotazioni sottostanti in base ai dati inseriti" placeholder="Search..">
+        </div>
+        <div class="row border border-secondary border-3 rounded-2 mb-3" id="Table">
+            <!-- Da qui parte la tabella delle prenotazioni -->
+            
+            <input class="form-control" id="myInput" type="text" aria-label="Barra di ricerca per filtrare le prenotazioni sottostanti in base ai dati inseriti" placeholder="Filtra...">
             <br>
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered mb-0">
             <thead>
                 <tr>
-                <th>Noleggio</th>
-                <th>Email cliente</th>
-                <th>Prezzo</th>
-                <th>Inizio noleggio</th>
-                <th>Fine noleggio</th>
+                <th class="text-center">Noleggio</th>
+                <th class="text-center">Email cliente</th>
+                <th class="text-center">Prezzo</th>
+                <th class="text-center">Inizio noleggio</th>
+                <th class="text-center">Fine noleggio</th>
                 </tr>
             </thead>
             <tbody id="myTable">

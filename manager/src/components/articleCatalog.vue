@@ -3,11 +3,11 @@
 <div class="container-fluid p-2">
   <div v-for="article in catalog" :key="article._id">
     <div class="d-flex justify-content-center align-items-center">
-      <div class="card mb-1 " style="height: 10em; width:90%; ">
-        <div class="card-body h-100">
+      <div class="card mb-1 mt-1 w-100" style="height: 10em; width:90%; ">
+        <div class="card-body h-100 w-100">
           <div class="row h-100">
             <div class="col-5 d-flex align-items-center h-100"> <img class="myImg" tabindex="0" :alt="'immagine '+ article.title + ' ' + article.brand" v-bind:src="article.image"></div>
-            <div class="col-7" style="height:100%;">
+            <div class="col-7 p-2" style="height:100%;">
               <h2 class="mb-2 text-truncate"> <router-link :to="{ name: 'article',  params: { id: article._id} }">{{article.title + ' ' + article.brand }}</router-link></h2>   
               <div class="row">
                 <div class="col-5">

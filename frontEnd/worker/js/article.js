@@ -2,7 +2,7 @@ let data = {}
 let deletable = true
 
 function activateButtons(){
-	if(($("#flexSwitchCheckDefault").is(':checked') == true))
+	if(($("#flexSwitchCheckDefault").is(':checked') == false))
 		$('#rentProduct').prop('disabled', false);
 	$('#flexSwitchCheckDefault').prop('disabled', false);
 	$('#btnModify').prop('disabled', false);
@@ -148,9 +148,9 @@ function fill(){
 				'<tr>'+
 				'<td><a aria-label="Link alla prenotazione. Identificativo:'+data.bookings[i].reservationId +'" href="reservation.html?id=' +data.bookings[i].reservationId+'">Prenotazione</td>'+
 				'<td><a aria-label="Email cliente: '+data.bookings[i].clientId+' " href="client.html?email=' +data.bookings[i].clientId+'">'+data.bookings[i].clientId+'</td>'+
-				'<td tabindex="0" aria-label="Prezzo totale: '+data.bookings[i].total +'€">'+data.bookings[i].total+'€</td>'+
-				'<td tabindex="0" aria-label="Data inizio prenotazione '+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'" >'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
-				'<td tabindex="0" aria-label="Data fine prenotazione '+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'">'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
+				'<td class="text-end" tabindex="0" aria-label="Prezzo totale: '+(data.bookings[i].total).toFixed(2) +' €">'+(data.bookings[i].total).toFixed(2)+' €</td>'+
+				'<td class="text-end" tabindex="0" aria-label="Data inizio prenotazione '+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'" >'+data.bookings[i].startDate.day+"-"+data.bookings[i].startDate.month+"-"+data.bookings[i].startDate.year+'</td>'+
+				'<td class="text-end" tabindex="0" aria-label="Data fine prenotazione '+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'">'+data.bookings[i].endDate.day+"-"+data.bookings[i].endDate.month+"-"+data.bookings[i].endDate.year+'</td>'+
 				'</tr>'
 			)
 		}

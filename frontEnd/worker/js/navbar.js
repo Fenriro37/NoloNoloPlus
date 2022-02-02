@@ -1,6 +1,6 @@
 let reservations = []
-//site202131Url = "http://localhost:8081"
-site202131Url = "http://site202131.tw.cs.unibo.it",
+site202131Url = "http://localhost:8081"
+// site202131Url = "http://site202131.tw.cs.unibo.it",
 
 window.onload = function login() {
   console.log("Cookie");  
@@ -78,11 +78,11 @@ function logout(){
             for (let i in articles){
                 $( "#catalog" ).append(
                     '<div class="d-flex justify-content-center align-items-center">' +
-                        '<div class="card mb-1 mt-1" style="height: 10em; width:90%; ">' +
-                            '<div class="card-body h-100">' +
+                        '<div class="card w-100 mb-1 mt-1" style="height: 10em; width:90%; ">' +
+                            '<div class="card-body h-100 w-100">' +
                                 '<div class="row h-100">' +
                                     '<div class="col-5 d-flex align-items-center h-100"> <img class="myImg " tabindex="0" alt="Immagine: ' +articles[i].title + " " + articles[i].brand +'" src='+ articles[i].image +'></div>' +
-                                    '<div class="col-7" style="height:100%;">'+
+                                    '<div class="col-7 p-2" style="height:100%;">'+
                                         '<h2 class="text-truncate"><a aria-label="Link a prodotto '+articles[i].title + " " + articles[i].brand+ '" href="article.html?id=' +articles[i]._id+ '">'+ articles[i].title + " " + articles[i].brand + '</a></h2> '+ 
                                         '<div class="row">' +
                                             '<div class="col-5">'+
@@ -109,7 +109,7 @@ function logout(){
                         newPrice = articles[i].fixedPrice - articles[i].fixedPrice * articles[i].discount.onSaleValue / 100;
                     }
                     $("#price"+ i).append(
-                        '<span class="price"><s>' +articles[i].fixedPrice+'€  </s><span>' +newPrice+ '€</span></span>'
+                        '<span class="price"><s>' +articles[i].fixedPrice+'€</s> <span>' +newPrice+ '€</span></span>'
                     )
                 }
                 else{
@@ -176,11 +176,11 @@ function logout(){
             clients.forEach(user => {
                 $("#catalog").append(
                     '<div class="d-flex justify-content-center align-items-center">' +
-                        '<div class="card mb-1 mt-1" style="height: 10em; width:90%; ">' +
-                            '<div class="card-body h-100">' +
+                        '<div class="card mb-1 mt-1 w-100" style="height: 10em; width:90%; ">' +
+                            '<div class="card-body h-100 w-100">' +
                                 '<div class="row h-100">' +
                                     '<div class="col-4 align-items-center h-100"> <img class="myImg" tabindex="0" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"  alt="Immagine utente generico"></div>' +
-                                    '<div class="col-8 text-truncate" style="height:100%;"> <h2><a aria-label="Link alla pagina del Cliente '+user.userName + ' ' + user.userSurname+'" href="client.html?email=' +user.email+ '">'+ user.userName + ' ' + user.userSurname + '</a></h4>'+ 
+                                    '<div class="col-8 text-truncate p-2" style="height:100%;"> <h2><a aria-label="Link alla pagina del Cliente '+user.userName + ' ' + user.userSurname+'" href="client.html?email=' +user.email+ '">'+ user.userName + ' ' + user.userSurname + '</a></h4>'+ 
                                         '<h4 tabindex="0" aria-label="Email cliente: '+user.email+'">Email: ' +user.email+'</h4>'+ 
                                         '<h4 tabindex="0" aria-label="Numero telefono: '+user.phoneNumber+ '" >Tel: ' +user.phoneNumber+ '</h4>'+ 
                                     '</div>' +
@@ -219,7 +219,7 @@ function logout(){
             $("#catalog").empty()
             reservations = result.obj
             $("#catalog").append(
-            '<div class="mt-2">'+
+            '<div class="mb-1">'+
                 '<button class="btn btn-secondary dropdown-toggle" aria-label="Bottone a tendina per filtrare le prenotazioni"  id="reservationsFilter" type="button" data-bs-toggle="dropdown" aria-expanded="false">Tutte</button>'+
                 '<div class="dropdown-menu dropdown-menu-right">'+
                     '<button class="dropdown-item" type="button" id="all">Tutte</button>'+
@@ -243,11 +243,11 @@ function logout(){
     for(let i in data) {
         $("#catalog").append(
         '<div id="'+i+'" class="d-flex justify-content-center align-items-center">' +
-            '<div class="card mb-1 mt-1" style="height: 10em; width:90%; ">' +
-                '<div class="card-body h-100">' +
+            '<div class="card mb-1 mt-1 w-100" style="height: 10em; width:90%; ">' +
+                '<div class="card-body h-100 w-100">' +
                     '<div class="row h-100">' +
                         '<div class="col-5 align-items-center h-100"> <img tabindex="0" class="myImg " alt="immagine '+data[i].productTitle + " " + data[i].productBrand+'" src='+ data[i].productImage +'></div>' +
-                        '<div class="col-7" style="height:100%;"> '+
+                        '<div class="col-7 p-2" style="height:100%;"> '+
                             '<h4 class="text-truncate">Id: <a aria-label="Link alla prenotazione '+data[i]._id+'" href="reservation.html?id=' +data[i]._id+ '">' +data[i]._id+ '</a></h4>' +
                             '<h4 class="text-truncate">Articolo: <a aria-label="Link al prodotto '+data[i].productTitle + " " + data[i].productBrand+'" href="article.html?id=' +data[i].productId+ '">' +data[i].productTitle + " " + data[i].productBrand + '</a></h4>' +
                             '<h4 class="text-truncate">Cliente: <a aria-label="Link al cliente prenotante '+data[i].clientEmail+'" href="client.html?id=' +data[i].clientEmail+ '">' +data[i].clientEmail+ '</a></h4>' +

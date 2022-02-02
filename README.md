@@ -188,7 +188,22 @@ overDays: {
     onSaleValue: double
     days: int
 }
-bookings: [reservation]
+bookings: [{
+    productId: string,
+    clientId: string,
+    reservationId: string,
+    startDate {
+        year: int,
+        month: int,
+        day: int
+    },
+    endDate {
+        year: int,
+        month: int,
+        day: int
+    },
+    total: double
+}]
 ```
 ### Reservation
 ```js
