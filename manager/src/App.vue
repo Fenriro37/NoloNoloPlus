@@ -23,11 +23,21 @@
   </nav>
 
   <div class="collapse text-center text-light bg-dark" id="navbarToggleExternalContent">
-    <div class="bg-dark p-2">
-      <p><a @click="logOut" href="/public/login.html">Logout</a></p>
-      <p><a @click="create" href="javascript:void(null);"> Aggiungi articolo </a></p>
-      <p><a @click="analyticsClient" href="javascript:void(null);">Analytics Clienti</a></p>
-      <p><a @click="analyticsAll" href="javascript:void(null);">Analytics Catalogo</a></p>
+    <div class="bg-dark p-2 row">
+      <div class='col-2'>
+      </div>
+      <div class='col-4'>
+        <p><a class='text-light' @click="logOut" href="/public/login.html">Logout</a></p>
+        <p><a class='text-light' href="http://site202131.tw.cs.unibo.it/user/index.html">Front Offcice</a></p>
+        <p><a class='text-light' href="http://site202131.tw.cs.unibo.it/worker/index.html">Back Office</a></p>
+      </div>
+      <div class='col-4'>
+        <p><a class='text-light' @click="create" href="javascript:void(null);"> Aggiungi articolo </a></p>
+        <p><a class='text-light' @click="analyticsClient" href="javascript:void(null);">Analytics Clienti</a></p>
+        <p><a class='text-light' @click="analyticsAll" href="javascript:void(null);">Analytics Catalogo</a></p>      
+      </div>
+      <div class='col-2'>
+      </div>
     </div>
   </div>
 

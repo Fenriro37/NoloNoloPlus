@@ -215,7 +215,7 @@ export class ReservationCard extends React.Component {
                 <div className='col-12'>
                   {
                     this.state.reservation.variableDiscount.onSale ? (
-                      'Sconto ' + (this.state.reservation.variableDiscount.onSaleType ? 'del ' : 'di ') + parseFloat(this.state.reservation.variableDiscount.onSaleValue).toFixed(2) + (this.state.reservation.variableDiscount.onSaleType ? '% ' : '€ ') + 'sul costo giornaliero se superi ' + this.state.reservation.variableDiscount.days + (parseInt(this.state.reservation.variableDiscount.days) > 1 ? ' giorni ' : ' giorno ') + 'di noleggio.'
+                      'Sconto ' + (this.state.reservation.variableDiscount.onSaleType ? 'del ' : 'di ') + parseFloat(this.state.reservation.variableDiscount.onSaleValue).toFixed(2) + (this.state.reservation.variableDiscount.onSaleType ? '% ' : ' € ') + 'sul costo giornaliero se superi ' + this.state.reservation.variableDiscount.days + (parseInt(this.state.reservation.variableDiscount.days) > 1 ? ' giorni ' : ' giorno ') + 'di noleggio.'
                     ) : ''
                   }
                 </div>

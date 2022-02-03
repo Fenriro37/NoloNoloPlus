@@ -176,7 +176,7 @@
     components: { DatePicker },
     data() {
       return {
-        enter: false,
+        enter: true,
         reservation: {},
         bookings: [],
         available:'',
@@ -246,6 +246,7 @@
           this.bookings = result.data.data.obj.bookings
           console.log(this.bookings)
           this.available = result.data.data.obj.available
+          this.enter = false
         })
         .catch( (error) => {
           alert('Problema nel caricamento dei dati');
@@ -445,9 +446,10 @@
         query.bookings = this.bookings
         Functions.saveDataProduct(this.reservation.productId, query)
           .then( () =>{
-          Functions.deleteReservation(this.reservationId).then( () =>{
-             this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
-          })
+            Functions.deleteReservation(this.reservationId).then( () =>{
+              alert("Operazione riuscita");
+              this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
+            })
           .catch( (error) => {
             alert("Problema nella cancellazione dei dati");
           })

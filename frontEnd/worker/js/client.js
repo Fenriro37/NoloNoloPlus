@@ -30,6 +30,7 @@ window.onload = function login() {
           data = result.data
           console.log(data)
           fill()   
+          $("#change").attr("disabled", false);
         },
         // Risposta del server in caso di insuccesso
         error: (error) => {

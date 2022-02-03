@@ -44,6 +44,7 @@ window.onload = window.onload = function login() {
 					data = result.data.obj
 					console.log(data)
 					fill()
+					activateButtons()
 				},
 				// Risposta del server in caso di insuccesso
 				error: (error) => {

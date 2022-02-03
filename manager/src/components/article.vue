@@ -25,7 +25,7 @@
           </div>
             <!-- Prezzo -->
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice }}€</span></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice()+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice() }}€</span></span>
           </div>
           <div class="mt-1 mb-1">
             <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
@@ -46,7 +46,7 @@
         </div>
       </div>
 
-      <div class="form-check form-switch ">
+      <div class="form-check form-switch m-1">
         <input class="form-check-input custom-switch " type="checkbox" id="flexSwitchCheckDefault" :disabled="enter" :checked="available" v-model="available" @click="changeInStock">
         <label  v-if="available" ria-label="Bottone per cambiare la disponibilità articolo" class="form-check-label" for="flexSwitchCheckDefault">Modifica per disattivare articolo</label>
         <label  v-else class="form-check-label" for="flexSwitchCheckDefault">Modifica per attivare articolo</label>
@@ -255,7 +255,7 @@
             
               <!-- Modal footer -->
               <div class="modal-footer d-flex justify-content-between">
-                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled="onSaleModal && discountTotal <= 0" >Salva</b-button>  
+                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled=" discountTotal <= 0" >Salva</b-button>  
                 <b-button type="button" aria-label="bottone annulla. Chiude la finestra di modifica senza salvare" @click="hideModal" class="btn-danger float-right">Chiudi</b-button>
               </div>
               
@@ -265,20 +265,20 @@
         </div>
       </b-modal>
       <!-- Etichette -->
-      <div class="row">
+      <div class="row mt-3">
         <h3 tabindex="0" aria-label="Categorie articolo">Categorie</h3>
-        <div class="mb-2">
-          <span tabindex="0" :aria-label="tag" class="badge rounded-pill bg-primary" v-for="tag in tags" :key="tag">{{ tag }}</span>
+        <div>
+          <span tabindex="0" :aria-label="tag" class="badge rounded-pill bg-primary m-1" v-for="tag in tags" :key="tag">{{ tag }}</span>
         </div>
       </div>
 
-      <b-row>
+      <b-row class='mt-3'>
         <h3>Descrizione</h3>
       </b-row>
-      <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'descrizione' + description">
+      <b-row class="p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'descrizione' + description">
         {{ description }}
       </b-row>
-      <b-row>
+      <b-row class='mt-3'>
         <h3>Note</h3>
       </b-row>
       <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'note non visibili ai clienti' + note">
@@ -286,29 +286,29 @@
       </b-row>
       <template v-if="bookings.length !== 0">
         <!-- Da qui parte la tabella delle prenotazioni -->
-        <h3 tabindex="0">Tabella prenotazioni</h3>
-        <div class="p-3">
-          <b-row>
-            <b-table hover :items="bookings" :fields="fields">
-              <!-- item è la riga -->
-              <template v-slot:cell(email)="{ item }">
-                <router-link :aria-label="'email:'+ item.clientId" :to="{ name: 'client',  params: { email: item.clientId}}">{{ item.clientId }}</router-link>
-              </template>
-              <template v-slot:cell(totale)="{ item }">
-                <span tabindex="0" :aria-label="'totale prenotazione: '+ item.total+'€'">{{ item.total + '€'}}</span>
-              </template>
-              <template v-slot:cell(prenotazione)="{ item }">
-                <router-link :aria-label="'identificativo: prenotazione' + item.reservationId" :to="{ name: 'reservation',  params: { id: item.reservationId}}"> Prenotazione</router-link>
-              </template>
-              <template v-slot:cell(inizio)="{ item }">
-                <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year ">{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>
-              </template>
-              <template v-slot:cell(fine)="{ item }">
-                <span tabindex="0" :aria-label="'fine prenotazione' + item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year">{{item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year}}</span>
-              </template>
-            </b-table>
-          </b-row>
-        </div>
+        <b-row class='mt-3'>
+          <h3 tabindex="0">Tabella prenotazioni</h3>
+        </b-row>
+        <b-row class="p-0 border border-secondary border-3 bg-white mb-3">
+          <b-table class='m-0' striped bordered hover :items="bookings" :fields="fields">
+            <!-- item è la riga -->
+            <template v-slot:cell(email)="{ item }">
+              <router-link :aria-label="'email:'+ item.clientId" :to="{ name: 'client',  params: { email: item.clientId}}">{{ item.clientId }}</router-link>
+            </template>
+            <template v-slot:cell(totale)="{ item }">
+              <span tabindex="0" :aria-label="'totale prenotazione: '+ (item.total).toFixed(2) + ' €'">{{ (item.total).toFixed(2) + ' €'}}</span>
+            </template>
+            <template v-slot:cell(prenotazione)="{ item }">
+              <router-link :aria-label="'identificativo: prenotazione' + item.reservationId" :to="{ name: 'reservation',  params: { id: item.reservationId}}"> Prenotazione</router-link>
+            </template>
+            <template v-slot:cell(inizio)="{ item }">
+              <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year ">{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>
+            </template>
+            <template v-slot:cell(fine)="{ item }">
+              <span tabindex="0" :aria-label="'fine prenotazione' + item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year">{{item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year}}</span>
+            </template>
+          </b-table>
+        </b-row>
       </template>
     </div>
   </div>
@@ -321,7 +321,7 @@
   export default {
     data() {
       return {
-        enter: false,
+        enter: true,
         identifier: '',
         title: '',
         brand: '',
@@ -423,7 +423,7 @@
               this.boolDelete = true
             } 
           }
-
+          this.enter = false
         }, (error) => {
           alert('La pagina non esiste');
            this.$router.push({ name: 'home'})
@@ -459,6 +459,9 @@
         this.onSaleModal = this.discount.onSale;
         this.onSaleTypeModal = this.discount.onSaleType;
         this.onSaleValueModal = this.discount.onSaleValue;
+        if(this.onSaleModal){
+          this.discountTotal = this.getDiscountedPrice()
+        }
         this.overDaysModal = this.overDays.days
         this.overSaleModal = this.overDays.onSale
         this.overSaleTypeModal = this.overDays.onSaleType
@@ -536,7 +539,7 @@
           query.price = parseFloat(this.dailyModal)
 
 
-        if(this.fixedModal != this.fixedPrice && this.fixedModal > 0) 
+        if(this.fixedModal != this.fixedPrice) 
           query.fixedPrice = parseFloat(this.fixedModal)
 
         if(this.descriptionModal != this.description && this.descriptionModal != '') 
@@ -624,6 +627,7 @@
         this.enter = true
         Functions.deleteProduct(this.identifier)
         .then( () =>{
+            alert("Operazione riuscita");
             this.$router.push({ name: 'articleCatalog' , params: { filter: ''}})
         })
         .catch( (error) => {
@@ -631,26 +635,26 @@
           this.enter = false
         })
       },
+
       changeDiscountValue() {
         if(this.onSaleTypeModal) {
           this.discountTotal = (this.fixedModal - this.fixedModal * this.onSaleValueModal / 100).toFixed(2);
         } 
         else {
           this.discountTotal = (this.fixedModal - this.onSaleValueModal).toFixed(2);
-      }   
-    },
-    computed: {
+        }
+      },
 
       getDiscountedPrice() {
+        console.log(this.fixedPrice)
         if(this.discount.onSaleType) {
           return (this.fixedPrice - this.fixedPrice * this.discount.onSaleValue / 100).toFixed(2);
         } else {
           return (this.fixedPrice - this.discount.onSaleValue).toFixed(2);
         }
-      },
 
-      },
-    },
+      }
+    }
   }
 
 </script>
