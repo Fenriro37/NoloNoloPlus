@@ -34,10 +34,11 @@ export class ReservationCard extends React.Component {
   componentDidMount() {
     let status = ''
     const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const startDate = new Date(this.state.reservation.startDate.year, this.state.reservation.startDate.month - 1, this.state.reservation.startDate.day);
     const endDate = new Date(this.state.reservation.endDate.year, this.state.reservation.endDate.month - 1, this.state.reservation.endDate.day);
-    if(this.state.reservation.isTaken == false && this.state.reservation.isReturned == false) {
+    if(today < startDate) {
       status = 'Prenotato';
-    } else if(this.state.reservation.isTaken == true && this.state.reservation.isReturned == false && today <= endDate) {
+    } else if(today >= startDate && today <= endDate) {
       status = 'Attivo';
     } else {
       status = 'Concluso';
