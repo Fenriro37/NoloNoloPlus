@@ -1,115 +1,81 @@
 # Progetto TecWeb 2020/2021
+## Introduzione
+I componenti del gruppo sono:
+- Chu Han
+- Maranzana Mattia
+- Roversi Gianpaolo
 
-CamelNotation
+Il progetto consiste nel realizzare un software gestionale per aziende di Noleggio.
+È un full stack web application; le tecnologie utilizzate sono:
+- Node.js
+- Express.js
+- MongoDB
+- React
+- Vue.js
 
-Commenti
-- lingua italiana/inglese
-- lunghezza riga 80 caratteri (compreso)
+Il sito è composto da 3 parti, i quali sono:
+- front-office (realizzato in React)
+- back-office (realizzato in JavaScript e jQuery)
+- dashboard (realizzato in Vue.js)
 
-API, divisi per soggetti: https://docs.google.com/spreadsheets/d/1dEVxP9BbVEQvrEBZx4rU8eIZVVpmbJnehbhby7xwTsQ/edit#gid=0
+## Implementazione
+La directory è composta dalle sottocartelle:
+- `backEnd` (server-side)
+- `frontEnd` (client-side)
+- `manager` (Vue CLI)
+- `user` (Create React App)
+
+- CamelNotation
+- Commenti:
+	- lingua italiana/inglese
+	- lunghezza riga 80 caratteri (compreso)
+
+Le API sono suddivise in due gruppi, il primo viene chiamato dal client mentre il secondo gruppo viene utilizzato per comunicare col database.  
+API per il client.
 ```
 - visitatore
-    - registrazione                 POST    /api/public/sign-up/
-    - login                         POST    /api/public/login/
-    - vedere il catalogo            GET     /api/products
-        - filtri
+	- registrazione POST /api/public/sign-up
+	- login POST /api/public/login
+	- vedere il catalogo GET /api/product/all
 
 - utente
-    - vedere il profilo             GET     /api/user
-    - modifiche del profilo         POST    /api/user/update
-    - noleggiare                    POST    /api/reservation?acs=1
-    - vedere i noleggi              GET     /api/reservations?acs=1
-    - vedere un noleggio            GET     /api/reservation?id=...&&acs=1
-    - richiedere la fattura         GET     /api/invoice?id=...
-    - modificare noleggio futuro    POST    /api/reservation?id=...&&acs=1
+	- login POST /api/public/login
+	- vedere il profilo GET /api/user
+	- modifiche del profilo POST /api/user/
+	- vedere il catalogo GET /api/product/all
+	- vedere un prodotto GET /api/product/:id
+	- noleggiare POST /api/reservation/:id
+	- vedere i noleggi GET /api/reservation/all
+	- vedere un noleggio GET /api/reservation/:id
+	- modificare noleggio futuro POST /api/reservation/:id
+	- cancellare un noleggio DELETE /api/reservation:id
+	- richiedere la fattura GET /api/invoice/:id
 
 - funzionario
-    - vedere i clienti              GET     /api/users
-    - vedere un cliente             GET     /api/user?id=...
-    - modificare un cliente         POST    /api/user/update?id=...&&acs=2
-    - cancellare un cliente         DELETE  /api/user?id=...
-    
-    - vedere i prodotti             GET     /api/products
-    - vedere un prodotto            GET     /api/product?id=...
-    - aggiungere un prodotto        POST    /api/product
-    - cancellare un prodotto        DELETE  /api/product?id=...
-    - modificare un prodotto        POST    /api/product/update?scenario=...
-    - vedere i noleggi              GET     /api/reservations
-    - vedere un noleggio            GET     /api/reservation?id=...
-    - modificare un noleggio        POST    /api/reservation?id=...&&acs=2
-        - dati                              scenario=1
-        - chiusura                          scenario=2
-    - cancellare un noleggio        DELETE  /api/reservation?id=...
+	- login POST /api/public/login
+	- vedere i clienti GET /api/user/all
+	- vedere un cliente GET /api/user/:id
+	- modificare un cliente POST /api/user/:id
+	- cancellare un cliente DELETE /api/user/:id
+	- vedere i prodotti GET /api/product/all
+	- vedere un prodotto GET /api/product/:id
+	- aggiungere un prodotto POST /api/product
+	- cancellare un prodotto DELETE /api/product/:id
+	- modificare un prodotto POST /api/product/:id
+	- noleggiare POST /api/reservation/:id
+	- vedere i noleggi GET /api/reservation/all
+	- vedere un noleggio GET /api/reservation/:id
+	- modificare un noleggio POST /api/reservation/:id
+	- cancellare un noleggio DELETE /api/reservation:id
+	- richiedere la fattura GET /api/invoice/:id
 
-- manager
-    - stat sui clienti              GET     /api/stat/user?id=...
-    - sugli oggetti                 GET     /api/stat/product?id=...
-    - sui dipendenti                GET     /api/stat/worker?id=...
-    - sulle categorie               GET     /api/stat/category?name=...
-    - sui noleggi                   GET     /api/stat/reservation?id=...
+- manager (stesse funzionalità del funzionario)
+	- statistiche sulle categorie dei prodotti GET /api/stat/:tag
 ```
+Le API per MongoDB sono definite nella cartella `backEnd/database`.
 
-API di Mongo per il server:
-```
-- visitatore
-    - registrazione
-        - controllare se esiste l'email                         - clienti.findOne (controllare l'email)
-        - aggiungere un cliente                                 - clienti.insertOne
-    - login                                                     - clienti.findOne (controllare l'email)
-        - se è un cliente
-        - se è un dipendente
-    - vedere il catalogo                                        - prodotti.find
-        - filtrare ($text)
-        - ordinare (sort)
-
-- utente
-    - vedere il profilo                                         - clienti.findOne (controllare l'email o l'id)
-    - modifiche del profilo                                     - clienti.updateOne
-    - noleggiare                                                - noleggi.insertOne
-    - vedere i noleggi                                          - noleggi.find
-        - ordinare (sort)
-        - filtrare ($text)
-    - vedere un noleggio                                        - noleggi.findOne (by id)
-    - richiedere la fattura (cerca un noleggio)                 - noleggi.findOne (by id)
-    - modificare un noleggio futuro
-        - cercare un noleggio                                   - noleggi.findOne (by id)
-        - modifica                                              - noleggi.updateOne
-
-- funzionario
-    - vedere i clienti                                          - clienti.find
-        - ordinare (sort)
-        - filtrare ($text)
-    - vedere un cliente                                         - clienti.findOne (controllare l'email o l'id)
-    - modificare un cliente                                     - clienti.updateOne
-    - cancellare un cliente                                     - clienti.deleteOne    
-    - vedere i prodotti                                         - prodotti.find
-        - ordinare (sort)
-        - filtrare ($text)
-    - vedere un prodotto                                        - prodotti.findOne (controllare l'email o l'id)
-    - aggiungere un prodotto                                    - prodotti.insertOne
-    - cancellare un prodotto                                    - prodotti.deleteOne
-    - modificare un prodotto                                    - prodotti.inserOne
-        - dati
-        - disponibilità
-        - aggiunta prenotazione
-        - rimozione prenotazione
-    - vedere i noleggi                                          - noleggi.find
-        - ordinare (sort)
-        - filtrare ($text)
-    - vedere un noleggio                                        - noleggi.findOne (by id)
-    - modificare un noleggio                                    - noleggi.updateOne
-    - cancellare un noleggio                                    - noleggi.deleteOne
-
-- manager
-    - stat sui clienti
-    - sugli oggetti
-    - sui dipendenti
-    - sulle categorie
-    - sui noleggi
-```
-
-## DataBase
-### User
+### Strutture del DataBase
+#### User
 ```js
 _id: ObjectId
 userName: string
@@ -135,116 +101,125 @@ payment: {
     cardCVV: int
 }
 ```
-### Worker
+#### Worker
 ```js
-_id: ObjectId
-userName: string
-userSurname: string
-email: string
-password: string
-```
-### Manager
-```js
-_id: ObjectId
-userName: string
-userSurname: string
-email: string
-password: string
-```
-### Product
-```js
-_id: ObjectId
-title: string
-brand: string
-image: string
-description: string
-note: string
-tags: [string]
-quality: bool
-avaible: bool
-fixedPirce: double
-discount: {
-    onSale: bool
-    onSaleType: bool
-    onSaleValue: double
+{
+    _id: ObjectId
+    userName: string
+    userSurname: string
+    email: string
+    password: string
 }
-price: double // giornaliero
-overDays: {
-    onSale: bool
-    onSaleType: bool
-    onSaleValue: double
-    days: int
+```
+#### Manager
+```js
+{
+    _id: ObjectId
+    userName: string
+    userSurname: string
+    email: string
+    password: string
 }
-bookings: [{
-    productId: string,
-    clientId: string,
-    reservationId: string,
-    startDate {
-        year: int,
-        month: int,
+
+```
+#### Product
+```js
+{
+    _id: ObjectId
+    title: string
+    brand: string
+    image: string
+    description: string
+    note: string
+    tags: [string]
+    quality: bool
+    avaible: bool
+    fixedPirce: double
+    discount: {
+        onSale: bool
+        onSaleType: bool
+        onSaleValue: double
+    }
+    price: double // giornaliero
+    overDays: {
+        onSale: bool
+        onSaleType: bool
+        onSaleValue: double
+        days: int
+    }
+    bookings: [{
+        productId: string,
+        clientId: string,
+        reservationId: string,
+        startDate {
+            year: int,
+            month: int,
+            day: int
+        },
+        endDate {
+            year: int,
+            month: int,
+            day: int
+        },
+        total: double
+    }]
+}
+
+```
+#### Reservation
+```js
+{
+    _id: ObjectId
+    clientEmail: string
+    clientName: string
+    clientSurname: string
+    productId: string
+    productTitle: string
+    productBrand: string
+    productImage: string
+
+    isTaken: bool
+    isReturned: bool
+    description: string
+    note: string
+
+    bookingDate: {
+        year: int
+        month: int
         day: int
-    },
-    endDate {
-        year: int,
-        month: int,
+    }
+    startDate: {
+        year: int
+        month: int
         day: int
-    },
-    total: double
-}]
-```
-### Reservation
-```js
-_id: ObjectId
-clientEmail: string
-clientName: string
-clientSurname: string
-productId: string
-productTitle: string
-productBrand: string
-productImage: string
+    }
+    endDate: {
+        year: int
+        month: int
+        day: int
+    }
 
-isTaken: bool
-isReturned: bool
-description: string
-note: string
+    variablePrice: double
+    fixedPrice: double
+    totalPrice: double
 
-bookingDate: {
-    year: int
-    month: int
-    day: int
-}
-startDate: {
-    year: int
-    month: int
-    day: int
-}
-endDate: {
-    year: int
-    month: int
-    day: int
-}
-
-variablePrice: double
-fixedPrice: double
-totalPrice: double
-
-fixedDiscount: {
-    onSale: bool
-    onSaleType: bool
-    onSaleValue: double
-}
-variableDiscount: {
-    onSale: bool
-    onSaleType: bool
-    onSaleValue: double
-    days: int
+    fixedDiscount: {
+        onSale: bool
+        onSaleType: bool
+        onSaleValue: double
+    }
+    variableDiscount: {
+        onSale: bool
+        onSaleType: bool
+        onSaleValue: double
+        days: int
+    }
 }
 ```
 
-- 0 Utente autenticato
-- 1 funzionario
-- 2 manager
-
-**NB:** `sort` è un JSON del tipo: `{ attribututeToSort: value }` dove `value` vale:
-- `1` se è crescente
-- `-1` se è decrescente
+### Autenticazione
+Il sever gestisce l'autenticazione tramite dei cookie secondo lo standard JSON Web Token.
+Generalmente quando il client chiede una verifica del cookie, il server risponde con un intero che rappresenta il suo ruolo, che sono:
+- 0 (utente autenticato)
+- 1 (funzionario)
+- 2 (manager)
