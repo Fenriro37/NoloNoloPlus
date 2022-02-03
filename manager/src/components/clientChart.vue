@@ -126,7 +126,7 @@ export default {
         }
         else {
           this.bookings.forEach(item => {
-            this.labels.push(item.productTitle + item.productBrand)
+            this.labels.push(item.productTitle +' '+ item.productBrand)
             this.price.push(item.totalPrice)
             this.newTotal += item.totalPrice 
 

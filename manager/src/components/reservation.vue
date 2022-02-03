@@ -129,7 +129,7 @@
       </template>
 
       <div class="form-floating mb-3">
-				<input type="number" class="form-control" :value="newTotal" aria-label="Prezzo totale. Sola lettura. Se negativo non si potrà modificare la prenotazione"  readonly>
+				<input type="number" class="form-control" :value="(parseFloat(newTotal)).toFixed(2)" aria-label="Prezzo totale. Sola lettura. Se negativo non si potrà modificare la prenotazione"  readonly>
 				<label for="price"> Prezzo Totale</label>
 			</div>       
 

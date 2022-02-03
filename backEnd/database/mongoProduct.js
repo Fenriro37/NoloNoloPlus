@@ -33,7 +33,7 @@ const config = require('./../config');
 //   È il messaggio d'errore.
 exports.productsFind = async function(filter, sortBy) {
     const mongo = new MongoClient(config.mongoUri, { useUnifiedTopology: true });
-    // try {
+    try {
         await mongo.connect();
         const products = mongo.db(config.databaseName).collection(config.databaseProductCollectionName);
         const re = new RegExp(`${filter}`, 'gi');
@@ -57,14 +57,14 @@ exports.productsFind = async function(filter, sortBy) {
             message: 'Ricerca effettuata con successo',
             obj: x
         }
-    // } catch(error) {
-    //     await mongo.close();
-    //     return {
-    //         status: -1,
-    //         message: 'Errore di productsFind.',
-    //         error: error
-    //     }
-    // }
+    } catch(error) {
+        await mongo.close();
+        return {
+            status: -1,
+            message: 'Errore di productsFind.',
+            error: error
+        }
+    }
 }
 
 // productsFindByTag

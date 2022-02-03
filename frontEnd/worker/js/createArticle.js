@@ -84,13 +84,13 @@ $('#dailySale').change(function() {
 						'<div class="col-3"><p> Tipo di sconto:</p></div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyPercentage" aria-label="Sconto percentuale, seleziona uno dei due" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault2" id="dailyPercentage" aria-label="Sconto percentuale, seleziona uno dei due" required>' +
 								'<label class="form-check-label" for="dailyPercentage">Percentuale</label>' +
 							'</div>' +
 						'</div>' +
 						'<div class="col-3">' +
 							'<div class="form-check">' +
-								'<input class="form-check-input" type="radio" name="flexRadioDefault" id="dailyFlat" aria-label="Sconto fisso, seleziona uno dei due" required>' +
+								'<input class="form-check-input" type="radio" name="flexRadioDefault2" id="dailyFlat" aria-label="Sconto fisso, seleziona uno dei due" required>' +
 								'<label class="form-check-label" for="dailyFlat">Fisso</label>' +
 							'</div>' +
 						'</div>' +
