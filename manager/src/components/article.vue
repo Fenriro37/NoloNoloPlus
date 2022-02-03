@@ -96,7 +96,7 @@
                   <label for="imageLink" class="form-label">Immagine* (link)</label>
                 </b-col>
                 <b-col cols="8">
-                  <b-form-input type="text"  :aria-label="'L` mmagine deve essere in forma di URL. Campo obbligatorio'+ imageModal" class="form-control" id="imageLink" v-model="imageModal" required></b-form-input>	
+                  <b-form-input type="url"  :aria-label="'L` mmagine deve essere in forma di URL. Campo obbligatorio'+ imageModal" class="form-control" id="imageLink" v-model="imageModal" required></b-form-input>	
                 </b-col>
               </b-row>
               <b-row>
@@ -192,14 +192,14 @@
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="discountOver" aria-label="sconto percentuale. Seleziona uno dei due"  id="overPercentage" :value="true" :disabled="!overSaleModal" :checked="overSaleModal && overSaleTypeModal == true"
                       @click="changeDiscountTypeOverDays">
-                    <label class="form-check-label" for="discountPercentage">Percentuale</label>
+                    <label class="form-check-label" for="overPercentage">Percentuale</label>
                   </div>
                 </b-col>
                 <b-col cols="3">
                   <div class="form-check">
                     <input id="overFlat" class="form-check-input" aria-label="sconto fisso. Seleziona uno dei due"  type="radio" name="discountOver" :value="false" :disabled="!overSaleModal" 
                       :checked="overSaleModal && overSaleTypeModal == false" @click="changeDiscountTypeOverDays" >
-                    <label class="form-check-label" for="discountAmount">Fisso</label>													
+                    <label class="form-check-label" for="overFlat">Fisso</label>													
                   </div>
                 </b-col>
               </b-row>

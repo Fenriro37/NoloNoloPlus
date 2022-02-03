@@ -31,7 +31,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "BUILD_PATH='./../frontEnd/user' react-scripts build",
+    "buildMacOs": "BUILD_PATH='./../frontEnd/user' react-scripts build",
+    "build": "react-scripts build && move build ../frontEnd/user",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

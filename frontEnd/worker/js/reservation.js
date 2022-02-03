@@ -41,7 +41,6 @@ window.onload = window.onload = function login() {
           dateFinish[1] = data.endDate.month
           dateFinish[2] = data.endDate.year
           insertData()  
-          $("#edit").attr("disabled", false);
           //Get product
           $.ajax({
             url: "/api/product?id=" + data.productId,
@@ -95,7 +94,7 @@ function fill(){
   $("#fixedPrice").val(data.fixedPrice);
   $("#dailyPrice").attr("placeholder", data.variablePrice);
   $("#dailyPrice").val(data.variablePrice);
-  $("#newTotal").val(data.totalPrice);
+  $("#newTotal").val(data.totalPrice.toFixed(2));
   if(data.fixedDiscount.onSale){
     $('#sale').prop('checked', true);
     changeSale()
@@ -414,7 +413,7 @@ function calculateTotal(){
     }
     console.log(start +'-'+ end +'-'+ addendum1 +'-'+ addendum2)
     let total = parseFloat((parseFloat(addendum1) +parseFloat(addendum2)).toFixed(2))
-    $('#newTotal').val(total) 
+    $('#newTotal').val(total.toFixed(2)) 
     if($('#newTotal').val() <= 0){
       $('#save').prop('disabled', true);
     }

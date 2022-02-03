@@ -138,11 +138,9 @@ export class User extends Component {
       for (var i in tmp) {
         if(tmp[i].name == 'userAddressCity') {
           address.addressCity = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } 
-        else if(tmp[i].name == 'userAddressStreet') {
+        } else if(tmp[i].name == 'userAddressStreet') {
           address.addressStreet = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
-        } 
-        else if(tmp[i].name == 'userAddressNumber') {
+        } else if(tmp[i].name == 'userAddressNumber') {
           address.addressNumber = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
         } else if(tmp[i].name == 'userPaymentOwner') {
           payment.cardOwner = tmp[i].value ? tmp[i].value : tmp[i].placeholder;
@@ -173,7 +171,7 @@ export class User extends Component {
           }
         }
       }
-      // Controllo le modifiche degli Selector
+      // Controllo le modifiche dei Selector
       if(this.state.userSex != this.state.newSex) {
         query.sex = this.state.newSex;
       }
@@ -343,7 +341,11 @@ export class User extends Component {
               <Form.Label>Data di Nascita:</Form.Label>
               <Form.Control
               type='date' 
-              value={this.state.newBirthday.year + '-' + (this.state.newBirthday.month < 10 ? '0' + this.state.newBirthday.month : this.state.newBirthday.month) + '-' + (this.state.newBirthday.day < 10 ? ('0' + this.state.newBirthday.day) : this.state.newBirthday.month)} 
+              value={this.state.newBirthday.year + '-' + 
+              (this.state.newBirthday.month < 10 ? '0' + this.state.newBirthday.month : this.state.newBirthday.month) + '-' + 
+              (this.state.newBirthday.day < 10 ? ('0' + this.state.newBirthday.day) : this.state.newBirthday.day)}
+              max="2004-02-03"
+              min="1900-01-01"
               name='userBirthday'
               aria-label='Data di nascita:'
               onChange={(event) => {

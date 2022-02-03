@@ -119,7 +119,7 @@ export class UpdateReservation extends React.Component {
       bookingDate: convertDateToObject(new Date()),
       startDate: convertDateToObject(this.state.value[0]),
       endDate: convertDateToObject(this.state.value[1]),
-      price: this.priceCalculator()
+      totalPrice: this.priceCalculator()
     }).then(() => {
       // Aggiornamento delle prenotazioni del prodotto
       let bookings = this.state.bookings;

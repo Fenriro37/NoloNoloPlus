@@ -482,7 +482,7 @@ function save(){
             newBooking.productId = data._id
             newBooking.clientId = user.email
             newBooking.reservationId = result.data._id
-            newBooking.total  = (parseFloat$("#newTotal").val())
+            newBooking.total  = parseFloat($("#newTotal").val())
             newBooking.startDate = {}
             newBooking.startDate.day = parseInt(dayStart)
             newBooking.startDate.month = parseInt(monthStart)

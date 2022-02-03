@@ -130,7 +130,7 @@ export default {
             result.data.data.products.forEach(item => {
               let totalArticle = 0
               let daysArticle = 0
-              this.labels.push(item.title + item.brand)
+              this.labels.push(item.title +' ' + item.brand)
               this.quality.push(item.quality)
               item.bookings.forEach(i => {   
                 this.reservationCount++
