@@ -471,6 +471,8 @@ function changeSale() {
 		$('#discountPercentage').prop('disabled', true);
 		$('#discountValue').prop('disabled', true);
 		$('#newPrice').val("");
+		$('#modalSave').prop('disabled', false);
+		
   } 
 }
 
