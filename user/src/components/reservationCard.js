@@ -88,7 +88,7 @@ export class ReservationCard extends React.Component {
           <Accordion.Header>
             <div
             className='row'
-            style={{ width: '95%', height: '12.5vh' }}>
+            style={{ width: '95%', height: '7.5em' }}>
               <div
               className='col-6 h-100 d-flex align-items-center'>
                 <img
