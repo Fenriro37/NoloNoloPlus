@@ -69,9 +69,9 @@ window.onload = function login() {
             for (let i in bookings){
               $("#myTable").append(
                 '<tr>'+
-                '<td width="20%"><a aria-label="Link alla prenotazione. Identificativo:'+bookings[i]._id+'" href="reservation.html?id=' +bookings[i]._id+'"> Prenotazione</td>'+
+                '<td ><a aria-label="Link alla prenotazione. Identificativo:'+bookings[i]._id+'" href="reservation.html?id=' +bookings[i]._id+'"> Prenotazione</td>'+
                 '<td ><a aria-label="Link al prodotto prenotato '+bookings[i].productTitle+' '+bookings[i].productBrand+'" href="article.html?id=' +bookings[i].productId+'">'+bookings[i].productTitle+' '+bookings[i].productBrand+'</td>'+
-                '<td class="text-end" tabindex="0" aria-label="Prezzo totale: '+bookings[i].totalPrice.toFixed(2) +' €" >'+bookings[i].totalPrice.toFixed(2)+' €</td>'+
+                '<td  class="text-end" tabindex="0" aria-label="Prezzo totale: '+bookings[i].totalPrice.toFixed(2) +' €" >'+bookings[i].totalPrice.toFixed(2)+' €</td>'+
                 '<td class="text-end" tabindex="0" aria-label="Data inizio prenotazione '+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'" >'+bookings[i].startDate.day+"-"+bookings[i].startDate.month+"-"+bookings[i].startDate.year+'</td>'+
                 '<td class="text-end" tabindex="0" aria-label="Data fine prenotazione '+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'" >'+bookings[i].endDate.day+"-"+bookings[i].endDate.month+"-"+bookings[i].endDate.year+'</td>'+
                 '</tr>'

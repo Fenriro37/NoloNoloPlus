@@ -16,8 +16,8 @@ export class ProductCard extends React.Component {
       discountedFixedPrice: props.product.discount.onSale
         ? (
           props.product.discount.onSaleType
-            ? (props.product.fixedPrice * parseFloat(100 - props.product.discount.onSaleValue) / 100).toFixed(2)
-            : (props.product.fixedPrice - props.product.discount.onSaleValue).toFixed(2)
+            ? (props.product.fixedPrice * parseFloat(100 - props.product.discount.onSaleValue) / 100)
+            : (props.product.fixedPrice - props.product.discount.onSaleValue)
         ) : (
           props.product.fixedPrice
         )

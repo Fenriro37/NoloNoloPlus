@@ -151,7 +151,7 @@
 
 			<div class="row mb-5">
 				<div class="col-6">
-					<button type="submit" aria-label="Bottone salva. Dopo la crezioe rimane su questa pagina e resetta i campi"  class="btn btn-lg btn-success" :disabled="enter || newTotal<0">Salva</button>
+					<button type="submit" aria-label="Bottone salva. Dopo la crezioe rimane su questa pagina e resetta i campi"  class="btn btn-lg btn-success" :disabled="enter || (onSale && newTotal<=0)">Salva</button>
 				</div>
 
 				<div class="col-6">

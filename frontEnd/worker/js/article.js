@@ -457,6 +457,7 @@ $('#onSale').change(changeSale)
 	
 function changeSale() {
 	if (this.checked) {
+		$('#pd').text('€')
 		$('#discountAmount').prop('disabled', false);
 		$('#discountPercentage').prop('disabled', false);
 		$('#discountAmount').prop('checked', true);
@@ -480,6 +481,7 @@ $('#dailySale').change(changeDailySale)
 
 function changeDailySale() {
 	if (this.checked) {
+		$('#pd1').text('€')
 		$('#dailyDiscountAmount').prop('disabled', false);
 		$('#dailyDiscountPercentage').prop('disabled', false);
 		$('#dailyDiscountAmount').prop('checked', true);

@@ -3,7 +3,7 @@
 CamelNotation
 
 Commenti
-- lingua italiana
+- lingua italiana/inglese
 - lunghezza riga 80 caratteri (compreso)
 
 API, divisi per soggetti: https://docs.google.com/spreadsheets/d/1dEVxP9BbVEQvrEBZx4rU8eIZVVpmbJnehbhby7xwTsQ/edit#gid=0
@@ -49,19 +49,6 @@ API, divisi per soggetti: https://docs.google.com/spreadsheets/d/1dEVxP9BbVEQvrE
     - sui noleggi                   GET     /api/stat/reservation?id=...
 ```
 
-Client invia una richiesta HTTP con:
-- Metodo
-- URL
-- Headers:
-    - "Content-type": "application/json",
-    - "Access-Control-Allow-Origin": "*",
-    - "dataType":'jsonp'
-- Parametri:
-    - variabili in base all'URL
-- Body
-    - variabili in base all'URL
-
-API per Mongo: https://docs.mongodb.com/drivers/node/current/
 API di Mongo per il server:
 ```
 - visitatore

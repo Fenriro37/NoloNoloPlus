@@ -21,17 +21,18 @@
             <span v-for="j in (3 - parseInt(quality))" class="fa fa-star big-size" :key="j"> </span>
           </div>
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo fisso:'+ fixedPrice + '€'"  class="">{{'Prezzo Fisso: ' + fixedPrice +'€' }} <span id="fixedPrice"></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso:'+ fixedPrice + '€'"  class="">{{'Prezzo Fisso: ' + fixedPrice +'€' }} </span>
           </div>
             <!-- Prezzo -->
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice()+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice() }}€</span></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice()+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice() }}€</span>
           </div>
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
+            <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} </span>
           </div>
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Noleggia oltre ' + overDays.days+ ' giorni per ottenere sconto giornaliero'" v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}} <span id="fixedPrice"></span>
+            <span tabindex="0" :aria-label="'Noleggia oltre ' + overDays.days+ ' giorni per ottenere sconto giornaliero'" v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}}
+              </span>
           </div>
 
         </div>
@@ -95,7 +96,7 @@
                   <label for="imageLink" class="form-label">Immagine* (link)</label>
                 </b-col>
                 <b-col cols="8">
-                  <b-form-input type="text"  :aria-label="'L` mmagine deve essere in forma di URL. Campo obbligatorio'+ imageModal" class="form-control" id="imageLink" v-model="imageModal" required></b-form-input>	
+                  <b-form-input type="url"  :aria-label="'L` mmagine deve essere in forma di URL. Campo obbligatorio'+ imageModal" class="form-control" id="imageLink" v-model="imageModal" required></b-form-input>	
                 </b-col>
               </b-row>
               <b-row>
@@ -255,7 +256,7 @@
             
               <!-- Modal footer -->
               <div class="modal-footer d-flex justify-content-between">
-                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled=" discountTotal <= 0" >Salva</b-button>  
+                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled="onSaleModal  && discountTotal <= 0" >Salva</b-button>  
                 <b-button type="button" aria-label="bottone annulla. Chiude la finestra di modifica senza salvare" @click="hideModal" class="btn-danger float-right">Chiudi</b-button>
               </div>
               
@@ -604,6 +605,9 @@
         this.$refs['myModal'].hide()
         Functions.saveDataProduct(this.identifier, query)
         .then( () => {
+          console.log(this.overDays.day)
+          console.log(this.overDaysModal)
+
           this.title = this.titleModal 
           this.brand = this.brandModal  
           this.image = this.imageModal  
@@ -614,14 +618,14 @@
           this.discount.onSale = this.onSaleModal  
           this.discount.onSaleType = this.onSaleTypeModal  
           this.discount.onSaleValue = this.onSaleValueModal  
-          this.overDays.day = this.overDaysModal  
+          this.overDays.days = this.overDaysModal  
           this.overDays.onSale = this.overSaleModal  
           this.overDays.onSaleType = this.overSaleTypeModal  
           this.overDays.onSaleValue = this.overSaleValueModal  
           this.description = this.descriptionModal  
           this.note = this.noteModal  
           alert("Modifica riuscita")
-
+          console.log(this.overDays.day)
           this.enter = false
         })
         .catch( (error) => {
