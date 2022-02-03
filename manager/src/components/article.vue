@@ -284,10 +284,13 @@
       <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'note non visibili ai clienti' + note">
         {{ note }}
       </b-row>
-      <template v-if="bookings.length !== 0">
+      <template v-if="tmpbookings.length !== 0">
         <!-- Da qui parte la tabella delle prenotazioni -->
         <h3 tabindex="0">Tabella prenotazioni</h3>
         <div class="p-3">
+          <b-row>
+          <input class="form-control" v-model="filter" type="text" v-on:keyup="filtTable" aria-label="Barra di ricerca per filtrare le prenotazioni sottostanti in base ai dati inseriti" placeholder="Filtra...">
+          </b-row>
           <b-row>
             <b-table hover :items="bookings" :fields="fields">
               <!-- item è la riga -->
@@ -367,6 +370,8 @@
         available: false,
         boolDelete: false,
         bookings: [],
+        tmpbookings: [],
+        filter: '',
 
         fields: [
          {
@@ -412,7 +417,11 @@
           this.overDays.onSaleValue = this.article.overDays.onSaleValue 
           this.available = this.article.available          
           this.description = this.article.description
-          this.bookings = this.article.bookings
+          this.bookings = []
+          this.tmpbookings = this.article.bookings
+          for(let i in this.tmpbookings){
+            this.bookings.push(this.tmpbookings[i])
+          }
           console.log(this.bookings)
           this.note = this.article.note
 
@@ -651,7 +660,31 @@
         } else {
           return (this.fixedPrice - this.discount.onSaleValue).toFixed(2);
         }
+      },
+      filtTable(){
+        if(this.filter == ''){
+          this.bookings = []
+          for(let i in this.tmpbookings){
+            this.bookings.push(this.tmpbookings[i])
+          }
+        }
+        else{
+          this.bookings = []
+          
+          let tmpFilter = this.filter.toLowerCase()
+          for(let i in this.tmpbookings){
+            let start = this.tmpbookings[i].startDate.day + '-' + this.tmpbookings[i].startDate.month  + '-' + this.tmpbookings[i].startDate.year
+            let end = this.tmpbookings[i].endDate.day + '-' + this.tmpbookings[i].endDate.month  + '-' + this.tmpbookings[i].endDate.year
 
+            if( (this.tmpbookings[i].clientId.toLowerCase()).includes(tmpFilter)  
+                || (this.tmpbookings[i].total + ' €').includes(tmpFilter) ||
+                start.includes(tmpFilter) || end.includes(tmpFilter)
+                ){
+                  //console.log(this.bookings[i].clientId.toLowerCase())
+                  this.bookings.push(this.tmpbookings[i])            
+            }
+          }
+        }
       }
     }
   }
