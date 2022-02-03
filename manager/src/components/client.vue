@@ -42,7 +42,7 @@
       <hr>
 
       <div class="form-floating mb-3">
-        <input id="birthday" v-model="birthday"  class="form-control" type="date" min="1900-01-01" max="2003-01-01" aria-label="Data di nascita: Campo obbligatorio'" :disabled="!boolModify" required>
+        <input id="birthday" v-model="birthday"  class="form-control" type="date" min="1900-01-01" max="2004-02-03" aria-label="Data di nascita: Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="birthday" > Data di nascita</label>
       </div>
 
