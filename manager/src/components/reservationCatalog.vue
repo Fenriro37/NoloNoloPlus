@@ -61,7 +61,6 @@ export default {
     methods: {
       changeFilter() {
         const current = new Date();      
-        const currentDate = current.getFullYear() + '-' + (current.getMonth()+1)+ '-' + current.getDate()
         //tutti i noleggi
         this.reservations = []
         if (this.selectedFilter == "all"){
@@ -74,8 +73,8 @@ export default {
         else if(this.selectedFilter == "active"){
           this.text = 'Attive'
           for(let i in this.catalog){
-            let endReservation = this.catalog[i].endDate.year + '-' + this.catalog[i].endDate.month + '-' + this.catalog[i].endDate.day
-            if(currentDate <= endReservation)
+            let endReservation = new Date(this.catalog[i].endDate.year, this.catalog[i].endDate.month-1, this.catalog[i].endDate.day, 23, 59, 59)
+            if(current <= endReservation)
               this.reservations.push(this.catalog[i])
           }
         }
@@ -83,8 +82,8 @@ export default {
         else if(this.selectedFilter == "old"){
           this.text = 'Passate'
           for(let i in this.catalog){
-            let endReservation = this.catalog[i].endDate.year + '-' + this.catalog[i].endDate.month + '-' + this.catalog[i].endDate.day
-            if(currentDate >= endReservation)
+            let endReservation = new Date(this.catalog[i].endDate.year, this.catalog[i].endDate.month-1, this.catalog[i].endDate.day, 23, 59, 59)
+            if(current > endReservation)
               this.reservations.push(this.catalog[i])
           }
         }

@@ -2,7 +2,7 @@
 <div class="container-fluid d-flex justify-content-center" id="main">
   <div class="w-100">
     <div class="row mt-3">
-      <div class="col-6 d-flex align-items-center justify-content-center" id="img">
+      <div class="col-6 d-flex align-items-center justify-content-center" style="height: 15em;" id="img">
         <b-img v-bind:src="reservation.productImage" tabindex="0" :alt="'Immagine' + reservation.productTitle + ' ' +reservation.productBrand " class="myImg"></b-img>
       </div>
       <div class="col-6" id="info">
@@ -134,12 +134,12 @@
 			</div>       
 
       <div class="form-floating mb-3">
-        <input type="text" id="notes" class="form-control" :disabled="!boolModify"  v-model="notes" >
+        <textarea id="notes" class="form-control" :disabled="!boolModify"  v-model="notes" ></textarea>
         <label for="notes"> Descrizione</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" id="privateNotes" class="form-control" :disabled="!boolModify" v-model="privateNotes" >
+        <textarea id="privateNotes" class="form-control" :disabled="!boolModify" v-model="privateNotes" ></textarea>
         <label for="privateNotes"> Note (non visibili ai clienti)</label>
       </div>
 
@@ -147,12 +147,12 @@
         <div class="col-6">
           <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato ritirato" type="checkbox" :disabled="!boolModify && !boolDelete || boolOld" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
           <label tabindex="0" v-if="rentalOccurred" class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto è stato ritirato</label>
-          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault">Il prodotto non è stato ritirato</label>
+          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto non è stato ritirato</label>
         </div>
         <div class="col-6">
           <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato restituito in tempo" type="checkbox" :disabled="!boolModify && !boolDelete || boolOld " :checked="returned" @click="changeReturned" id="flexCheckDefault2">
           <label tabindex="0" v-if="returned" class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto è stato restituito in tempo </label>
-          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault"> Il prodotto non è stato restituito in tempo </label>
+          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto non è stato restituito in tempo </label>
         </div>
       </div>
 

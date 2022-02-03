@@ -42,7 +42,7 @@
       <hr>
 
       <div class="form-floating mb-3">
-        <input id="birthday" v-model="birthday"  class="form-control" type="date" min="1900-01-01" max="2003-01-01" aria-label="Data di nascita: Campo obbligatorio'" :disabled="!boolModify" required>
+        <input id="birthday" v-model="birthday"  class="form-control" type="date" min="1900-01-01" max="2004-02-03" aria-label="Data di nascita: Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="birthday" > Data di nascita</label>
       </div>
 
@@ -124,18 +124,19 @@
     </form>
 
     <!-- Da qui parte la tabella delle prenotazioni -->
-    <template v-if="bookings.length !== 0">
+    <template v-if="tmpBookings.length !== 0">
     <hr>
     <h3 tabindex="0">Tabella prenotazioni</h3>
     <div class="p-3">
       <b-row>
+        <input class="form-control" v-model="filter" v-on:keyup="filtTable" type="text" aria-label="Barra di ricerca per filtrare le prenotazioni sottostanti in base ai dati inseriti" placeholder="Filtra...">
         <b-table hover :items="bookings" :fields="fields">
           <!-- item è la riga -->
           <template v-slot:cell(prodotto)="{ item }">
             <router-link :aria-label="'Articolo: '+ item.title" :to="{ name: 'article',  params: { id: item.id}}">{{ item.title }}</router-link>
           </template>
           <template v-slot:cell(prezzo)="{ item }">
-            <span tabindex="0" :aria-label="'totale prenotazione: '+ item.price+'€'">{{ item.price +'€'}}</span>
+            <span tabindex="0" :aria-label="'totale prenotazione: '+ item.price+'€'">{{ item.price +' €'}}</span>
           </template>
           <template v-slot:cell(prenotazione)="{ item }">
             <router-link :aria-label="'identificativo prenotazione: '+ item.reservation" :to="{ name: 'reservation',  params: { id: item.reservation}}">Prenotazione</router-link>
@@ -185,6 +186,8 @@
           cardCVV: ''
         },      
         bookings: [],
+        tmpBookings: [],
+        filter: '',
         fields: [
          {
             key: 'prodotto',
@@ -248,9 +251,10 @@
             this.boolDelete = true
             //row._rowVariant = 'danger'
           } 
-          console.log(row)
+          this.tmpBookings.push(row)
           this.bookings.push(row)
         } 
+        console.log(this.tmpBookings)
       })
       .catch( (error) => {
             alert("Problema nel caricamento dei dati");
@@ -376,18 +380,39 @@
       },
       chart(){
         this.$router.push({ name: 'clientChart', params: { email: this.email} })
+      },
+      
+      filtTable(){
+        console.log('this.bookings')
+        console.log(this.bookings)
+        console.log(this.tmpBookings)
+        console.log(this.filter)
+        if(this.filter == ''){
+          this.bookings = []
+          for(let i in this.tmpBookings){
+            this.bookings.push(this.tmpBookings[i])
+          }
+        }
+        else{
+          this.bookings = []
+          
+          let tmpFilter = this.filter.toLowerCase()
+          for(let i in this.tmpBookings){
+            let start = this.tmpBookings[i].startDate
+            let end = this.tmpBookings[i].endDate
+
+            if( (this.tmpBookings[i].title.toLowerCase()).includes(tmpFilter)  
+                || (this.tmpBookings[i].price + ' €').includes(tmpFilter) ||
+                start.includes(tmpFilter) || end.includes(tmpFilter)
+                ){
+                  this.bookings.push(this.tmpBookings[i])            
+            }
+          }
+        }
       }
-    }
+    },
   }
-//////////////////////////////////////FINE VUE - INIZIO JS///////////////////////////////////////
-  $(document).ready(function(){
-    $("#myInput").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#myTable tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-  });
+
 </script>
 <style scoped>
 .zIndex{

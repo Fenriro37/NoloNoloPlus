@@ -124,12 +124,12 @@
 			</div>
 
       <div class="form-floating mb-3">
-        <input type="text"  v-model="notes" class="form-control" id="notes" aria-label="Descrizione prenotazione" >
+        <textarea v-model="notes" class="form-control" id="notes" aria-label="Descrizione prenotazione" ></textarea>
         <label for="notes"> Descrizione</label>
       </div>
 
       <div class="form-floating mb-4">
-        <input type="text" v-model="privateNotes" class="form-control" id="privateNotes" aria-label="Note non visibili ai clienti" >
+        <textarea v-model="privateNotes" class="form-control" id="privateNotes" aria-label="Note non visibili ai clienti" ></textarea>
         <label for="privateNotes">  Note (non visibili ai clienti)</label>
       </div>
 

@@ -21,17 +21,18 @@
             <span v-for="j in (3 - parseInt(quality))" class="fa fa-star big-size" :key="j"> </span>
           </div>
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo fisso:'+ fixedPrice + '€'"  class="">{{'Prezzo Fisso: ' + fixedPrice +'€' }} <span id="fixedPrice"></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso:'+ fixedPrice + '€'"  class="">{{'Prezzo Fisso: ' + fixedPrice +'€' }} </span>
           </div>
             <!-- Prezzo -->
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice()+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice() }}€</span></span>
+            <span tabindex="0" :aria-label="'Prezzo fisso scontato:'+getDiscountedPrice()+'€'" v-if="discount.onSale" class=""> <span id="onSalePrice">{{'Prezzo fisso scontato: ' + getDiscountedPrice() }}€</span>
           </div>
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} <span id="PriceforDay"></span>
+            <span tabindex="0" :aria-label="'Prezzo giornaliero:'+dailyPrice+'€'" class="">{{'Prezzo giornaliero: ' + dailyPrice +'€/giorno' }} </span>
           </div>
           <div class="mt-1 mb-1">
-            <span tabindex="0" :aria-label="'Noleggia oltre ' + overDays.days+ ' giorni per ottenere sconto giornaliero'" v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}} <span id="fixedPrice"></span>
+            <span tabindex="0" :aria-label="'Noleggia oltre ' + overDays.days+ ' giorni per ottenere sconto giornaliero'" v-if="overDays.onSale"  class="">{{'Noleggia oltre ' + overDays.days + ' giorni per ricevere sconto giornaliero'}}
+              </span>
           </div>
 
         </div>
@@ -255,7 +256,7 @@
             
               <!-- Modal footer -->
               <div class="modal-footer d-flex justify-content-between">
-                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled=" discountTotal <= 0" >Salva</b-button>  
+                <b-button type="submit" aria-label="Bottone salva. Salva le modifiche e chiude la finestra di modifica"  class="float-left" variant="primary" :disabled="onSaleModal  && discountTotal <= 0" >Salva</b-button>  
                 <b-button type="button" aria-label="bottone annulla. Chiude la finestra di modifica senza salvare" @click="hideModal" class="btn-danger float-right">Chiudi</b-button>
               </div>
               
@@ -284,12 +285,13 @@
       <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'note non visibili ai clienti' + note">
         {{ note }}
       </b-row>
-      <template v-if="bookings.length !== 0">
+      <template v-if="tmpbookings.length !== 0">
         <!-- Da qui parte la tabella delle prenotazioni -->
         <b-row class='mt-3'>
           <h3 tabindex="0">Tabella prenotazioni</h3>
         </b-row>
         <b-row class="p-0 border border-secondary border-3 bg-white mb-3">
+          <input class="form-control" v-model="filter" v-on:keyup="filtTable" type="text" aria-label="Barra di ricerca per filtrare le prenotazioni sottostanti in base ai dati inseriti" placeholder="Filtra...">
           <b-table class='m-0' striped bordered hover :items="bookings" :fields="fields">
             <!-- item è la riga -->
             <template v-slot:cell(email)="{ item }">
@@ -367,6 +369,8 @@
         available: false,
         boolDelete: false,
         bookings: [],
+        tmpbookings: [],
+        filter: '',
 
         fields: [
          {
@@ -412,7 +416,11 @@
           this.overDays.onSaleValue = this.article.overDays.onSaleValue 
           this.available = this.article.available          
           this.description = this.article.description
-          this.bookings = this.article.bookings
+          this.bookings = []
+          this.tmpbookings = this.article.bookings
+          for(let i in this.tmpbookings){
+            this.bookings.push(this.tmpbookings[i])
+          }
           console.log(this.bookings)
           this.note = this.article.note
 
@@ -597,6 +605,9 @@
         this.$refs['myModal'].hide()
         Functions.saveDataProduct(this.identifier, query)
         .then( () => {
+          console.log(this.overDays.day)
+          console.log(this.overDaysModal)
+
           this.title = this.titleModal 
           this.brand = this.brandModal  
           this.image = this.imageModal  
@@ -607,14 +618,14 @@
           this.discount.onSale = this.onSaleModal  
           this.discount.onSaleType = this.onSaleTypeModal  
           this.discount.onSaleValue = this.onSaleValueModal  
-          this.overDays.day = this.overDaysModal  
+          this.overDays.days = this.overDaysModal  
           this.overDays.onSale = this.overSaleModal  
           this.overDays.onSaleType = this.overSaleTypeModal  
           this.overDays.onSaleValue = this.overSaleValueModal  
           this.description = this.descriptionModal  
           this.note = this.noteModal  
           alert("Modifica riuscita")
-
+          console.log(this.overDays.day)
           this.enter = false
         })
         .catch( (error) => {
@@ -652,7 +663,31 @@
         } else {
           return (this.fixedPrice - this.discount.onSaleValue).toFixed(2);
         }
+      },
+      filtTable(){
+        if(this.filter == ''){
+          this.bookings = []
+          for(let i in this.tmpbookings){
+            this.bookings.push(this.tmpbookings[i])
+          }
+        }
+        else{
+          this.bookings = []
+          
+          let tmpFilter = this.filter.toLowerCase()
+          for(let i in this.tmpbookings){
+            let start = this.tmpbookings[i].startDate.day + '-' + this.tmpbookings[i].startDate.month  + '-' + this.tmpbookings[i].startDate.year
+            let end = this.tmpbookings[i].endDate.day + '-' + this.tmpbookings[i].endDate.month  + '-' + this.tmpbookings[i].endDate.year
 
+            if( (this.tmpbookings[i].clientId.toLowerCase()).includes(tmpFilter)  
+                || (this.tmpbookings[i].total + ' €').includes(tmpFilter) ||
+                start.includes(tmpFilter) || end.includes(tmpFilter)
+                ){
+                  //console.log(this.bookings[i].clientId.toLowerCase())
+                  this.bookings.push(this.tmpbookings[i])            
+            }
+          }
+        }
       }
     }
   }
