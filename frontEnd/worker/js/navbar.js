@@ -1,6 +1,6 @@
 let reservations = []
-site202131Url = "http://localhost:8081"
-// site202131Url = "http://site202131.tw.cs.unibo.it",
+//site202131Url = "http://localhost:8081"
+site202131Url = "http://site202131.tw.cs.unibo.it",
 
 window.onload = function login() {
   console.log("Cookie");  
@@ -276,11 +276,13 @@ document.addEventListener('click',function(e){
 
  document.addEventListener('click',function(e){
     if(e.target && e.target.id== 'active'){
+        const current = new Date();      
         $("#reservationsFilter").text("Attive")    
         let bookings = []   
         for(let i in reservations){
             $("#" + i).remove()
-            if(reservations[i].isTaken && !reservations[i].isReturned){
+            let endReservation = new Date(reservations[i].endDate.year, reservations[i].endDate.month-1, reservations[i].endDate.day, 23, 59, 59)
+            if(current <= endReservation){
                 bookings[i] = reservations[i]
             }     
         }
@@ -291,11 +293,13 @@ document.addEventListener('click',function(e){
 
  document.addEventListener('click',function(e){
     if(e.target && e.target.id== 'old'){
+        const current = new Date();      
         $("#reservationsFilter").text("Concluse")   
         let bookings = [] 
         for(let i in reservations){
             $("#" + i).remove()
-            if(reservations[i].isTaken && reservations[i].isReturned){
+            let endReservation = new Date(reservations[i].endDate.year, reservations[i].endDate.month-1, reservations[i].endDate.day, 23, 59, 59)
+            if(current > endReservation){
                 bookings[i] = reservations[i]
             }
         }    
