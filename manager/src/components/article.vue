@@ -46,7 +46,7 @@
         </div>
       </div>
 
-      <div class="form-check form-switch ">
+      <div class="form-check form-switch m-1">
         <input class="form-check-input custom-switch " type="checkbox" id="flexSwitchCheckDefault" :disabled="enter" :checked="available" v-model="available" @click="changeInStock">
         <label  v-if="available" ria-label="Bottone per cambiare la disponibilità articolo" class="form-check-label" for="flexSwitchCheckDefault">Modifica per disattivare articolo</label>
         <label  v-else class="form-check-label" for="flexSwitchCheckDefault">Modifica per attivare articolo</label>
@@ -265,20 +265,20 @@
         </div>
       </b-modal>
       <!-- Etichette -->
-      <div class="row">
+      <div class="row mt-3">
         <h3 tabindex="0" aria-label="Categorie articolo">Categorie</h3>
-        <div class="mb-2">
-          <span tabindex="0" :aria-label="tag" class="badge rounded-pill bg-primary" v-for="tag in tags" :key="tag">{{ tag }}</span>
+        <div>
+          <span tabindex="0" :aria-label="tag" class="badge rounded-pill bg-primary m-1" v-for="tag in tags" :key="tag">{{ tag }}</span>
         </div>
       </div>
 
-      <b-row>
+      <b-row class='mt-3'>
         <h3>Descrizione</h3>
       </b-row>
-      <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'descrizione' + description">
+      <b-row class="p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'descrizione' + description">
         {{ description }}
       </b-row>
-      <b-row>
+      <b-row class='mt-3'>
         <h3>Note</h3>
       </b-row>
       <b-row class="mb-3 p-3 border border-secondary border-3 bg-white" tabindex="0" :aria-label="'note non visibili ai clienti' + note">
@@ -286,32 +286,30 @@
       </b-row>
       <template v-if="tmpbookings.length !== 0">
         <!-- Da qui parte la tabella delle prenotazioni -->
-        <h3 tabindex="0">Tabella prenotazioni</h3>
-        <div class="p-3">
-          <b-row>
-          <input class="form-control" v-model="filter" type="text" v-on:keyup="filtTable" aria-label="Barra di ricerca per filtrare le prenotazioni sottostanti in base ai dati inseriti" placeholder="Filtra...">
-          </b-row>
-          <b-row>
-            <b-table hover :items="bookings" :fields="fields">
-              <!-- item è la riga -->
-              <template v-slot:cell(email)="{ item }">
-                <router-link :aria-label="'email:'+ item.clientId" :to="{ name: 'client',  params: { email: item.clientId}}">{{ item.clientId }}</router-link>
-              </template>
-              <template v-slot:cell(totale)="{ item }">
-                <span tabindex="0" :aria-label="'totale prenotazione: '+ item.total+'€'">{{ item.total + '€'}}</span>
-              </template>
-              <template v-slot:cell(prenotazione)="{ item }">
-                <router-link :aria-label="'identificativo: prenotazione' + item.reservationId" :to="{ name: 'reservation',  params: { id: item.reservationId}}"> Prenotazione</router-link>
-              </template>
-              <template v-slot:cell(inizio)="{ item }">
-                <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year ">{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>
-              </template>
-              <template v-slot:cell(fine)="{ item }">
-                <span tabindex="0" :aria-label="'fine prenotazione' + item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year">{{item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year}}</span>
-              </template>
-            </b-table>
-          </b-row>
-        </div>
+        <b-row class='mt-3'>
+          <h3 tabindex="0">Tabella prenotazioni</h3>
+        </b-row>
+        <b-row class="p-0 border border-secondary border-3 bg-white mb-3">
+          <input class="form-control" v-model="filter" v-on:keyup="filtTable" type="text" aria-label="Barra di ricerca per filtrare le prenotazioni sottostanti in base ai dati inseriti" placeholder="Filtra...">
+          <b-table class='m-0' striped bordered hover :items="bookings" :fields="fields">
+            <!-- item è la riga -->
+            <template v-slot:cell(email)="{ item }">
+              <router-link :aria-label="'email:'+ item.clientId" :to="{ name: 'client',  params: { email: item.clientId}}">{{ item.clientId }}</router-link>
+            </template>
+            <template v-slot:cell(totale)="{ item }">
+              <span tabindex="0" :aria-label="'totale prenotazione: '+ (item.total).toFixed(2) + ' €'">{{ (item.total).toFixed(2) + ' €'}}</span>
+            </template>
+            <template v-slot:cell(prenotazione)="{ item }">
+              <router-link :aria-label="'identificativo: prenotazione' + item.reservationId" :to="{ name: 'reservation',  params: { id: item.reservationId}}"> Prenotazione</router-link>
+            </template>
+            <template v-slot:cell(inizio)="{ item }">
+              <span tabindex="0" :aria-label="'inizio prenotazione' + item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year ">{{item.startDate.day + '-'+item.startDate.month+'-'+item.startDate.year}}</span>
+            </template>
+            <template v-slot:cell(fine)="{ item }">
+              <span tabindex="0" :aria-label="'fine prenotazione' + item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year">{{item.endDate.day + '-'+ item.endDate.month +'-'+ item.endDate.year}}</span>
+            </template>
+          </b-table>
+        </b-row>
       </template>
     </div>
   </div>
@@ -636,6 +634,7 @@
         this.enter = true
         Functions.deleteProduct(this.identifier)
         .then( () =>{
+            alert("Operazione riuscita");
             this.$router.push({ name: 'articleCatalog' , params: { filter: ''}})
         })
         .catch( (error) => {

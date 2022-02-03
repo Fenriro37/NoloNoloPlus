@@ -34,7 +34,7 @@ export class Price extends React.Component {
               ? <span style={{ color: 'red' }} tabIndex='0'>
                   Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
                   {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
-                  {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
+                  {this.state.variableDiscount.onSaleType ? '% ' : ' € '}
                   sul costo giornaliero se superi {this.state.variableDiscount.days} {parseInt(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno '} 
                   di noleggio.
                 </span>
@@ -59,8 +59,9 @@ export class Price extends React.Component {
               ? <span style={{ color: 'red' }} tabIndex='0'>
                   Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
                   {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
-                  {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
-                  sul prezzo giornaliero se superi {this.state.variableDiscount.days} {parseFloat(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno '} 
+                  {this.state.variableDiscount.onSaleType ? '% ' : ' € '}
+                  sul prezzo giornaliero se superi {this.state.variableDiscount.days} {parseFloat(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno '}
+                  di noleggio.
                 </span>
               : <></>
             }

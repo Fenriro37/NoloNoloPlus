@@ -88,7 +88,7 @@ export class ReservationCard extends React.Component {
           <Accordion.Header>
             <div
             className='row'
-            style={{ width: '95%', height: '12.5vh' }}>
+            style={{ width: '95%', height: '7.5em' }}>
               <div
               className='col-6 h-100 d-flex align-items-center'>
                 <img
@@ -215,7 +215,7 @@ export class ReservationCard extends React.Component {
                 <div className='col-12'>
                   {
                     this.state.reservation.variableDiscount.onSale ? (
-                      'Sconto ' + (this.state.reservation.variableDiscount.onSaleType ? 'del ' : 'di ') + parseFloat(this.state.reservation.variableDiscount.onSaleValue).toFixed(2) + (this.state.reservation.variableDiscount.onSaleType ? '% ' : '€ ') + 'sul costo giornaliero se superi ' + this.state.reservation.variableDiscount.days + (parseInt(this.state.reservation.variableDiscount.days) > 1 ? ' giorni ' : ' giorno ') + 'di noleggio.'
+                      'Sconto ' + (this.state.reservation.variableDiscount.onSaleType ? 'del ' : 'di ') + parseFloat(this.state.reservation.variableDiscount.onSaleValue).toFixed(2) + (this.state.reservation.variableDiscount.onSaleType ? '% ' : ' € ') + 'sul costo giornaliero se superi ' + this.state.reservation.variableDiscount.days + (parseInt(this.state.reservation.variableDiscount.days) > 1 ? ' giorni ' : ' giorno ') + 'di noleggio.'
                     ) : ''
                   }
                 </div>

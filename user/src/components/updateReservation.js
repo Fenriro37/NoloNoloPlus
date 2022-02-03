@@ -283,7 +283,7 @@ export class UpdateReservation extends React.Component {
                 <div className='col-12' style={{textAlign: 'justify'}}>
                   Sconto {this.state.variableDiscount.onSaleType ? 'del ' : 'di '}
                   {parseFloat(this.state.variableDiscount.onSaleValue).toFixed(2)}
-                  {this.state.variableDiscount.onSaleType ? '% ' : '€ '}
+                  {this.state.variableDiscount.onSaleType ? '% ' : ' € '}
                   sul costo giornaliero se superi {this.state.variableDiscount.days} {parseInt(this.state.variableDiscount.days) > 1 ? 'giorni ' : 'giorno '} 
                   di noleggio.
                 </div>

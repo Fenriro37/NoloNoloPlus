@@ -446,9 +446,10 @@
         query.bookings = this.bookings
         Functions.saveDataProduct(this.reservation.productId, query)
           .then( () =>{
-          Functions.deleteReservation(this.reservationId).then( () =>{
-             this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
-          })
+            Functions.deleteReservation(this.reservationId).then( () =>{
+              alert("Operazione riuscita");
+              this.$router.push({ name: 'reservationCatalog' , params: { filter: ''}})
+            })
           .catch( (error) => {
             alert("Problema nella cancellazione dei dati");
           })
