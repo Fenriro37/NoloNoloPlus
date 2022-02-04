@@ -1,8 +1,13 @@
-window.addEventListener("load", () => {
-    alert("Questo è un progetto universitario, inserisci dei dati fittizi");
-    // Seleziona il bottone per inviare il form
-    $("#signUpButton").click((event) => event.preventDefault());
-    $("#signUpButton").click(async () => {
+// window.addEventListener("load", () => {
+//     alert("Questo è un progetto universitario, inserisci dei dati fittizi");
+//     // Seleziona il bottone per inviare il form
+//     $("#signUpButton").click((event) => event.preventDefault());
+//     $("#signUpButton").click(async () => {
+
+$(document).ready(function() {
+    $('form').on('submit', function(e) {
+        e.preventDefault();
+
         // Cattura dei dati
         const data = []
         $(".card input").each(function() {
@@ -59,8 +64,7 @@ window.addEventListener("load", () => {
                 }),
                 // Risposta del server in caso di successo
                 success: () => {
-                    console.log("Success");
-                    window.location.href = "/public/login.html";
+                    window.location = "/public/login.html";
                 },
                 // Risposta del server in caso di insuccesso
                 error: (error) => {

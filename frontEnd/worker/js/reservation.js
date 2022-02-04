@@ -802,6 +802,10 @@ $('#bookingRange').focusout(() => {
     let d1 = new Date(date1[2], date1[1] -1, date1[0], 0, 0, 0)
     let d2 = new Date(date2[2], date2[1] -1, date2[0], 23, 59, 59)
 
+    if(d2 < d1){
+      $("#bookingRange").val('')
+    }
+
     for(let i in data.bookings){
       bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day, 0, 0, 0)
       bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day, 23, 59, 59)

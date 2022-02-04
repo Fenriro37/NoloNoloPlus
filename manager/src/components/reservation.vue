@@ -349,6 +349,10 @@
         if(this.privateNotes != this.reservation.note)
           query.note = this.privateNotes;
 
+        if(Object.keys(query).length === 0 ){
+          this.enter = false
+          return(alert('Nessun campo modificato'))
+        }
 
         if(this.time != null || this.newTotal != this.reservation.totalPrice ){
           query.totalPrice = parseFloat(this.newTotal);

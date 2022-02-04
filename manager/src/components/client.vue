@@ -30,7 +30,7 @@
       </div>
         
       <div class="form-floating mb-3">
-        <input type="tel" id="phone"  v-model="phoneNumber" class="form-control" :aria-label="'numero telefono:'+ 'Campo obbligatorio'" :disabled="!boolModify" required>
+        <input type="tel" id="phone" pattern="[0-9]{10}" v-model="phoneNumber" class="form-control" :aria-label="'numero telefono:'+ 'Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="phone"> Numero di telefono</label>
       </div>
         
@@ -83,7 +83,7 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" id="cardCode" v-model="payment.cardCode"  class="form-control" :aria-label="'numero carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
+        <input type="tel" pattern="[0-9]{16}" id="cardCode" v-model="payment.cardCode"  class="form-control" :aria-label="'numero carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="cardCode"> Numero carta</label>
       </div>
 
@@ -102,7 +102,7 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number"  v-model="payment.cardExpireYear" min="2021" max="2030" step="1" id="cardYear" class="form-control" :aria-label="'Anno scadenza carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
+        <input type="number"  v-model="payment.cardExpireYear" min="2022" max="2030" step="1" id="cardYear" class="form-control" :aria-label="'Anno scadenza carta:'+'. Campo obbligatorio'" :disabled="!boolModify" required>
         <label for="cardYear"> Anno</label>
       </div>
 
@@ -340,6 +340,10 @@
           query.payment.cardExpireYear = parseInt(this.payment.cardExpireYear);
         }
         console.log(query)
+        if(Object.keys(query).length === 0 ){
+          this.enter = false
+          return(alert('Nessun campo modificato'))
+        }
         Functions.saveDataClient(this.id, query)
         .then( () => {
             alert("modifica riuscita")

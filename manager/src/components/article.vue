@@ -603,6 +603,12 @@
         
 
         this.$refs['myModal'].hide()
+        
+        if(Object.keys(query).length === 0 ){
+          this.enter = false
+          return(alert('Nessun campo modificato'))
+        }
+
         Functions.saveDataProduct(this.identifier, query)
         .then( () => {
           console.log(this.overDays.day)

@@ -162,6 +162,8 @@ export class User extends Component {
               query.payment = payment;
             } else if(tmp[i].name == 'userPhoneNumber') { 
               query.phoneNumber = parseInt(tmp[i].value)
+            } else if(tmp[i].name == 'userPassword') {
+              query.password = tmp[i].value;
             } else {
               query[tmp[i].name] = tmp[i].value;
             }          
@@ -393,7 +395,7 @@ export class User extends Component {
               <Form.Label>Numero di Telefono:</Form.Label>
               <Form.Control
               className='remove-spin-box'
-              type='number' 
+              type='tel' pattern='[0-9]{10}'
               name='userPhoneNumber'
               placeholder={this.state.userPhoneNumber}
               aria-label='Numero di cellulare:'/>
@@ -413,7 +415,8 @@ export class User extends Component {
             <Form.Group className='mb-2'>
               <Form.Label>Numero della Carta:</Form.Label>
               <Form.Control 
-              type='number'
+              type='tel'
+              pattern='[0-9]{16}'
               className='remove-spin-box'
               name='userPaymentCardCode' 
               placeholder={this.state.userPayment.cardCode}
@@ -475,7 +478,8 @@ export class User extends Component {
             <Form.Group className='mb-2'>
               <Form.Label>CVV:</Form.Label>
               <Form.Control
-              type='number'
+              type='tel'
+              pattern='[0-9]{3}'
               className='remove-spin-box'
               name='userPaymentCVV'
               placeholder={this.state.userPayment.cardCVV}

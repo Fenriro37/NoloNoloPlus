@@ -25,7 +25,7 @@
                         <label for="name">Nome:</label>
                     </div>
                     <div class="col-8">
-                        <input id="name" class="form-control" type="text">
+                        <input id="name" class="form-control" type="text" required>
                     </div>
                 </div>
                 <div class="row d-flex align-items-center mb-2">
@@ -33,7 +33,7 @@
                         <label for="surname">Cognome:</label>
                     </div>
                     <div class="col-8">
-                        <input id="surname" class="form-control" type="text">    
+                        <input id="surname" class="form-control" type="text" required>    
                     </div>
                 </div>
                 <div class="row mb-0 d-flex align-items-center">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="row mt-0 mb-3 d-flex align-items-center align-items-center">
                     <div class="col-7">
-                        <input id="birthday" class="form-control" type="date" min="1900-01-01" max="2004-02-03">                            
+                        <input id="birthday" class="form-control" type="date" min="1900-01-01" max="2004-02-03" required> 
                     </div>
                     <div class="col-5">
                         <select id="sex" class="form-select">
@@ -61,7 +61,7 @@
                         <label for="phoneNumber">Cellulare:</label>
                     </div>
                     <div class="col-8">
-                        <input id="phoneNumber" class="form-control remove-spin-box" type="number">
+                        <input id="phoneNumber" class="form-control remove-spin-box" type="tel" pattern="[0-9]{10}" required placeholder="1234567890">
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
@@ -69,7 +69,7 @@
                         <label for="email">Email:</label>
                     </div>
                     <div class="col-8" data-bs-toggle="tooltip" data-bs-placement="top" title="L'email non può essere modificato dopo l'iscrizione">
-                        <input id="email" class="form-control" type="email" >    
+                        <input id="email" class="form-control" type="email" required>    
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
@@ -77,7 +77,7 @@
                         <label for="password">Password:</label>
                     </div>
                     <div class="col-8">
-                        <input id="password" class="form-control" type="password">
+                        <input id="password" class="form-control" type="password" required>
                     </div>
                 </div>
                 <div class="row mb-0">
@@ -90,10 +90,10 @@
                 </div>
                 <div class="row mt-0 mb-3 d-flex align-items-center">
                     <div class="col-9">
-                        <input id="addressStreet" class="form-control" type="text">
+                        <input id="addressStreet" class="form-control" type="text" required>
                     </div>
                     <div class="col-3">
-                        <input id="addressNumber" class="form-control" type="text">
+                        <input id="addressNumber" class="form-control" type="text" required> 
                     </div>
                 </div>
                 <div class="row mb-3 d-flex align-items-center">
@@ -101,7 +101,7 @@
                         <label for="addressCity">Città:</label>
                     </div>
                     <div class="col-8">
-                        <input id="addressCity" class="form-control" type="text">
+                        <input id="addressCity" class="form-control" type="text" required>
                     </div>
                 </div>
 
@@ -123,7 +123,7 @@
                         <label for="paymentCardOwnerName">Numero:</label>
                     </div>
                     <div class="col-8">
-                        <input id="paymentCardOwnerName" class="form-control remove-spin-box" type="number">
+                        <input id="paymentCardOwnerName" class="form-control remove-spin-box" type="tel" pattern="[0-9]{16}" required placeholder="1111222233334444">
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
@@ -131,7 +131,7 @@
                         <label for="paymentCardOwnerSurname">Intestatario:</label>
                     </div>
                     <div class="col-8">
-                        <input id="paymentCardOwnerSurname" class="form-control" type="text">
+                        <input id="paymentCardOwnerSurname" class="form-control" type="text" required>
                     </div>
                 </div>
                 <div class="row mb-0">
@@ -142,7 +142,7 @@
                         <label for="paymentCardExpireYear">Anno:</label>
                     </div>
                     <div class="col-4">
-                        <label for="paymentCardCCV">CCV:</label>
+                        <label for="paymentCardCCV">CVV:</label>
                     </div>
                 </div>             
                 <div class="row mt-0 mb-3 d-flex align-items-center">
@@ -172,13 +172,13 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <input id="paymentCardCVV" class="form-control remove-spin-box" type="number">
+                        <input id="paymentCardCVV" class="form-control remove-spin-box" type="tel" pattern="[0-9]{3}" required>
                     </div>
                 </div>
 
                 <div class="row mb-0">
                     <div class="col" data-bs-toggle="tooltip" data-bs-placement="top" title="L'email non può essere modificato dopo l'iscrizione">
-                        <input id="signUpButton" class="btn btn-primary rounded-3 w-100 text-center d-block" type="button" value="Registrati">
+                        <input id="signUpButton" class="btn btn-primary rounded-3 w-100 text-center d-block" type="submit" value="Registrati">
                     </div>
                 </div>
             </form>

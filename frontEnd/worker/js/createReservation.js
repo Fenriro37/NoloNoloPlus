@@ -146,6 +146,7 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
     if( d1 < bookingStart && bookingEnd < d2){
       $("#dateRange").val('')
       $('#returned').prop('disabled', true);
+      $( "#returned" ).prop( "checked", false );
       isTaken = false
     }
   }
@@ -159,6 +160,7 @@ $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
   }
   else{
     $('#returned').prop('disabled', true);
+    $( "#returned" ).prop( "checked", false );
     isTaken = false
   }
 
@@ -177,24 +179,35 @@ $('#dateRange').focusout(() => {
     date2 = date2.split("-")
     let d1 = new Date(date1[2], date1[1] -1, date1[0], 0, 0, 0)
     let d2 = new Date(date2[2], date2[1] -1, date2[0], 23, 59, 59)
+    if(d2 < d1){
+      $("#dateRange").val('')
+      $( "#returned" ).prop( "checked", false );
+      $('#returned').prop('disabled', true)
+    }
 
     for(let i in data.bookings){
       bookingStart = new Date(data.bookings[i].startDate.year, data.bookings[i].startDate.month-1, data.bookings[i].startDate.day, 0, 0, 0)
       bookingEnd = new Date(data.bookings[i].endDate.year, data.bookings[i].endDate.month-1, data.bookings[i].endDate.day, 23, 59, 59)
       if(d1 < bookingStart && bookingEnd < d2 || (bookingStart <= d1 && d1 <= bookingEnd) || (bookingStart <= d2 && d2 <= bookingEnd)){
         $("#dateRange").val('')
+        $( "#returned" ).prop( "checked", false );
+        $('#returned').prop('disabled', true)
       }
     }
     if(checkDateIsPast($('#dateRange').val()) === true) {
       // Enable check
       $('#returned').prop('disabled', false)
+      console.log('passato')
     } else {
       // Disable check
+      $( "#returned" ).prop( "checked", false );
       $('#returned').prop('disabled', true)
     }
   }
   else{
     $("#dateRange").val('')
+    $( "#returned" ).prop( "checked", false );
+    $('#returned').prop('disabled', true)
   }
 
 })
@@ -620,9 +633,15 @@ function checkDateIsPast(value) {
   if(checkRangeDatePicker(value) === true) {
     const startDateAsString = value.split(' ')[0];
     const startDateAsArray = startDateAsString.split('-');
+    const endDateAsString = value.split(' ')[1];
+    const endDateAsArray = endDateAsString.split('-');
     const startDate = new Date(startDateAsArray[2], startDateAsArray[1] - 1, startDateAsArray[0]);
+    const endDate = new Date(endDateAsArray[2], endDateAsArray[1] - 1, endDateAsArray[0],23,59,59);
     const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-    if(startDate < today) {
+    console.log(today)
+    console.log(startDate )
+    console.log(endDate )
+    if(endDate < today) {
       return true;
     } else {
       return false;

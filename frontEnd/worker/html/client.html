@@ -76,7 +76,7 @@ function includeHTML() {
       </div>
         
       <div class="form-floating mb-3">
-        <input type="tel" id="phone" class="form-control" aria-label="Numero di telefono. Campo obbligatorio" disabled required>
+        <input type="tel" id="phone" class="form-control" pattern="[0-9]{10}" aria-label="Numero di telefono. Campo obbligatorio" disabled required>
         <label for="phone"> Numero di telefono*</label>
       </div>
         
@@ -130,7 +130,7 @@ function includeHTML() {
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" id="cardName" class="form-control" aria-label="Numero carta. Campo obbligatorio" disabled required>
+        <input type="tel" pattern="[0-9]{16}" id="cardName" class="form-control" aria-label="Numero carta. Campo obbligatorio" disabled required>
         <label for="cardName"> Numero carta*</label>
       </div>
       
@@ -149,7 +149,7 @@ function includeHTML() {
       </div>
 
       <div class="form-floating mb-3">
-        <input type="number" min="2021" max="2030" step="1" id="cardYear" class="form-control" aria-label="Anno scadenza metodo di pagamento. Campo obbligatorio" disabled required>
+        <input type="number" min="2022" max="2030" step="1" id="cardYear" class="form-control" aria-label="Anno scadenza metodo di pagamento. Campo obbligatorio" disabled required>
         <label for="cardYear"> Anno*</label>
       </div>
       
