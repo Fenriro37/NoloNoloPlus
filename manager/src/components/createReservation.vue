@@ -35,7 +35,7 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" aria-label="Sconto prezzo fisso, seleziona per abilitare" class="form-check-input" :checked="onSale"  @click="changeSale">
+						<input type="checkbox" id="sale" aria-label="Sconto prezzo fisso, seleziona per abilitare" class="form-check-input" :checked="onSale"  @click="changeSale">
 						<label tabindex="0" class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
             <label tabindex="0" class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
 					</div>
@@ -48,13 +48,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto percentuale, seleziona uno dei due" type="radio" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
+                <input class="form-check-input" name="discountflat" aria-label="sconto percentuale, seleziona uno dei due" type="radio" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto fisso, seleziona uno dei due" type="radio" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
+                <input class="form-check-input" name="discountflat" aria-label="sconto fisso, seleziona uno dei due" type="radio" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -80,9 +80,9 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" aria-label="sconto prezzo giornaliero, seleziona per abilitare" class="form-check-input" :checked="overOnSale"  @click="changeDailySale">
-						<label tabindex="0" class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
-            <label tabindex="0" class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+						<input type="checkbox" id="dailySale" aria-label="sconto prezzo giornaliero, seleziona per abilitare" class="form-check-input" :checked="overOnSale"  @click="changeDailySale">
+						<label tabindex="0" class="form-check-label" for="dailySale"  v-if="overOnSale">L'articolo verrà scontato</label>
+            <label tabindex="0" class="form-check-label" for="dailySale"  v-else>Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
@@ -93,14 +93,14 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto giornaliero percentuale, seleziona uno dei due" type="radio" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
-                <label class="form-check-label" for="percentage">Percentuale</label>
+                <input class="form-check-input" name="discountDaily" aria-label="sconto giornaliero percentuale, seleziona uno dei due" type="radio" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
+                <label class="form-check-label" for="percentageOver">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label="sconto giornaliero fisso, seleziona uno dei due" type="radio"  :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
-                <label class="form-check-label" for="flat">Fisso</label>
+                <input class="form-check-input" name="discountDaily" aria-label="sconto giornaliero fisso, seleziona uno dei due" type="radio"  :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
+                <label class="form-check-label" for="flatOver">Fisso</label>
               </div>
             </div>
           </div>

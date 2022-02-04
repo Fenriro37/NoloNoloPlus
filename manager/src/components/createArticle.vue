@@ -40,7 +40,7 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" class="form-check-input" aria-label="seleziona per scegliere sconto percentuale o fisso sul prezzo fisso" v-model="onSale"  @change="newPrice">
+						<input type="checkbox" class="form-check-input"  id="sale" aria-label="seleziona per scegliere sconto percentuale o fisso sul prezzo fisso" v-model="onSale"  @change="newPrice">
 						<label tabindex="0" class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
             <label tabindex="0" class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
 					</div>
@@ -133,7 +133,7 @@
 				</div>
 				<div class="col-9">
 					<div class=" form-check">
-						<input type="checkbox" aria-label="Selezionare per rendere disponibile il prodotto" class="form-check-input" v-model="available" :checked="available" @click="changeAvailable">
+						<input type="checkbox" id="available" aria-label="Selezionare per rendere disponibile il prodotto" class="form-check-input" v-model="available" :checked="available" @click="changeAvailable">
 						<label tabindex="0" class="form-check-label" for="available" v-if="available">L'articolo sarà disponibile</label>
             <label tabindex="0" class="form-check-label" for="available" v-else>L'articolo non sarà disponile</label>
 					</div>

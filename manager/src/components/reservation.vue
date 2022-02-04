@@ -45,7 +45,7 @@
 				</div>
 				<div class="col-9 ">
 					<div class=" form-check">
-						<input type="checkbox" aria-label="Seleziona per applicare/togliere sconto fisso" class="form-check-input" :disabled="!boolModify" :checked="onSale"  @click="changeSale">
+						<input type="checkbox" id="sale" aria-label="Seleziona per applicare/togliere sconto fisso" class="form-check-input" :disabled="!boolModify" :checked="onSale"  @click="changeSale">
 						<label class="form-check-label" for="sale"  v-if="onSale">L'articolo verrà scontato</label>
             <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
 					</div>
@@ -58,13 +58,13 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" aria-label=" sconto percentuale prezzo fisso. Seleziona uno dei due" :disabled="!boolModify" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
+                <input class="form-check-input" name="discountFlat" type="radio" aria-label=" sconto percentuale prezzo fisso. Seleziona uno dei due" :disabled="!boolModify" :value="true" :checked="onSaleType" @click="changeOnSaleType" id="percentage" required>
                 <label class="form-check-label" for="percentage">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" aria-label=" sconto fisso prezzo fisso. Seleziona uno dei due" :disabled="!boolModify" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
+                <input class="form-check-input" name="discountFlat" type="radio" aria-label=" sconto fisso prezzo fisso. Seleziona uno dei due" :disabled="!boolModify" :value="false" :checked="!onSaleType" @click="changeOnSaleType" id="flat" required>
                 <label class="form-check-label" for="flat">Fisso</label>
               </div>
             </div>
@@ -90,9 +90,9 @@
 				</div>
 				<div class="col-9 ">
 					<div class="form-check">
-						<input type="checkbox" aria-label="Seleziona per applicare/togliere sconto giornaliero" class="form-check-input" :disabled="!boolModify" :checked="overOnSale"  @click="changeDailySale">
-						<label class="form-check-label" for="sale"  v-if="overOnSale">L'articolo verrà scontato</label>
-            <label class="form-check-label" for="sale"  v-else>Il prodotto non è scontato</label>
+						<input type="checkbox" id="dailySale" aria-label="Seleziona per applicare/togliere sconto giornaliero" class="form-check-input" :disabled="!boolModify" :checked="overOnSale"  @click="changeDailySale">
+						<label class="form-check-label" for="dailySale"  v-if="overOnSale">L'articolo verrà scontato</label>
+            <label class="form-check-label" for="dailySale"  v-else>Il prodotto non è scontato</label>
 					</div>
 				</div>
 			</div>
@@ -103,14 +103,14 @@
             <div class="col-3"><p> Tipo di sconto:</p></div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label=" sconto percentuale prezzo giornaliero. Seleziona uno dei due" type="radio" :disabled="!boolModify" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
-                <label class="form-check-label" for="percentage">Percentuale</label>
+                <input class="form-check-input" name="discountDaily" aria-label=" sconto percentuale prezzo giornaliero. Seleziona uno dei due" type="radio" :disabled="!boolModify" :value="true" :checked="overOnSaleType"  @click="changeType" id="percentageOver" required>
+                <label class="form-check-label" for="percentageOver">Percentuale</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-check">
-                <input class="form-check-input" aria-label=" sconto fisso prezzo giornaliero. Seleziona uno dei due" type="radio" :disabled="!boolModify" :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
-                <label class="form-check-label" for="flat">Fisso</label>
+                <input class="form-check-input" name="discountDaily" aria-label=" sconto fisso prezzo giornaliero. Seleziona uno dei due" type="radio" :disabled="!boolModify" :value="false" :checked="!overOnSaleType" @click="changeType"  id="flatOver" required>
+                <label class="form-check-label" for="flatOver">Fisso</label>
               </div>
             </div>
           </div>
@@ -146,13 +146,13 @@
       <div class="row mb-3">
         <div class="col-6">
           <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato ritirato" type="checkbox" :disabled="!boolModify && !boolDelete || boolOld" :checked="rentalOccurred" @click="changeRentalOccured" id="flexCheckDefault1">
-          <label tabindex="0" v-if="rentalOccurred" class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto è stato ritirato</label>
-          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto non è stato ritirato</label>
+          <label tabindex="0" v-if="rentalOccurred" class="form-check-label" for="flexCheckDefault1">&nbsp;Il prodotto è stato ritirato</label>
+          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault1">&nbsp;Il prodotto non è stato ritirato</label>
         </div>
         <div class="col-6">
           <input class="form-check-input" aria-label="seleziona per indicare che il prodotto è stato restituito in tempo" type="checkbox" :disabled="!boolModify && !boolDelete || boolOld " :checked="returned" @click="changeReturned" id="flexCheckDefault2">
-          <label tabindex="0" v-if="returned" class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto è stato restituito in tempo </label>
-          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault">&nbsp;Il prodotto non è stato restituito in tempo </label>
+          <label tabindex="0" v-if="returned" class="form-check-label" for="flexCheckDefault2">&nbsp;Il prodotto è stato restituito in tempo </label>
+          <label tabindex="0" v-else class="form-check-label" for="flexCheckDefault2">&nbsp;Il prodotto non è stato restituito in tempo </label>
         </div>
       </div>
 
